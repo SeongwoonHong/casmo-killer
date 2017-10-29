@@ -25,6 +25,9 @@ const paths = require('../utils/paths');
 const config = require('../webpack.config.dev');
 const createDevServerConfig = require('../webpack.config.server');
 
+const interpolate = require('../utils/interpolate');
+const getClientEnvironment = require('../utils/env');
+
 const useYarn = fs.existsSync(paths.yarnLockFile);
 
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
@@ -37,6 +40,9 @@ const prepDevServer = (localPort) => {
     const HOST = process.env.HOST || '0.0.0.0';
     const appName = require(paths.appPackageJson).name;
     const urls = prepareUrls(protocol, HOST, localPort);
+    const clientEnv = getClientEnvironment('');
+
+    interpolate(clientEnv.raw, paths.appHtml, 'index.dev.html', config.output.filename);
 
     console.log(chalk.cyan('Starting the development server...\n'));
 

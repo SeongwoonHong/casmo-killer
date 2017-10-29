@@ -3,20 +3,36 @@ const path = require('path');
 const express = require('express');
 const app = express();
 
+const port = process.env.PORT || 4000;
+
 const webpackMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 
-const devUtils = require('./client/scripts/start');
+const openBrowser = require('react-dev-utils/openBrowser');
 
 if (process.env.NODE_ENV === 'development') {
-    app.use(webpackMiddleware(devUtils.compiler, devUtils.serverConfig));
-    app.use(webpackHotMiddleware(devUtils.compiler));
+
+    const devServer = require('./client/config/scripts/dev')(port);
+
+    app.use(webpackMiddleware(devServer.compiler, devServer.serverConfig));
+    app.use(webpackHotMiddleware(devServer.compiler, {
+        reload: true
+    }));
+
 }
 
-app.get('/', (req, res) => {
-    res.sendFile(path.resolve('./public/index.html'));
+app.use('/api', require('./server/api'));
+
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, './client/build/index.html'));
 });
 
-app.listen(4000, () => {
-    console.log('Express is running.');
+app.listen(port, () => {
+
+    if (process.env.NODE_ENV === 'development') {
+
+        openBrowser(`http://localhost:${port}/`);
+
+    }
+
 });

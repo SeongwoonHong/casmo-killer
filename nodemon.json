@@ -2,7 +2,10 @@
   "restartable": "rs",
   "ignore": [
     "./node_modules/",
-    "./client/"
+    "./client/build/",
+    "./client/public/",
+    "./client/src/",
+    "./package.json"
   ],
   "execMap": {
     "js": "node"

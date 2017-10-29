@@ -59,6 +59,7 @@
   "scripts": {
     "dev": "NODE_ENV=development nodemon --config './nodemon.json' app.js",
     "build": "node client/config/scripts/build.js",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install",
     "start": "npm run build && NODE_ENV=production node app.js",
     "test": "node client/config/scripts/test.js --env=jsdom"
   },

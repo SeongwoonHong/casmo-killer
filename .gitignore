@@ -2,7 +2,7 @@
 
 /.idea
 /node_modules
-
+/client/public/index.dev.html
 # testing
 /coverage
 

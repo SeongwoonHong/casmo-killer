@@ -1,0 +1,133 @@
+#main-menu {
+  width: 120px;
+  height: 100%;
+  background: teal;
+  position: fixed;
+  transition: all 0.3s;
+  box-shadow: 10px 0px 10px rgba(0 ,0 ,0 ,0.19), 8px 0px 10px rgba(0 ,0 ,0 ,0.23);
+  text-align: center;
+  overflow: auto;
+  .logo {
+    width: 100%;
+    height: 70px;
+    position: relative;
+    cursor: pointer;
+    span {
+      width: 10px;
+      height: 10px;
+      background-color: teal;
+      position: absolute;
+      left: 59%;
+      transform: translateX(-50%);
+      right: 0;
+      top: 25px;
+      border-left: 15px solid white;
+      border-right: 15px solid rgba(0, 0, 0, 0);
+      border-top: 15px solid rgba(0, 0, 0, 0);
+      border-bottom: 15px solid rgba(0, 0, 0, 0);
+      transition: all 0.2s;
+      &::after {
+        content:'';
+        display: block;
+        width: 0;
+        height: 0;
+        border-left: 8px solid teal;
+        border-right: 8px solid rgba(0, 0, 0, 0);
+        border-top: 8px solid rgba(0, 0, 0, 0);
+        border-bottom: 8px solid rgba(0, 0, 0, 0);
+        left: -15px;
+        position: absolute;
+        top: -8px;
+      }
+    }
+    &:hover ~ .menu-text {
+      color: white;
+      transition: all 0.3s;
+    }
+  }
+  .menu-text {
+    margin: 0;
+    cursor: pointer;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    font-weight: 300;
+  }
+  hr {
+    width: 75%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  .menu-item {
+    list-style: none;
+    width: 100%;
+    li {
+      padding: 15px;
+      width: 40%;
+      margin: 0 auto;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      position: relative;
+      transition: all 0.3s;
+      &:last-child {
+        border: none;
+      }
+      &:hover {
+        background: teal;
+        transition: all 0.3s;
+        & .material-icons {
+          color: white;
+        }
+        & {
+          transform: scale(1.1);
+        }
+      }
+      .material-icons {
+        color: #cfd8dc;
+      }
+      .menu-item-text {
+        display: none;
+        margin: auto;
+        color: #888;
+        font-size: 14px;
+        font-weight: 300;
+        position: absolute;
+        padding-left: 30px;
+        line-height: 30px;
+      }
+    }
+  }
+  &.expanded {
+    width: 280px;
+    background: #000;
+    transition: all 0.3s ease-out;
+    .logo span {
+      left: 46%;
+      background-color: #000;
+      transform: translateX(-50%) rotate(-180deg);
+      &::after {
+        border-left: 8px solid #000;
+      }
+    }
+    .menu-item li {
+      text-align: left;
+      width: 60%;
+      &:hover {
+        background-color: #000;
+        & .menu-item-text{
+          color: white;
+        }
+      }
+      .menu-item-text {
+        display: inline-block;
+      }
+    }
+  }
+  .material-icons.info {
+    color: #cfd8dc;
+    position: absolute;
+    margin: 0;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+  }
+}

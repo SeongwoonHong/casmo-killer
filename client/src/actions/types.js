@@ -1,0 +1,1 @@
+export const TOGGLE_MAINMENU = 'TOGGLE_MAINMENU';

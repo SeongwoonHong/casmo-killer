@@ -1,6 +1,6 @@
 const path = require('path');
-
 const express = require('express');
+
 const app = express();
 
 const port = process.env.PORT || 4000;
@@ -16,12 +16,10 @@ const publicPath = `client/${isDev ? 'public' : 'build'}`;
 const indexFile = `index${isDev ? '.dev' : ''}.html`;
 
 if (isDev) {
+  const devServer = require('./client/config/scripts/dev')(port);
 
-    const devServer = require('./client/config/scripts/dev')(port);
-
-    app.use(webpackMiddleware(devServer.compiler, devServer.serverConfig));
-    app.use(webpackHotMiddleware(devServer.compiler));
-
+  app.use(webpackMiddleware(devServer.compiler, devServer.serverConfig));
+  app.use(webpackHotMiddleware(devServer.compiler));
 }
 
 app.use(express.static(path.join(__dirname, publicPath)));
@@ -29,13 +27,11 @@ app.use(express.static(path.join(__dirname, publicPath)));
 app.use('/api', require('./server/api'));
 
 app.get('/*', (req, res) => {
-    res.sendFile(path.join(__dirname, publicPath, indexFile));
+  res.sendFile(path.join(__dirname, publicPath, indexFile));
 });
 
 app.listen(port, () => {
-
-    if (isDev) {
-        openBrowser(`http://localhost:${port}/`);
-    }
-
+  if (isDev) {
+    openBrowser(`http://localhost:${port}/`);
+  }
 });

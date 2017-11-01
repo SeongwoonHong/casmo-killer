@@ -9,19 +9,18 @@ const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 
 const envPublicUrl = process.env.PUBLIC_URL;
 
-function ensureSlash(path, needsSlash) {
-    const hasSlash = path.endsWith('/');
-    if (hasSlash && !needsSlash) {
-        return path.substr(path, path.length - 1);
-    } else if (!hasSlash && needsSlash) {
-        return `${path}/`;
-    } else {
-        return path;
-    }
+function ensureSlash(urlPath, needsSlash) {
+  const hasSlash = urlPath.endsWith('/');
+  if (hasSlash && !needsSlash) {
+    return urlPath.substr(urlPath, urlPath.length - 1);
+  } else if (!hasSlash && needsSlash) {
+    return `${urlPath}/`;
+  }
+  return urlPath;
 }
 
 const getPublicUrl = appPackageJson =>
-    envPublicUrl || require(appPackageJson).homepage;
+  envPublicUrl || require(appPackageJson).homepage;
 
 // We use `PUBLIC_URL` environment variable or "homepage" field to infer
 // "public path" at which the app is served.
@@ -30,23 +29,23 @@ const getPublicUrl = appPackageJson =>
 // We can't use a relative path in HTML because we don't want to load something
 // like /todos/42/static/js/bundle.7289d.js. We have to know the root.
 function getServedPath(appPackageJson) {
-    const publicUrl = getPublicUrl(appPackageJson);
-    const servedUrl =
-        envPublicUrl || (publicUrl ? url.parse(publicUrl).pathname : '/');
-    return ensureSlash(servedUrl, true);
+  const publicUrl = getPublicUrl(appPackageJson);
+  const servedUrl =
+      envPublicUrl || (publicUrl ? url.parse(publicUrl).pathname : '/');
+  return ensureSlash(servedUrl, true);
 }
 
 module.exports = {
-    dotenv: resolveApp('client/config/env/.env'),
-    appBuild: resolveApp('client/build'),
-    appPublic: resolveApp('client/public'),
-    appHtml: resolveApp('client/public/index.html'),
-    appIndexJs: resolveApp('client/src/index.js'),
-    appPackageJson: resolveApp('package.json'),
-    appSrc: resolveApp('client/src'),
-    yarnLockFile: resolveApp('client/yarn.lock'),
-    testsSetup: resolveApp('client/src/setupTests.js'),
-    appNodeModules: resolveApp('node_modules'),
-    publicUrl: getPublicUrl(resolveApp('package.json')),
-    servedPath: getServedPath(resolveApp('package.json'))
+  dotenv: resolveApp('client/config/env/.env'),
+  appBuild: resolveApp('client/build'),
+  appPublic: resolveApp('client/public'),
+  appHtml: resolveApp('client/public/index.html'),
+  appIndexJs: resolveApp('client/src/index.js'),
+  appPackageJson: resolveApp('package.json'),
+  appSrc: resolveApp('client/src'),
+  yarnLockFile: resolveApp('client/yarn.lock'),
+  testsSetup: resolveApp('client/src/setupTests.js'),
+  appNodeModules: resolveApp('node_modules'),
+  publicUrl: getPublicUrl(resolveApp('package.json')),
+  servedPath: getServedPath(resolveApp('package.json'))
 };

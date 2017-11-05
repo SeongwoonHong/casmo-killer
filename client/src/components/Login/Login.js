@@ -33,6 +33,7 @@ class Login extends Component {
       setTimeout(() => { // temporay method for development purpose. will modify this later
         this.setState({ isLoading: false });
         Materialize.toast($('<span style="color: #00c853">Welcome brother!</span>'), 3000);
+        Materialize.toast($(`<span style="color: #00c853">your email is ${this.props.auth.currentUser}</span>`), 3000);
       }, 2000);
     } else {
       let errorMsg = '';

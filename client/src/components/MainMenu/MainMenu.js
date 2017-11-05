@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import './MainMenu.scss';
 
 const mainMenuItems = [
-  { name: 'WE', link: '/test1', icon: 'home' },
-  { name: 'ARE', link: '/test2', icon: 'explore' },
+  { name: 'WE', link: '/home', icon: 'home' },
+  { name: 'ARE', link: '/community', icon: 'explore' },
   { name: 'KILLING', link: '/test3', icon: 'email' },
   { name: 'CASMO', link: '/test4', icon: 'shopping_cart' },
   { name: 'HAHAHA', link: '/test5', icon: 'search' }

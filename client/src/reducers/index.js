@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import menuReducer from './menuReducer';
+import layoutReducer from './layoutReducer';
 
 export default combineReducers({
-  menu: menuReducer
+  layout: layoutReducer
 });

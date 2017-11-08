@@ -1,47 +1,91 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import './MainMenu.scss';
 
+import SubMenu from './SubMenu/SubMenu';
+
 const mainMenuItems = [
-  { name: 'WE', link: '/test1', icon: 'home' },
-  { name: 'ARE', link: '/test2', icon: 'explore' },
-  { name: 'KILLING', link: '/test3', icon: 'email' },
-  { name: 'CASMO', link: '/test4', icon: 'shopping_cart' },
-  { name: 'HAHAHA', link: '/test5', icon: 'search' }
+  { name: '커뮤니티', link: '/test1', icon: 'home' },
+  { name: '맛집', link: '/test2', icon: 'explore' },
+  { name: 'Q&A', link: '/test3', icon: 'email' },
+  { name: '정보', link: '/test4', icon: 'shopping_cart' }
 ];
+
 class MainMenu extends Component {
   render() {
+    const { layout } = this.props;
     return (
-      <div id="main-menu" className={classnames({ expanded: this.props.menu.isExpanded })}>
-        <div
-          onClick={this.props.toggleMenu}
-          role="button"
-          tabIndex={0}
-          onKeyDown={this.props.toggleMenu}
-        >
-          <div className="logo">
-            <span />
+      <nav className={ classnames('side-main-nav', {
+        active: layout.isMainMenuVisible
+      }) }>
+        <div className="side-main-nav-wrapper">
+          <div className="side-main-nav-header">
+            <a
+              className="btn"
+              role="button"
+              tabIndex={ 0 }
+              onClick={ this.props.toggleSearchForm }
+              onKeyDown={() => {}}>
+              <i className="material-icons">
+                search
+              </i>
+            </a>
+            <h1>
+              <NavLink to="/">CK BOARD</NavLink>
+            </h1>
+            <form className={ classnames('search-form-dt', {
+              active: layout.isSearchFormVisible && layout.isMainMenuVisible
+            }) }>
+              <input type="text" placeholder="Search" />
+            </form>
           </div>
-          <p className="menu-text">MENU</p>
+          <div className={ classnames('side-main-nav-body', {
+             multiColumns: layout.isSubMenuVisible
+          })}>
+            <ul className="main-menu">
+              <a
+                className="btn"
+                role="button"
+                tabIndex={ 0 }
+                onClick={ this.props.toggleMenu }
+                onKeyDown={ () => {} }>
+                <i className="material-icons">
+                  {
+                    layout.isMainMenuVisible ? 'chevron_left' : 'chevron_right'
+                  }
+                </i>
+              </a>
+              {
+                mainMenuItems.map((menu, index) => {
+                  return (
+                    <li key={ menu.name }>
+                      <a
+                        role="button"
+                        tabIndex={ 0 }
+                        className={ classnames({
+                          testing: layout.isSubMenuVisible && index === 0
+                        })}
+                        onClick={ this.props.toggleSubMenu }
+                        onKeyDown={ () => {} }>
+                        <i className="material-icons">{ menu.icon }</i>
+                        {
+                          !layout.isSubMenuVisible || layout.isMainMenuVisible
+                            ? <span>{ menu.name }</span>
+                            : ''
+                        }
+                      </a>
+                    </li>
+                  );
+                })
+              }
+            </ul>
+            {
+              layout.isSubMenuVisible ? <SubMenu /> : ''
+            }
+          </div>
         </div>
-        <hr />
-        <ul className="menu-item">
-          {
-            mainMenuItems.map((menu) => {
-              return (
-                <li key={menu.name}>
-                  <Link to={`${this.props.menu.isExpanded ? menu.link : '#'}`}>
-                    <i className="material-icons">{ menu.icon }</i>
-                    <p className="menu-item-text">{ menu.name }</p>
-                  </Link>
-                </li>
-              );
-            })
-          }
-        </ul>
-        <i className="material-icons info">sentiment_very_satisfied</i>
-      </div>
+      </nav>
     );
   }
 }

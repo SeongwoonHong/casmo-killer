@@ -1,0 +1,21 @@
+.sub-menu {
+    background-color: #004d40;
+    width: 100%;
+    > h3 {
+        color: #26a69a;
+        font-size: 22px;
+        line-height: 50px;
+        margin: 0;
+        padding-left: 30px;
+    }
+    > ul {
+        > li {
+            width: 100%;
+            > a {
+                color: #e0f2f1;
+                line-height: normal;
+                padding: 10px 25px;
+            }
+        }
+    }
+}

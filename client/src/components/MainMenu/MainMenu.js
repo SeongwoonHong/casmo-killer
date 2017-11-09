@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import classnames from 'classnames';
 import { NavLink } from 'react-router-dom';
+import classnames from 'classnames';
+
 import './MainMenu.scss';
 
+import SearchForm from '../SearchForm/SearchForm';
 import SubMenu from './SubMenu/SubMenu';
 
 const mainMenuItems = [
@@ -34,15 +36,17 @@ class MainMenu extends Component {
             <h1>
               <NavLink to="/">CK BOARD</NavLink>
             </h1>
-            <form className={ classnames('search-form-dt', {
-              active: layout.isSearchFormVisible && layout.isMainMenuVisible
-            }) }>
-              <input type="text" placeholder="Search" />
-            </form>
+            <SearchForm
+              styleClass={ classnames('mb', {
+                active: layout.isSearchFormVisible
+              }) }
+            />
           </div>
-          <div className={ classnames('side-main-nav-body', {
-             multiColumns: layout.isSubMenuVisible
-          })}>
+          <div
+            className={ classnames('side-main-nav-body', {
+               multiColumns: layout.isSubMenuVisible
+            })}
+          >
             <ul className="main-menu">
               <a
                 className="btn"

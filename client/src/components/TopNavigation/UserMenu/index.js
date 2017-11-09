@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import UserMenu from './UserMenu';
-import * as actions from '../../actions';
+import * as actions from '../../../actions';
 
 const mapStateToProps = (state) => {
   return {

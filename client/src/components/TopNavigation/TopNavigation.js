@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-
+import { NavLink } from 'react-router-dom';
 import classnames from 'classnames';
 
 import './TopNavigation.scss';
 
-import UserMenu from '../UserMenu';
+import UserMenu from './UserMenu';
+import SearchForm from '../SearchForm/SearchForm';
 
 class TopNavigation extends Component {
   render() {
@@ -25,14 +26,9 @@ class TopNavigation extends Component {
           </i>
         </a>
         <h1>
-          <a href="#">CK BOARD</a>
+          <NavLink to="/">CK BOARD</NavLink>
         </h1>
-        <form className="search-form-dt">
-          <i className="material-icons">
-            search
-          </i>
-          <input type="text" placeholder="Search" />
-        </form>
+        <SearchForm styleClass="dt" />
         <div className="user-menu-toggle">
           <a className="btn hide-in-mobile">
             <i className="material-icons">

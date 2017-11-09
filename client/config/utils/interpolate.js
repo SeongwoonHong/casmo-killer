@@ -15,7 +15,7 @@ const interpolate = (srcObj, prevHtml, newHtml, scriptName) => {
     );
   });
 
-  template = template.replace('</body>', `<script type="text/javascript" src="${scriptName}"></script></body>`);
+  template = template.replace('</body>', `<script type="text/javascript" src="/${scriptName}"></script></body>`);
 
   fs.writeFileSync(path.join(path.parse(prevHtml).dir, newHtml), template);
 

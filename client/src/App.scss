@@ -1,1 +1,11 @@
-
+.App {
+  .login-wrapper {
+    width: 50%;
+    margin: 0 auto;
+  }
+  @media screen and (max-width: 950px) {
+    .login-wrapper {
+      width: 100%;
+    }
+  }
+}

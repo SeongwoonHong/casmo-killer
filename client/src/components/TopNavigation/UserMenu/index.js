@@ -5,7 +5,7 @@ import UserMenu from './UserMenu';
 const mapStateToProps = (state) => {
   return {
     layout: state.layout,
-    user: state.user
+    auth: state.auth
   };
 };
 

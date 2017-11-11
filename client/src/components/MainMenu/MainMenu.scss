@@ -6,6 +6,7 @@
     top: 0;
     transform: translateX(-100%);
     transition: all 0.3s;
+    z-index: 88;
     &.toggled {
         transform: translateX(0);
     }

@@ -9,7 +9,7 @@ class UserMenu extends Component {
 
   render() {
 
-    const { layout, user } = this.props;
+    const { layout, auth } = this.props;
     const isDeskTop = layout.breakPoint === 'lg' || layout.breakPoint === 'xl';
 
     const UserMenuButton = (isLoggedIn) => {
@@ -51,7 +51,7 @@ class UserMenu extends Component {
         <NavLink
           to="/asdf"
           className={ classnames('btn teal darken-4', {
-            hide: !user.isLoggedIn || !isDeskTop
+            hide: !auth.isLoggedIn || !isDeskTop
           }) }>
           <i className="material-icons">
             notifications_none
@@ -60,10 +60,10 @@ class UserMenu extends Component {
             N
           </span>
         </NavLink>
-        { UserMenuButton(user.isLoggedIn) }
+        { UserMenuButton(auth.isLoggedIn) }
         {
-          user.isLoggedIn && layout.isUserMenuVisible
-            ? <UserMenuDropdown showNotification={ user.isLoggedIn && !isDeskTop } />
+          auth.isLoggedIn && layout.isUserMenuVisible
+            ? <UserMenuDropdown showNotification={ auth.isLoggedIn && !isDeskTop } />
             : null
         }
       </div>

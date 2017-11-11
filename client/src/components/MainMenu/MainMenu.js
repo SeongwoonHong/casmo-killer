@@ -6,7 +6,7 @@ import './MainMenu.scss';
 
 import SearchForm from '../SearchForm/SearchForm';
 
-import { RootRoutes } from '../../routers';
+import { MainMenuRoutes } from '../../routers';
 
 class MainMenu extends Component {
 
@@ -90,10 +90,10 @@ class MainMenu extends Component {
           </a>
           <div className="side-main-nav-body">
             <ul className="main-menu">
-              { MenuLinks(RootRoutes) }
+              { MenuLinks(MainMenuRoutes) }
             </ul>
             <Switch>
-              { SubMenus(RootRoutes) }
+              { SubMenus(MainMenuRoutes) }
             </Switch>
           </div>
         </div>

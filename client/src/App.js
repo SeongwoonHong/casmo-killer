@@ -8,6 +8,9 @@ class App extends Component {
     return (
       <div className="App">
         <MainMenu />
+        <h1 style={{ textAlign: 'center' }}>
+          this is app.js
+        </h1>
       </div>
     );
   }

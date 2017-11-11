@@ -1,64 +1,50 @@
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import classnames from 'classnames';
 
 import './TopNavigation.scss';
 
-import UserMenu from './UserMenu';
 import SearchForm from '../SearchForm/SearchForm';
+import UserMenu from './UserMenu';
 
 class TopNavigation extends Component {
+
   render() {
+
+    const { layout } = this.props;
+
     return (
-      <header className="z-depth-2 top-main-nav">
+      <header className="teal darken-4 z-depth-2 top-main-nav">
         <a
           role="button"
           tabIndex={ 0 }
-          className={ classnames('btn', 'hide-in-dt', {
-            active: this.props.layout.isMainMenuVisible
+          className={ classnames('btn teal darken-4 hide-in-dt', {
+            toggled: layout.isMainMenuVisible
           }) }
           onClick={ this.props.toggleMenu }
           onKeyDown={ () => {} }>
-          <i className="material-icons">
+          <i className="material-icons teal-text text-lighten-5">
             {
-              this.props.layout.isMainMenuVisible ? 'close' : 'dehaze'
+              layout.isMainMenuVisible
+                ? 'close'
+                : 'dehaze'
             }
           </i>
         </a>
         <h1>
-          <NavLink to="/">CK BOARD</NavLink>
+          <Link
+            to="/"
+            className="teal-text text-lighten-5">
+            CK BOARD
+          </Link>
         </h1>
         <SearchForm styleClass="dt" />
-        <div className="user-menu-toggle">
-          <a className="btn hide-in-mobile">
-            <i className="material-icons">
-              notifications_none
-            </i>
-            <span className="notification-badge">4</span>
-          </a>
-          <a
-            role="button"
-            tabIndex={ 0 }
-            className="btn"
-            onBlur={ () => {
-              // if (this.props.layout.isUserMenuVisible) {
-              //   this.props.toggleUserMenu();
-              // }
-            } }
-            onClick={ this.props.toggleUserMenu }
-            onKeyDown={ () => {
-            } }>
-            <i className="material-icons">
-              {
-                this.props.layout.isUserMenuVisible ? 'person_outline' : 'person'
-              }
-            </i>
-          </a>
-          <UserMenu />
-        </div>
+        <UserMenu />
       </header>
     );
+
   }
+
 }
 
 export default TopNavigation;

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import MainMenu from './MainMenu';
+import Community from './Community';
 import * as actions from '../../actions';
 
 const mapStateToProps = (state) => {
@@ -11,9 +11,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     toggleMenu: () => dispatch(actions.toggleMenu()),
-    toggleSubMenu: () => dispatch(actions.toggleSubMenu()),
     toggleSearchForm: () => dispatch(actions.toggleSearchForm())
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(MainMenu);
+export default connect(mapStateToProps, mapDispatchToProps)(Community);

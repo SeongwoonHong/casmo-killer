@@ -1,97 +1,107 @@
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Route, Switch, NavLink, Link } from 'react-router-dom';
 import classnames from 'classnames';
 
 import './MainMenu.scss';
 
 import SearchForm from '../SearchForm/SearchForm';
-import SubMenu from './SubMenu/SubMenu';
 
-const mainMenuItems = [
-  { name: '커뮤니티', link: '/test1', icon: 'home' },
-  { name: '맛집', link: '/test2', icon: 'explore' },
-  { name: 'Q&A', link: '/test3', icon: 'email' },
-  { name: '정보', link: '/test4', icon: 'shopping_cart' }
-];
+import { RootRoutes } from '../../routers';
 
 class MainMenu extends Component {
+
   render() {
+
     const { layout } = this.props;
+
+    const MenuLinks = (routes) => {
+      return routes.map((route) => {
+        if (route.name) {
+          return (
+            <li key={ route.name }>
+              <NavLink
+                to={ route.path }>
+                <i className="material-icons">
+                  { route.icon }
+                </i>
+                <span>{ route.name }</span>
+              </NavLink>
+            </li>
+          );
+        }
+        return null;
+      });
+    };
+
+    const SubMenus = (routes) => {
+      return routes.map(route => (
+        <Route
+          key={ route.name || 'root' }
+          exact={ route.exact }
+          path={ route.path }
+          items={ route.children }
+          component={ route.subMenu }
+        />
+      ));
+    };
+
     return (
       <nav className={ classnames('side-main-nav', {
-        active: layout.isMainMenuVisible
+        toggled: layout.isMainMenuVisible
       }) }>
-        <div className="side-main-nav-wrapper">
+        <div className="teal darken-3 side-main-nav-wrapper">
           <div className="side-main-nav-header">
             <a
               className="btn"
               role="button"
               tabIndex={ 0 }
               onClick={ this.props.toggleSearchForm }
-              onKeyDown={() => {}}>
+              onKeyDown={ () => {
+              } }>
               <i className="material-icons">
                 search
               </i>
             </a>
             <h1>
-              <NavLink to="/">CK BOARD</NavLink>
+              <Link
+                to="/"
+                className="teal-text text-lighten-5">
+                CK BOARD
+              </Link>
             </h1>
-            <SearchForm
-              styleClass={ classnames('mb', {
-                active: layout.isSearchFormVisible
-              }) }
-            />
+            <SearchForm styleClass={ classnames('mb', {
+              active: layout.isSearchFormVisible
+            }) } />
           </div>
-          <div
-            className={ classnames('side-main-nav-body', {
-               multiColumns: layout.isSubMenuVisible
-            })}
-          >
-            <ul className="main-menu">
-              <a
-                className="btn"
-                role="button"
-                tabIndex={ 0 }
-                onClick={ this.props.toggleMenu }
-                onKeyDown={ () => {} }>
-                <i className="material-icons">
-                  {
-                    layout.isMainMenuVisible ? 'chevron_left' : 'chevron_right'
-                  }
-                </i>
-              </a>
+          <a
+            className="btn submenu-toggle"
+            role="button"
+            tabIndex={ 0 }
+            onClick={ this.props.toggleMenu }
+            onKeyDown={ () => {
+            } }>
+            <i className="material-icons">
               {
-                mainMenuItems.map((menu, index) => {
-                  return (
-                    <li key={ menu.name }>
-                      <a
-                        role="button"
-                        tabIndex={ 0 }
-                        className={ classnames({
-                          testing: layout.isSubMenuVisible && index === 0
-                        })}
-                        onClick={ this.props.toggleSubMenu }
-                        onKeyDown={ () => {} }>
-                        <i className="material-icons">{ menu.icon }</i>
-                        {
-                          !layout.isSubMenuVisible || layout.isMainMenuVisible
-                            ? <span>{ menu.name }</span>
-                            : ''
-                        }
-                      </a>
-                    </li>
-                  );
-                })
+                layout.isMainMenuVisible
+                  ? 'chevron_right'
+                  : 'chevron_left'
               }
+            </i>
+          </a>
+          <div className="side-main-nav-body">
+            <ul className="main-menu">
+              { MenuLinks(RootRoutes) }
             </ul>
-            {
-              layout.isSubMenuVisible ? <SubMenu /> : ''
-            }
+            <Switch>
+              { SubMenus(RootRoutes) }
+            </Switch>
           </div>
         </div>
       </nav>
     );
+
   }
+
 }
 
 export default MainMenu;

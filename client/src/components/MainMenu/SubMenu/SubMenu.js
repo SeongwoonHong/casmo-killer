@@ -4,40 +4,38 @@ import { NavLink } from 'react-router-dom';
 import './SubMenu.scss';
 
 class SubMenu extends Component {
+
   render() {
+
+    const { match, title, items } = this.props;
+
     return (
-      <div className="sub-menu">
-        <h3>커뮤니티</h3>
+      <div className="teal darken-4 sub-menu">
+        <h3 className="teal-text text-lighten-1">{ title }</h3>
         <ul>
-          <li>
-            <NavLink to="/">
-              &middot; 모든 커뮤니티
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/">
-              &middot; 나의 커뮤니티
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/">
-              &middot; 즐겨찾기
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/">
-              &middot; 자유게시판
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/">
-              &middot; 장터
-            </NavLink>
-          </li>
+          {
+            items
+              ? items.map((item) => {
+                return (
+                  <li key={ item.name }>
+                    <NavLink
+                      exact
+                      to={ match.path + item.path }
+                      className="teal-text text-lighten-5">
+                      <span>&#183;</span>
+                      { item.name }
+                    </NavLink>
+                  </li>
+                );
+              })
+              : null
+          }
         </ul>
       </div>
     );
+
   }
+
 }
 
 export default SubMenu;

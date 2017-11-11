@@ -1,33 +1,60 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import classnames from 'classnames';
-import './UserMenu.scss';
 
+import './UserMenuDropdown.scss';
 
-const UserMenu = ({ active }) => {
-  return (
-    <ul className={ classnames('dropdown-content', 'user-menu-dropdown', { active })}>
+const NotificationBadge = (showNotification) => {
+  if (showNotification) {
+    return (
       <li>
-        <NavLink to="/">
+        <NavLink
+          to="/"
+          className="teal-text text-darken-4">
+          <i className="material-icons">notifications</i>
+          <span>Notifications</span>
+          <span className="notification-badge">
+            N
+          </span>
+        </NavLink>
+      </li>
+    );
+  }
+  return null;
+};
+
+const UserMenuDropdown = ({ showNotification }) => {
+  return (
+    <ul className="teal lighten-5 dropdown-content">
+      { NotificationBadge(showNotification) }
+      <li>
+        <NavLink
+          to="/"
+          className="teal-text text-darken-4">
           <i className="material-icons">dashboard</i>
           <span>My Board</span>
         </NavLink>
       </li>
       <li>
-        <NavLink to="/">
+        <NavLink
+          to="/"
+          className="teal-text text-darken-4">
           <i className="material-icons">account_circle</i>
           <span>Profiles</span>
         </NavLink>
       </li>
       <li>
-        <NavLink to="/">
+        <NavLink
+          to="/"
+          className="teal-text text-darken-4">
           <i className="material-icons">settings</i>
           <span>Settings</span>
         </NavLink>
       </li>
       <li className="divider" />
       <li>
-        <NavLink to="/">
+        <NavLink
+          to="/"
+          className="teal-text text-darken-4">
           <i className="material-icons">power_settings_new</i>
           <span>Log out</span>
         </NavLink>
@@ -36,4 +63,4 @@ const UserMenu = ({ active }) => {
   );
 };
 
-export default UserMenu;
+export default UserMenuDropdown;

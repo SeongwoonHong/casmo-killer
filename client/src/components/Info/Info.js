@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 
-import './Home.scss';
+import './Info.scss';
 
 class Home extends Component {
   render() {
     return (
-      <div className="home">
-        <h3 className="red-text text-darken-4">
-          This Is Home !!!
+      <div className="info">
+        <h3 className="green-text text-darken-4">
+          This Is Info !!!
         </h3>
       </div>
     );

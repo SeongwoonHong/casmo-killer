@@ -1,27 +1,25 @@
-.user-menu-dropdown {
-    background-color: #e0f2f1;
-    position: absolute;
+.dropdown-content {
+    display: block;
+    opacity: 1;
     right: 5px;
     top: 45px;
     > li {
         > a {
-            color: #004d40;
+            font-size: 14px;
             > .material-icons {
-                color: #004d40;
                 font-size: 20px;
-                line-height: normal;
-                margin-right: 5px;
+                margin-right: 10px;
             }
-            > span {
-                font-size: 14px;
+            > .notification-badge {
+                left: 4px;
+                top: 4px;
             }
         }
         &:hover {
             background-color: #b2dfdb;
         }
     }
-    &.active {
-        display: block;
-        opacity: 1;
+    @media screen and (min-width: 768px) {
+        top: 55px;
     }
 }

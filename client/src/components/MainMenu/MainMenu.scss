@@ -1,21 +1,34 @@
 .side-main-nav {
     background-color: rgba(0, 0, 0, .8);
     height: 100%;
+    left: 0;
     position: fixed;
     top: 0;
     transform: translateX(-100%);
     transition: all 0.3s;
-    &.active {
+    &.toggled {
         transform: translateX(0);
     }
 }
 
 .side-main-nav-wrapper {
-    background-color: #00695c;
     height: 100%;
     width: 270px;
+    > .submenu-toggle {
+        display: none;
+    }
+    .btn {
+        background-color: transparent;
+        border-radius: 0;
+        box-shadow: none;
+        height: 30px;
+        padding: 0 14px;
+        > .material-icons {
+            height: 100%;
+            line-height: 30px;
+        }
+    }
     .side-main-nav-header {
-        border-bottom: 1px solid #00796b;
         height: 50px;
         overflow: hidden;
         position: relative;
@@ -24,9 +37,8 @@
             border-radius: 0;
             box-shadow: none;
             height: 50px;
-            padding: 0 13px;
+            padding: 0 14px;
             > .material-icons {
-                color: #e0f2f1;
                 height: 100%;
                 line-height: 50px;
             }
@@ -37,7 +49,6 @@
             margin: 0;
             text-align: center;
             > a {
-                color: #e0f2f1;
                 line-height: 50px;
             }
         }
@@ -46,20 +57,10 @@
         }
     }
     > .side-main-nav-body {
+        border-top: 1px solid #00796b;
         height: 100%;
-        &.multiColumns {
-            display: flex;
-            > ul.main-menu {
-                > li {
-                    > a {
-                        > .material-icons {
-                            margin: 0;
-                        }
-                    }
-                }
-            }
-        }
-        > ul.main-menu {
+        position: relative;
+        > .main-menu {
             > .btn {
                 display: none;
             }
@@ -71,11 +72,10 @@
                     display: flex;
                     height: 50px;
                     padding: 0 15px;
-                    &:hover {
-                        color: #fff;
-                    }
-                    &.testing {
+                    &:hover,
+                    &.active {
                         background-color: #004d40;
+                        color: #fff;
                     }
                     > .material-icons {
                         border: 1px solid #e0f2f1;
@@ -125,38 +125,46 @@
     }
 }
 
-
 @media screen and (min-width: 992px) {
     .side-main-nav {
+        background-color: transparent;
+        box-shadow: none;
         line-height: normal;
-        top: 60px;
+        position: relative;
         transform: translateX(0);
-        width: 310px;
-        &.active {
+        width: 260px;
+        &.toggled {
+            width: 62px;
             .side-main-nav-wrapper {
-                width: auto;
-                > .side-main-nav-body {
-                    > ul.main-menu {
-                        > .btn {
-                            text-align: center;
-                        }
-                        > li {
-                            > a {
-                                > .material-icons {
-                                    margin: 0;
-                                }
-                                > span {
-                                    display: none;
-                                }
-                            }
+                width: 62px;
+                > .submenu-toggle {
+                    > .material-icons {
+                        text-align: center;
+                    }
+                }
+            }
+            .main-menu {
+                > li {
+                    > a {
+                        > span {
+                            display: none;
                         }
                     }
                 }
+            }
+            .sub-menu {
+                display: none;
             }
         }
     }
     .side-main-nav-wrapper {
         width: 260px;
+        > .submenu-toggle {
+            display: block;
+            > .material-icons {
+                text-align: right;
+            }
+        }
         > .side-main-nav-header {
             display: none;
         }
@@ -184,6 +192,38 @@
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .side-main-nav {
+        width: 260px;
+        .side-main-nav-wrapper {
+            > .submenu-toggle {
+                display: none;
+            }
+        }
+        &.toggled {
+            width: 260px;
+            .side-main-nav-wrapper {
+                width: 260px;
+                > .submenu-toggle {
+                    display: none;
+                }
+            }
+            .main-menu {
+                > li {
+                    > a {
+                        > span {
+                            display: inline-block;
+                        }
+                    }
+                }
+            }
+            .sub-menu {
+                display: block;
             }
         }
     }

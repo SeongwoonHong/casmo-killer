@@ -1,14 +1,15 @@
 import * as types from './types';
 
-export const toggleMenu = () => {
+export const updateBreakPoint = (breakPoint) => {
   return {
-    type: types.TOGGLE_MAIN_MENU
+    type: types.UPDATE_BREAK_POINT,
+    breakPoint
   };
 };
 
-export const toggleSubMenu = () => {
+export const toggleMenu = () => {
   return {
-    type: types.TOGGLE_SUB_MENU
+    type: types.TOGGLE_MAIN_MENU
   };
 };
 
@@ -24,3 +25,14 @@ export const toggleSearchForm = () => {
   };
 };
 
+export const userLoggedIn = () => {
+  return {
+    type: types.USER_LOGGED_IN
+  };
+};
+
+export const userLoggedOut = () => {
+  return {
+    types: types.USER_LOGGED_OUT
+  };
+};

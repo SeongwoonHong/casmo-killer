@@ -1,0 +1,21 @@
+html,
+body,
+#root,
+.app {
+    height: 100%;
+}
+
+.app {
+    min-width: 320px;
+}
+
+.app-wrapper {
+    height: 100%;
+    @media screen and (min-width: 992px) {
+        display: flex;
+    }
+}
+
+.component-wrapper {
+    padding: 0 10px;
+}

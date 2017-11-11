@@ -1,0 +1,68 @@
+.top-main-nav {
+    align-items: center;
+    display: flex;
+    height: 50px;
+    justify-content: space-between;
+    .btn {
+        border-radius: 0;
+        box-shadow: none;
+        height: 50px;
+        padding: 0 13px;
+        position: relative;
+        transition: all .3s;
+        vertical-align: baseline;
+        &.toggled {
+            position: absolute;
+            transform: translateX(270px);
+            z-index: 99;
+        }
+        > .material-icons {
+            font-size: 24px;
+            height: 100%;
+            line-height: 50px;
+        }
+    }
+    > h1 {
+        font-size: 20px;
+        font-weight: 700;
+        margin: 0;
+        text-align: center;
+        > a {
+            display: block;
+            line-height: 50px;
+        }
+    }
+    @media screen and (min-width: 360px) {
+        .btn {
+            &.toggled {
+                transform: translateX(310px);
+            }
+        }
+    }
+    @media screen and (min-width: 768px) {
+        height: 60px;
+        .btn {
+            height: 60px;
+            padding: 0 18px;
+            > .material-icons {
+                line-height: 60px;
+            }
+        }
+        > h1 {
+            font-size: 24px;
+            > a {
+                line-height: 60px;
+            }
+        }
+    }
+    @media screen and (min-width: 992px) {
+        .btn {
+            &.hide-in-dt {
+                display: none;
+            }
+        }
+        > h1 {
+            width: 260px;
+        }
+    }
+}

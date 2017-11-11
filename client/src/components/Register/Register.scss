@@ -1,0 +1,99 @@
+#register {
+  width: 100%;
+  form {
+    > div {
+      margin: 1rem;
+      .card-panel {
+        margin: initial;
+      }
+      .register-header {
+        color: #fff;
+        font-size: 1.3rem;
+      }
+      .register-body {
+        .input-field {
+          position: relative;
+          .input-field-text {
+            position: absolute;
+            width: 8%;
+            pointer-events: none;
+            top: 34%;
+            transform: translateY(-50%);
+            left: 0;
+            color: #a9a9a9;
+            transition: all 0.5s ease-out;
+            &.isFocused {
+              left: 100%;
+              transform: translate(-100%, -50%);
+              transition: all 0.5s ease-out;
+            }
+          }
+          .input-error {
+            color: #FF6600;
+          }
+        }
+      }
+      .register-footer {
+        background-color: lightgrey;
+        .register-footer-btns {
+          position: relative;
+        }
+        .progress {
+          margin-top: 3rem;
+        }
+      }
+    }
+  }
+  @media screen and (min-width: 1100px) {
+    .input-field-text {
+      width: 8% !important;
+    }
+  }
+  @media screen and (max-width: 1030px) {
+    .input-field-text {
+      width: 10% !important;
+    }
+  }
+  @media screen and (max-width: 810px) {
+    .input-field-text {
+      width: 12% !important;
+    }
+  }
+  @media screen and (max-width: 690px) {
+    .input-field-text {
+      width: 16% !important;
+    }
+  }
+  @media screen and (max-width: 690px) {
+    .input-field-text {
+      width: 20% !important;
+    }
+  }
+  @media screen and (max-width: 360px) {
+    .input-field-text {
+      width: 23% !important;
+    }
+  }
+  @media screen and (max-width: 660px) {
+    .social-media-btns {
+      width: 100% !important;
+    }
+  }
+  @media screen and (max-width: 450px) {
+    &, .btn {
+      font-size: 0.8rem !important;
+    }
+    .card-panel {
+      padding: 10px !important;
+    }
+  }
+  @media screen and (max-width: 350px) {
+    font-size: 0.7rem !important;
+    .btn {
+      font-size: 0.7rem !important;
+    }
+    .card-panel {
+      padding: 10px !important;
+    }
+  }
+}

@@ -29,11 +29,11 @@ class Login extends Component {
       this.setState({ isLoading: true });
       this.initializeState();
       this.props.loginRequest(email, password);
-      this.props.history.push('/');
       setTimeout(() => { // temporay method for development purpose. will modify this later
         this.setState({ isLoading: false });
-        Materialize.toast($('<span style="color: #00c853">Welcome brother!</span>'), 3000);
-        Materialize.toast($(`<span style="color: #00c853">your email is ${this.props.auth.currentUser}</span>`), 3000);
+        Materialize.toast($('<span style="color: #00c853">Welcome brother!</span>'), 3000, 'rounded');
+        Materialize.toast($(`<span style="color: #00c853">your email is ${this.props.auth.currentUser}</span>`), 3000, 'rounded');
+        this.props.history.push('/');
       }, 2000);
     } else {
       let errorMsg = '';
@@ -43,7 +43,7 @@ class Login extends Component {
       if (this.validationErrorMessages.password) {
         errorMsg += ` ${this.validationErrorMessages.password}`;
       }
-      Materialize.toast($(`<span style="color: #FFB4BA">${errorMsg}</span>`), 4000);
+      Materialize.toast($(`<span style="color: #FFB4BA">${errorMsg}</span>`), 4000, 'rounded');
     }
   }
   onChangeHandler = (e) => {

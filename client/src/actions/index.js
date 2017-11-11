@@ -1,3 +1,4 @@
+import axios from 'axios';
 import * as types from './types';
 
 export const updateBreakPoint = (breakPoint) => {
@@ -25,14 +26,29 @@ export const toggleSearchForm = () => {
   };
 };
 
-export const userLoggedIn = () => {
+export const login = () => {
   return {
-    type: types.USER_LOGGED_IN
+    type: types.LOGIN_REQUEST
   };
 };
-
-export const userLoggedOut = () => {
+export const loginFailure = () => {
   return {
-    types: types.USER_LOGGED_OUT
+    type: types.LOGIN_FAILURE
   };
+};
+export const loginSuccess = (email) => {
+  return {
+    type: types.LOGIN_SUCCESS,
+    email
+  };
+};
+export const loginRequest = (email, password) => async (dispatch) => {
+  try {
+    dispatch(login());
+    await axios.get('/api/login', { email, password });
+    dispatch(loginSuccess(email));
+  } catch (e) {
+    console.error(e);
+    dispatch(loginFailure());
+  }
 };

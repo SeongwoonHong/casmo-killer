@@ -64,7 +64,7 @@ const InfoRoutes = [
   }
 ];
 
-export const RootRoutes = [
+export const MainMenuRoutes = [
   {
     path: '/',
     exact: true,

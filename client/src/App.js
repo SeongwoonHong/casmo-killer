@@ -6,10 +6,10 @@ import classnames from 'classnames';
 import * as actions from './actions';
 import './App.scss';
 
-import MainMenu from './components/MainMenu';
 import TopNavigation from './components/TopNavigation';
-
-import { RootRoutes } from './routers';
+import MainMenu from './components/MainMenu';
+import { MainMenuRoutes } from './routers';
+import Login from './components/Login';
 
 class App extends Component {
 
@@ -45,7 +45,7 @@ class App extends Component {
           <Route path="/" component={ MainMenu } />
           <div className="component-wrapper">
             {
-              RootRoutes.map(route => (
+              MainMenuRoutes.map(route => (
                 <Route
                   key={ route.path }
                   exact={ route.exact }
@@ -54,6 +54,7 @@ class App extends Component {
                 />
               ))
             }
+            <Route path="/login" component={Login} />
           </div>
         </div>
       </div>

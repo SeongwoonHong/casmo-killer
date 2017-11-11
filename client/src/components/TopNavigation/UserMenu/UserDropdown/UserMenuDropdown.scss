@@ -1,0 +1,27 @@
+.user-menu-dropdown {
+    background-color: #e0f2f1;
+    position: absolute;
+    right: 5px;
+    top: 45px;
+    > li {
+        > a {
+            color: #004d40;
+            > .material-icons {
+                color: #004d40;
+                font-size: 20px;
+                line-height: normal;
+                margin-right: 5px;
+            }
+            > span {
+                font-size: 14px;
+            }
+        }
+        &:hover {
+            background-color: #b2dfdb;
+        }
+    }
+    &.active {
+        display: block;
+        opacity: 1;
+    }
+}

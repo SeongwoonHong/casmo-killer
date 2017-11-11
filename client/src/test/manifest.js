@@ -5,5 +5,15 @@ export default {
     component: require('../components/MainMenu'),
     props: {
     }
+  },
+  Login: {
+    components: require('../components/Login'),
+    props: {
+    }
+  },
+  Button: {
+    components: require('../components/Button/Button'),
+    props: {
+    }
   }
 };

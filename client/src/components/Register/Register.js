@@ -56,6 +56,7 @@ class Register extends Component {
   onChangeHandler = (e) => {
     this.setState({
       [e.target.name]: {
+        ...this.state[e.target.name],
         value: e.target.value,
         isTextVisible: true
       }
@@ -71,14 +72,15 @@ class Register extends Component {
     if (this.state[e.target.name].value) {
       this.setState({
         [e.target.name]: {
+          ...this.state[e.target.name],
           value: e.target.value,
           isTextVisible: false
         }
       });
     }
   }
-
   onSubmitHandler = (e) => {
+    this.clearStateErrors();
     e.preventDefault();
     Materialize.Toast.removeAll();
     const {
@@ -99,11 +101,27 @@ class Register extends Component {
     } else {
       Object.keys(this.validationErrorMessages).map((item) => {
         if (this.validationErrorMessages[item]) {
+          this.setState({
+            [item]: {
+              ...this.state[item],
+              error: this.validationErrorMessages[item]
+            }
+          });
           Materialize.toast($(`<span style="color: #FFB4BA">${this.validationErrorMessages[item]}</span>`), 5000, 'rounded');
         }
         return item;
       });
     }
+  }
+  clearStateErrors = () => {
+    registerInputs.map((input) => {
+      return this.setState({
+        [input.name]: {
+          ...this.state[input.name],
+          error: ''
+        }
+      });
+    });
   }
   animateIn = () => {
     return animate.to(this.component, 0.5, { autoAlpha: 1, y: '0%' });
@@ -130,10 +148,10 @@ class Register extends Component {
       <div className="row container" id="register" ref={el => this.component = el}>
         <form className="col s12">
           <div>
-            <div className="register-header card-panel teal lighten-2" ref={el => this.header = el}>
+            <div className="register-header card-panel teal lighten-2">
               New Account
             </div>
-            <div className="register-body card-panel" ref={el => this.body = el}>
+            <div className="register-body card-panel">
               {
                 registerInputs.map((input) => {
                   return (
@@ -144,6 +162,7 @@ class Register extends Component {
                         name={input.name}
                         onChange={this.onChangeHandler}
                         onFocus={this.onFocusHandler}
+                        className={classnames({ 'has-error': this.state[input.name].error })}
                         onBlur={this.onBlurHandler}
                         value={`${this.state[input.name].value}`}
                       />
@@ -162,7 +181,7 @@ class Register extends Component {
                 })
               }
             </div>
-            <div className="register-footer card-panel" ref={el => this.footer = el}>
+            <div className="register-footer card-panel">
               <div className="register-footer-btns">
                 <Button
                   className="btn waves-effect teal waves-light register-btn"

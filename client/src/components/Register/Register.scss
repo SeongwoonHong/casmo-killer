@@ -13,6 +13,9 @@
       .register-body {
         .input-field {
           position: relative;
+          .has-error {
+            border-bottom: 2px solid red;
+          }
           .input-field-text {
             position: absolute;
             width: 8%;

@@ -6,9 +6,6 @@ const validatePost = (values) => {
   if (!values.title || values.title.trim() === '') {
     errors.title = 'Enter a Title';
   }
-  if (!values.categories || values.categories.trim() === '') {
-    errors.categories = 'Enter categories';
-  }
   if (!values.contents || values.contents.trim() === '') {
     errors.contents = 'Enter some content';
   }

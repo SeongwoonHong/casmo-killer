@@ -22,14 +22,30 @@ import {
   DELETE_POST,
   DELETE_POST_SUCCESS,
   DELETE_POST_FAILURE,
-  RESET_DELETED_POST
+  RESET_DELETED_POST,
+
+  // Edit post
+  EDIT_POST,
+  EDIT_POST_SUCCESS,
+  EDIT_POST_FAILURE,
+  RESET_EDIT_POST,
+
+  // Search posts
+  SEARCH_POSTS,
+  SEARCH_POSTS_SUCCESS,
+  SEARCH_POSTS_FAILURE,
+
+  // Create reply
+  CREATE_REPLY,
+  CREATE_REPLY_SUCCESS,
+  CREATE_REPLY_FAILURE
 } from './types';
 
 // FETCH POSTS
-export function fetchPosts() {
+export function fetchPosts(page) {
   const request = axios({
     method: 'get',
-    url: '/api/post',
+    url: `/api/post/${page}`,
     headers: []
   });
 
@@ -103,7 +119,7 @@ export function resetDeletedPost() {
 
 
 export function fetchPost(id) {
-  const request = axios.get(`/api/post/${id}`);
+  const request = axios.get(`/api/post/detail/${id}`);
 
   return {
     type: FETCH_POST,
@@ -162,70 +178,106 @@ export function deletePostFailure(response) {
 }
 
 
-/* EDIT POST */
-export function EditPost() {
+export function editPost(id, props, tokenFromStorage) {
+  const request = axios({
+    method: 'put',
+    data: props,
+    url: `/api/post/${id}`,
+    headers: {
+      Authorization: `ck-board-App12341 ${tokenFromStorage}`
+    }
+  });
+
   return {
-    type: POST_EDIT
+    type: EDIT_POST,
+    payload: request
   };
 }
 
-export function EditPostSuccess(index, post) {
+export function editPostSuccess(editData) {
   return {
-    type: POST_EDIT_SUCCESS,
-    index,
-    post
+    type: EDIT_POST_SUCCESS,
+    payload: editData
   };
 }
 
-export function EditPostFailure(error) {
+export function editPostFailure(error) {
   return {
-    type: POST_EDIT_FAILURE,
-    error
-  };
-}
-export function editPostRequest(id, index, contents) {
-  return (dispatch) => {
-    // Inform Edit Post API is starting
-    dispatch(editPost());
-    // API request
-    return axios.put(`/api/post/${id}`, { contents })
-      .then((response) => {
-        dispatch(editPostSuccess(index, response.data.memo));
-      }).catch((error) => {
-        dispatch(editPostFailure(error.response.data.code));
-      });
+    type: EDIT_POST_FAILURE,
+    payload: error
   };
 }
 
-/* POST TOGGLE STAR */
-export function postStar() {
+export function resetEditPost() {
   return {
-    type: POST_STAR
+    type: RESET_EDIT_POST
   };
 }
 
-export function postStarSuccess(index, memo) {
+// FETCH POSTS
+export function searchPosts(searchWord, page) {
+  const request = axios({
+    method: 'get',
+    url: `/api/post/search/${searchWord}/${page}`,
+    headers: []
+  });
+
   return {
-    type: POST_STAR_SUCCESS,
-    index,
-    memo
+    type: SEARCH_POSTS,
+    payload: request
   };
 }
 
-export function postStarFailure(error) {
+export function searchPostsSuccess(posts) {
   return {
-    type: POST_STAR_FAILURE,
-    error
+    type: SEARCH_POSTS_SUCCESS,
+    payload: posts
   };
 }
-export function postStarRequest(id, index) {
-  return (dispatch) => {
-    // TO BE IMPLEMENTED
-    return axios.post(`/api/post/star/${id}`)
-      .then((response) => {
-        dispatch(postStarSuccess(index, response.data.memo));
-      }).catch((error) => {
-        dispatch(postStarFailure(error.response.data.code));
-      });
+
+export function searchPostsFailure(error) {
+  return {
+    type: SEARCH_POSTS_FAILURE,
+    payload: error
+  };
+}
+
+export function createReply(comment, postId) {
+  const data = {
+    comment,
+    postId
+  };
+  const request = axios({
+    method: 'post',
+    data,
+    url: '/api/post/reply',
+    // headers: {
+    //   Authorization: `ck-board-App12341 ${tokenFromStorage}`
+    // }
+  });
+
+  return {
+    type: CREATE_REPLY,
+    payload: request
+  };
+}
+
+export function createReplySuccess(newPost) {
+  return {
+    type: CREATE_REPLY_SUCCESS,
+    payload: newPost
+  };
+}
+
+export function createReplyFailure(error) {
+  return {
+    type: CREATE_REPLY_FAILURE,
+    payload: error
+  };
+}
+
+export function resetNewReply() {
+  return {
+    type: RESET_NEW_REPLY
   };
 }

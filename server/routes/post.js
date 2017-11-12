@@ -3,32 +3,94 @@ const mongoose = require('mongoose');
 const Post = require('../models/post');
 
 const router = express.Router();
+const PER_PAGE = 10;
 
 /* GET POST LIST */
-router.get('/', (req, res) => {
-  Post
-    .find({})
-    .select({
-      content: 0,
-      __v: 0,
-      updatedAt: 0,
-      createdAt: 0
-    })
-    .limit(100)
-    .sort({
-      postNum: -1
-    })
-    .exec((err, posts) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).json({
-          message: 'Could not retrieve posts'
-        });
-      }
-      res.json(posts);
-    });
+router.get('/:page', (req, res) => {
+  const skipSize = (req.params.page - 1) * PER_PAGE;
+  let pageNum = 1;
+
+  Post.count({ deleted: false }, (err, totalCount) => {
+    if (err) throw err;
+    pageNum = Math.ceil(totalCount / PER_PAGE);
+    Post
+      .find({ deleted: false })
+      .sort({
+        postNum: -1
+      })
+      .skip(skipSize)
+      .limit(PER_PAGE)
+      .exec((error, posts) => {
+        if (error) {
+          console.log(error);
+          return res.status(500).json({
+            message: 'Could not retrieve posts'
+          });
+        }
+
+        const meta = {
+          limit: PER_PAGE,
+          pagination: pageNum
+        };
+
+        const json = {
+          meta,
+          posts
+        };
+        res.json(json);
+      });
+  });
 });
 
+/* GET SEARCH POSTS */
+router.get('/search/:searchWord/:page', (req, res) => {
+  const skipSize = (req.params.page - 1) * PER_PAGE;
+  let pageNum = 1;
+  const { searchWord } = req.params;
+  const searchCondition = { $regex: searchWord };
+  Post.count({
+    deleted: false,
+    $or: [
+      { title: searchCondition },
+      { contents: searchCondition },
+      { writer: searchCondition }
+    ]
+  }, (err, totalCount) => {
+    if (err) throw err;
+    pageNum = Math.ceil(totalCount / PER_PAGE);
+    Post
+      .find({
+        deleted: false,
+        $or: [
+          { title: searchCondition },
+          { contents: searchCondition },
+          { writer: searchCondition }]
+      })
+      .sort({
+        postNum: -1
+      })
+      .skip(skipSize)
+      .limit(PER_PAGE)
+      .exec((error, posts) => {
+        if (error) {
+          console.log(error);
+          return res.status(500).json({
+            message: 'Could not retrieve posts'
+          });
+        }
+        const meta = {
+          limit: PER_PAGE,
+          pagination: pageNum
+        };
+
+        const json = {
+          meta,
+          posts
+        };
+        res.json(json);
+      });
+  });
+});
 /* SUBMIT POST */
 router.post('/', (req, res) => {
   // AFTER ADD USER
@@ -47,45 +109,35 @@ router.post('/', (req, res) => {
 
   const { body } = req;
   const { title } = body;
-  const { categories } = body;
+  // const { categories } = body;
   const { contents } = body;
+  // const { password } = body;
 
   // simulate error if title, categories and content are all "test"
   // This is demo field-validation error upon submission.
-  if (title === 'test' && categories === 'test' && contents === 'test') {
+  if (title === 'test' && contents === 'test') {
     return res.status(403).json({
       message: {
         title: 'Title Error - Cant use "test" in all fields!',
-        categories: 'Categories Error',
+        // categories: 'Categories Error',
         content: 'Content Error',
         submitmessage: 'Final Error near the submit button!'
       }
     });
   }
 
-  if (!title || !categories || !contents) {
+  if (!title || !contents) {
     return res.status(400).json({
-      message: 'Error title, categories and content are all required!'
+      message: 'Error title and content are all required!'
     });
   }
 
-  const post = new Post({
-    title,
-    categories: categories.split(','),
-    contents,
-    authorName: 'gook',
-    authorId: 'gook',
-    authorImage: 'gook',
-    starred: ''
-    // AFTER ADD USER
-    // authorName: req.user.name,
-    // authorUsername: req.user.username,
-    // authorId: req.user._id,
-    // authorImage: req.user.image
-  });
+  // post.save((err, postResult) => {
+  req.body.authorName = 'gook';
+  req.body.authorId = 'gook';
+  req.body.boardId = 'general';
 
-
-  post.save((err, postResult) => {
+  Post.create(req.body, (err, postResult) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
@@ -97,7 +149,7 @@ router.post('/', (req, res) => {
 });
 
 /* POST DETAIL */
-router.get('/:id', (req, res) => {
+router.get('/detail/:id', (req, res) => {
   Post.findById({
     _id: req.params.id
   }, (err, post) => {
@@ -112,6 +164,11 @@ router.get('/:id', (req, res) => {
         message: 'Post not found'
       });
     }
+
+    post.count += 1;
+    post.save((errCount) => { // view count
+      if (errCount) throw errCount;
+    });
     res.json(post);
   });
 });
@@ -124,31 +181,22 @@ router.delete('/:id', (req, res) => {
   //     message: 'Permission Denied!'
   //   });
   // }
-
-  let { id } = req.params;
-  if (id.length !== 24) {
-    return res.json({
-      message: 'id must be a valid 24 char hex string'
-    });
-  }
-  id = mongoose.Types.ObjectId(req.params.id); // convert to objectid
-  Post.findByIdAndRemove(id, (err, post) => {
-    if (err) {
-      throw err;
-    }
-    if (!post) {
-      return res.status(404).json({
-        message: 'Could not delete post'
+  Post.findOneAndUpdate({ _id: req.params.id },
+    { deleted: true }, { runValidators: true, new: true }, (err, result) => {
+      if (err) {
+        throw err;
+      }
+      if (!result) {
+        return res.status(404).json({
+          message: 'Could not delete post'
+        });
+      }
+      res.json({
+        result: 'Post was deleted'
       });
-    }
-
-    res.json({
-      result: 'Post was deleted'
     });
-  });
 });
 
-//
 // /*
 //     MODIFY POST: PUT /api/post/:id
 //     BODY SAMPLE: { contents: "sample "}
@@ -159,72 +207,159 @@ router.delete('/:id', (req, res) => {
 //         4: NO RESOURCE
 //         5: PERMISSION FAILURE
 // */
-// router.put('/:id', (req, res) => {
-//   // CHECK POST ID VALIDITY
-//   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-//     return res.status(400).json({
-//       error: 'INVALID ID',
-//       code: 1
-//     });
-//   }
-//
-//   // CHECK CONTENTS VALID
-//   if (typeof req.body.contents !== 'string') {
-//     return res.status(400).json({
-//       error: 'EMPTY CONTENTS',
-//       code: 2
-//     });
-//   }
-//
-//   if (req.body.contents === '') {
-//     return res.status(400).json({
-//       error: 'EMPTY CONTENTS',
-//       code: 2
-//     });
-//   }
-//
-//   // CHECK LOGIN STATUS
-//   if (typeof req.session.loginInfo === 'undefined') {
-//     return res.status(403).json({
-//       error: 'NOT LOGGED IN',
-//       code: 3
-//     });
-//   }
-//
-//   // FIND POST
-//   Post.findById(req.params.id, (err, post) => {
-//     if (err) throw err;
-//
-//     // IF POST DOES NOT EXIST
-//     if (!post) {
-//       return res.status(404).json({
-//         error: 'NO RESOURCE',
-//         code: 4
-//       });
-//     }
-//
-//     // // IF EXISTS, CHECK WRITER
-//     // if (post.writer !== req.session.loginInfo.username) {
-//     //   return res.status(403).json({
-//     //     error: 'PERMISSION FAILURE',
-//     //     code: 5
-//     //   });
-//     // }
-//
-//     // MODIFY AND SAVE IN DATABASE
-//     post.contents = req.body.contents;
-//     post.date.edited = new Date();
-//     post.is_edited = true;
-//
-//     post.save((error, result) => {
-//       if (error) throw error;
-//       return res.json({
-//         success: true,
-//         result
-//       });
-//     });
-//   });
-// });
+/* EDIT POST */
+router.put('/:id', (req, res) => {
+  // AFTER ADD USER
+  // const user = req.user;
+  // if (!user) {
+  //   return res.status(401).json({
+  //     message: 'Permission Denied!'
+  //   });
+  // } else if (!user.isEmailVerified) {
+  //   return res.status(401).json({
+  //     message: 'Permission Denied! Please verify your email.'
+  //   });
+  // }
+  //
+  // console.dir(req.user);
+
+  const { body } = req;
+  const { title } = body;
+  // const { categories } = body;
+  const { contents } = body;
+  // const { password } = body;
+
+  // simulate error if title, categories and content are all "test"
+  // This is demo field-validation error upon submission.
+  if (title === 'test' && contents === 'test') {
+    return res.status(403).json({
+      message: {
+        title: 'Title Error - Cant use "test" in all fields!',
+        categories: 'Categories Error',
+        content: 'Content Error',
+        submitmessage: 'Final Error near the submit button!'
+      }
+    });
+  }
+
+  if (!title || !contents) {
+    return res.status(400).json({
+      message: 'Error title and content are all required!'
+    });
+  }
+
+  // CHECK POST ID VALIDITY
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({
+      error: 'INVALID ID',
+      code: 1
+    });
+  }
+  //
+  // CHECK CONTENTS VALID
+  if (typeof req.body.contents !== 'string') {
+    return res.status(400).json({
+      error: 'EMPTY CONTENTS',
+      code: 2
+    });
+  }
+
+  if (req.body.contents === '') {
+    return res.status(400).json({
+      error: 'EMPTY CONTENTS',
+      code: 2
+    });
+  }
+  //
+  //   // CHECK LOGIN STATUS
+  //   if (typeof req.session.loginInfo === 'undefined') {
+  //     return res.status(403).json({
+  //       error: 'NOT LOGGED IN',
+  //       code: 3
+  //     });
+  //   }
+
+  // const post = new Post({
+  //   title,
+  //   categories: categories.split(','),
+  //   contents,
+  //   authorName: 'gook',
+  //   authorId: 'gook',
+  //   authorImage: 'gook',
+  //   starred: ''
+  //   // AFTER ADD USER
+  //   // authorName: req.user.name,
+  //   // authorUsername: req.user.username,
+  //   // authorId: req.user._id,
+  //   // authorImage: req.user.image
+  // });
+  // categories = categories.split(',')
+  Post.findOne({ _id: req.params.id }, (err, originContent) => {
+    if (err) throw err;
+    originContent.updated.push({ title: originContent.title, contents: originContent.contents });
+    originContent.save((errOrigin) => {
+      if (errOrigin) throw errOrigin;
+    });
+  });
+
+  Post.findOneAndUpdate({ _id: req.params.id },
+    req.body, { runValidators: true, new: true }, (err, result) => {
+      if (err) {
+        throw err;
+      }
+      if (!result) {
+        return res.status(404).json({
+          message: 'Could not delete post'
+        });
+      }
+      res.json({
+        success: true,
+        result
+      });
+    });
+});
+
+/* CREATE REPLY */
+router.post('/reply', (req, res) => {
+  const { body } = req;
+  // const { categories } = body;
+  const { comment } = body;
+  // const { password } = body;
+
+  // simulate error if title, categories and content are all "test"
+  // This is demo field-validation error upon submission.
+  if (comment === 'test') {
+    return res.status(403).json({
+      message: {
+        // categories: 'Categories Error',
+        content: 'Content Error'
+      }
+    });
+  }
+
+  if (!comment) {
+    return res.status(400).json({
+      message: 'Error content is required!'
+    });
+  }
+
+  // post.save((err, postResult) => {
+  // req.body.authorName = 'gook';
+  // req.body.authorId = 'gook';
+  // req.body.boardId = 'general';
+
+  Post.findOne({ _id: req.body.postId }, (err, rawContent) => {
+    if (err) throw err;
+    console.log('find');
+    console.log(rawContent);
+    rawContent.comments.unshift({ name: 'gook', id: 'gook', memo: comment });
+    rawContent.save((error, replyResult) => {
+      console.log(replyResult);
+      if (error) throw error;
+      res.json(replyResult);
+    });
+  });
+});
 //
 // /*
 //     TOGGLES STAR OF POST: POST /api/post/star/:id

@@ -7,7 +7,7 @@ process.env.BABEL_ENV = 'development';
 // ignoring them. In the future, promise rejections that are not handled will
 // terminate the Node.js process with a non-zero exit code.
 process.on('unhandledRejection', err => {
-    throw err;
+  throw err;
 });
 
 // Ensure environment variables are read.
@@ -31,29 +31,29 @@ const getClientEnvironment = require('../utils/env');
 const useYarn = fs.existsSync(paths.yarnLockFile);
 
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
-    process.exit(1);
+  process.exit(1);
 }
 
 const prepDevServer = (localPort) => {
 
-    const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
-    const HOST = process.env.HOST || '0.0.0.0';
-    const appName = require(paths.appPackageJson).name;
-    const urls = prepareUrls(protocol, HOST, localPort);
-    const clientEnv = getClientEnvironment('');
+  const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
+  const HOST = process.env.HOST || '0.0.0.0';
+  const appName = require(paths.appPackageJson).name;
+  const urls = prepareUrls(protocol, HOST, localPort);
+  const clientEnv = getClientEnvironment('');
 
-    interpolate(clientEnv.raw, paths.appHtml, 'index.dev.html', config.output.filename);
+  interpolate(clientEnv.raw, paths.appHtml, 'index.dev.html', config.output.filename);
 
-    console.log(chalk.cyan('Starting the development server...\n'));
+  console.log(chalk.cyan('Starting the development server...\n'));
 
-    return {
-        compiler: createCompiler(webpack, config, appName, urls, useYarn),
-        serverConfig: createDevServerConfig(
-            urls.lanUrlForConfig,
-            protocol,
-            HOST
-        )
-    };
+  return {
+    compiler: createCompiler(webpack, config, appName, urls, useYarn),
+    serverConfig: createDevServerConfig(
+      urls.lanUrlForConfig,
+      protocol,
+      HOST
+    )
+  };
 
 };
 

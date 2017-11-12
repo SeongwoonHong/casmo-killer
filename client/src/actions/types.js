@@ -1,4 +1,7 @@
 export const TOGGLE_MAINMENU = 'TOGGLE_MAINMENU';
+export const LOGIN_REQUEST = 'LOGIN_REQUEST';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 
 export const POST_EDIT = 'POST_EDIT';
 export const POST_EDIT_SUCCESS = 'POST_EDIT_SUCCESS';
@@ -14,7 +17,6 @@ export const POST_DETAIL_FAILURE = 'POST_DETAIL_FAILURE';
 export const FETCH_POSTS = 'FETCH_POSTS';
 export const FETCH_POSTS_SUCCESS = 'FETCH_POSTS_SUCCESS';
 export const FETCH_POSTS_FAILURE = 'FETCH_POSTS_FAILURE';
-export const RESET_POSTS = 'RESET_POSTS';
 
 // Create new post
 export const CREATE_POST = 'CREATE_POST';
@@ -34,3 +36,20 @@ export const DELETE_POST = 'DELETE_POST';
 export const DELETE_POST_SUCCESS = 'DELETE_POST_SUCCESS';
 export const DELETE_POST_FAILURE = 'DELETE_POST_FAILURE';
 export const RESET_DELETED_POST = 'RESET_DELETED_POST';
+
+// Edit post
+export const EDIT_POST = 'EDIT_POST';
+export const EDIT_POST_SUCCESS = 'EDIT_POST_SUCCESS';
+export const EDIT_POST_FAILURE = 'EDIT_POST_FAILURE';
+export const RESET_EDIT_POST = 'RESET_EDIT_POST';
+
+// Search Post
+export const SEARCH_POSTS = 'SEARCH_POSTS';
+export const SEARCH_POSTS_SUCCESS = 'SEARCH_POSTS_SUCCESS';
+export const SEARCH_POSTS_FAILURE = 'SEARCH_POSTS_FAILURE';
+
+// Create new post reply
+export const CREATE_REPLY = 'CREATE_REPLY';
+export const CREATE_REPLY_SUCCESS = 'CREATE_REPLY_SUCCESS';
+export const CREATE_REPLY_FAILURE = 'CREATE_REPLY_FAILURE';
+export const RESET_NEW_REPLY = 'RESET_NEW_REPLY';

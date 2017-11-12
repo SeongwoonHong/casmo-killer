@@ -1,13 +1,16 @@
 import { connect } from 'react-redux';
 import PostShow from './PostShow';
-import { fetchPost, fetchPostFailure, fetchPostSuccess, resetActivePost, resetDeletedPost, deletePost, deletePostFailure, deletePostSuccess } from '../../actions/post';
+import { fetchPost, fetchPostFailure, fetchPostSuccess, resetActivePost,
+  resetDeletedPost, resetEditPost,
+  deletePost, deletePostFailure, deletePostSuccess,
+  createReply, createReplyFailure, createReplySuccess } from '../../actions/post';
 
 function mapStateToProps(globalState, ownProps) {
   return {
     activePost: globalState.posts.activePost,
     postId: ownProps.match.params.id,
     deletedPost: globalState.posts.deletedPost,
-    newPost: globalState.posts.newPost
+    editPost: globalState.posts.editPost
   };
 }
 
@@ -29,6 +32,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       // clean up both activePost(currrently open) and deletedPost(open and being deleted) states
       dispatch(resetActivePost());
       dispatch(resetDeletedPost());
+      dispatch(resetEditPost());
     },
     onDeleteClick: () => {
       // const token = sessionStorage.getItem('jwtToken');
@@ -38,11 +42,19 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       //   return;
       // }
 
-      dispatch(deletePost(ownProps.id))
+      dispatch(deletePost(ownProps.match.params.id))
         .then((response) => {
           !response.error ?
             dispatch(deletePostSuccess(response.payload)) :
             dispatch(deletePostFailure(response.payload));
+        });
+    },
+    handleReply: (comment, postId) => {
+      dispatch(createReply(comment, postId))
+        .then((response) => {
+          !response.error ?
+            dispatch(createReplySuccess(response.payload)) :
+            dispatch(createReplyFailure(response.payload));
         });
     }
   };

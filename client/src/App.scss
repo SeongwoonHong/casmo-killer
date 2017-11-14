@@ -1,11 +1,28 @@
-.App {
-  .login-wrapper {
-    width: 50%;
-    margin: 0 auto;
-  }
-  @media screen and (max-width: 950px) {
-    .login-wrapper {
-      width: 100%;
+html,
+body,
+#root,
+.app {
+    height: 100%;
+}
+
+.app {
+    min-width: 320px;
+}
+
+.app-wrapper {
+    height: 100%;
+    @media screen and (min-width: 992px) {
+        display: flex;
     }
-  }
+    .login-wrapper {
+        width: 50%;
+        margin: 0 auto;
+        @media screen and (max-width: 950px) {
+            width: 100%;
+        }
+    }
+}
+
+.component-wrapper {
+    padding: 0 10px;
 }

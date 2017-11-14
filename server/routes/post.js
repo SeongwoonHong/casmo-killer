@@ -5,16 +5,51 @@ const Post = require('../models/post');
 const router = express.Router();
 const PER_PAGE = 10;
 
+/* POST DETAIL */
+router.get('/detail/:id', (req, res) => {
+  Post.findById({
+    _id: req.params.id
+  }, (err, post) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: 'Could not retrieve post w/ that id'
+      });
+    }
+    if (!post) {
+      return res.status(404).json({
+        message: 'Post not found'
+      });
+    }
+
+    post.count += 1;
+    post.save((errCount) => { // view count
+      if (errCount) throw errCount;
+    });
+    res.json(post);
+  });
+});
+
 /* GET POST LIST */
-router.get('/:page', (req, res) => {
+router.get('/board', (req, res) => {
+  Post.distinct('boardId')
+    .exec((err, boards) => {
+      if (err) throw err;
+      res.json(boards);
+    });
+});
+
+/* GET POST LIST */
+router.get('/:boardId/:page', (req, res) => {
   const skipSize = (req.params.page - 1) * PER_PAGE;
   let pageNum = 1;
 
-  Post.count({ deleted: false }, (err, totalCount) => {
+  Post.count({ deleted: false, boardId: req.params.boardId }, (err, totalCount) => {
     if (err) throw err;
+
     pageNum = Math.ceil(totalCount / PER_PAGE);
     Post
-      .find({ deleted: false })
+      .find({ deleted: false, boardId: req.params.boardId })
       .sort({
         postNum: -1
       })
@@ -43,13 +78,14 @@ router.get('/:page', (req, res) => {
 });
 
 /* GET SEARCH POSTS */
-router.get('/search/:searchWord/:page', (req, res) => {
+router.get('/search/:searchWord/:boardId/:page', (req, res) => {
   const skipSize = (req.params.page - 1) * PER_PAGE;
   let pageNum = 1;
   const { searchWord } = req.params;
   const searchCondition = { $regex: searchWord };
   Post.count({
     deleted: false,
+    boardId: req.params.boardId,
     $or: [
       { title: searchCondition },
       { contents: searchCondition },
@@ -61,6 +97,7 @@ router.get('/search/:searchWord/:page', (req, res) => {
     Post
       .find({
         deleted: false,
+        boardId: req.params.boardId,
         $or: [
           { title: searchCondition },
           { contents: searchCondition },
@@ -117,12 +154,7 @@ router.post('/', (req, res) => {
   // This is demo field-validation error upon submission.
   if (title === 'test' && contents === 'test') {
     return res.status(403).json({
-      message: {
-        title: 'Title Error - Cant use "test" in all fields!',
-        // categories: 'Categories Error',
-        content: 'Content Error',
-        submitmessage: 'Final Error near the submit button!'
-      }
+      message: 'Title Error - Cant use "test" in all fields!'
     });
   }
 
@@ -135,7 +167,7 @@ router.post('/', (req, res) => {
   // post.save((err, postResult) => {
   req.body.authorName = 'gook';
   req.body.authorId = 'gook';
-  req.body.boardId = 'general';
+  req.body.boardId = 'movie';
 
   Post.create(req.body, (err, postResult) => {
     if (err) {
@@ -145,31 +177,6 @@ router.post('/', (req, res) => {
       });
     }
     res.json(postResult);
-  });
-});
-
-/* POST DETAIL */
-router.get('/detail/:id', (req, res) => {
-  Post.findById({
-    _id: req.params.id
-  }, (err, post) => {
-    if (err) {
-      console.log(err);
-      return res.status(500).json({
-        message: 'Could not retrieve post w/ that id'
-      });
-    }
-    if (!post) {
-      return res.status(404).json({
-        message: 'Post not found'
-      });
-    }
-
-    post.count += 1;
-    post.save((errCount) => { // view count
-      if (errCount) throw errCount;
-    });
-    res.json(post);
   });
 });
 
@@ -233,12 +240,7 @@ router.put('/:id', (req, res) => {
   // This is demo field-validation error upon submission.
   if (title === 'test' && contents === 'test') {
     return res.status(403).json({
-      message: {
-        title: 'Title Error - Cant use "test" in all fields!',
-        categories: 'Categories Error',
-        content: 'Content Error',
-        submitmessage: 'Final Error near the submit button!'
-      }
+      message: 'Title Error - Cant use "test" in all fields!'
     });
   }
 
@@ -279,21 +281,6 @@ router.put('/:id', (req, res) => {
   //     });
   //   }
 
-  // const post = new Post({
-  //   title,
-  //   categories: categories.split(','),
-  //   contents,
-  //   authorName: 'gook',
-  //   authorId: 'gook',
-  //   authorImage: 'gook',
-  //   starred: ''
-  //   // AFTER ADD USER
-  //   // authorName: req.user.name,
-  //   // authorUsername: req.user.username,
-  //   // authorId: req.user._id,
-  //   // authorImage: req.user.image
-  // });
-  // categories = categories.split(',')
   Post.findOne({ _id: req.params.id }, (err, originContent) => {
     if (err) throw err;
     originContent.updated.push({ title: originContent.title, contents: originContent.contents });
@@ -342,11 +329,6 @@ router.post('/reply', (req, res) => {
       message: 'Error content is required!'
     });
   }
-
-  // post.save((err, postResult) => {
-  // req.body.authorName = 'gook';
-  // req.body.authorId = 'gook';
-  // req.body.boardId = 'general';
 
   Post.findOne({ _id: req.body.postId }, (err, rawContent) => {
     if (err) throw err;

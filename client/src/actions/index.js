@@ -1,11 +1,31 @@
 import axios from 'axios';
 import * as types from './types';
 
-export const toggleMenu = () => {
+export const updateBreakPoint = (breakPoint) => {
   return {
-    type: types.TOGGLE_MAINMENU
+    type: types.UPDATE_BREAK_POINT,
+    breakPoint
   };
 };
+
+export const toggleMenu = () => {
+  return {
+    type: types.TOGGLE_MAIN_MENU
+  };
+};
+
+export const toggleUserMenu = () => {
+  return {
+    type: types.TOGGLE_USER_MENU
+  };
+};
+
+export const toggleSearchForm = () => {
+  return {
+    type: types.TOGGLE_SEARCH_FORM
+  };
+};
+
 export const login = () => {
   return {
     type: types.LOGIN_REQUEST

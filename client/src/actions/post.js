@@ -1,77 +1,65 @@
 import axios from 'axios';
-import {
-  // Post list
-  FETCH_POSTS,
-  FETCH_POSTS_SUCCESS,
-  FETCH_POSTS_FAILURE,
-
-  // Create new post
-  CREATE_POST,
-  CREATE_POST_SUCCESS,
-  CREATE_POST_FAILURE,
-  RESET_NEW_POST,
-  RESET_POST_FIELDS,
-
-  // Fetch post
-  FETCH_POST,
-  FETCH_POST_SUCCESS,
-  FETCH_POST_FAILURE,
-  RESET_ACTIVE_POST,
-
-  // Delete post
-  DELETE_POST,
-  DELETE_POST_SUCCESS,
-  DELETE_POST_FAILURE,
-  RESET_DELETED_POST,
-
-  // Edit post
-  EDIT_POST,
-  EDIT_POST_SUCCESS,
-  EDIT_POST_FAILURE,
-  RESET_EDIT_POST,
-
-  // Search posts
-  SEARCH_POSTS,
-  SEARCH_POSTS_SUCCESS,
-  SEARCH_POSTS_FAILURE,
-
-  // Create reply
-  CREATE_REPLY,
-  CREATE_REPLY_SUCCESS,
-  CREATE_REPLY_FAILURE
-} from './types';
+import * as types from './types';
 
 // FETCH POSTS
-export function fetchPosts(page) {
+export function fetchPosts(boardId, page) {
   const request = axios({
     method: 'get',
-    url: `/api/post/${page}`,
+    url: `/api/post/${boardId}/${page}`,
     headers: []
   });
 
   return {
-    type: FETCH_POSTS,
+    type: types.FETCH_POSTS,
     payload: request
   };
 }
 
 export function fetchPostsSuccess(posts) {
   return {
-    type: FETCH_POSTS_SUCCESS,
+    type: types.FETCH_POSTS_SUCCESS,
     payload: posts
   };
 }
 
 export function fetchPostsFailure(error) {
   return {
-    type: FETCH_POSTS_FAILURE,
+    type: types.FETCH_POSTS_FAILURE,
+    payload: error
+  };
+}
+
+// FETCH BOARDS
+export function fetchBoards() {
+  const request = axios({
+    method: 'get',
+    url: '/api/post/board',
+    headers: []
+  });
+
+  return {
+    type: types.FETCH_BOARDS,
+    payload: request
+  };
+}
+
+export function fetchBoardsSuccess(posts) {
+  return {
+    type: types.FETCH_BOARDS_SUCCESS,
+    payload: posts
+  };
+}
+
+export function fetchBoardsFailure(error) {
+  return {
+    type: types.FETCH_BOARDS_FAILURE,
     payload: error
   };
 }
 
 export function resetPostFields() {
   return {
-    type: RESET_POST_FIELDS
+    type: types.RESET_POST_FIELDS
   };
 }
 
@@ -86,34 +74,34 @@ export function createPost(props, tokenFromStorage) {
   });
 
   return {
-    type: CREATE_POST,
+    type: types.CREATE_POST,
     payload: request
   };
 }
 
 export function createPostSuccess(newPost) {
   return {
-    type: CREATE_POST_SUCCESS,
+    type: types.CREATE_POST_SUCCESS,
     payload: newPost
   };
 }
 
 export function createPostFailure(error) {
   return {
-    type: CREATE_POST_FAILURE,
+    type: types.CREATE_POST_FAILURE,
     payload: error
   };
 }
 
 export function resetNewPost() {
   return {
-    type: RESET_NEW_POST
+    type: types.RESET_NEW_POST
   };
 }
 
 export function resetDeletedPost() {
   return {
-    type: RESET_DELETED_POST
+    type: types.RESET_DELETED_POST
   };
 }
 
@@ -122,7 +110,7 @@ export function fetchPost(id) {
   const request = axios.get(`/api/post/detail/${id}`);
 
   return {
-    type: FETCH_POST,
+    type: types.FETCH_POST,
     payload: request
   };
 }
@@ -130,21 +118,21 @@ export function fetchPost(id) {
 
 export function fetchPostSuccess(activePost) {
   return {
-    type: FETCH_POST_SUCCESS,
+    type: types.FETCH_POST_SUCCESS,
     payload: activePost
   };
 }
 
 export function fetchPostFailure(error) {
   return {
-    type: FETCH_POST_FAILURE,
+    type: types.FETCH_POST_FAILURE,
     payload: error
   };
 }
 
 export function resetActivePost() {
   return {
-    type: RESET_ACTIVE_POST
+    type: types.RESET_ACTIVE_POST
   };
 }
 
@@ -158,21 +146,21 @@ export function deletePost(id) {
     // }
   });
   return {
-    type: DELETE_POST,
+    type: types.DELETE_POST,
     payload: request
   };
 }
 
 export function deletePostSuccess(deletedPost) {
   return {
-    type: DELETE_POST_SUCCESS,
+    type: types.DELETE_POST_SUCCESS,
     payload: deletedPost
   };
 }
 
 export function deletePostFailure(response) {
   return {
-    type: DELETE_POST_FAILURE,
+    type: types.DELETE_POST_FAILURE,
     payload: response
   };
 }
@@ -189,55 +177,55 @@ export function editPost(id, props, tokenFromStorage) {
   });
 
   return {
-    type: EDIT_POST,
+    type: types.EDIT_POST,
     payload: request
   };
 }
 
 export function editPostSuccess(editData) {
   return {
-    type: EDIT_POST_SUCCESS,
+    type: types.EDIT_POST_SUCCESS,
     payload: editData
   };
 }
 
 export function editPostFailure(error) {
   return {
-    type: EDIT_POST_FAILURE,
+    type: types.EDIT_POST_FAILURE,
     payload: error
   };
 }
 
 export function resetEditPost() {
   return {
-    type: RESET_EDIT_POST
+    type: types.RESET_EDIT_POST
   };
 }
 
 // FETCH POSTS
-export function searchPosts(searchWord, page) {
+export function searchPosts(searchWord, boardId, page) {
   const request = axios({
     method: 'get',
-    url: `/api/post/search/${searchWord}/${page}`,
+    url: `/api/post/search/${searchWord}/${boardId}/${page}`,
     headers: []
   });
 
   return {
-    type: SEARCH_POSTS,
+    type: types.SEARCH_POSTS,
     payload: request
   };
 }
 
 export function searchPostsSuccess(posts) {
   return {
-    type: SEARCH_POSTS_SUCCESS,
+    type: types.SEARCH_POSTS_SUCCESS,
     payload: posts
   };
 }
 
 export function searchPostsFailure(error) {
   return {
-    type: SEARCH_POSTS_FAILURE,
+    type: types.SEARCH_POSTS_FAILURE,
     payload: error
   };
 }
@@ -257,27 +245,27 @@ export function createReply(comment, postId) {
   });
 
   return {
-    type: CREATE_REPLY,
+    type: types.CREATE_REPLY,
     payload: request
   };
 }
 
 export function createReplySuccess(newPost) {
   return {
-    type: CREATE_REPLY_SUCCESS,
+    type: types.CREATE_REPLY_SUCCESS,
     payload: newPost
   };
 }
 
 export function createReplyFailure(error) {
   return {
-    type: CREATE_REPLY_FAILURE,
+    type: types.CREATE_REPLY_FAILURE,
     payload: error
   };
 }
 
 export function resetNewReply() {
   return {
-    type: RESET_NEW_REPLY
+    type: types.RESET_NEW_REPLY
   };
 }

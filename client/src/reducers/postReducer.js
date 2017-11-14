@@ -4,6 +4,9 @@ const initialState = {
   postsList: {
     posts: [], error: null, loading: false, page: 1
   },
+  boardsList: {
+    boards: [], error: null, loading: false
+  },
   pagination: {
     pageCount: 1
   },
@@ -26,7 +29,6 @@ const initialState = {
 
 export default function post(state = initialState, action) {
   let error;
-  console.log(action);
   switch (action.type) {
     case types.FETCH_POSTS:// start fetching posts and set loading = true
       return { ...state, postsList: { posts: [], error: null, loading: true } };
@@ -125,7 +127,6 @@ export default function post(state = initialState, action) {
     case types.CREATE_REPLY:
       return { ...state, newComment: { ...state.newComment, loading: true } };
     case types.CREATE_REPLY_SUCCESS:
-      console.log(action);
       return {
         ...state,
         newComment: { comment: action.payload, error: null, loading: false },
@@ -137,6 +138,21 @@ export default function post(state = initialState, action) {
       return { ...state, newComment: { comment: null, error, loading: false } };
     case types.RESET_NEW_REPLY:
       return { ...state, newComment: { comment: null, error: null, loading: false } };
+    case types.FETCH_BOARDS:// start fetching boards and set loading = true
+      return { ...state, boardsList: { boards: [], error: null, loading: true } };
+    case types.FETCH_BOARDS_SUCCESS:// return list of boards and make loading = false
+      return {
+        ...state,
+        boardsList: {
+          boards: action.payload,
+          error: null,
+          loading: false
+        }
+      };
+    case types.FETCH_BOARDS_FAILURE:// return error and make loading = false
+      error = action.payload || { message: action.payload.message };
+      // 2nd one is network or server down errors
+      return { ...state, boardsList: { boards: [], error, loading: false } };
     default:
       return state;
   }

@@ -1,320 +1,211 @@
-/* eslint-disable no-plusplus, max-len, consistent-return, no-lonely-if */
+/* eslint-disable jsx-a11y/label-has-for, no-plusplus, max-len */
 import React, { Component } from 'react';
 import classnames from 'classnames';
+import Materialize from 'materialize-css';
 import animate from 'gsap-promise';
 import TransitionGroup from 'react-transition-group-plus';
 import SpanAnimatedText from '../SpanAnimatedText/SpanAnimatedText';
 import inputValidator from '../../utils/input-validator';
 import Button from '../Button/Button';
+
 import './Register.scss';
 
 const registerInputs = [
   {
-    name: 'username', displayName: 'User Name', type: 'text', validationFunc: 'isUsername'
+    name: 'username', displayName: 'User Name', type: 'text', icon: 'account_circle'
   },
   {
-    name: 'email', displayName: 'Email', type: 'email', validationFunc: 'isEmail'
+    name: 'email', displayName: 'Email', type: 'email', icon: 'email'
   },
   {
-    name: 'password', displayName: 'Password', type: 'password', validationFunc: 'isPassword'
+    name: 'password', displayName: 'Password', type: 'password', icon: 'lock'
   },
   {
-    name: 'confirmPassword', displayName: 'Confirm Password', type: 'password', validationFunc: 'isPassword'
+    name: 'confirmPassword', displayName: 'Confirm Password', type: 'password', icon: 'lock'
   }
 ];
 class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      focusedInput: undefined,
       isLoading: false,
-      username: {
-        value: '',
-        isTextVisible: true,
-        isValid: false
-      },
-      email: {
-        value: '',
-        isTextVisible: true,
-        isValid: false
-      },
-      password: {
-        value: '',
-        isTextVisible: true,
-        isValid: false
-      },
-      confirmPassword: {
-        value: '',
-        isTextVisible: true,
-        isValid: false
-      },
-      formErrors: {
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-      },
-      formValid: false
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      errors: {},
+      validFields: {
+        username: false,
+        email: false,
+        password: false,
+        confirmPassword: false
+      }
     };
   }
   componentDidMount = () => {
-    animate.set(this.component, { autoAlpha: 0, y: '-20%' });
-    this.animateIn();
-  }
-  onChangeHandler = (e) => {
-    const { name, value } = e.target;
-    this.setState({
-      [name]: {
-        ...this.state[name],
-        value
-      }
-    }, () => this.validateField(name, value));
-  }
-
-  onFocusHandler = (e) => {
-    this.setState({
-      focusedInput: e.target.name
-    });
-  }
-  onBlurHandler = (e) => {
-    this.setState({ focusedInput: undefined });
-    if (this.state[e.target.name].value) {
-      this.setState({
-        [e.target.name]: {
-          ...this.state[e.target.name],
-          value: e.target.value,
-          isTextVisible: false
-        }
-      });
-    } else {
-      this.setState({
-        [e.target.name]: {
-          ...this.state[e.target.name],
-          value: e.target.value,
-          isTextVisible: true
-        }
-      });
-    }
+    animate.from(this.component, 1, { autoAlpha: 0, y: '-20%' });
   }
   onSubmitHandler = (e) => {
+    this.setState({ errors: {} });
     const {
       username, email, password, confirmPassword
     } = this.state;
     e.preventDefault();
+    let errors = {};
     registerInputs.map((input) => {
-      return this.validateField(input.name, this.state[input.name].value);
+      return errors = this.fieldValidation(input.name);
     });
-    if (this.isInputValidationPassed()) {
+    for (let i = 0; i < registerInputs.length; i++) {
+      errors[registerInputs[i].name] = this.fieldValidation(registerInputs[i].name)[registerInputs[i].name];
+    }
+    if (!errors.username && !errors.email && !errors.password && !errors.confirmPassword) {
       this.setState({ isLoading: true });
-      this.props.registerRequest(username.value, email.value, password.value, confirmPassword.value);
-      setTimeout(() => {
-        this.setState({ isLoading: false });
-        Materialize.toast($('<span style="color: #00c853">Register Success!</span>'), 3000, 'rounded');
-        this.props.history.push('/test/login');
-      }, 2000);
+      // bcrypt 설치하면 터미널 에러뜨는데 해결방법 모르겠음...ㅠㅠ
+      // const hashedPassword = bcrypt.hash(password, 10, (err, hash) => {
+      //   return hash;
+      // });
+      // console.log(hashedPassword);
+      this.props.registerRequest(username, email, password, confirmPassword);
+      Materialize.toast($('<span style="color: #00c853">Register Success</span>'), 3000, 'rounded');
     } else {
-      if (this.state.formValid) {
-        this.setState({ isLoading: true }, () => {
-          setTimeout(() => {
-            Materialize.toast($('<span style="color: #FFB4BA">Register Failed</span>'), 5000, 'rounded');
-            this.setState({ isLoading: false });
-          }, 1000);
-        });
-      }
+      this.setState({ errors });
+      Materialize.toast($('<span style="color: #FFB4BA">Register Failed</span>'), 3000, 'rounded');
     }
   }
-  validateField = (fieldName, value) => {
-    const { formErrors } = this.state;
-    let usernameIsValid = this.state.username.isValid;
-    let emailIsValid = this.state.email.isValid;
-    let passwordIsValid = this.state.password.isValid;
-    let confirmPasswordIsValid = this.state.confirmPassword.isValid;
-
+  onChangeHandler = async (e) => {
+    e.persist();
+    await this.setState({
+      [e.target.name]: e.target.value
+    });
+    const errors = this.fieldValidation(e.target.name);
+    if (errors[e.target.name]) {
+      this.setState({
+        errors: {
+          ...this.state.errors,
+          [e.target.name]: errors[e.target.name]
+        },
+        validFields: {
+          ...this.state.validFields,
+          [e.target.name]: false
+        }
+      });
+    } else {
+      this.setState({
+        errors: {
+          ...this.state.errors,
+          [e.target.name]: ''
+        },
+        validFields: {
+          ...this.state.validFields,
+          [e.target.name]: true
+        }
+      });
+    }
+  }
+  fieldValidation = (fieldName) => {
+    const errors = {};
     switch (fieldName) {
       case 'username':
-        usernameIsValid = !inputValidator.isEmpty(value);
-        if (!usernameIsValid) {
-          formErrors.username = 'This field is required';
-        } else {
-          usernameIsValid = inputValidator.isUsername(value);
-          if (usernameIsValid) {
-            formErrors.username = '';
-          } else {
-            formErrors.username = 'User Name is invalid';
-          }
+        if (inputValidator.isEmpty(this.state.username)) {
+          errors.username = 'This field is required';
+        } else if (!inputValidator.isUsername(this.state.username)) {
+          errors.username = 'Invalid Username';
         }
         break;
       case 'email':
-        emailIsValid = !inputValidator.isEmpty(value);
-        if (!emailIsValid) {
-          formErrors.email = 'This field is required';
-        } else {
-          emailIsValid = inputValidator.isEmail(value);
-          if (emailIsValid) {
-            formErrors.email = '';
-          } else {
-            formErrors.email = 'Email is invalid';
-          }
+        if (inputValidator.isEmpty(this.state.email)) {
+          errors.email = 'This field is required';
+        } else if (!inputValidator.isEmail(this.state.email)) {
+          errors.email = 'Invalid Email';
         }
         break;
       case 'password':
-        passwordIsValid = !inputValidator.isEmpty(value);
-        if (!passwordIsValid) {
-          formErrors.password = 'This field is required';
-          break;
-        } else {
-          passwordIsValid = inputValidator.isPassword(value);
-          if (!passwordIsValid) {
-            formErrors.password = 'Password is invalid';
-          } else if (this.state.password.value !== this.state.confirmPassword.value) {
-            formErrors.password = 'Password should match';
-            formErrors.confirmPassword = 'Password should match';
-          } else {
-            formErrors.password = '';
-            formErrors.confirmPassword = '';
-          }
+        if (inputValidator.isEmpty(this.state.password)) {
+          errors.password = 'This field is required';
+        } else if (!inputValidator.isPassword(this.state.password)) {
+          errors.password = 'Invalid Password';
         }
         break;
       case 'confirmPassword':
-        confirmPasswordIsValid = !inputValidator.isEmpty(value);
-        if (!confirmPasswordIsValid) {
-          formErrors.confirmPassword = 'This field is required';
-          break;
-        } else {
-          confirmPasswordIsValid = inputValidator.isPassword(value);
-          if (!confirmPasswordIsValid) {
-            formErrors.confirmPassword = 'Confirm Password is invalid';
-          } else if (this.state.password.value !== this.state.confirmPassword.value) {
-            formErrors.password = 'Password should match';
-            formErrors.confirmPassword = 'Password should match';
-          } else {
-            formErrors.password = '';
-            formErrors.confirmPassword = '';
-          }
+        if (inputValidator.isEmpty(this.state.confirmPassword)) {
+          errors.confirmPassword = 'This field is required';
+        } else if (this.state.password !== this.state.confirmPassword) {
+          errors.password = 'Password should match';
+          errors.confirmPassword = 'Password should match';
         }
         break;
       default:
         break;
     }
-    this.setState({
-      ...this.state,
-      formErrors,
-      username: {
-        ...this.state.username,
-        isValid: usernameIsValid
-      },
-      email: {
-        ...this.state.email,
-        isValid: emailIsValid
-      },
-      password: {
-        ...this.state.password,
-        isValid: passwordIsValid
-      },
-      confirmPassword: {
-        ...this.state.confirmPassword,
-        isValid: confirmPasswordIsValid
-      },
-    }, () => this.validateForm());
+    return errors;
   }
-  validateForm = () => {
-    this.setState({
-      formValid: this.state.username.isValid && this.state.email.isValid && this.state.password.isValid && this.state.confirmPassword.isValid
-    });
-  }
-  clearStateErrors = () => {
-    this.setState({
-      formErrors: {
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-      }
-    });
-  }
-  animateIn = () => {
-    return animate.to(this.component, 0.5, { autoAlpha: 1, y: '0%' });
-  }
-  isInputValidationPassed = () => {
-    const { formErrors } = this.state;
-    const {
-      username,
-      email,
-      password,
-      confirmPassword
-    } = formErrors;
-    if (this.state.formValid && username === '' && email === '' && password === '' && confirmPassword === '') {
-      return true;
-    }
-    return false;
+  cancelHandler = () => {
+    alert('CASMO KILLER!');
   }
   render() {
     return (
-      <div className="row container" id="register" ref={el => this.component = el}>
-        <form className="col s12">
-          <div>
-            <div className="register-header card-panel teal lighten-2">
-              <SpanAnimatedText text="New Account" animateAtDidMount />
+      <div className="container" id="register" ref={el => this.component = el}>
+        <form className="col s12 l8">
+          <div className="register-header">
+            <div className="center register-header-text">
+              <SpanAnimatedText text="NEW ACCOUNT" animateAtDidMount />
+              <i
+                className="material-icons prefix right register-close"
+                onKeyDown={() => {}}
+                role="button"
+                tabIndex="0"
+                onClick={this.cancelHandler}>
+                cancel
+              </i>
             </div>
-            <div className="register-body card-panel">
-              {
-                registerInputs.map((input) => {
-                  return (
-                    <div className="input-field" key={input.name}>
+          </div>
+          <div className="register-body">
+            {
+              registerInputs.map((input, i) => {
+                return (
+                  <div className="row" key={input.name}>
+                    <div className="input-field col s12 ">
+                      <i className={classnames('material-icons prefix', { 'is-correct': this.state.validFields[input.name] })}>{ input.icon }</i>
                       <input
-                        type={input.type}
                         id={input.name}
-                        name={input.name}
+                        type={input.type}
+                        className="validate"
+                        value={this.state[input.name]}
                         onChange={this.onChangeHandler}
-                        onFocus={this.onFocusHandler}
-                        onBlur={this.onBlurHandler}
-                        value={`${this.state[input.name].value}`}
+                        name={input.name}
                       />
+                      <label htmlFor={input.name}>{input.displayName}</label>
                       <TransitionGroup>
                         {
-                          this.state[input.name].isTextVisible
-                          ?
-                            <SpanAnimatedText
-                              className={classnames('input-field-text', { isFocused: this.state.focusedInput === input.name })}
-                              text={input.displayName}
-                              animateAtDidMount
-                            />
-                            : null
-                          }
-                      </TransitionGroup>
-                      <TransitionGroup>
-                        {
-                          this.state.formErrors[input.name] !== ''
-                          ? <SpanAnimatedText className="input-error" text={this.state.formErrors[input.name]} />
+                          this.state.errors[input.name]
+                          ? <SpanAnimatedText className="input-field-error-text" text={this.state.errors[input.name]} />
                           : null
                         }
                       </TransitionGroup>
                     </div>
-                  );
-                })
-              }
-            </div>
-            <div className="register-footer card-panel">
-              <div className="register-footer-btns">
-                <Button
-                  className="btn waves-effect teal waves-light register-btn"
-                  type="submit"
-                  name="action"
-                  text="CREATE"
-                  to="#"
-                  disabled={this.state.isLoading}
-                  onClick={this.onSubmitHandler}
-                />
-              </div>
-              {
-                this.state.isLoading
-                ?
-                  <div className="progress">
-                    <div className="indeterminate" />
                   </div>
-                : null
-              }
-            </div>
+                );
+              })
+            }
+          </div>
+          <div className="register-footer">
+            <Button
+              to="#"
+              className="btn waves-effect teal waves-light register-btn"
+              type="submit"
+              text="REGISTER"
+              disabled={this.state.isLoading}
+              onClick={this.onSubmitHandler}
+              animateAtDidMount
+            />
+            {
+              this.state.isLoading
+              ?
+                <div className="progress">
+                  <div className="indeterminate" />
+                </div>
+              : null
+            }
           </div>
         </form>
       </div>

@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class Search extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      search: ''
+      search: '',
+      boardId: props.boardId
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
@@ -17,7 +19,7 @@ class Search extends Component {
   }
 
   handleSearch() {
-    this.props.onSearch(this.state.search);
+    this.props.onSearch(this.state.search, this.state.boardId);
   }
 
   render() {
@@ -49,5 +51,15 @@ class Search extends Component {
     );
   }
 }
+
+Search.defaultProps = {
+  boardId: 'general',
+  onSearch: () => {}
+};
+
+Search.propTypes = {
+  boardId: PropTypes.string,
+  onSearch: PropTypes.func
+};
 
 export default Search;

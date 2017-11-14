@@ -4,13 +4,14 @@ import * as actions from '../../actions';
 
 const mapStateToProps = (state) => {
   return {
-    menu: state.menu
+    layout: state.layout
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    toggleMenu: () => dispatch(actions.toggleMenu())
+    toggleMenu: () => dispatch(actions.toggleMenu()),
+    toggleSearchForm: () => dispatch(actions.toggleSearchForm())
   };
 };
 

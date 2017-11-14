@@ -4,6 +4,7 @@ import { Field, reduxForm } from 'redux-form';
 import renderField from './renderField';
 import renderTextArea from './renderTextArea';
 import validatePost from './validatePost';
+import renderError from './renderError';
 
 class PostInputForm extends Component {
   componentWillMount() {
@@ -12,16 +13,6 @@ class PostInputForm extends Component {
       contents: this.props.contents
     });
   }
-  renderError(post) {
-    if (post && post.error && post.error.message) {
-      return (
-        <div className="alert alert-danger">
-          { post ? post.error.message.title : '' }
-        </div>
-      );
-    }
-    return (<span />);
-  }
 
   render() {
     const { handleSubmit, submitting, postProp } = this.props;
@@ -29,6 +20,7 @@ class PostInputForm extends Component {
     const editCancel = (
       <button
         onClick={this.props.toggleEdit}
+        type="button"
         className="btn btn-primary"
       >
         Cancel
@@ -36,7 +28,7 @@ class PostInputForm extends Component {
     );
     const postCancel = (
       <Link
-        to={this.props.formName === 'PostEditForm' ? '' : this.props.cancelUrl}
+        to={this.props.formType === 'edit' ? '' : this.props.cancelUrl}
         className="btn btn-error"
       >
         Cancel
@@ -45,7 +37,7 @@ class PostInputForm extends Component {
     return (
       <div className="card">
         <div className="card-content">
-          { this.renderError(postProp) }
+          { renderError(postProp) }
           <form onSubmit={handleSubmit(this.props.validateAndPost)}>
             <Field
               name="title"
@@ -66,7 +58,7 @@ class PostInputForm extends Component {
               >
                 Save
               </button>
-              {this.props.formName === 'PostEditForm' ? editCancel : postCancel}
+              {this.props.formType === 'edit' ? editCancel : postCancel}
             </div>
           </form>
         </div>

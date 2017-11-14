@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class ReplyNew extends Component {
   constructor(props) {
@@ -27,7 +28,7 @@ class ReplyNew extends Component {
     return (
       <div className="card">
         <div className="card-content">
-          <label htmlFor="reply">댓글</label>
+          <label htmlFor="reply">{this.props.title}</label>
           <textarea
             id="reply"
             className="materialize-textarea"
@@ -41,12 +42,26 @@ class ReplyNew extends Component {
             onKeyDown={this.handleReply}
             role="button"
             tabIndex={0}
-          >Save
+          >{this.props.btnName}
           </a>
         </div>
       </div>
     );
   }
 }
+
+ReplyNew.defaultProps = {
+  postId: '',
+  title: '',
+  btnName: 'Save',
+  onReply: () => {}
+};
+
+ReplyNew.propTypes = {
+  postId: PropTypes.string,
+  title: PropTypes.string,
+  btnName: PropTypes.string,
+  onReply: PropTypes.func
+};
 
 export default ReplyNew;

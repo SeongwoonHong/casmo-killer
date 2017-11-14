@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import { fetchPosts, fetchPostsSuccess, fetchPostsFailure, searchPosts, searchPostsSuccess, searchPostsFailure } from '../../actions/post';
-import PostList from './PostList';
+import { fetchPosts, fetchPostsSuccess, fetchPostsFailure, searchPosts, searchPostsSuccess, searchPostsFailure } from '../../../actions/post';
+import Board from './Board';
 
 const mapStateToProps = (state) => {
   return {
@@ -11,33 +11,32 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchPosts: (page) => {
+    fetchPosts: (boardId, page) => {
       if (page === null || page === undefined) {
         page = 1;
       } else {
         page += 1;
       }
-      dispatch(fetchPosts(page)).then((response) => {
-        console.log(response);
+      dispatch(fetchPosts(boardId, page)).then((response) => {
         !response.error ?
           dispatch(fetchPostsSuccess(response.payload.data)) :
           dispatch(fetchPostsFailure(response.payload.data));
       });
     },
-    searchPosts: (searchWord, page) => {
+    searchPosts: (searchWord, boardId, page) => {
       if (page === null || page === undefined) {
         page = 1;
       } else {
         page += 1;
       }
       if (searchWord === '') {
-        dispatch(fetchPosts(page)).then((response) => {
+        dispatch(fetchPosts(boardId, page)).then((response) => {
           !response.error ?
             dispatch(fetchPostsSuccess(response.payload.data)) :
             dispatch(fetchPostsFailure(response.payload.data));
         });
       } else {
-        dispatch(searchPosts(searchWord, page)).then((response) => {
+        dispatch(searchPosts(searchWord, boardId, page)).then((response) => {
           !response.error ?
             dispatch(searchPostsSuccess(response.payload.data)) :
             dispatch(searchPostsFailure(response.payload.data));
@@ -47,4 +46,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PostList);
+export default connect(mapStateToProps, mapDispatchToProps)(Board);

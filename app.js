@@ -1,5 +1,8 @@
+const mongoose = require('mongoose');
 const path = require('path');
 const express = require('express');
+const api = require('./server/routes');
+const keys = require('./client/config/keys/key');
 
 const app = express();
 
@@ -15,6 +18,14 @@ const isDev = process.env.NODE_ENV === 'development';
 const publicPath = `client/${isDev ? 'public' : 'build'}`;
 const indexFile = `index${isDev ? '.dev' : ''}.html`;
 
+/* mongodb connection */
+const db = mongoose.connection;
+db.on('error', console.error);
+db.once('open', () => { console.log('Connected to mongodb server'); });
+mongoose.connect(keys.mongooseURI, {
+  useMongoClient: true,
+});
+
 if (isDev) {
   const devServer = require('./client/config/scripts/dev')(port);
 
@@ -22,9 +33,13 @@ if (isDev) {
   app.use(webpackHotMiddleware(devServer.compiler));
 }
 
+app.use(require('morgan')('dev'));
+
+app.use(require('body-parser').json());
+
 app.use(express.static(path.join(__dirname, publicPath)));
 
-app.use('/api', require('./server/api'));
+app.use('/api', api);
 
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, publicPath, indexFile));

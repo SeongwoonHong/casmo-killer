@@ -74,6 +74,7 @@ export const MainMenuRoutes = [
     name: '커뮤니티',
     path: '/community',
     icon: 'group',
+    exact: true,
     main: Community,
     subMenu: ({ match }) => <SubMenu match={ match } title="커뮤니티" items={ CommunityRoutes } />
   },

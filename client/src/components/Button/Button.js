@@ -52,7 +52,7 @@ class Button extends Component {
   }
   render() {
     return (
-      <Link to={this.props.to} style={{ marginRight: '1%' }}>
+      <Link to={this.props.to} style={{ marginRight: '1%', ...this.props.style }}>
         <button
           id={this.props.id}
           className={classnames(this.props.className)}

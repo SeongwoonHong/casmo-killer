@@ -140,7 +140,7 @@ class Register extends Component {
     return errors;
   }
   cancelHandler = () => {
-    alert('CASMO KILLER!');
+    this.props.history.goBack();
   }
   render() {
     return (

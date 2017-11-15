@@ -1,10 +1,11 @@
-/* eslint-disable no-return-assign */
+/* eslint-disable no-return-assign, jsx-a11y/label-has-for */
 import React, { Component } from 'react';
 import Materialize from 'materialize-css';
 import classnames from 'classnames';
 import animate from 'gsap-promise';
 import { Link } from 'react-router-dom';
 import './Login.scss';
+import SpanAnimatedText from '../SpanAnimatedText/SpanAnimatedText';
 import inputValidator from '../../utils/input-validator';
 import Button from '../Button/Button';
 
@@ -78,7 +79,7 @@ class Login extends Component {
   render() {
     const loginSocialMedia = (
       <div className="login-social-media card-panel">
-        <p>Connect with</p>
+        <SpanAnimatedText text="Connect with" animateAtDidMount />
         <div className="social-media-btns">
           <div className="btn facebook" />
           <div className="btn kakaotalk" />
@@ -87,52 +88,50 @@ class Login extends Component {
       </div>
     );
     const loginBody = (
-      <div className="login-body card-panel">
-        <p>
-          <span>Email</span>
-          <label htmlFor="email">
-            <input
-              type="email"
-              placeholder="email"
-              id="email"
-              name="email"
-              onChange={this.onChangeHandler}
-              value={this.state.email}
-            />
-          </label>
-        </p>
-        <p>
-          <span>Password</span>
-          <label htmlFor="password">
-            <input
-              type="password"
-              placeholder="password"
-              id="password"
-              name="password"
-              onChange={this.onChangeHandler}
-              value={this.state.password}
-            />
-          </label>
-        </p>
+      <div className="login-body">
+        <div className="input-field col s12">
+          <i className="material-icons prefix">email</i>
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            onChange={this.onChangeHandler}
+            value={this.state.email}
+          />
+        </div>
+        <div className="input-field col s12">
+          <i className="material-icons prefix">lock</i>
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            onChange={this.onChangeHandler}
+            value={this.state.password}
+          />
+        </div>
       </div>
     );
     const loginFooter = (
-      <div className="login-footer card-panel">
+      <div className="login-footer">
         <div className="login-footer-btns">
           <Button
-            className="btn waves-effect cyan waves-light login"
+            className="btn waves-effect teal waves-light login"
             type="submit"
             name="action"
             disabled={this.state.isLoading}
             text="LOGIN"
             onClick={this.onSubmitHandler}
+            style={{ display: 'inline-block', width: '40%' }}
           />
           <Button
-            className="btn waves-effect cyan waves-light register"
+            className="btn waves-effect teal waves-light register"
             name="action"
             to="/register"
             disabled={this.state.isLoading}
             text="REGISTER"
+            style={{ display: 'inline-block', width: '40%' }}
           />
         </div>
         <p className="forgot-your-password"><Link to="/#">forgot your password?</Link></p>
@@ -147,10 +146,9 @@ class Login extends Component {
       </div>
     );
     return (
-      <div ref={el => this.component = el} className={classnames('row container', this.props.className)} id="login">
+      <div ref={el => this.component = el} className={classnames('container', this.props.className)} id="login">
         <form className="col s12">
-          <div>
-            <div className="login-header card-panel cyan lighten-2" />
+          <div className="card-panel">
             {loginSocialMedia}
             {loginBody}
             {loginFooter}

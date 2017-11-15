@@ -1,17 +1,22 @@
 import { connect } from 'react-redux';
+import { fetchBoards, fetchBoardsSuccess, fetchBoardsFailure } from '../../actions/post';
 import Community from './Community';
-import * as actions from '../../actions';
 
 const mapStateToProps = (state) => {
   return {
-    layout: state.layout
+    boardsList: state.posts.boardsList
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    toggleMenu: () => dispatch(actions.toggleMenu()),
-    toggleSearchForm: () => dispatch(actions.toggleSearchForm())
+    fetchBoards: () => {
+      dispatch(fetchBoards()).then((response) => {
+        !response.error ?
+          dispatch(fetchBoardsSuccess(response.payload.data)) :
+          dispatch(fetchBoardsFailure(response.payload.data));
+      });
+    }
   };
 };
 

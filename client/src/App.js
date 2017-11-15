@@ -1,7 +1,7 @@
 import 'materialize-css/dist/css/materialize.min.css';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import classnames from 'classnames';
 import * as actions from './actions';
 import './App.scss';
@@ -10,6 +10,9 @@ import TopNavigation from './components/TopNavigation';
 import MainMenu from './components/MainMenu';
 import { MainMenuRoutes } from './routers';
 import Login from './components/Login';
+import Board from './components/Community/Board';
+import PostNew from './components/Community/PostNew';
+import PostDetail from './components/Community/PostDetail';
 
 class App extends Component {
 
@@ -43,18 +46,25 @@ class App extends Component {
           widened: this.props.layout.isMainMenuVisible
         }) }>
           <Route path="/" component={ MainMenu } />
-          <div className="component-wrapper">
-            {
-              MainMenuRoutes.map(route => (
-                <Route
-                  key={ route.path }
-                  exact={ route.exact }
-                  path={ route.path }
-                  component={ route.main }
-                />
-              ))
-            }
-            <Route path="/login" component={Login} />
+          <div className="container">
+            <div className="component-wrapper">
+              {
+                MainMenuRoutes.map(route => (
+                  <Route
+                    key={ route.path }
+                    exact={ route.exact }
+                    path={ route.path }
+                    component={ route.main }
+                  />
+                ))
+              }
+              <Switch>
+                <Route path="/login" component={Login} />
+                <Route path="/community/:boardId/board/new" component={PostNew} />
+                <Route path="/community/:boardId/board/show/:postId" component={PostDetail} />
+                <Route path="/community/:boardId/board" component={Board} />
+              </Switch>
+            </div>
           </div>
         </div>
       </div>

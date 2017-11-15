@@ -28,11 +28,10 @@
         color: #FF6600;
       }
     }
-    .register-footer {
-
-    }
     input {
       color: black;
+      width: 0%;
+      animation: increasingWidth ease-out 1s 1 forwards;
     }
     label {
       color: lightgrey;
@@ -48,5 +47,8 @@
     & {
       width: 90% !important;
     }
+  }
+  @keyframes increasingWidth {
+    to { width: calc(100% - 5rem); }
   }
 }

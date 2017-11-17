@@ -1,20 +1,38 @@
+.main-menu-backdrop {
+    &.active {
+        background: rgba(0, 0, 0, .75);
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 20;
+    }
+    @media screen and (min-width: 992px) {
+        display: none;
+    }
+}
+
 .side-main-nav {
-    background-color: rgba(0, 0, 0, .8);
+    background-color: transparent;
     height: 100%;
     left: 0;
     position: fixed;
     top: 0;
     transform: translateX(-100%);
     transition: all 0.3s;
+    width: 270px;
     z-index: 88;
     &.toggled {
         transform: translateX(0);
+    }
+    @media screen and (min-width: 360px) {
+        width: 310px;
     }
 }
 
 .side-main-nav-wrapper {
     height: 100%;
-    width: 270px;
     > .submenu-toggle {
         display: none;
     }
@@ -23,7 +41,7 @@
         border-radius: 0;
         box-shadow: none;
         height: 30px;
-        padding: 0 14px;
+        padding: 0 13px;
         > .material-icons {
             height: 100%;
             line-height: 30px;
@@ -38,7 +56,7 @@
             border-radius: 0;
             box-shadow: none;
             height: 50px;
-            padding: 0 14px;
+            padding: 0 13px;
             > .material-icons {
                 height: 100%;
                 line-height: 50px;
@@ -72,6 +90,7 @@
                     color: #e0f2f1;
                     display: flex;
                     height: 50px;
+                    font-size: 12px;
                     padding: 0 15px;
                     &:hover,
                     &.active {
@@ -81,7 +100,7 @@
                     > .material-icons {
                         border: 1px solid #e0f2f1;
                         border-radius: 5px;
-                        font-size: 16px;
+                        font-size: 14px;
                         height: auto;
                         line-height: normal;
                         margin-right: 15px;
@@ -99,25 +118,15 @@
     }
     @media screen and (min-width: 768px) {
         .side-main-nav-header {
-            height: 60px;
-            > .btn {
-                height: 60px;
-                padding: 0 18px;
-                > .material-icons {
-                    line-height: 60px;
-                }
-            }
             > h1 {
                 font-size: 24px;
-                > a {
-                    line-height: 60px;
-                }
             }
         }
         > .side-main-nav-body {
             > ul.main-menu {
                 > li {
                     > a {
+                        font-size: 14px;
                         height: 60px;
                     }
                 }
@@ -128,7 +137,6 @@
 
 @media screen and (min-width: 992px) {
     .side-main-nav {
-        background-color: transparent;
         box-shadow: none;
         line-height: normal;
         position: relative;
@@ -198,6 +206,8 @@
     }
 }
 
+/*
+
 @media screen and (min-width: 1200px) {
     .side-main-nav {
         width: 260px;
@@ -229,3 +239,4 @@
         }
     }
 }
+*/

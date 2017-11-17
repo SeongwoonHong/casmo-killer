@@ -1,12 +1,14 @@
 import React from 'react';
 
 import Home from '../components/Home';
-import Community from '../components/Community';
+// import Community from '../components/Community';
+import CommunityWrapper from '../components/Community/index';
 import Restaurants from '../components/Restaurants';
 import QnA from '../components/QnA';
 import Info from '../components/Info';
 
-import SubMenu from '../components/MainMenu/SubMenu/SubMenu';
+import SubMenu from '../components/Navigations/MainMenu/SubMenu/SubMenu';
+import Login from '../components/Login/Login';
 
 const CommunityRoutes = [
   {
@@ -74,29 +76,64 @@ export const MainMenuRoutes = [
     name: '커뮤니티',
     path: '/community',
     icon: 'group',
-    exact: true,
-    main: Community,
-    subMenu: ({ match }) => <SubMenu match={ match } title="커뮤니티" items={ CommunityRoutes } />
+    main: CommunityWrapper,
+    subMenu: ({ match }) => {
+      return (
+        <SubMenu
+          match={ match }
+          title="커뮤니티"
+          items={ CommunityRoutes }
+        />
+      );
+    }
   },
   {
     name: '맛집',
     path: '/restaurants',
     icon: 'free_breakfast',
     main: Restaurants,
-    subMenu: ({ match }) => <SubMenu match={ match } title="맛집" items={ RestaurantsRoutes } />
+    subMenu: ({ match }) => {
+      return (
+        <SubMenu
+          match={ match }
+          title="맛집"
+          items={ RestaurantsRoutes }
+        />
+      );
+    }
   },
   {
     name: 'Q&A',
     path: '/qna',
     icon: 'forum',
     main: QnA,
-    subMenu: ({ match }) => <SubMenu match={ match } title="Q&A" items={ QnARoutes } />
+    subMenu: ({ match }) => {
+      return (
+        <SubMenu
+          match={ match }
+          title="Q&A"
+          items={ QnARoutes }
+        />
+      );
+    }
   },
   {
     name: '정보',
     path: '/info',
     icon: 'event',
     main: Info,
-    subMenu: ({ match }) => <SubMenu match={ match } title="정보" items={ InfoRoutes } />
+    subMenu: ({ match }) => {
+      return (
+        <SubMenu
+          match={ match }
+          title="정보"
+          items={ InfoRoutes }
+        />
+      );
+    }
+  },
+  {
+    path: '/login',
+    main: Login
   }
 ];

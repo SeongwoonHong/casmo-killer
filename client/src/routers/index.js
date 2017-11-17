@@ -1,7 +1,6 @@
 import React from 'react';
 
 import Home from '../components/Home';
-// import Community from '../components/Community';
 import CommunityWrapper from '../components/Community/index';
 import Restaurants from '../components/Restaurants';
 import QnA from '../components/QnA';
@@ -9,6 +8,7 @@ import Info from '../components/Info';
 
 import SubMenu from '../components/Navigations/MainMenu/SubMenu/SubMenu';
 import Login from '../components/Login/Login';
+import Register from '../components/Register/Register';
 
 const CommunityRoutes = [
   {
@@ -135,5 +135,9 @@ export const MainMenuRoutes = [
   {
     path: '/login',
     main: Login
+  },
+  {
+    path: '/register',
+    main: Register
   }
 ];

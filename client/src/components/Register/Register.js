@@ -43,7 +43,7 @@ class Register extends Component {
     };
   }
   componentDidMount = () => {
-    animate.from(this.component, 1, { autoAlpha: 0, y: '-20%' });
+    animate.from(this.component, 0.5, { autoAlpha: 0, y: '-10%' });
   }
   onSubmitHandler = (e) => {
     this.setState({ errors: {} });

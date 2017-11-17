@@ -1,13 +1,13 @@
 import 'materialize-css/dist/css/materialize.min.css';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import classnames from 'classnames';
 import * as actions from './actions';
 import './App.scss';
-
 import TopNavigation from './components/Navigations/TopNavigation';
 import MainMenu from './components/Navigations/MainMenu';
+
 import { MainMenuRoutes } from './routers';
 
 import breakPoint from './utils/breakPoint';
@@ -52,16 +52,18 @@ class App extends Component {
         }) }>
           <Route path="/" component={ MainMenu } />
           <div className="container">
-            {
-              MainMenuRoutes.map(route => (
-                <Route
-                  key={ route.path }
-                  exact={ route.exact }
-                  path={ route.path }
-                  component={ route.main }
-                />
-              ))
-            }
+            <Switch>
+              {
+                MainMenuRoutes.map(route => (
+                  <Route
+                    key={ route.path }
+                    exact={ route.exact }
+                    path={ route.path }
+                    component={ route.main }
+                  />
+                ))
+              }
+            </Switch>
           </div>
         </div>
       </div>

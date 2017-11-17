@@ -21,8 +21,9 @@ body,
             width: 100%;
         }
     }
-}
-
-.component-wrapper {
-    padding: 0 10px;
+    > .container {
+      @media screen and (max-width: 450px) {
+        width: 100% !important;
+      }
+    }
 }

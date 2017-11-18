@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import ReactPaginate from 'react-paginate';
 import Materialize from 'materialize-css';
+import { Link } from 'react-router-dom';
 import Search from '../../Search/Search';
 import PostList from '../../PostList/PostList';
-import Button from '../../Button/Button';
 import LoadingCircle from '../../Loading/LoadingCircle';
+import BreadCrumbs from '../../BreadCrumbs/BreadCrumbs';
+import './Board.scss';
 
 class Board extends Component {
   constructor(props) {
@@ -12,28 +14,34 @@ class Board extends Component {
     this.state = {
       page: 0,
       boardId: props.match.params.boardId,
-      baseUrl: props.location.pathname
+      currentUrl: props.location.pathname
     };
   }
+
   componentDidMount() {
-    this.props.fetchPosts(this.state.boardId, this.state.page);
+    this.props.fetchPostsRequest(this.state.boardId, this.state.page);
+  }
+
+  shouldComponentUpdate(nextProps) {
+    const update = JSON.stringify(this.props) !== JSON.stringify(nextProps);
+    return update;
   }
 
   handlePageClick = (data) => {
     const { selected } = data;
-    // const offset = Math.ceil(selected * this.state.perPage);
+
     this.setState({ page: selected }, () => {
-      this.props.fetchPosts(this.state.boardId, this.state.page);
+      this.props.fetchPostsRequest(this.state.boardId, this.state.page);
     });
   };
 
   render() {
-    const { posts, loading, error } = this.props.postsList;
+    const { data, status, error } = this.props.postsList;
     const { pageCount } = this.props.pagination;
 
-    if (loading) {
+    if (status === 'WAITING') {
       return (
-        <div className="board">
+        <div className="board_loadind">
           <LoadingCircle />
         </div>
       );
@@ -46,30 +54,43 @@ class Board extends Component {
     }
     return (
       <div className="board">
-        <h1>{this.state.boardId}</h1>
-        <Button to={`${this.props.match.url}/new`} text="New Post" />
-        <PostList
-          postsList={posts}
-          baseUrl={this.state.baseUrl}
-        />
-        <Search
-          onSearch={this.props.searchPosts}
-          boardId={this.state.boardId}
-        />
-        <ReactPaginate
-          previousLabel="previous"
-          nextLabel="next"
-          breakLabel={<a href="">...</a>}
-          breakClassName="break-me"
-          pageCount={pageCount}
-          marginPagesDisplayed={2}
-          forcePage={this.state.page}
-          pageRangeDisplayed={5}
-          onPageChange={this.handlePageClick}
-          containerClassName="pagination"
-          subContainerClassName="pages pagination"
-          activeClassName="active"
-        />
+        <BreadCrumbs url={this.state.currentUrl} />
+        <div className="board_newPost right">
+          <Link className="btn-floating btn-large teal" to={`${this.props.match.url}/new`}>
+            <i className="large material-icons">mode_edit</i>
+          </Link>
+        </div>
+        <div className="row">
+          <div className="board_search col s12 m12 l5 offset-l7">
+            <Search
+              onSearch={this.props.searchPostsRequest}
+              boardId={this.state.boardId}
+            />
+          </div>
+        </div>
+        <div className="board_postList">
+          <PostList
+            postsList={data}
+            baseUrl={this.state.currentUrl}
+          />
+        </div>
+        <div className="board_page center">
+          <ReactPaginate
+            previousLabel="<"
+            nextLabel=">"
+            breakLabel="..."
+            breakClassName="break-me"
+            pageCount={pageCount}
+            marginPagesDisplayed={2}
+            forcePage={this.state.page}
+            pageRangeDisplayed={5}
+            onPageChange={this.handlePageClick}
+            containerClassName="pagination"
+            pageClassName="waves-effect"
+            subContainerClassName="pages pagination"
+            activeClassName="active"
+          />
+        </div>
       </div>
     );
   }

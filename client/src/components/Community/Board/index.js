@@ -1,46 +1,34 @@
 import { connect } from 'react-redux';
-import { fetchPosts, fetchPostsSuccess, fetchPostsFailure, searchPosts, searchPostsSuccess, searchPostsFailure } from '../../../actions/post';
+import * as actions from '../../../actions/post';
 import Board from './Board';
 
 const mapStateToProps = (state) => {
   return {
-    postsList: state.posts.postsList,
+    postsList: state.posts.list,
     pagination: state.posts.pagination
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchPosts: (boardId, page) => {
+    fetchPostsRequest: (boardId, page) => {
       if (page === null || page === undefined) {
         page = 1;
       } else {
         page += 1;
       }
-      dispatch(fetchPosts(boardId, page)).then((response) => {
-        !response.error ?
-          dispatch(fetchPostsSuccess(response.payload.data)) :
-          dispatch(fetchPostsFailure(response.payload.data));
-      });
+      dispatch(actions.fetchPostsRequest(boardId, page));
     },
-    searchPosts: (searchWord, boardId, page) => {
+    searchPostsRequest: (searchWord, boardId, page) => {
       if (page === null || page === undefined) {
         page = 1;
       } else {
         page += 1;
       }
       if (searchWord === '') {
-        dispatch(fetchPosts(boardId, page)).then((response) => {
-          !response.error ?
-            dispatch(fetchPostsSuccess(response.payload.data)) :
-            dispatch(fetchPostsFailure(response.payload.data));
-        });
+        dispatch(actions.fetchPostsRequest(boardId, page));
       } else {
-        dispatch(searchPosts(searchWord, boardId, page)).then((response) => {
-          !response.error ?
-            dispatch(searchPostsSuccess(response.payload.data)) :
-            dispatch(searchPostsFailure(response.payload.data));
-        });
+        dispatch(actions.searchPostsRequest(searchWord, boardId, page));
       }
     }
   };

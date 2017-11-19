@@ -6,7 +6,7 @@ import './MainMenu.scss';
 
 import SearchForm from '../SearchForm/SearchForm';
 
-import { MainMenuRoutes } from '../../routers';
+import { MainMenuRoutes } from '../../../routers';
 
 class MainMenu extends Component {
 

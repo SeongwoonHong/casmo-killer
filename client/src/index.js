@@ -28,10 +28,10 @@ ReactDOM.render(
       <Switch>
         {
           isDevelopment
-          ? <Route path="/test" component={TestRoutes} />
-          : null
+            ? <Route path="/test" component={ TestRoutes } />
+            : null
         }
-        <Route path="/" component={App} />
+        <Route path="/" component={ App } />
       </Switch>
     </BrowserRouter>
   </Provider>,

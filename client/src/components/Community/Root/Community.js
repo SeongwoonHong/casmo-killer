@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Materialize from 'materialize-css';
 import { Link } from 'react-router-dom';
-import LoadingCircle from '../Loading/LoadingCircle';
-import BreadCrumbs from '../BreadCrumbs/BreadCrumbs';
+import LoadingCircle from '../../Loading/LoadingCircle';
+import BreadCrumbs from '../../BreadCrumbs/BreadCrumbs';
 
 class Community extends Component {
   constructor(props) {
@@ -16,7 +16,7 @@ class Community extends Component {
   }
 
   render() {
-    const { data, loading, error } = this.props.boardsList;
+    const { data, loading, error } = this.props.boardList;
     const mapToComponents = (boardData) => {
       return boardData.map((board) => {
         return (

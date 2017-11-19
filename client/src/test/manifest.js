@@ -2,7 +2,7 @@
 
 export default {
   MainMenu: {
-    component: require('../components/MainMenu'),
+    component: require('../components/Navigations/MainMenu'),
     props: {
     }
   },

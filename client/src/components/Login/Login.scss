@@ -2,95 +2,93 @@
   width: 100%;
   color: #546e7a;
   animation: appearWithOpacity ease-out 2s 1 forwards;
+  margin-top: 2rem;
   form {
-    & > div {
-      margin: 1rem;
-      .card-panel {
-        margin: initial;
+    background-color: #fff;
+    box-shadow: 0px 0px 15px lightgrey;
+    .card-panel {
+      margin: initial;
+    }
+    .login-social-media {
+      flex-direction: column;
+      margin-top: 3%;
+      padding-top: 10px !important;
+      .SpanAnimatedText {
+        margin: 2%;
+        color: teal;
+        font-size: 1.3rem;
       }
-      .login-social-media {
-        flex-direction: column;
-        padding-top: 10px !important;
-        &, .social-media-btn {
-          align-items: center;
-          display: flex;
-          justify-content: center;
-        }
-        .social-media-btns {
-          width: 50%;
-          .btn {
-            width: 32%;
-            position: relative;
-            margin-right: 1%;
-            &.facebook {
-              background-color: #4C69BA;
-              &::after {
-                background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_facebook.png') 50% no-repeat;
-              }
-            }
-            &.kakaotalk {
-              background-color: rgb(252, 233, 61);
-              &::after {
-              }
-            }
-            &.google {
-              background-color: #DD4B39;
-              &::after {
-                background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_google.png') 50% no-repeat;
-              }
-            }
-            &.facebook, &.google, &.kakaotalk {
-              &::after {
-                content: "";
-                display: block;
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-              }
-            }
-            &:hover {
-              -webkit-animation: bounce .3s infinite alternate;
-              -moz-animation: bounce .3s infinite alternate;
-              animation: bounce .3s infinite alternate;
-            }
-          }
-        }
+      &, .social-media-btn {
+        align-items: center;
+        display: flex;
+        justify-content: center;
       }
-      .login-body {
-        p {
-          span {
-            width: 30%;
-            display: inline-block;
+      .social-media-btns {
+        width: 50%;
+        .btn {
+          width: 32%;
+          position: relative;
+          margin-right: 1%;
+          &.facebook {
+            background-color: #4C69BA;
+            &::after {
+              background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_facebook.png') 50% no-repeat;
+            }
           }
-          label {
-            width: 70%;
-            display: inline-block;
+          &.kakaotalk {
+            background-color: rgb(252, 233, 61);
+            &::after {
+            }
           }
-          input {
-            width: 0%;
-            animation: increasingWidth ease-out 1s 1 forwards;
+          &.google {
+            background-color: #DD4B39;
+            &::after {
+              background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_google.png') 50% no-repeat;
+            }
+          }
+          &.facebook, &.google, &.kakaotalk {
+            &::after {
+              content: "";
+              display: block;
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+            }
+          }
+          &:hover {
+            -webkit-animation: bounce .3s infinite alternate;
+            -moz-animation: bounce .3s infinite alternate;
+            animation: bounce .3s infinite alternate;
           }
         }
       }
-      .login-footer {
-        background-color: lightgrey;
-        .login-footer-btns {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          button, .register {
-            // transform: scale(0);
-            margin-right: 1%;
-          }
+    }
+    .login-body {
+      margin-top: 7%;
+      input {
+        width: 0%;
+        animation: increasingWidth ease-out 1s 1 forwards;
+      }
+    }
+    .login-footer {
+      background-color: #fff;
+      margin-top: 7%;
+      .login-footer-btns {
+        text-align: center;
+        button, .register {
+          margin-right: 1%;
         }
-        .forgot-your-password {
-          text-align: center;
+        .register, .login {
+          width: 100%;
         }
-        &, .btn {
-          font-size: 0.9rem;
-        }
+      }
+      .forgot-your-password {
+        text-align: center;
+      }
+      &, .btn {
+        font-size: 0.9rem;
       }
     }
   }
@@ -99,21 +97,9 @@
       width: 100% !important;
     }
   }
-  @media screen and (max-width: 450px) {
-    &, .btn {
-      font-size: 0.8rem !important;
-    }
-    .card-panel {
-      padding: 10px !important;
-    }
-  }
-  @media screen and (max-width: 350px) {
-    font-size: 0.7rem !important;
-    .btn {
-      font-size: 0.7rem !important;
-    }
-    .card-panel {
-      padding: 10px !important;
+  @media screen and (max-width: 550px) {
+    & {
+      width: 100% !important;
     }
   }
 }
@@ -126,5 +112,5 @@
 }
 
 @keyframes increasingWidth {
-  to { width: 100%; }
+  to { width: calc(100% - 5rem); }
 }

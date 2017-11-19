@@ -41,7 +41,7 @@ class Board extends Component {
 
     if (status === 'WAITING') {
       return (
-        <div className="board_loadind">
+        <div className="board_loading">
           <LoadingCircle />
         </div>
       );

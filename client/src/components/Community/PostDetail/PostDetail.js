@@ -7,6 +7,7 @@ import PostShow from '../../PostShow/PostShow';
 import PostInputForm from '../../PostInputForm';
 import LoadingCircle from '../../Loading/LoadingCircle';
 import BreadCrumbs from '../../BreadCrumbs/BreadCrumbs';
+import './PostDetail.scss';
 
 class PostDetail extends Component {
   constructor(props) {
@@ -22,15 +23,6 @@ class PostDetail extends Component {
 
   componentDidMount() {
     this.props.fetchPostRequest(this.props.postId);
-  }
-
-  componentWillReceiveProps() {
-    // if (nextProps.deletedPost.error && nextProps.deletedPost.error.message) { // delete failure
-    //   Materialize.toast($(`<span style="color: #FF0000">${nextProps.deletedPost.error.message
-    // || 'Could not delete. Please try again.'}</span>`), 3000);
-    // } else if (nextProps.deletedPost.post && !nextProps.deletedPost.error) { // delete success
-    //   this.props.history.push(this.state.baseUrl);
-    // }
   }
 
   componentWillUnmount() {
@@ -51,12 +43,8 @@ class PostDetail extends Component {
     const id = this.props.activePost.data._id;
     return this.props.editPostRequest(id, values).then(() => {
       if (this.props.editPost.status === 'SUCCESS') {
-        this.toggleEdit().then(
-          () => {
-            Materialize.toast('Success!', 2000);
-          }
-        );
-
+        Materialize.toast('Success!', 2000);
+        this.toggleEdit();
       } else {
         Materialize.toast($(`<span style="color: #00c853">Error: ${this.props.editPost.error.message}</span>`), 3000);
       }

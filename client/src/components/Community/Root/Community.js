@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Materialize from 'materialize-css';
 import { Link } from 'react-router-dom';
-import LoadingCircle from '../Loading/LoadingCircle';
+import LoadingCircle from '../../Loading/LoadingCircle';
 
 class Community extends Component {
   constructor(props) {

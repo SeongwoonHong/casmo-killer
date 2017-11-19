@@ -1,23 +1,25 @@
-import { connect } from 'react-redux';
-import { fetchBoards, fetchBoardsSuccess, fetchBoardsFailure } from '../../actions/post';
-import Community from './Community';
+import React, { Component } from 'react';
+import { Route, Switch } from 'react-router-dom';
 
-const mapStateToProps = (state) => {
-  return {
-    boardsList: state.posts.boardsList
-  };
-};
+import CommunityHome from './Root';
+import Board from './Board';
+import PostNew from './PostNew';
+import PostDetail from './PostDetail';
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    fetchBoards: () => {
-      dispatch(fetchBoards()).then((response) => {
-        !response.error ?
-          dispatch(fetchBoardsSuccess(response.payload.data)) :
-          dispatch(fetchBoardsFailure(response.payload.data));
-      });
-    }
-  };
-};
+class CommunityWrapper extends Component {
 
-export default connect(mapStateToProps, mapDispatchToProps)(Community);
+  render() {
+    return (
+      <div className="community">
+        <Switch>
+          <Route path="/community/:boardId/board/new" component={ PostNew } />
+          <Route path="/community/:boardId/board/show/:postId" component={ PostDetail } />
+          <Route path="/community/:boardId/board" component={ Board } />
+          <Route path="/" component={ CommunityHome } />
+        </Switch>
+      </div>
+    );
+  }
+}
+
+export default CommunityWrapper;

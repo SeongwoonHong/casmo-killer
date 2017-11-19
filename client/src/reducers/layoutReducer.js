@@ -1,8 +1,9 @@
 import * as types from '../actions/types';
+import breakPoint from '../utils/breakPoint';
 
 const initialState = {
   layout: {
-    breakPoint: '',
+    breakPoint: breakPoint(window.innerWidth),
     isMainMenuVisible: false,
     isUserMenuVisible: false,
     isSearchFormVisible: false

@@ -5,49 +5,54 @@ import { Route, Switch } from 'react-router-dom';
 import classnames from 'classnames';
 import * as actions from './actions';
 import './App.scss';
-import Register from './components/Register';
-import TopNavigation from './components/TopNavigation';
-import MainMenu from './components/MainMenu';
+import TopNavigation from './components/Navigations/TopNavigation';
+import MainMenu from './components/Navigations/MainMenu';
+
 import { MainMenuRoutes } from './routers';
-import Login from './components/Login';
-import Board from './components/Community/Board';
-import PostNew from './components/Community/PostNew';
-import PostDetail from './components/Community/PostDetail';
+
+import breakPoint from './utils/breakPoint';
 
 class App extends Component {
 
   componentDidMount() {
-
     if (typeof window !== 'undefined') {
       window.addEventListener('resize', (e) => {
-        this.props.updateBreakPoint(e.target.innerWidth);
+        if (breakPoint(e.target.innerWidth) !== this.props.layout.breakPoint) {
+          this.props.updateBreakPoint(breakPoint(e.target.innerWidth));
+        }
       }, false);
-      this.props.updateBreakPoint(window.innerWidth);
     }
-
   }
 
   componentWillUnmount() {
-
     if (typeof window !== 'undefined') {
       window.removeEventListener('resize', (e) => {
         this.props.updateBreakPoint(e.target.innerWidth);
       });
     }
-
   }
 
   render() {
 
     return (
       <div className="app">
+        <div
+          className={ classnames('main-menu-backdrop', {
+            active: this.props.layout.isMainMenuVisible
+          }) }
+          role="button"
+          tabIndex={ 0 }
+          onClick={ this.props.toggleMenu }
+          onKeyDown={ () => {
+          } }
+        />
         <TopNavigation />
         <div className={ classnames('app-wrapper', {
           widened: this.props.layout.isMainMenuVisible
         }) }>
           <Route path="/" component={ MainMenu } />
           <div className="container">
-            <div className="component-wrapper">
+            <Switch>
               {
                 MainMenuRoutes.map(route => (
                   <Route
@@ -58,14 +63,7 @@ class App extends Component {
                   />
                 ))
               }
-              <Switch>
-                <Route path="/login" component={Login} />
-                <Route path="/Register" component={Register} />
-                <Route path="/community/:boardId/board/new" component={PostNew} />
-                <Route path="/community/:boardId/board/show/:postId" component={PostDetail} />
-                <Route path="/community/:boardId/board" component={Board} />
-              </Switch>
-            </div>
+            </Switch>
           </div>
         </div>
       </div>
@@ -83,19 +81,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    updateBreakPoint: (width) => {
-      if (width <= 575) {
-        dispatch(actions.updateBreakPoint('xs'));
-      } else if (width > 575 && width <= 767) {
-        dispatch(actions.updateBreakPoint('sm'));
-      } else if (width > 767 && width <= 991) {
-        dispatch(actions.updateBreakPoint('md'));
-      } else if (width > 991 && width <= 1199) {
-        dispatch(actions.updateBreakPoint('lg'));
-      } else if (width > 1199) {
-        dispatch(actions.updateBreakPoint('xl'));
-      }
-    }
+    updateBreakPoint: (size) => {
+      dispatch(actions.updateBreakPoint(size));
+    },
+    toggleMenu: () => dispatch(actions.toggleMenu())
   };
 };
 

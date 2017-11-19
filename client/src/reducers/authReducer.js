@@ -26,6 +26,18 @@ export default function (state = initialState.auth, action) {
         isLoggedIn: false,
         currentUser: null
       };
+    case types.REGISTER_REQUEST:
+      return {
+        ...state
+      };
+    case types.REGISTER_SUCCESS:
+      return {
+        ...state
+      };
+    case types.REGISTER_FAILURE:
+      return {
+        ...state
+      };
     default:
       return state;
   }

@@ -15,5 +15,10 @@ export default {
     components: require('../components/Button/Button'),
     props: {
     }
+  },
+  Register: {
+    components: require('../components/Register'),
+    props: {
+    }
   }
 };

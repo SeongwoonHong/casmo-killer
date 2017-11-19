@@ -5,7 +5,7 @@ import { Route, Switch } from 'react-router-dom';
 import classnames from 'classnames';
 import * as actions from './actions';
 import './App.scss';
-
+import Register from './components/Register';
 import TopNavigation from './components/TopNavigation';
 import MainMenu from './components/MainMenu';
 import { MainMenuRoutes } from './routers';
@@ -60,6 +60,7 @@ class App extends Component {
               }
               <Switch>
                 <Route path="/login" component={Login} />
+                <Route path="/Register" component={Register} />
                 <Route path="/community/:boardId/new" component={PostNew} />
                 <Route path="/community/:boardId/:postId" component={PostDetail} />
                 <Route path="/community/:boardId" component={Board} />

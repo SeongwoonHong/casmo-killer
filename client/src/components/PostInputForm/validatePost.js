@@ -1,7 +1,7 @@
 
 const validatePost = (values) => {
-  // console.log(values) => {title: 'asdf', categories: 'asdf', content: 'asdf'}
   const errors = {};
+
   // validation the inputs from 'values'
   if (!values.title || values.title.trim() === '') {
     errors.title = 'Enter a Title';

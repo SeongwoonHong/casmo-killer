@@ -2,7 +2,7 @@ import React from 'react';
 
 const LoadingCircle = () => {
   return (
-    <div className="preloader-wrapper active">
+    <div className="loading preloader-wrapper active">
       <div className="spinner-layer spinner-green-only">
         <div className="circle-clipper left">
           <div className="circle" />

@@ -12,9 +12,9 @@ class CommunityWrapper extends Component {
     return (
       <div className="community">
         <Switch>
-          <Route path="/community/:boardId/board/new" component={ PostNew } />
-          <Route path="/community/:boardId/board/show/:postId" component={ PostDetail } />
-          <Route path="/community/:boardId/board" component={ Board } />
+          <Route path="/community/:boardId/new" component={PostNew} />
+          <Route path="/community/:boardId/:postId" component={PostDetail} />
+          <Route path="/community/:boardId" component={Board} />
           <Route path="/" component={ CommunityHome } />
         </Switch>
       </div>

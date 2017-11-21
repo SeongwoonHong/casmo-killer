@@ -1,158 +1,279 @@
+import update from 'react-addons-update';
 import * as types from '../actions/types';
 
 const initialState = {
-  postsList: {
-    posts: [], error: null, loading: false, page: 1
+  newPost: {
+    status: 'INIT',
+    data: null,
+    error: null
   },
-  boardsList: {
-    boards: [], error: null, loading: false
+  list: {
+    status: 'INIT',
+    data: [],
+    error: null
+  },
+  editPost: {
+    status: 'INIT',
+    error: null
+  },
+  deletePost: {
+    status: 'INIT',
+    error: null
   },
   pagination: {
     pageCount: 1
   },
-  newPost: {
-    post: null, error: null, loading: false
+  activePost: {
+    status: 'INIT',
+    data: null,
+    error: null
+  },
+  boardList: {
+    status: 'INIT',
+    data: [],
+    error: null
   },
   newComment: {
-    comment: null, error: null, loading: false
-  },
-  activePost: {
-    post: null, error: null, loading: false
-  },
-  deletedPost: {
-    post: null, error: null, loading: false
-  },
-  editPost: {
-    post: null, error: null, loading: false
+    status: 'INIT',
+    error: null
   }
 };
 
 export default function post(state = initialState, action) {
-  let error;
   switch (action.type) {
-    case types.FETCH_POSTS:// start fetching posts and set loading = true
-      return { ...state, postsList: { posts: [], error: null, loading: true } };
-    case types.FETCH_POSTS_SUCCESS:// return list of posts and make loading = false
-      return {
-        ...state,
-        postsList: {
-          posts: action.payload.posts,
-          error: null,
-          loading: false,
-          page: action.payload.meta.pagination
-        },
-        pagination: {
-          pageCount: action.payload.meta.pagination
-        }
-      };
-    case types.FETCH_POSTS_FAILURE:// return error and make loading = false
-      error = action.payload || { message: action.payload.message };
-      // 2nd one is network or server down errors
-      return { ...state, postsList: { posts: [], error, loading: false } };
-    case types.SEARCH_POSTS:// start searcing posts and set loading = true
-      return { ...state, postsList: { posts: [], error: null, loading: true } };
-    case types.SEARCH_POSTS_SUCCESS:// return list of posts and make loading = false
-      return {
-        ...state,
-        postsList: {
-          posts: action.payload.posts,
-          error: null,
-          loading: false
-        },
-        pagination: {
-          pageCount: action.payload.meta.pagination
-        }
-      };
-    case types.SEARCH_POSTS_FAILURE:// return error and make loading = false
-      error = action.payload || { message: action.payload.message };
-      // 2nd one is network or server down errors
-      return { ...state, postsList: { posts: [], error, loading: false } };
 
+
+    // FETCH POST
+    case types.FETCH_POSTS:
+      return update(state, {
+        list: {
+          status: { $set: 'WAITING' },
+        }
+      });
+    case types.FETCH_POSTS_SUCCESS:
+      return update(state, {
+        list: {
+          status: { $set: 'SUCCESS' },
+          data: { $set: action.payload.posts }
+        },
+        pagination: {
+          pageCount: { $set: action.payload.meta.pagination }
+        }
+      });
+    case types.FETCH_POSTS_FAILURE:
+      return update(state, {
+        list: {
+          status: { $set: 'FAILURE' },
+          error: { $set: action.payload.response.data }
+        }
+      });
+
+
+      // SEARCH POSTS
+    case types.SEARCH_POSTS:
+      return update(state, {
+        list: {
+          status: { $set: 'WAITING' },
+        }
+      });
+    case types.SEARCH_POSTS_SUCCESS:
+      return update(state, {
+        list: {
+          status: { $set: 'SUCCESS' },
+          data: { $set: action.payload.posts }
+        },
+        pagination: {
+          pageCount: { $set: action.payload.meta.pagination }
+        }
+      });
+    case types.SEARCH_POSTS_FAILURE:
+      return update(state, {
+        list: {
+          status: { $set: 'FAILURE' },
+          error: { $set: action.payload.response.data }
+        }
+      });
+
+
+      // CREATE POST
     case types.CREATE_POST:
-      return { ...state, newPost: { ...state.newPost, loading: true } };
-    case types.CREATE_POST_SUCCESS:
-      return { ...state, newPost: { post: action.payload, error: null, loading: false } };
-    case types.CREATE_POST_FAILURE:
-      error = action.payload || { message: action.payload.message };
-      // 2nd one is network or server down errors
-      return { ...state, newPost: { post: null, error, loading: false } };
-    case types.RESET_NEW_POST:
-      return { ...state, newPost: { post: null, error: null, loading: false } };
-
-    case types.RESET_POST_FIELDS:
-      return { ...state, newPost: { ...state.newPost, error: null, loading: null } };
-    case types.FETCH_POST:
-      return { ...state, activePost: { ...state.activePost, loading: true } };
-    case types.FETCH_POST_SUCCESS:
-      return { ...state, activePost: { post: action.payload, error: null, loading: false } };
-    case types.FETCH_POST_FAILURE:
-      error = action.payload || { message: action.payload.message };
-      // 2nd one is network or server down errors
-      return { ...state, activePost: { post: null, error, loading: false } };
-    case types.RESET_ACTIVE_POST:
-      return { ...state, activePost: { post: null, error: null, loading: false } };
-    case types.DELETE_POST:
-      return { ...state, deletedPost: { ...state.deletedPost, loading: true } };
-    case types.DELETE_POST_SUCCESS:
-      return { ...state, deletedPost: { post: action.payload, error: null, loading: false } };
-    case types.DELETE_POST_FAILURE:
-      error = action.payload || { message: action.payload.message };
-      // 2nd one is network or server down errors
-      return { ...state, deletedPost: { post: null, error, loading: false } };
-    case types.RESET_DELETED_POST:
-      return { ...state, deletedPost: { post: null, error: null, loading: false } };
-
-    case types.EDIT_POST:
-      return {
-        ...state,
-        editPost: { ...state.editPost, loading: true },
-        activePost: { ...state.editPost, loading: true }
-      };
-    case types.EDIT_POST_SUCCESS:
-      return {
-        ...state,
-        editPost: { post: action.payload, error: null, loading: false },
-        activePost: { post: action.payload, error: null, loading: false }
-      };
-    case types.EDIT_POST_FAILURE:
-      error = action.payload || { message: action.payload.message };
-      // 2nd one is network or server down errors
-      return {
-        ...state,
-        editPost: { post: null, error, loading: false },
-        activePost: { post: null, error, loading: false }
-      };
-    case types.RESET_EDIT_POST:
-      return { ...state, editPost: { post: null, error: null, loading: false } };
-    case types.CREATE_REPLY:
-      return { ...state, newComment: { ...state.newComment, loading: true } };
-    case types.CREATE_REPLY_SUCCESS:
-      return {
-        ...state,
-        newComment: { comment: action.payload, error: null, loading: false },
-        activePost: { post: action.payload.data, error: null, lading: false }
-      };
-    case types.CREATE_REPLY_FAILURE:
-      error = action.payload || { message: action.payload.message };
-      // 2nd one is network or server down errors
-      return { ...state, newComment: { comment: null, error, loading: false } };
-    case types.RESET_NEW_REPLY:
-      return { ...state, newComment: { comment: null, error: null, loading: false } };
-    case types.FETCH_BOARDS:// start fetching boards and set loading = true
-      return { ...state, boardsList: { boards: [], error: null, loading: true } };
-    case types.FETCH_BOARDS_SUCCESS:// return list of boards and make loading = false
-      return {
-        ...state,
-        boardsList: {
-          boards: action.payload,
-          error: null,
-          loading: false
+      return update(state, {
+        newPost: {
+          status: { $set: 'WAITING' },
         }
-      };
-    case types.FETCH_BOARDS_FAILURE:// return error and make loading = false
-      error = action.payload || { message: action.payload.message };
-      // 2nd one is network or server down errors
-      return { ...state, boardsList: { boards: [], error, loading: false } };
+      });
+    case types.CREATE_POST_SUCCESS:
+      return update(state, {
+        newPost: {
+          status: { $set: 'SUCCESS' },
+          data: { $set: action.payload }
+        }
+      });
+    case types.CREATE_POST_FAILURE:
+      return update(state, {
+        newPost: {
+          status: { $set: 'FAILURE' },
+          error: { $set: action.payload.response.data }
+        }
+      });
+
+
+      // FETCH POST
+    case types.FETCH_POST:
+      return update(state, {
+        activePost: {
+          status: { $set: 'WAITING' },
+        }
+      });
+    case types.FETCH_POST_SUCCESS:
+      return update(state, {
+        activePost: {
+          status: { $set: 'SUCCESS' },
+          data: { $set: action.payload }
+        }
+      });
+    case types.FETCH_POST_FAILURE:
+      return update(state, {
+        activePost: {
+          status: { $set: 'FAILURE' },
+          error: { $set: action.payload.response.data }
+        }
+      });
+
+
+      // DELETE POST
+    case types.DELETE_POST:
+      return update(state, {
+        deletePost: {
+          status: { $set: 'WAITING' },
+        }
+      });
+    case types.DELETE_POST_SUCCESS:
+      return update(state, {
+        deletePost: {
+          status: { $set: 'SUCCESS' },
+        }
+      });
+    case types.DELETE_POST_FAILURE:
+      return update(state, {
+        deletePost: {
+          status: { $set: 'FAILURE' },
+          error: { $set: action.payload.response.data }
+        }
+      });
+
+
+      // EDIT POST
+    case types.EDIT_POST:
+      return update(state, {
+        editPost: {
+          status: { $set: 'WAITING' },
+        },
+        activePost: {
+          status: { $set: 'WAITING' },
+        }
+      });
+    case types.EDIT_POST_SUCCESS:
+      return update(state, {
+        editPost: {
+          status: { $set: 'SUCCESS' },
+          data: { $set: action.payload }
+        },
+        activePost: {
+          status: { $set: 'SUCCESS' },
+          data: { $set: action.payload }
+        }
+      });
+    case types.EDIT_POST_FAILURE:
+      return update(state, {
+        editPost: {
+          status: { $set: 'FAILURE' },
+          error: { $set: action.payload.response.data }
+        },
+        activePost: {
+          status: { $set: 'FAILURE' },
+          error: { $set: action.payload.response.data }
+        }
+      });
+
+
+      // CREATE REPLY
+    case types.CREATE_REPLY:
+      return update(state, {
+        newComment: {
+          status: { $set: 'WAITING' },
+        }
+      });
+    case types.CREATE_REPLY_SUCCESS:
+      return update(state, {
+        newComment: {
+          status: { $set: 'SUCCESS' },
+        },
+        activePost: {
+          data: { $set: action.payload }
+        }
+      });
+    case types.CREATE_REPLY_FAILURE:
+      return update(state, {
+        newComment: {
+          status: { $set: 'FAILURE' },
+          error: { $set: action.payload.response.data }
+        }
+      });
+
+
+      // FETCH BOARDS
+    case types.FETCH_BOARDS:
+      return update(state, {
+        boardList: {
+          status: { $set: 'WAITING' },
+        }
+      });
+    case types.FETCH_BOARDS_SUCCESS:
+      return update(state, {
+        boardList: {
+          status: { $set: 'SUCCESS' },
+          data: { $set: action.payload }
+        }
+      });
+    case types.FETCH_BOARDS_FAILURE:
+      return update(state, {
+        boardList: {
+          status: { $set: 'FAILURE' },
+          error: { $set: action.payload.response.data }
+        }
+      });
+
+
+      // RESET
+    case types.RESET_NEW_REPLY:
+      return update(state, {
+        newComment: {
+          status: { $set: 'WAITING' },
+          error: { $set: null }
+        }
+      });
+    case types.RESET_POST_PROPS:
+      return update(state, {
+        newPost: {
+          status: { $set: 'INIT' },
+          data: { $set: null },
+          error: { $set: null }
+        },
+        activePost: {
+          status: { $set: 'INIT' },
+          data: { $set: null },
+          error: { $set: null }
+        },
+        editPost: {
+          status: { $set: 'INIT' },
+          error: { $set: null }
+        },
+        deletePost: {
+          status: { $set: 'INIT' },
+          error: { $set: null }
+        }
+      });
     default:
       return state;
   }

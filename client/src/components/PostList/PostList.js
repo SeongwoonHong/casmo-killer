@@ -13,18 +13,19 @@ class PostList extends Component {
             id={post._id}
             postNum={post.postNum}
             authorName={post.authorName}
-            categories={post.categories}
+            comments={post.comments.length}
             title={post.title}
             count={post.count}
             key={post._id}
             baseUrl={baseUrl}
+            date={post.date}
           />
         );
       });
     };
 
     return (
-      <ul className="collection">
+      <ul className="post_row collection col s6 m1 l1">
         {mapToComponents(postsList)}
       </ul>
     );

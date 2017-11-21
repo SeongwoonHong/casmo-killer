@@ -1,5 +1,4 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const Post = require('../models/post');
 
 const router = express.Router();
@@ -128,27 +127,43 @@ router.get('/search/:searchWord/:boardId/:page', (req, res) => {
       });
   });
 });
-/* SUBMIT POST */
-router.post('/', (req, res) => {
-  // AFTER ADD USER
-  // const user = req.user;
-  // if (!user) {
-  //   return res.status(401).json({
-  //     message: 'Permission Denied!'
-  //   });
-  // } else if (!user.isEmailVerified) {
-  //   return res.status(401).json({
-  //     message: 'Permission Denied! Please verify your email.'
-  //   });
-  // }
-  //
-  // console.dir(req.user);
 
+/* CREATE REPLY */
+router.post('/reply', (req, res) => {
+  const { body } = req;
+  const { comment } = body;
+  // simulate error if title, categories and content are all "test"
+  // This is demo field-validation error upon submission.
+  if (comment === 'test') {
+    return res.status(403).json({
+      message: {
+        // categories: 'Categories Error',
+        content: 'Content Error'
+      }
+    });
+  }
+
+  if (!comment) {
+    return res.status(400).json({
+      message: 'Error: content is required!'
+    });
+  }
+
+  Post.findOne({ _id: req.body.postId }, (err, rawContent) => {
+    if (err) throw err;
+    rawContent.comments.unshift({ name: 'gook', id: 'gook', memo: comment });
+    rawContent.save((error, replyResult) => {
+      if (error) throw error;
+      res.json(replyResult);
+    });
+  });
+});
+
+/* SUBMIT POST */
+router.post('/:boardId', (req, res) => {
   const { body } = req;
   const { title } = body;
-  // const { categories } = body;
   const { contents } = body;
-  // const { password } = body;
 
   // simulate error if title, categories and content are all "test"
   // This is demo field-validation error upon submission.
@@ -164,10 +179,9 @@ router.post('/', (req, res) => {
     });
   }
 
-  // post.save((err, postResult) => {
   req.body.authorName = 'gook';
   req.body.authorId = 'gook';
-  req.body.boardId = 'movie';
+  req.body.boardId = req.params.boardId;
 
   Post.create(req.body, (err, postResult) => {
     if (err) {
@@ -182,12 +196,6 @@ router.post('/', (req, res) => {
 
 /* POST DELETE */
 router.delete('/:id', (req, res) => {
-  // AFTER ADD USER
-  // if (!req.user || !req.user.isEmailVerified) {
-  //   return res.status(401).json({
-  //     message: 'Permission Denied!'
-  //   });
-  // }
   Post.findOneAndUpdate({ _id: req.params.id },
     { deleted: true }, { runValidators: true, new: true }, (err, result) => {
       if (err) {
@@ -204,38 +212,12 @@ router.delete('/:id', (req, res) => {
     });
 });
 
-// /*
-//     MODIFY POST: PUT /api/post/:id
-//     BODY SAMPLE: { contents: "sample "}
-//     ERROR CODES
-//         1: INVALID ID,
-//         2: EMPTY CONTENTS
-//         3: NOT LOGGED IN
-//         4: NO RESOURCE
-//         5: PERMISSION FAILURE
-// */
+
 /* EDIT POST */
 router.put('/:id', (req, res) => {
-  // AFTER ADD USER
-  // const user = req.user;
-  // if (!user) {
-  //   return res.status(401).json({
-  //     message: 'Permission Denied!'
-  //   });
-  // } else if (!user.isEmailVerified) {
-  //   return res.status(401).json({
-  //     message: 'Permission Denied! Please verify your email.'
-  //   });
-  // }
-  //
-  // console.dir(req.user);
-
   const { body } = req;
   const { title } = body;
-  // const { categories } = body;
   const { contents } = body;
-  // const { password } = body;
-
   // simulate error if title, categories and content are all "test"
   // This is demo field-validation error upon submission.
   if (title === 'test' && contents === 'test') {
@@ -244,42 +226,12 @@ router.put('/:id', (req, res) => {
     });
   }
 
-  if (!title || !contents) {
-    return res.status(400).json({
-      message: 'Error title and content are all required!'
-    });
-  }
-
-  // CHECK POST ID VALIDITY
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    return res.status(400).json({
-      error: 'INVALID ID',
-      code: 1
-    });
-  }
-  //
   // CHECK CONTENTS VALID
   if (typeof req.body.contents !== 'string') {
     return res.status(400).json({
-      error: 'EMPTY CONTENTS',
-      code: 2
+      message: 'INVALID CONTENTS'
     });
   }
-
-  if (req.body.contents === '') {
-    return res.status(400).json({
-      error: 'EMPTY CONTENTS',
-      code: 2
-    });
-  }
-  //
-  //   // CHECK LOGIN STATUS
-  //   if (typeof req.session.loginInfo === 'undefined') {
-  //     return res.status(403).json({
-  //       error: 'NOT LOGGED IN',
-  //       code: 3
-  //     });
-  //   }
 
   Post.findOne({ _id: req.params.id }, (err, originContent) => {
     if (err) throw err;
@@ -294,54 +246,10 @@ router.put('/:id', (req, res) => {
       if (err) {
         throw err;
       }
-      if (!result) {
-        return res.status(404).json({
-          message: 'Could not delete post'
-        });
-      }
-      res.json({
-        success: true,
-        result
-      });
+      res.json(result);
     });
 });
 
-/* CREATE REPLY */
-router.post('/reply', (req, res) => {
-  const { body } = req;
-  // const { categories } = body;
-  const { comment } = body;
-  // const { password } = body;
-
-  // simulate error if title, categories and content are all "test"
-  // This is demo field-validation error upon submission.
-  if (comment === 'test') {
-    return res.status(403).json({
-      message: {
-        // categories: 'Categories Error',
-        content: 'Content Error'
-      }
-    });
-  }
-
-  if (!comment) {
-    return res.status(400).json({
-      message: 'Error content is required!'
-    });
-  }
-
-  Post.findOne({ _id: req.body.postId }, (err, rawContent) => {
-    if (err) throw err;
-    console.log('find');
-    console.log(rawContent);
-    rawContent.comments.unshift({ name: 'gook', id: 'gook', memo: comment });
-    rawContent.save((error, replyResult) => {
-      console.log(replyResult);
-      if (error) throw error;
-      res.json(replyResult);
-    });
-  });
-});
 //
 // /*
 //     TOGGLES STAR OF POST: POST /api/post/star/:id

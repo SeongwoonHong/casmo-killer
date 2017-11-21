@@ -1,40 +1,24 @@
 import { connect } from 'react-redux';
-import Materialize from 'materialize-css';
 import PostDetail from './PostDetail';
-import { fetchPost, fetchPostFailure, fetchPostSuccess, resetActivePost,
-  resetDeletedPost, resetEditPost,
-  deletePost, deletePostFailure, deletePostSuccess,
-  createReply, createReplyFailure, createReplySuccess } from '../../../actions/post';
+import * as actions from '../../../actions/post';
 
 function mapStateToProps(state, ownProps) {
   return {
     activePost: state.posts.activePost,
     postId: ownProps.match.params.postId,
-    deletedPost: state.posts.deletedPost,
-    editPost: state.posts.editPost
+    deletePost: state.posts.deletePost,
+    editPost: state.posts.editPost,
+    newComment: state.posts.newComment
   };
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    fetchPost: (id) => {
-      dispatch(fetchPost(id))
-        .then((result) => {
-          // Note: Error's "data" is in result.payload.response.data (inside "response")
-          // success's "data" is in result.payload.data
-          if (result.payload.response && result.payload.response.status !== 200) {
-            dispatch(fetchPostFailure(result.payload.response.data));
-            Materialize.toast($(`<span style="color: #FF0000">${result.payload.response.data.message}</span>`), 3000);
-          } else {
-            dispatch(fetchPostSuccess(result.payload.data));
-          }
-        });
+    fetchPostRequest: (id) => {
+      dispatch(actions.fetchPostRequest(id));
     },
-    resetMe: () => {
-      // clean up both activePost(currrently open) and deletedPost(open and being deleted) states
-      dispatch(resetActivePost());
-      dispatch(resetDeletedPost());
-      dispatch(resetEditPost());
+    editPostRequest: (postId, values) => {
+      return dispatch(actions.editPostRequest(postId, values));
     },
     onDeleteClick: () => {
       // const token = sessionStorage.getItem('jwtToken');
@@ -43,20 +27,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       //   dispatch(deletePostFailure(data)); // but let other comps know
       //   return;
       // }
-      dispatch(deletePost(ownProps.match.params.postId))
-        .then((response) => {
-          !response.error ?
-            dispatch(deletePostSuccess(response.payload)) :
-            dispatch(deletePostFailure(response.payload));
-        });
+      return dispatch(actions.deletePostRequest(ownProps.match.params.postId));
     },
-    handleReply: (comment, postId) => {
-      dispatch(createReply(comment, postId))
-        .then((response) => {
-          !response.error ?
-            dispatch(createReplySuccess(response.payload)) :
-            dispatch(createReplyFailure(response.payload));
-        });
+    resetPostProps: () => {
+      // clean up both activePost(currrently open) and deletedPost(open and being deleted) states
+      dispatch(actions.resetPostProps());
+    },
+    createReplyRequest: (comment, postId) => {
+      return dispatch(actions.createReplyRequest(comment, postId));
     }
   };
 };

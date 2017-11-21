@@ -12,38 +12,34 @@ class Search extends Component {
     this.handleSearch = this.handleSearch.bind(this);
   }
 
+  handleSearch(event) {
+    event.preventDefault();
+    this.props.onSearch(this.state.search, this.state.boardId);
+  }
+
   handleChange(e) {
     this.setState({
       search: e.target.value
     });
   }
 
-  handleSearch() {
-    this.props.onSearch(this.state.search, this.state.boardId);
-  }
-
   render() {
     return (
-      <div className="center row">
+      <div className="search center row">
         <div className="col s12">
           <div className="row">
             <div className="input-field col s6 s12">
-              <i className="material-icons prefix">
-                <a
-                  onClick={this.handleSearch}
-                  onKeyDown={this.handleSearch}
-                  role="button"
-                  tabIndex={0}
-                >search
-                </a>
-              </i>
-              <input
-                type="text"
-                className="validate"
-                placeholder="Write down your search word"
-                value={this.state.search}
-                onChange={this.handleChange}
-              />
+              <form onSubmit={this.handleSearch}>
+                <i className="material-icons prefix">search</i>
+                <input
+                  type="text"
+                  id="search"
+                  className="validate"
+                  value={this.state.search}
+                  onChange={this.handleChange}
+                />
+                <label htmlFor="search">Search</label>
+              </form>
             </div>
           </div>
         </div>

@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import TimeAgo from 'react-timeago';
+import krStrings from 'react-timeago/lib/language-strings/ko';
+import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
+
+const formatter = buildFormatter(krStrings);
 
 class PostShow extends Component {
 
@@ -11,7 +16,7 @@ class PostShow extends Component {
       <div className="postShow">
         <span className="card-title">{activePost.title}</span>
         <h6>Writer : {activePost.authorName}</h6>
-        <h6>Created : {activePost.date}</h6>
+        <h6>Created : <TimeAgo date={activePost.date} formatter={formatter} /></h6>
         <p>{activePost.contents}</p>
       </div>
     );

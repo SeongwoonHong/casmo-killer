@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
-import { SubmissionError } from 'redux-form';
 import Materialize from 'materialize-css';
 import ReplyNew from '../../ReplyNew/ReplyNew';
 import ReplyList from '../../ReplyList/ReplyList';
 import PostShow from '../../PostShow/PostShow';
 import PostInputForm from '../../PostInputForm';
-import { editPost, editPostFailure, editPostSuccess } from '../../../actions/post';
+import LoadingCircle from '../../Loading/LoadingCircle';
+import BreadCrumbs from '../../BreadCrumbs/BreadCrumbs';
+import './PostDetail.scss';
 
 class PostDetail extends Component {
   constructor(props) {
     super(props);
     const pathName = props.location.pathname;
-    const baseUrl = pathName.substring(0, pathName.indexOf('/show'));
+    const baseUrl = pathName.substring(0, pathName.lastIndexOf('/'));
     this.state = {
       editMode: false,
       baseUrl
@@ -21,22 +22,14 @@ class PostDetail extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchPost(this.props.postId);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.deletedPost.error && nextProps.deletedPost.error.message) { // delete failure
-      Materialize.toast($(`<span style="color: #FF0000">${nextProps.deletedPost.error.message || 'Could not delete. Please try again.'}</span>`), 3000);
-    } else if (nextProps.deletedPost.post && !nextProps.deletedPost.error) { // delete success
-      this.props.history.push(this.state.baseUrl);
-    }
+    this.props.fetchPostRequest(this.props.postId);
   }
 
   componentWillUnmount() {
     // Important! If your component is navigating based on
     // some global state(from say componentWillReceiveProps)
     // always reset that global state back to null when you REMOUNT
-    this.props.resetMe();
+    this.props.resetPostProps();
   }
 
   toggleEdit() {
@@ -44,45 +37,73 @@ class PostDetail extends Component {
       editMode: !this.state.editMode
     });
   }
-  // For any field errors upon submission (i.e. not instant check)
-  validateAndEditPost = (values, dispatch) => {
-    const id = this.props.activePost.post._id;
 
-    return dispatch(editPost(id, values, sessionStorage.getItem('jwtToken')))
-      .then((result) => {
-        // Note: Error's "data" is in result.payload.response.data (inside "response")
-        // success's "data" is in result.payload.data
-        if (result.payload.response && result.payload.response.status !== 200) {
-          dispatch(editPostFailure(result.payload.response.data));
-          throw new SubmissionError(result.payload.response.data);
-        }
-        // let other components know that everything is fine by updating the redux` state
-        dispatch(editPostSuccess(result.payload.data.result));
-        dispatch(this.toggleEdit());
-        // ps: this is same as dispatching RESET_USER_FIELDS
-      });
+  // For any field errors upon submission (i.e. not instant check)
+  validateAndEditPost = (values) => {
+    const id = this.props.activePost.data._id;
+    return this.props.editPostRequest(id, values).then(() => {
+      if (this.props.editPost.status === 'SUCCESS') {
+        Materialize.toast('Success!', 2000);
+        this.toggleEdit();
+      } else {
+        Materialize.toast($(`<span style="color: #00c853">Error: ${this.props.editPost.error.message}</span>`), 3000);
+      }
+    }
+    );
   }
 
-  render() {
-    const { post, loading, error } = this.props.activePost;
+  handleDelete = () => {
+    return this.props.onDeleteClick().then(() => {
+      if (this.props.deletePost.status === 'SUCCESS') {
+        Materialize.toast('Success!', 2000);
+        this.props.history.push(this.state.baseUrl);
+      } else {
+        Materialize.toast($(`<span style="color: #00c853">Error: ${this.props.editPost.error.message}</span>`), 3000);
+      }
+    });
+  }
 
-    if (loading) {
-      return <div className="container">Loading...</div>;
+  handleReply = (comment, postId) => {
+    return this.props.createReplyRequest(comment, postId).then(() => {
+      if (this.props.newComment.status === 'SUCCESS') {
+        Materialize.toast('Success!', 2000);
+      } else {
+        Materialize.toast($(`<span style="color: #00c853">Error: ${this.props.editPost.error.message}</span>`), 3000);
+      }
+    });
+  }
+
+
+  render() {
+    const { data, status, error } = this.props.activePost;
+
+    if (status === 'WAITING') {
+      return (
+        <div className="board_detail_loading">
+          <LoadingCircle />
+        </div>
+      );
     } else if (error) {
-      return <div className="alert alert-danger">{error.message}</div>;
-    } else if (!post) {
-      return <span />;
+      return (
+        <div className="board_detail_error">
+          {Materialize.toast($(`<span style="color: #00c853">Error: ${error.message}</span>`), 3000)}
+        </div>
+      );
+    } else if (!data) {
+      return (
+        <div className="board_detail_loading">
+          <LoadingCircle />
+        </div>
+      );
     }
 
     const editView = (
       <PostInputForm
-        postProp={this.props.editPost}
         validateAndPost={this.validateAndEditPost}
         toggleEdit={this.toggleEdit}
         formType="edit"
-        title={post.title}
-        contents={post.contents}
-        baseUrl={this.props.location.pathname}
+        title={data.title}
+        contents={data.contents}
       />
     );
 
@@ -90,7 +111,7 @@ class PostDetail extends Component {
       <div className="card">
         <div className="card-content">
           <PostShow
-            activePost={this.props.activePost.post}
+            activePost={data}
           />
         </div>
         <div className="card-action">
@@ -104,8 +125,8 @@ class PostDetail extends Component {
             Edit
           </a>
           <a
-            onClick={this.props.onDeleteClick}
-            onKeyDown={this.props.onDeleteClick}
+            onClick={this.handleDelete}
+            onKeyDown={this.handleDelete}
             role="button"
             tabIndex={0}
           >
@@ -116,15 +137,16 @@ class PostDetail extends Component {
     );
 
     return (
-      <div className="container">
+      <div className="board_detail">
+        <BreadCrumbs url={this.state.baseUrl} />
         { this.state.editMode ? editView : detailView }
         <ReplyList
-          comments={this.props.activePost.post.comments}
+          comments={data.comments}
         />
         <ReplyNew
-          onReply={this.props.handleReply}
+          onReply={this.handleReply}
           title="댓글"
-          postId={this.props.activePost.post._id}
+          postId={data._id}
         />
       </div>
     );

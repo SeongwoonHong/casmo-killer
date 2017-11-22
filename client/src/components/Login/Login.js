@@ -18,7 +18,8 @@ class Login extends Component {
       isLoading: false
     };
   }
-  componentDidMount = () => {
+  componentDidMount = (a) => {
+    console.log(a);
     animate.set(this.component, { autoAlpha: 0, y: '-20%' });
     this.animateIn();
   }
@@ -81,7 +82,15 @@ class Login extends Component {
       <div className="login-social-media card-panel">
         <SpanAnimatedText text="Connect with" animateAtDidMount />
         <div className="social-media-btns">
-          <div className="btn facebook" />
+          <a className="btn facebook" href="/api/user/signup/facebook">
+            <svg
+              width="25"
+              height="25"
+              viewBox="0 0 30 30"
+              xmlns="http://www.w3.org/2000/svg">
+              <path d="M22 16l1-5h-5V7c0-1.544.784-2 3-2h2V0h-4c-4.072 0-7 2.435-7 7v4H7v5h5v14h6V16h4z" />
+            </svg>
+          </a>
           <div className="btn kakaotalk" />
           <div className="btn google" />
         </div>

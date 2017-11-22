@@ -291,3 +291,38 @@ export function resetNewReply() {
     type: types.RESET_NEW_REPLY
   };
 }
+
+export function giveLikes() {
+  return {
+    type: types.GIVE_LIKES
+  };
+}
+export function giveLikesSuccess(post) {
+  return {
+    type: types.GIVE_LIKES_SUCCESS,
+    payload: {
+      post
+    }
+  };
+}
+export function giveLikesFailure(error) {
+  return {
+    type: types.GIVE_LIKES_FAILURE,
+    payload: error
+  };
+}
+
+export function giveLikesRequest(id) {
+  return (dispatch) => {
+
+    dispatch(giveLikes());
+
+    axios.post(`/api/post/likes/${id}`).then((response) => {
+      console.log(response.data); // 임시 (테스팅 목적)
+      dispatch(giveLikesSuccess(response.data)); // 여기 나중에 수정해야함..
+    }).catch((e) => {
+      console.error(e);
+      dispatch(giveLikesFailure(e));
+    });
+  };
+}

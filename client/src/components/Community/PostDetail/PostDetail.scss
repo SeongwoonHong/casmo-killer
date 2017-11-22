@@ -1,3 +1,13 @@
-.board_detail_loading {
-  text-align: center;
+.board_detail {
+  .board_detail_loading {
+    text-align: center;
+  }
+  .edit, .delete {
+    margin-right: 1%;
+  }
+  .card {
+    .card-action {
+      border-top: initial !important;
+    }
+  }
 }

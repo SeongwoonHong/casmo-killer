@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const Post = require('../models/post');
 
 const router = express.Router();
@@ -248,6 +249,38 @@ router.put('/:id', (req, res) => {
       }
       res.json(result);
     });
+});
+
+
+// GIVING LIKES
+// @Params:
+//  postId: 좋아요 눌러질 포스트의 아이디
+router.post('/likes/:postId', (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.postId)) {
+    return res.status(400).json({
+      message: 'INVALID ID'
+    });
+  }
+  // 로그인 백엔드까지 되면 해보겠슴다ㅎㅎ
+  // 테스팅중..
+  Post.findById(req.params.postId, (err, post) => {
+    if (err) throw err;
+    if (!post) return res.status(404).json({ message: 'NO SUCH POST' });
+
+    const index = post.likes.indexOf('gook'); // 테스팅 목적
+    const didLike = (index !== -1);
+    if (!didLike) {
+      // IF IT DOES NOT EXIST
+      post.likes.push('gook');
+    } else {
+      // ALREADY likes
+      post.likes.splice(index, 1);
+    }
+    post.save((error, result) => {
+      if (error) throw error;
+      return res.json(result);
+    });
+  });
 });
 
 //

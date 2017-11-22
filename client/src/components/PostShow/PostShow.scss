@@ -1,0 +1,52 @@
+.postShow {
+  width: 100%;
+  .header {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid lightgrey;
+    a {
+
+    }
+    .header-info {
+      line-height: normal;
+      margin-left: 10px;
+      .writer {
+        color: teal;
+      }
+      .created {
+        font-size: 10px;
+      }
+    }
+  }
+  .title {
+    margin-top: 5px;
+    border-bottom: 1px solid lightgrey;
+    .info {
+      color: #bbb;
+      font-size: 14px;
+      .tags {
+        background-color: #bbb;
+        display: inline-block;
+        color: #fff;
+        margin-right: 5px;
+        border-radius: 20%;
+        font-size: 10px;
+        padding: 1px 2px;
+        &:nth-of-type(1) {
+          margin-left: 3px;
+        }
+      }
+    }
+    .card-title {
+      font-size: 2rem;
+      font-weight: 400;
+    }
+  }
+  .contents {
+    margin-top: 10px;
+    .preferences {
+      margin-top: 20px;
+    }
+  }
+}

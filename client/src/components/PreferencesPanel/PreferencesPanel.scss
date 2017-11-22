@@ -1,0 +1,21 @@
+.preferences-panel {
+  font-size: 20px;
+  .material-icons {
+    cursor: pointer;
+    &:hover {
+      -webkit-animation: enlarge ease-out 0.5s 1 forwards;
+      -moz-animation: enlarge ease-out 0.5s 1 forwards;
+      animation: enlarge ease-out 0.5s 1 forwards;
+    }
+  }
+  .likes, .dislikes {
+    color: #bbb;
+    font-size: 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+    vertical-align: text-bottom;
+  }
+  @keyframes enlarge {
+    to { transform: scale(1.15); }
+  }
+}

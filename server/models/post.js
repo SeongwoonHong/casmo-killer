@@ -21,7 +21,10 @@ const Post = new Schema({
   count: { type: Number, default: 0 },
   date: { type: Date, default: Date.now },
   updated: [{ title: String, contents: String, date: { type: Date, default: Date.now } }],
-  deleted: { type: Boolean, default: false } // true => deleted
+  deleted: { type: Boolean, default: false }, // true => deleted
+  likes: [String],
+  disLikes: [String],
+  isOwner: { type: Boolean, default: false }
 });
 
 Post.plugin(AutoIncrement, { inc_field: 'postNum' });

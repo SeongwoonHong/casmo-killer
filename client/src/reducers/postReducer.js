@@ -36,6 +36,10 @@ const initialState = {
   newComment: {
     status: 'INIT',
     error: null
+  },
+  likes: {
+    status: 'INIT',
+    error: null
   }
 };
 
@@ -274,6 +278,37 @@ export default function post(state = initialState, action) {
           error: { $set: null }
         }
       });
+
+    // LIKES
+    case types.GIVE_LIKES:
+      return {
+        ...state,
+        likes: {
+          status: 'WAITING',
+          error: null
+        }
+      };
+    case types.GIVE_LIKES_SUCCESS:
+      return {
+        ...state,
+        activePost: {
+          ...state.list,
+          status: 'SUCCESS',
+          data: action.payload.post
+        },
+        likes: {
+          status: 'SUCCESS',
+          error: null
+        }
+      };
+    case types.GIVE_LIKES_FAILURE:
+      return {
+        ...state,
+        likes: {
+          status: 'FAILURE',
+          error: action.payload.error
+        }
+      };
     default:
       return state;
   }

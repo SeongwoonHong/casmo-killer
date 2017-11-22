@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Button from '../Button/Button';
 
 class ReplyNew extends Component {
   constructor(props) {
@@ -18,10 +19,12 @@ class ReplyNew extends Component {
   }
 
   handleReply() {
-    this.props.onReply(this.state.comment, this.props.postId);
-    this.setState({
-      comment: ''
-    });
+    if (this.state.comment.trim() !== '') {
+      this.props.onReply(this.state.comment, this.props.postId);
+      this.setState({
+        comment: ''
+      });
+    }
   }
 
   render() {
@@ -37,13 +40,15 @@ class ReplyNew extends Component {
           />
         </div>
         <div className="card-action">
-          <a
+          <Button
             onClick={this.handleReply}
             onKeyDown={this.handleReply}
+            className="btn waves-effect teal waves-light"
             role="button"
             tabIndex={0}
-          >{this.props.btnName}
-          </a>
+            text={this.props.btnName}
+            isLink={false}
+          />
         </div>
       </div>
     );

@@ -8,7 +8,8 @@ function mapStateToProps(state, ownProps) {
     postId: ownProps.match.params.postId,
     deletePost: state.posts.deletePost,
     editPost: state.posts.editPost,
-    newComment: state.posts.newComment
+    newComment: state.posts.newComment,
+    likes: state.posts.likes
   };
 }
 
@@ -35,6 +36,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     createReplyRequest: (comment, postId) => {
       return dispatch(actions.createReplyRequest(comment, postId));
+    },
+    giveLikesRequest: (id) => {
+      return dispatch(actions.giveLikesRequest(id));
     }
   };
 };

@@ -50,7 +50,7 @@ class Button extends Component {
   componentWillAppear = (done) => {
     this.animateIn().then(done);
   }
-  render() {
+  renderButtonWithLink = () => {
     return (
       <Link to={this.props.to} style={{ marginRight: '1%', ...this.props.style }}>
         <button
@@ -73,6 +73,33 @@ class Button extends Component {
       </Link>
     );
   }
+  renderButton = () => {
+    return (
+      <button
+        id={this.props.id}
+        className={classnames(this.props.className)}
+        type={this.props.type}
+        name={this.props.name}
+        disabled={this.props.disabled}
+        tab-index={this.props.tabIndex}
+        aria-label={this.props.ariaLabel}
+        role={this.props.role}
+        onKeyDown={this.props.onKeyDown}
+        onClick={this.props.onClick}
+        onMouseEnter={this.onMouseEnterHandler}
+        onMouseLeave={this.onMouseLeaveHandler}
+        ref={el => this.component = el}
+        style={this.props.style}
+        >
+        { this.getSpanText(this.props.text) }
+      </button>
+    );
+  }
+  render() {
+    return (
+      this.props.isLink ? this.renderButtonWithLink() : this.renderButton()
+    );
+  }
 }
 Button.defaultProps = {
   id: 'default',
@@ -89,7 +116,8 @@ Button.defaultProps = {
   onMouseEnter: () => {},
   onMouseLeave: () => {},
   onKeyDown: () => {},
-  animateAtDidMount: true
+  animateAtDidMount: true,
+  isLink: true
 };
 
 Button.propTypes = {
@@ -107,6 +135,7 @@ Button.propTypes = {
   role: PropTypes.string,
   delay: PropTypes.number,
   to: PropTypes.string,
-  animateAtDidMount: PropTypes.bool
+  animateAtDidMount: PropTypes.bool,
+  isLink: PropTypes.bool
 };
 export default Button;

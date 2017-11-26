@@ -9,7 +9,8 @@ function mapStateToProps(state, ownProps) {
     deletePost: state.posts.deletePost,
     editPost: state.posts.editPost,
     newComment: state.posts.newComment,
-    likes: state.posts.likes
+    likes: state.posts.likes,
+    disLikes: state.posts.disLikes
   };
 }
 
@@ -39,6 +40,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     giveLikesRequest: (id) => {
       return dispatch(actions.giveLikesRequest(id));
+    },
+    giveDislikesRequest: (id) => {
+      return dispatch(actions.giveDislikesRequest(id));
     }
   };
 };

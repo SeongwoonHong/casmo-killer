@@ -4,7 +4,8 @@ import PreferencesPanel from './PreferencesPanel';
 //
 function mapStateToProps(state) {
   return {
-    likes: state.posts.activePost.data.likes.length
+    likes: state.posts.activePost.data.likes.length,
+    disLikes: state.posts.activePost.data.disLikes.length
   };
 }
 // function mapDispatchToProps(dispatch) {

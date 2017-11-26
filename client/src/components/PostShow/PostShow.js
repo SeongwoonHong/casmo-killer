@@ -8,7 +8,7 @@ import PreferencesPanel from '../PreferencesPanel';
 import './PostShow.scss';
 
 const formatter = buildFormatter(krStrings);
-const tags = [
+const tags = [ // 지금은 하드코딩으로..
   { name: 'toronto', link: '#' },
   { name: 'casmo', link: '#' },
   { name: 'killer', link: '#' }
@@ -42,6 +42,7 @@ class PostShow extends Component {
             <PreferencesPanel
               postId={activePost._id}
               onLikesHandler={this.props.onLikesHandler}
+              onDislikesHandler={this.props.onDislikesHandler}
             />
           </div>
         </div>

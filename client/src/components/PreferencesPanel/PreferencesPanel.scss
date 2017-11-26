@@ -1,21 +1,17 @@
 .preferences-panel {
-  font-size: 20px;
-  .material-icons {
+  .like-icon, .dislike-icon {
+    width: 20px;
+    height: 20px;
     cursor: pointer;
-    &:hover {
-      -webkit-animation: enlarge ease-out 0.5s 1 forwards;
-      -moz-animation: enlarge ease-out 0.5s 1 forwards;
-      animation: enlarge ease-out 0.5s 1 forwards;
-    }
+  }
+  .dislike-icon {
+    margin-left: 5px;
   }
   .likes, .dislikes {
-    color: #bbb;
-    font-size: 20px;
+    color: teal;
+    font-size: 17px;
     margin-left: 5px;
     margin-right: 5px;
     vertical-align: text-bottom;
-  }
-  @keyframes enlarge {
-    to { transform: scale(1.15); }
   }
 }

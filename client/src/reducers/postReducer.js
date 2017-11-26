@@ -40,6 +40,10 @@ const initialState = {
   likes: {
     status: 'INIT',
     error: null
+  },
+  disLikes: {
+    status: 'INIT',
+    error: null
   }
 };
 
@@ -305,6 +309,36 @@ export default function post(state = initialState, action) {
       return {
         ...state,
         likes: {
+          status: 'FAILURE',
+          error: action.payload.error
+        }
+      };
+    // DISLIKES
+    case types.GIVE_DISLIKES:
+      return {
+        ...state,
+        disLikes: {
+          status: 'WAITING',
+          error: null
+        }
+      };
+    case types.GIVE_DISLIKES_SUCCESS:
+      return {
+        ...state,
+        activePost: {
+          ...state.list,
+          status: 'SUCCESS',
+          data: action.payload.post
+        },
+        disLikes: {
+          status: 'SUCCESS',
+          error: null
+        }
+      };
+    case types.GIVE_DISLIKES_FAILURE:
+      return {
+        ...state,
+        disLikes: {
           status: 'FAILURE',
           error: action.payload.error
         }

@@ -30,6 +30,7 @@ class PostNew extends Component {
   }
 
   render() {
+    console.log(this.props.data);
     return (
       <div className="post_new">
         <BreadCrumbs url={this.props.location.pathname} />

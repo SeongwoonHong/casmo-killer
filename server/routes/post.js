@@ -261,8 +261,6 @@ router.post('/likes/:postId', (req, res) => {
       message: 'INVALID ID'
     });
   }
-  // 로그인 백엔드까지 되면 해보겠슴다ㅎㅎ
-  // 테스팅중..
   Post.findById(req.params.postId, (err, post) => {
     if (err) throw err;
     if (!post) return res.status(404).json({ message: 'NO SUCH POST' });
@@ -273,7 +271,7 @@ router.post('/likes/:postId', (req, res) => {
       // IF IT DOES NOT EXIST
       post.likes.push('gook');
     } else {
-      // ALREADY likes
+      // ALREADY liked
       post.likes.splice(index, 1);
     }
     post.save((error, result) => {
@@ -283,6 +281,35 @@ router.post('/likes/:postId', (req, res) => {
   });
 });
 
+// GIVING DISLIKES
+// @Params:
+//  postId: 싫어요 눌러질 포스트의 아이디
+router.post('/disLikes/:postId', (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.postId)) {
+    return res.status(400).json({
+      message: 'INVALID ID'
+    });
+  }
+
+  Post.findById(req.params.postId, (err, post) => {
+    if (err) throw err;
+    if (!post) return res.status(404).json({ message: 'NO SUCH POST' });
+
+    const index = post.disLikes.indexOf('gook'); // 테스팅 목적
+    const didDislike = (index !== -1);
+    if (!didDislike) {
+      // IF IT DOES NOT EXIST
+      post.disLikes.push('gook');
+    } else {
+      // ALREADY disliked
+      post.disLikes.splice(index, 1);
+    }
+    post.save((error, result) => {
+      if (error) throw error;
+      return res.json(result);
+    });
+  });
+});
 //
 // /*
 //     TOGGLES STAR OF POST: POST /api/post/star/:id

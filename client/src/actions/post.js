@@ -318,11 +318,44 @@ export function giveLikesRequest(id) {
     dispatch(giveLikes());
 
     axios.post(`/api/post/likes/${id}`).then((response) => {
-      console.log(response.data); // 임시 (테스팅 목적)
-      dispatch(giveLikesSuccess(response.data)); // 여기 나중에 수정해야함..
+      dispatch(giveLikesSuccess(response.data));
     }).catch((e) => {
       console.error(e);
       dispatch(giveLikesFailure(e));
+    });
+  };
+}
+
+export function giveDislikes() {
+  return {
+    type: types.GIVE_DISLIKES
+  };
+}
+export function giveDislikesSuccess(post) {
+  return {
+    type: types.GIVE_DISLIKES_SUCCESS,
+    payload: {
+      post
+    }
+  };
+}
+export function giveDislikesFailure(error) {
+  return {
+    type: types.GIVE_DISLIKES_FAILURE,
+    payload: error
+  };
+}
+
+export function giveDislikesRequest(id) {
+  return (dispatch) => {
+
+    dispatch(giveDislikes());
+
+    axios.post(`/api/post/disLikes/${id}`).then((response) => {
+      dispatch(giveDislikesSuccess(response.data));
+    }).catch((e) => {
+      console.error(e);
+      dispatch(giveDislikesFailure(e));
     });
   };
 }

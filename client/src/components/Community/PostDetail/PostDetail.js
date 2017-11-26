@@ -37,7 +37,12 @@ class PostDetail extends Component {
   onLikesHandler = () => {
     this.props.giveLikesRequest(this.props.activePost.data._id);
   }
-
+  onDislikesHandler = () => {
+    this.props.giveDislikesRequest(this.props.activePost.data._id);
+  }
+  onDeleteHandler = () => {
+    //
+  }
   toggleEdit() {
     this.setState({
       editMode: !this.state.editMode
@@ -118,14 +123,10 @@ class PostDetail extends Component {
           <PostShow
             activePost={data}
             onLikesHandler={this.onLikesHandler}
+            onDislikesHandler={this.onDislikesHandler}
           />
         </div>
         <div className="card-action">
-          {/* <Button
-            text="Back"
-            to={this.state.baseUrl}
-            className="btn waves-effect teal waves-light"
-          /> */}
           <Button
             text="Edit"
             onClick={this.toggleEdit}

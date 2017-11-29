@@ -6,15 +6,29 @@ const passport = require('passport');
 
 const User = require('../models/user');
 
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
+
 require('../middlewares/strategies/local')(passport);
 require('../middlewares/strategies/facebook')(passport);
+require('../middlewares/strategies/google')(passport);
+require('../middlewares/strategies/kakao')(passport);
+
+const jwtUtils = require('../utils/jwt');
 
 /* signup using local strategy (email & password) */
 router.post('/signup', (req, res) => {
 
   const { strategy, email, password, username } = req.body;
 
-  const user = new User({ strategy, email, password, username });
+  const user = new User({
+    strategy, email, password, username
+  });
 
   user
     .save()
@@ -31,28 +45,6 @@ router.post('/signup', (req, res) => {
 
 });
 
-/* signup using facebook social login */
-router.get('/signup/facebook', passport.authenticate('facebook', {
-  scope: ['email']
-}));
-
-router.get('/signup/facebook/return', passport.authenticate('facebook', {
-  failureRedirect: '/login'
-}), (req, res) => {
-
-  const token = jwt.sign({
-    _id: req.user._id
-  }, keys.jwtSecretKey, {
-    expiresIn: 604800
-  });
-
-  console.log(token);
-
-  res.cookie('ckToken', token);
-  res.redirect('http://localhost:4000');
-
-});
-
 router.post('/signin/local', (req, res) => {
 
   const { email, password } = req.body;
@@ -61,20 +53,56 @@ router.post('/signin/local', (req, res) => {
     .findByCredentials(email, password)
     .then((user) => {
 
-      const token = jwt.sign({
-        _id: user._id
-      }, keys.jwtSecretKey, {
-        expiresIn: 604800
-      });
+      const token = jwtUtils.sign(user);
 
-      res.header('ckToken', token).send(user);
+      res.status(200).send({ token });
 
     })
-    .catch((err) => {
+    .catch((error) => {
 
-      res.status(400).send(err);
+      res.status(400).send({ error });
 
     });
+
+});
+
+/* signup using facebook social login */
+router.get('/signup/facebook', passport.authenticate('facebook', {
+  scope: ['email']
+}));
+
+router.get('/signup/facebook/return', passport.authenticate('facebook', { failureRedirect: '/login' }), (req, res) => {
+
+  const token = jwtUtils.sign(req.user);
+
+  res.cookie('ck-token', token);
+  res.redirect('http://localhost:4000');
+
+});
+
+/* signup using google social login */
+router.get('/signup/google', passport.authenticate('google', {
+  scope: ['email']
+}));
+
+router.get('/signup/google/return', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
+
+  const token = jwtUtils.sign(req.user);
+
+  res.cookie('ck-token', token);
+  res.redirect('http://localhost:4000');
+
+});
+
+/* signup using kakao social login */
+router.get('/signup/kakao', passport.authenticate('kakao'));
+
+router.get('/signup/kakao/return', passport.authenticate('kakao', { failureRedirect: '/login' }), (req, res) => {
+
+  const token = jwtUtils.sign(req.user);
+
+  res.cookie('ck-token', token);
+  res.redirect('http://localhost:4000');
 
 });
 

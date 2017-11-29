@@ -5,16 +5,19 @@ import { Route, Switch } from 'react-router-dom';
 import classnames from 'classnames';
 import * as actions from './actions';
 import './App.scss';
+
 import TopNavigation from './components/Navigations/TopNavigation';
 import MainMenu from './components/Navigations/MainMenu';
 
 import { MainMenuRoutes } from './routers';
 
 import breakPoint from './utils/breakPoint';
+import Login from './components/Login';
 
 class App extends Component {
 
   componentDidMount() {
+
     if (typeof window !== 'undefined') {
       window.addEventListener('resize', (e) => {
         if (breakPoint(e.target.innerWidth) !== this.props.layout.breakPoint) {
@@ -22,30 +25,23 @@ class App extends Component {
         }
       }, false);
     }
+
   }
 
   componentWillUnmount() {
+
     if (typeof window !== 'undefined') {
       window.removeEventListener('resize', (e) => {
         this.props.updateBreakPoint(e.target.innerWidth);
       });
     }
+
   }
 
   render() {
 
     return (
       <div className="app">
-        <div
-          className={ classnames('main-menu-backdrop', {
-            active: this.props.layout.isMainMenuVisible
-          }) }
-          role="button"
-          tabIndex={ 0 }
-          onClick={ this.props.toggleMenu }
-          onKeyDown={ () => {
-          } }
-        />
         <TopNavigation />
         <div className={ classnames('app-wrapper', {
           widened: this.props.layout.isMainMenuVisible
@@ -64,6 +60,11 @@ class App extends Component {
                 ))
               }
             </Switch>
+            {
+              this.props.layout.isLoginModalOpen
+                ? <Login />
+                : null
+            }
           </div>
         </div>
       </div>
@@ -84,7 +85,9 @@ const mapDispatchToProps = (dispatch) => {
     updateBreakPoint: (size) => {
       dispatch(actions.updateBreakPoint(size));
     },
-    toggleMenu: () => dispatch(actions.toggleMenu())
+    toggleMenu: () => {
+      dispatch(actions.toggleMenu());
+    }
   };
 };
 

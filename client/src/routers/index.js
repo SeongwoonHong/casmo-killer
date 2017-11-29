@@ -7,8 +7,6 @@ import QnA from '../components/QnA';
 import Info from '../components/Info';
 
 import SubMenu from '../components/Navigations/MainMenu/SubMenu/SubMenu';
-import Login from '../components/Login/Login';
-import Register from '../components/Register/Register';
 
 const CommunityRoutes = [
   {
@@ -131,13 +129,5 @@ export const MainMenuRoutes = [
         />
       );
     }
-  },
-  {
-    path: '/login',
-    main: Login
-  },
-  {
-    path: '/register',
-    main: Register
   }
 ];

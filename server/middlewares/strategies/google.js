@@ -1,4 +1,4 @@
-const { Strategy } = require('passport-facebook');
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 const keys = require('../../../client/config/keys/key');
 const User = require('../../models/user');
@@ -6,13 +6,12 @@ const User = require('../../models/user');
 module.exports = (passport) => {
 
   const opts = {
-    clientID: keys.facebookClientId,
-    clientSecret: keys.facebookSecret,
-    callbackURL: keys.facebookCallbackUrl,
-    profileFields: ['displayName', 'email', 'photos']
+    clientID: keys.googleClientId,
+    clientSecret: keys.googleSecret,
+    callbackURL: keys.googleCallbackUrl
   };
 
-  passport.use(new Strategy(opts, (accessToken, refreshToken, profile, done) => {
+  passport.use(new GoogleStrategy(opts, (accessToken, refreshToken, profile, done) => {
 
     User.findOrCreate(profile, (err, user) => {
 

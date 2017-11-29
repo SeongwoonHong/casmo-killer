@@ -1,4 +1,4 @@
-const { Strategy } = require('passport-facebook');
+const { Strategy } = require('passport-kakao');
 
 const keys = require('../../../client/config/keys/key');
 const User = require('../../models/user');
@@ -6,10 +6,9 @@ const User = require('../../models/user');
 module.exports = (passport) => {
 
   const opts = {
-    clientID: keys.facebookClientId,
-    clientSecret: keys.facebookSecret,
-    callbackURL: keys.facebookCallbackUrl,
-    profileFields: ['displayName', 'email', 'photos']
+    clientID: keys.kakaoClientId,
+    clientSecret: keys.kakaoSecret,
+    callbackURL: keys.kakaoCallbackUrl
   };
 
   passport.use(new Strategy(opts, (accessToken, refreshToken, profile, done) => {

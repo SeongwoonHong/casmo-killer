@@ -37,7 +37,6 @@ mongoose.connect(keys.mongooseURI, {
 
 if (isDev) {
   const devServer = require('./client/config/scripts/dev')(port);
-
   app.use(webpackMiddleware(devServer.compiler, devServer.serverConfig));
   app.use(webpackHotMiddleware(devServer.compiler));
 }
@@ -52,6 +51,7 @@ app.use(express.static(path.join(__dirname, publicPath)));
 // }).unless({
 //   path: [/\/facebook/i]
 // }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 

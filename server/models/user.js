@@ -31,9 +31,22 @@ const UserSchema = new Schema({
     trim: true,
     unique: true,
     required: 'Username is required'
+  },
+  avatar: {
+    type: String,
+    trim: true
+  },
+  privilege: {
+    type: String,
+    required: true,
+    default: 'newbie'
   }
 });
 
+/**
+* salt and has the password either when a new user is saved
+* or a user record has been modified
+* */
 UserSchema.pre('save', function (next) {
 
   const user = this;
@@ -67,9 +80,7 @@ UserSchema.statics.findUserById = function (token, callback) {
 
   const User = this;
 
-  User.findOne({
-    _id: mongoose.Types.ObjectId(token._id)
-  }, callback);
+  User.findOne({ _id: mongoose.Types.ObjectId(token._id) }, callback);
 
 };
 
@@ -89,8 +100,9 @@ UserSchema.statics.findOrCreate = function (profile, callback) {
     if (!user) {
       const newUser = new User({
         strategy: profile.provider,
-        email: profile.emails[0].value,
-        username: profile.username || profile.displayName
+        email: profile.provider !== 'kakao' ? profile.emails[0].value : profile._json.kaccount_email,
+        username: profile.username || profile.displayName,
+        avatar: profile.provider !== 'kakao' ? profile.photos[0].value : profile._json.properties.profile_image
       });
 
       newUser
@@ -112,18 +124,20 @@ UserSchema.statics.findByCredentials = function (email, password) {
 
   return User
     .findOne({
+      strategy: 'local',
       email
     })
     .then((user) => {
       if (!user) {
-        return Promise.reject();
+        return Promise.reject('Incorrect username or password.');
       }
       return new Promise((resolve, reject) => {
         bcrypt.compare(password, user.password, (err, res) => {
+          console.log(err, res);
           if (res) {
             resolve(user);
           } else {
-            reject();
+            reject('Incorrect username or password.');
           }
         });
       });

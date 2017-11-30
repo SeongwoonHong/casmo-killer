@@ -11,6 +11,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     toggleMenu: () => dispatch(actions.toggleMenu()),
+    toggleSubMenu: () => dispatch(actions.toggleSubMenu()),
     toggleSearchForm: () => dispatch(actions.toggleSearchForm())
   };
 };

@@ -1,4 +1,7 @@
 .user-menu {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
     .notification-badge {
         color: #e0f2f1;
         background-color: #ff3d00;
@@ -9,10 +12,83 @@
         padding: 1px 3px;
         position: absolute;
     }
+    > .notification {
+        background-color: transparent;
+        display: none;
+    }
+    > .user-profile {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        &:focus {
+            background-color: #00695c;
+        }
+        .user-avatar,
+        .user-info {
+            display: none;
+        }
+        > .user-info {
+            color: #b2dfdb;
+            > span {
+                display: block;
+                line-height: 15px;
+                &:last-child {
+                    color: #b8b5c0;
+                    font-size: 12px;
+                }
+            }
+        }
+        > span {
+            color: #fff;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        > .btn {
+            background-color: transparent;
+        }
+    }
     > .btn {
         > .notification-badge {
             right: 3px;
             top: 8px;
+        }
+    }
+    @media screen and (min-width: 992px) {
+        > .notification {
+            display: block;
+        }
+        > .user-profile {
+            cursor: pointer;
+            height: 50px;
+            margin-left: 10px;
+            width: 250px;
+            &.active {
+                background-color: #00695c;
+            }
+            .user-avatar,
+            .user-info {
+                display: block;
+            }
+            img.user-avatar {
+                height: 40px;
+                width: 40px;
+            }
+            span.user-avatar {
+                background-color: #b2dfdb;
+                color: #004d40;
+                height: 36px;
+                width: 36px;
+                text-align: center;
+                line-height: 34px;
+                font-size: 22px;
+            }
+            .user-info {
+                > span {
+                    &:first-child {
+                        font-size: 12px;
+                    }
+                }
+            }
         }
     }
 }

@@ -1,8 +1,8 @@
 .dropdown-content {
     display: block;
     opacity: 1;
-    right: 5px;
-    top: 45px;
+    right: 0;
+    top: 50px;
     > li {
         > a {
             font-size: 14px;
@@ -19,7 +19,10 @@
             background-color: #b2dfdb;
         }
     }
-    @media screen and (min-width: 768px) {
-        top: 55px;
+    @media screen and (min-width: 992px) {
+        width: 158px;
+        > li.notification {
+            display: none;
+        }
     }
 }

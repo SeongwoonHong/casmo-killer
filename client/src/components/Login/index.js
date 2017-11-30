@@ -1,16 +1,16 @@
-import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Login from './Login';
-import * as actions from '../../actions';
+import * as actions from '../../actions/index';
 
 function mapStateToProps(state) {
   return {
-    auth: state.auth
+    user: state.user
   };
 }
 function mapDispatchToProps(dispatch) {
   return {
-    loginRequest: email => dispatch(actions.loginRequest(email))
+    toggleLoginModal: () => dispatch(actions.toggleLoginModal()),
+    loginSuccess: token => dispatch(actions.loginSuccess(token))
   };
 }
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Login));
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

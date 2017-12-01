@@ -13,60 +13,60 @@ class Button extends Component {
         animate.staggerTo(animateText, 1, { autoAlpha: 1, delay: this.props.delay }, 0.05);
       });
     }
-  }
+  };
   componentWillReceiveProps = (nextProps) => {
     if (this.props.text !== nextProps.text) {
       return this.animateIn();
     }
     return 0;
-  }
+  };
   onMouseEnterHandler = () => {
     animate.to(this.component, 0.2, { scale: 1.1, ease: Expo.easeOut })
       .then(() => animate.to(this.component, 0.2, { scale: 0.9, ease: Expo.easeOut }))
       .then(() => animate.to(this.component, 0.1, { scale: 1, ease: Expo.easeOut }));
-  }
+  };
   onMouseLeaveHandler = () => {
     animate.to(this.component, 0.5, { scale: 1, ease: Expo.easeOut });
-  }
+  };
   getSpanText = (text) => {
     return text.split('').map((txt, i) => {
       return (
         <span
-          key={`${txt}-${i}`}
-          className={`animate-text txt-${i}`}
+          key={ `${txt}-${i}` }
+          className={ `animate-text txt-${i}` }
         >
           { txt }
         </span>
       );
     });
-  }
+  };
   animateIn = () => {
     const animateText = [...this.component.querySelectorAll('.animate-text')];
     return animate.staggerFrom(animateText, 0.05, { autoAlpha: 0 }, 0.01);
-  }
+  };
   componentWillEnter = (done) => {
     this.animateIn().then(done);
-  }
+  };
   componentWillAppear = (done) => {
     this.animateIn().then(done);
   }
   renderButtonWithLink = () => {
     return (
-      <Link to={this.props.to} style={{ marginRight: '1%', ...this.props.style }}>
+      <Link to={ this.props.to } style={ { marginRight: '1%', ...this.props.style } }>
         <button
-          id={this.props.id}
-          className={classnames(this.props.className)}
-          type={this.props.type}
-          name={this.props.name}
-          disabled={this.props.disabled}
-          tab-index={this.props.tabIndex}
-          aria-label={this.props.ariaLabel}
-          role={this.props.role}
-          onKeyDown={this.props.onKeyDown}
-          onClick={this.props.onClick}
-          onMouseEnter={this.onMouseEnterHandler}
-          onMouseLeave={this.onMouseLeaveHandler}
-          ref={el => this.component = el}
+          id={ this.props.id }
+          className={ classnames(this.props.className) }
+          type={ this.props.type }
+          name={ this.props.name }
+          disabled={ this.props.disabled }
+          tab-index={ this.props.tabIndex }
+          aria-label={ this.props.ariaLabel }
+          role={ this.props.role }
+          onKeyDown={ this.props.onKeyDown }
+          onClick={ this.props.onClick }
+          onMouseEnter={ this.onMouseEnterHandler }
+          onMouseLeave={ this.onMouseLeaveHandler }
+          ref={ el => this.component = el }
         >
           { this.getSpanText(this.props.text) }
         </button>
@@ -101,6 +101,7 @@ class Button extends Component {
     );
   }
 }
+
 Button.defaultProps = {
   id: 'default',
   text: '',
@@ -112,10 +113,14 @@ Button.defaultProps = {
   role: '',
   delay: 0,
   to: '/#',
-  onClick: () => {},
-  onMouseEnter: () => {},
-  onMouseLeave: () => {},
-  onKeyDown: () => {},
+  onClick: () => {
+  },
+  onMouseEnter: () => {
+  },
+  onMouseLeave: () => {
+  },
+  onKeyDown: () => {
+  },
   animateAtDidMount: true,
   isLink: true
 };

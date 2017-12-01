@@ -1,0 +1,26 @@
+.reply {
+  .header {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid lightgrey;
+    .header-info {
+      line-height: normal;
+      margin-left: 10px;
+      .writer {
+        color: teal;
+      }
+      .created {
+        font-size: 10px;
+      }
+    }
+  }
+  .comment {
+    margin-top: 10px;
+  }
+  .preferences-panel {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid lightgrey;
+  }
+}

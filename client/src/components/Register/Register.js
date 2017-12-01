@@ -5,7 +5,7 @@ import Materialize from 'materialize-css';
 import animate from 'gsap-promise';
 import TransitionGroup from 'react-transition-group-plus';
 import SpanAnimatedText from '../SpanAnimatedText/SpanAnimatedText';
-import inputValidator from '../../utils/input-validator';
+import inputValidator from '../../utils/input-validator/index';
 import Button from '../Button/Button';
 
 import './Register.scss';

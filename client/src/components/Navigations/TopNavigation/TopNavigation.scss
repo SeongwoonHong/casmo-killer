@@ -11,11 +11,6 @@
         position: relative;
         transition: all .3s;
         vertical-align: baseline;
-        &.toggled {
-            position: absolute;
-            transform: translateX(270px);
-            z-index: 99;
-        }
         > .material-icons {
             font-size: 24px;
             height: 100%;
@@ -32,29 +27,14 @@
             line-height: 50px;
         }
     }
-    @media screen and (min-width: 360px) {
-        .btn {
-            &.toggled {
-                transform: translateX(310px);
-            }
-        }
-    }
     @media screen and (min-width: 768px) {
-        .btn {
-            > .material-icons {
-            }
-        }
         > h1 {
             font-size: 24px;
-            > a {
-            }
         }
     }
     @media screen and (min-width: 992px) {
-        .btn {
-            &.hide-in-dt {
-                display: none;
-            }
+        > .hide-in-dt {
+            display: none;
         }
         > h1 {
             width: 260px;

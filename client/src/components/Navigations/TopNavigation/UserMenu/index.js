@@ -5,13 +5,14 @@ import UserMenu from './UserMenu';
 const mapStateToProps = (state) => {
   return {
     layout: state.layout,
-    auth: state.auth
+    user: state.user
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    toggleUserMenu: () => dispatch(actions.toggleUserMenu())
+    toggleUserMenu: () => dispatch(actions.toggleUserMenu()),
+    toggleLoginModal: () => dispatch(actions.toggleLoginModal())
   };
 };
 

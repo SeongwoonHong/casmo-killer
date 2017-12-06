@@ -18,7 +18,7 @@ class CommunityWrapper extends Component {
           <Route path="/community/:boardId/new" component={PostNew} />
           <Route path="/community/:boardId/:postId" component={PostDetail} />
           <Route path="/community/:boardId" component={Board} />
-          <Route path="/" component="" />
+          {/* <Route path="/" component="" /> */}
         </Switch>
       </div>
     );

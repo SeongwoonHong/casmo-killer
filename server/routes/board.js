@@ -17,6 +17,7 @@ router.post('/', (req, res) => {
   const { body } = req;
   const { boardId } = body;
   const { description } = body;
+
   // simulate error if title, categories and content are all "test"
   // This is demo field-validation error upon submission.
   if (boardId === 'test' && description === 'test') {

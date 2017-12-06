@@ -46,10 +46,33 @@ class MainMenu extends Component {
     };
 
     return (
-      <nav className={ classnames('side-main-nav', {
-        toggled: layout.isMainMenuVisible
-      }) }>
-        <div className="teal darken-3 side-main-nav-wrapper">
+      <nav
+        onClick={ (e) => {
+          if (e.target.classList.contains('side-main-nav')) {
+            this.props.toggleMenu();
+          }
+        } }
+        className={ classnames('side-main-nav', {
+          toggled: layout.isMainMenuVisible,
+          folded: !layout.isSubMenuVisible
+        }) }>
+        <a
+          role="button"
+          tabIndex={ 0 }
+          className="btn teal darken-4 mainmenu-toggle"
+          onClick={ this.props.toggleMenu }
+          onKeyDown={ () => {
+          } }>
+          <i className="material-icons teal-text text-lighten-5">
+            {
+              layout.isMainMenuVisible
+                ? 'close'
+                : 'dehaze'
+            }
+          </i>
+        </a>
+        <div
+          className="teal darken-3 side-main-nav-wrapper">
           <div className="side-main-nav-header">
             <a
               className="btn"
@@ -77,14 +100,14 @@ class MainMenu extends Component {
             className="btn submenu-toggle"
             role="button"
             tabIndex={ 0 }
-            onClick={ this.props.toggleMenu }
+            onClick={ this.props.toggleSubMenu }
             onKeyDown={ () => {
             } }>
             <i className="material-icons">
               {
-                layout.isMainMenuVisible
-                  ? 'chevron_right'
-                  : 'chevron_left'
+                layout.isSubMenuVisible
+                  ? 'chevron_left'
+                  : 'chevron_right'
               }
             </i>
           </a>

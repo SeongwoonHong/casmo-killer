@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const Board = new Schema({
-  author: { type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true },
+  author: String,
+  authorName: String,
   boardId: String,
   description: String,
   date: { type: Date, default: Date.now },

@@ -47,6 +47,8 @@ class MainMenu extends Component {
 
     return (
       <nav
+        role="presentation"
+        onKeyDown={ () => {} }
         onClick={ (e) => {
           if (e.target.classList.contains('side-main-nav')) {
             this.props.toggleMenu();
@@ -61,8 +63,7 @@ class MainMenu extends Component {
           tabIndex={ 0 }
           className="btn teal darken-4 mainmenu-toggle"
           onClick={ this.props.toggleMenu }
-          onKeyDown={ () => {
-          } }>
+          onKeyDown={ () => {} }>
           <i className="material-icons teal-text text-lighten-5">
             {
               layout.isMainMenuVisible

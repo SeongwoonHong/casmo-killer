@@ -1,5 +1,5 @@
 const express = require('express');
-const Post = require('../models/post');
+const Post = require('../db/models/post');
 
 const router = express.Router();
 const PER_PAGE = 10;

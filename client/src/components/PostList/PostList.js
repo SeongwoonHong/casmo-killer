@@ -19,6 +19,8 @@ class PostList extends Component {
             key={post._id}
             baseUrl={baseUrl}
             date={post.date}
+            page={this.props.page}
+            selected={this.props.selected}
           />
         );
       });
@@ -34,12 +36,16 @@ class PostList extends Component {
 
 PostList.defaultProps = {
   postsList: [],
-  baseUrl: ''
+  baseUrl: '',
+  page: 0,
+  selected: 0
 };
 
 PostList.propTypes = {
   postsList: PropTypes.array,
-  baseUrl: PropTypes.string
+  baseUrl: PropTypes.string,
+  page: PropTypes.number,
+  selected: PropTypes.number
 };
 
 export default PostList;

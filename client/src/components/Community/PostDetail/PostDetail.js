@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import Materialize from 'materialize-css';
 import ReplyNew from '../../ReplyNew/ReplyNew';
 import ReplyList from '../../ReplyList/ReplyList';
@@ -73,6 +73,12 @@ class PostDetail extends Component {
     });
   }
 
+  cancelHandler = () => {
+    this.props.history.push({
+      pathname: this.state.baseUrl,
+      state: { page: this.props.location.state.page, selected: this.props.location.state.selected }
+    });
+  }
 
   render() {
     const { data, status, error } = this.props.activePost;
@@ -115,7 +121,14 @@ class PostDetail extends Component {
           />
         </div>
         <div className="card-action">
-          <Link to={this.state.baseUrl}>Back</Link>
+          <a
+            onClick={this.cancelHandler}
+            onKeyDown={this.cancelHandler}
+            role="button"
+            tabIndex={0}
+          >
+            Back
+          </a>
           <a
             onClick={this.toggleEdit}
             onKeyDown={this.toggleEdit}

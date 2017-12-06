@@ -11,24 +11,24 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchPostsRequest: (boardId, page) => {
+    fetchPostsRequest: (boardId, page, sort) => {
       if (page === null || page === undefined) {
         page = 1;
       } else {
         page += 1;
       }
-      dispatch(actions.fetchPostsRequest(boardId, page));
+      dispatch(actions.fetchPostsRequest(boardId, page, sort));
     },
-    searchPostsRequest: (searchWord, boardId, page) => {
+    searchPostsRequest: (searchWord, boardId, page, sort) => {
       if (page === null || page === undefined) {
         page = 1;
       } else {
         page += 1;
       }
       if (searchWord === '') {
-        dispatch(actions.fetchPostsRequest(boardId, page));
+        dispatch(actions.fetchPostsRequest(boardId, page, sort));
       } else {
-        dispatch(actions.searchPostsRequest(searchWord, boardId, page));
+        dispatch(actions.searchPostsRequest(searchWord, boardId, page, sort));
       }
     }
   };

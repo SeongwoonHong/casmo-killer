@@ -20,5 +20,10 @@ export default {
     components: require('../components/Register'),
     props: {
     }
+  },
+  BoardNew: {
+    components: require('../components/Community/BoardNew'),
+    props: {
+    }
   }
 };

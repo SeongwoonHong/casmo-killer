@@ -18,55 +18,21 @@ export function fetchPostsSuccess(posts) {
 export function fetchPostsFailure(error) {
   return {
     type: types.FETCH_POSTS_FAILURE,
-    error
+    payload: error
   };
 }
 
-export function fetchPostsRequest(boardId, page) {
+export function fetchPostsRequest(boardId, page, sort) {
   return (dispatch) => {
     // Inform Login API is starting
     dispatch(fetchPosts());
     // API request
-    return axios.get(`/api/post/${boardId}/${page}`)
+    return axios.get(`/api/post/${boardId}/${page}/${sort}`)
       .then((response) => {
         dispatch(fetchPostsSuccess(response.data));
       }).catch((error) => {
         console.log(error);
         dispatch(fetchPostsFailure(error));
-      });
-  };
-}
-
-// FETCH BOARDS
-export function fetchBoards() {
-  return {
-    type: types.FETCH_BOARDS
-  };
-}
-export function fetchBoardsSuccess(posts) {
-  return {
-    type: types.FETCH_BOARDS_SUCCESS,
-    payload: posts
-  };
-}
-
-export function fetchBoardsFailure(error) {
-  return {
-    type: types.FETCH_BOARDS_FAILURE,
-    payload: error
-  };
-}
-export function fetchBoardsRequest() {
-  return (dispatch) => {
-    // Inform Login API is starting
-    dispatch(fetchBoards());
-    // API request
-    return axios.get('/api/post/board')
-      .then((response) => {
-        dispatch(fetchBoardsSuccess(response.data));
-      }).catch((error) => {
-        console.log(error);
-        dispatch(fetchBoardsFailure(error));
       });
   };
 }
@@ -174,6 +140,7 @@ export function createPostRequest(contents, boardId) {
   };
 }
 
+// EDIT Post
 export function editPost() {
   return {
     type: types.EDIT_POST
@@ -288,6 +255,6 @@ export function createReplyRequest(comment, postId) {
 
 export function resetNewReply() {
   return {
-    type: types.RESET_NEW_REPLY
+    type: types.RESET_NEW_BOARD
   };
 }

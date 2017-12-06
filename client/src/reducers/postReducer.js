@@ -28,11 +28,6 @@ const initialState = {
     data: null,
     error: null
   },
-  boardList: {
-    status: 'INIT',
-    data: [],
-    error: null
-  },
   newComment: {
     status: 'INIT',
     error: null
@@ -220,30 +215,6 @@ export default function post(state = initialState, action) {
           error: { $set: action.payload.response.data }
         }
       });
-
-
-      // FETCH BOARDS
-    case types.FETCH_BOARDS:
-      return update(state, {
-        boardList: {
-          status: { $set: 'WAITING' },
-        }
-      });
-    case types.FETCH_BOARDS_SUCCESS:
-      return update(state, {
-        boardList: {
-          status: { $set: 'SUCCESS' },
-          data: { $set: action.payload }
-        }
-      });
-    case types.FETCH_BOARDS_FAILURE:
-      return update(state, {
-        boardList: {
-          status: { $set: 'FAILURE' },
-          error: { $set: action.payload.response.data }
-        }
-      });
-
 
       // RESET
     case types.RESET_NEW_REPLY:

@@ -18,7 +18,8 @@ const Post = new Schema({
     date: { type: Date, default: Date.now }
   }],
   categories: [String],
-  count: { type: Number, default: 0 },
+  commentsCount: { type: Number, default: 0 },
+  count: { type: Number, default: 0 }, // View
   date: { type: Date, default: Date.now },
   updated: [{ title: String, contents: String, date: { type: Date, default: Date.now } }],
   deleted: { type: Boolean, default: false } // true => deleted

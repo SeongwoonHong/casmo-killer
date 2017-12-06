@@ -1,5 +1,6 @@
 const express = require('express');
 const Post = require('../models/post');
+const Board = require('../models/board');
 
 const router = express.Router();
 const PER_PAGE = 10;
@@ -30,49 +31,50 @@ router.get('/detail/:id', (req, res) => {
 });
 
 /* GET POST LIST */
-router.get('/board', (req, res) => {
-  Post.distinct('boardId')
-    .exec((err, boards) => {
-      if (err) throw err;
-      res.json(boards);
-    });
-});
-
-/* GET POST LIST */
-router.get('/:boardId/:page', (req, res) => {
+router.get('/:boardId/:page/:sortType', (req, res) => {
   const skipSize = (req.params.page - 1) * PER_PAGE;
   let pageNum = 1;
+  const sortObject = {};
+  const stype = req.params.sortType;
+  sortObject[stype] = -1;
 
-  Post.count({ deleted: false, boardId: req.params.boardId }, (err, totalCount) => {
-    if (err) throw err;
+  Board.findOne({ boardId: req.params.boardId }, (errBoard, resultBoard) => {
+    if (resultBoard) {
+      console.log(resultBoard);
+      Post.count({ deleted: false, boardId: req.params.boardId }, (err, totalCount) => {
+        if (err) throw err;
 
-    pageNum = Math.ceil(totalCount / PER_PAGE);
-    Post
-      .find({ deleted: false, boardId: req.params.boardId })
-      .sort({
-        postNum: -1
-      })
-      .skip(skipSize)
-      .limit(PER_PAGE)
-      .exec((error, posts) => {
-        if (error) {
-          console.log(error);
-          return res.status(500).json({
-            message: 'Could not retrieve posts'
+        pageNum = Math.ceil(totalCount / PER_PAGE);
+        Post
+          .find({ deleted: false, boardId: req.params.boardId })
+          .sort(sortObject)
+          .skip(skipSize)
+          .limit(PER_PAGE)
+          .exec((error, posts) => {
+            if (error) {
+              console.log(error);
+              return res.status(500).json({
+                message: 'Could not retrieve posts'
+              });
+            }
+
+            const meta = {
+              limit: PER_PAGE,
+              pagination: pageNum
+            };
+
+            const json = {
+              meta,
+              posts
+            };
+            res.json(json);
           });
-        }
-
-        const meta = {
-          limit: PER_PAGE,
-          pagination: pageNum
-        };
-
-        const json = {
-          meta,
-          posts
-        };
-        res.json(json);
       });
+    } else {
+      return res.status(400).json({
+        message: `There is no board ${req.params.boardId}`
+      });
+    }
   });
 });
 
@@ -152,6 +154,7 @@ router.post('/reply', (req, res) => {
   Post.findOne({ _id: req.body.postId }, (err, rawContent) => {
     if (err) throw err;
     rawContent.comments.unshift({ name: 'gook', id: 'gook', memo: comment });
+    rawContent.commentsCount += 1;
     rawContent.save((error, replyResult) => {
       if (error) throw error;
       res.json(replyResult);

@@ -11,14 +11,20 @@ const formatter = buildFormatter(krStrings);
 export default class Post extends Component {
   render() {
     const {
-      id, postNum, title, authorName, count, comments, date
+      id, postNum, title, authorName, count, comments, date, page, selected
     } = this.props;
 
     return (
       <li className="post_row collection-item row" key={id}>
         <div className="post_list_title_wrapper col s8 m7 l7">
           <div className="post_num"><span className="number">#{postNum} </span></div>
-          <h6 className="post_title"><Link to={`${this.props.baseUrl}/${id}`}>{title}</Link></h6>
+          <h6 className="post_title">
+            <Link to={{
+              pathname: `${this.props.baseUrl}/${id}`,
+              state: { page, selected }
+            }}>{title}
+            </Link>
+          </h6>
         </div>
         <div className="post_list_side_wrapper col s4 m5 l5">
           <div className="post_detail_item_author">
@@ -49,7 +55,9 @@ Post.defaultProps = {
   postNum: 0,
   title: '',
   authorName: '',
-  count: 0
+  count: 0,
+  page: 0,
+  selected: 0
 };
 
 Post.propTypes = {
@@ -57,5 +65,7 @@ Post.propTypes = {
   postNum: PropTypes.number,
   title: PropTypes.string,
   authorName: PropTypes.string,
-  count: PropTypes.number
+  count: PropTypes.number,
+  page: PropTypes.number,
+  selected: PropTypes.number
 };

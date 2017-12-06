@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { Field, reduxForm } from 'redux-form';
 import renderField from './renderField';
 import renderTextArea from './renderTextArea';
@@ -13,6 +13,13 @@ class PostInputForm extends Component {
         contents: this.props.contents
       });
     }
+  }
+
+  cancelHandler = () => {
+    if (this.props.formType === 'edit') {
+      return '';
+    }
+    this.props.history.goBack();
   }
 
   render() {
@@ -29,12 +36,13 @@ class PostInputForm extends Component {
       </button>
     );
     const postCancel = (
-      <Link
-        to={this.props.formType === 'edit' ? '' : this.props.cancelUrl}
-        className="btn btn-error"
+      <button
+        onClick={this.cancelHandler}
+        type="button"
+        className="btn btn-primary"
       >
         Cancel
-      </Link>
+      </button>
     );
 
     return (
@@ -75,5 +83,5 @@ export default reduxForm({
   validate,
   form: 'PostForm'
 })(
-  PostInputForm
+  withRouter(PostInputForm)
 );

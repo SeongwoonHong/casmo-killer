@@ -5,6 +5,7 @@ import './TopNavigation.scss';
 
 import SearchForm from '../SearchForm/SearchForm';
 import UserMenu from './UserMenu';
+import UserDropdown from './UserDropdown/UserMenuDropdown';
 
 class TopNavigation extends Component {
 
@@ -29,6 +30,15 @@ class TopNavigation extends Component {
         </h1>
         <SearchForm styleClass="dt" />
         <UserMenu />
+        {
+          this.props.layout.isUserDropdownOpen
+            ? (
+              <UserDropdown
+                user={ this.props.user }
+                openAuthModal={ this.props.openAuthModal } />
+            )
+            : null
+        }
       </header>
     );
 

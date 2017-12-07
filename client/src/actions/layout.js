@@ -13,21 +13,16 @@ export const toggleSubMenu = (payload = null) => {
   };
 };
 
-export const toggleUserMenu = () => {
-  return {
-    type: types.TOGGLE_USER_MENU
-  };
-};
-
 export const toggleSearchForm = () => {
   return {
     type: types.TOGGLE_SEARCH_FORM
   };
 };
 
-export const toggleLoginModal = () => {
+export const toggleUserDropdown = (isOpen = null) => {
   return {
-    type: types.TOGGLE_LOGIN_MODAL
+    type: types.TOGGLE_USER_DROPDOWN,
+    isOpen
   };
 };
 

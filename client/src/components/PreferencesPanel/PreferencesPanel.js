@@ -17,6 +17,10 @@ class PreferencesPanel extends Component {
       this.animateIn();
     }
   }
+  componentWillUnmount = () => {
+    TweenMax.killTweensOf(this.like);
+    TweenMax.killTweensOf(this.disLike);
+  }
   likesHandler = () => {
     this.clickAnimation(this.like);
     this.props.onLikesHandler();
@@ -25,8 +29,9 @@ class PreferencesPanel extends Component {
     this.clickAnimation(this.disLike);
     this.props.onDislikesHandler();
   }
-  animateIn = () => {
+  animateIn = async () => {
     return animate.all([
+      await animate.to({}, this.props.delay),
       animate.to(this.like[0], 0.5, { autoAlpha: 1, x: '0px' }),
       animate.to(this.like[1], 0.5, { autoAlpha: 1, delay: 0.2 }),
       animate.to(this.disLike[0], 0.5, { autoAlpha: 1, x: '0px', delay: 0.3 }),

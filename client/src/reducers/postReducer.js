@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import update from 'react-addons-update';
 import * as types from '../actions/types';
 
@@ -42,6 +43,14 @@ const initialState = {
     error: null
   },
   disLikes: {
+    status: 'INIT',
+    error: null
+  },
+  deleteComment: {
+    status: 'INIT',
+    error: null
+  },
+  fetchComment: {
     status: 'INIT',
     error: null
   }
@@ -310,7 +319,7 @@ export default function post(state = initialState, action) {
         ...state,
         likes: {
           status: 'FAILURE',
-          error: action.payload.error
+          error: action.payload
         }
       };
     // DISLIKES
@@ -340,7 +349,39 @@ export default function post(state = initialState, action) {
         ...state,
         disLikes: {
           status: 'FAILURE',
-          error: action.payload.error
+          error: action.payload
+        }
+      };
+    // DELETE COMMENTS
+    case types.DELETE_COMMENT:
+      return {
+        ...state,
+        deleteComment: {
+          status: 'WAITING',
+          error: null
+        }
+      };
+    case types.DELETE_COMMENT_SUCCESS:
+      return {
+        ...state,
+        activePost: {
+          ...state.activePost,
+          data: {
+            ...state.activePost.data,
+            comments: state.activePost.data.comments.slice(0, action.index).concat(state.activePost.data.comments.slice(action.index + 1, state.activePost.data.comments.length))
+          }
+        },
+        deleteComment: {
+          status: 'SUCCESS',
+          error: null
+        }
+      };
+    case types.DELETE_COMMENT_FAILURE:
+      return {
+        ...state,
+        deleteComment: {
+          status: 'FAILURE',
+          error: action.payload
         }
       };
     default:

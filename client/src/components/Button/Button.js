@@ -19,7 +19,12 @@ class Button extends Component {
       return this.animateIn();
     }
     return 0;
-  };
+  }
+  componentWillUnmount = () => {
+    const animateText = [...this.component.querySelectorAll('.animate-text')];
+    TweenMax.killTweensOf(this.component);
+    TweenMax.killTweensOf(animateText);
+  }
   onMouseEnterHandler = () => {
     animate.to(this.component, 0.2, { scale: 1.1, ease: Expo.easeOut })
       .then(() => animate.to(this.component, 0.2, { scale: 0.9, ease: Expo.easeOut }))
@@ -103,7 +108,7 @@ class Button extends Component {
 }
 
 Button.defaultProps = {
-  id: 'default',
+  id: '',
   text: '',
   type: '',
   name: '',

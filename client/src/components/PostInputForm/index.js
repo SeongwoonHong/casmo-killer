@@ -6,7 +6,7 @@ import krStrings from 'react-timeago/lib/language-strings/ko';
 import TimeAgo from 'react-timeago';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import renderField from './renderField';
-import renderTextArea from './renderTextArea';
+import renderRichTextEditor from './renderRichTextEditor';
 import validate from './validatePost';
 import Button from '../Button/Button';
 import './PostInputForm.scss';
@@ -72,7 +72,7 @@ class PostInputForm extends Component {
             />
             <Field
               name="contents"
-              component={renderTextArea}
+              component={renderRichTextEditor}
               label="Content*"
               fieldClass={fieldClass}
             />

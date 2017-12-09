@@ -15,6 +15,13 @@
       }
     }
   }
+  .btn-edit {
+    margin-right: 10px;
+  }
+  .btn-delete, .btn-edit {
+    float: right;
+    cursor: pointer;
+  }
   .comment {
     margin-top: 10px;
   }

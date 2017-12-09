@@ -213,6 +213,22 @@ router.delete('/:id', (req, res) => {
     });
 });
 
+// DELETING COMMENTS
+// @Params:
+//  postId: 삭제될 코멘트가있는 포스트의 아이디
+//  commentId: 삭제될 코멘트의 아이디
+router.post('/:postId/:commentId', (req, res) => {
+  const { postId, commentId } = req.params;
+  Post.update(
+    { _id: postId, 'comments._id': commentId },
+    { $set: { 'comments.$.deleted': true } },
+    (err, result) => {
+      if (err) throw err;
+      if (!result) res.status(404).json({ message: 'NO SUCH COMMENT' });
+      return res.json(result);
+    }
+  );
+});
 
 /* EDIT POST */
 router.put('/:id', (req, res) => {
@@ -252,19 +268,18 @@ router.put('/:id', (req, res) => {
 });
 
 
-// GIVING LIKES
+// GIVING LIKES FOR POSTS
 // @Params:
 //  postId: 좋아요 눌러질 포스트의 아이디
 router.post('/likes/:postId', (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.postId)) {
     return res.status(400).json({
-      message: 'INVALID ID'
+      message: 'INVALID POST ID'
     });
   }
   Post.findById(req.params.postId, (err, post) => {
     if (err) throw err;
     if (!post) return res.status(404).json({ message: 'NO SUCH POST' });
-
     const index = post.likes.indexOf('gook'); // 테스팅 목적
     const didLike = (index !== -1);
     if (!didLike) {
@@ -281,13 +296,13 @@ router.post('/likes/:postId', (req, res) => {
   });
 });
 
-// GIVING DISLIKES
+// GIVING DISLIKES FOR POSTS
 // @Params:
 //  postId: 싫어요 눌러질 포스트의 아이디
 router.post('/disLikes/:postId', (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.postId)) {
     return res.status(400).json({
-      message: 'INVALID ID'
+      message: 'INVALID POST ID'
     });
   }
 
@@ -310,68 +325,84 @@ router.post('/disLikes/:postId', (req, res) => {
     });
   });
 });
-//
-// /*
-//     TOGGLES STAR OF POST: POST /api/post/star/:id
-//     ERROR CODES
-//         1: INVALID ID
-//         2: NOT LOGGED IN
-//         3: NO RESOURCE
-// */
-// router.post('/star/:id', (req, res) => {
-//   // CHECK POST ID VALIDITY
-//   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-//     return res.status(400).json({
-//       error: 'INVALID ID',
-//       code: 1
-//     });
-//   }
-//
-//   // CHECK LOGIN STATUS
-//   if (typeof req.session.loginInfo === 'undefined') {
-//     return res.status(403).json({
-//       error: 'NOT LOGGED IN',
-//       code: 2
-//     });
-//   }
-//
-//   // FIND POST
-//   Post.findById(req.params.id, (err, post) => {
-//     if (err) throw err;
-//
-//     // POST DOES NOT EXIST
-//     if (!post) {
-//       return res.status(404).json({
-//         error: 'NO RESOURCE',
-//         code: 3
-//       });
-//     }
-//
-//     // GET INDEX OF USERNAME IN THE ARRAY
-//     const index = post.starred.indexOf(req.session.loginInfo.username);
-//
-//     // CHECK WHETHER THE USER ALREADY HAS GIVEN A STAR
-//     const hasStarred = (index !== -1);
-//
-//     if (!hasStarred) {
-//       // IF IT DOES NOT EXIST
-//       post.starred.push(req.session.loginInfo.username);
-//     } else {
-//       // ALREADY starred
-//       post.starred.splice(index, 1);
-//     }
-//
-//     // SAVE THE POST
-//     post.save((error, result) => {
-//       if (error) throw error;
-//       res.json({
-//         success: true,
-//         has_starred: !hasStarred,
-//         result,
-//       });
-//     });
-//   });
-// });
 
+// GIVING LIKES FOR COMMENTS
+// @Params:
+//  postId: 좋아요 눌러질 포스트의 아이디
+//  commentId: 좋아요 눌러질 코멘트 아이디
+router.post('/comment/likes/:postId/:commentId', (req, res) => {
+  const { postId, commentId } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(postId)) {
+    return res.status(400).json({
+      message: 'INVALID POST ID'
+    });
+  }
+  if (!mongoose.Types.ObjectId.isValid(commentId)) {
+    return res.status(400).json({
+      message: 'INVALID COMMENT ID'
+    });
+  }
+  Post.findById(postId, (err, post) => {
+    if (err) throw err;
+    if (!post) return res.status(404).json({ message: 'NO SUCH POST' });
+    for (let i = 0; i < post.comments.length; i += 1) {
+      if (post.comments[i]._id == commentId) {
+        const index = post.comments[i].likes.indexOf('gook');
+        const didLike = (index !== -1);
+        console.log(didLike);
+        if (!didLike) {
+          // IF IT DOES NOT EXIST
+          post.comments[i].likes.push('gook');
+        } else {
+          // ALREADY disliked
+          post.comments[i].likes.splice(index, 1);
+        }
+      }
+    }
+    post.save((error, result) => {
+      if (error) throw error;
+      return res.json(result);
+    });
+  });
+});
+
+// GIVING DISLIKES FOR COMMENTS
+// @Params:
+//  postId: 싫어요 눌러질 포스트의 아이디
+//  commentId: 싫어요 눌러질 코멘트 아이디
+router.post('/comment/disLikes/:postId/:commentId', (req, res) => {
+  const { postId, commentId } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(postId)) {
+    return res.status(400).json({
+      message: 'INVALID POST ID'
+    });
+  }
+  if (!mongoose.Types.ObjectId.isValid(commentId)) {
+    return res.status(400).json({
+      message: 'INVALID COMMENT ID'
+    });
+  }
+  Post.findById(postId, (err, post) => {
+    if (err) throw err;
+    if (!post) return res.status(404).json({ message: 'NO SUCH POST' });
+    for (let i = 0; i < post.comments.length; i += 1) {
+      if (post.comments[i]._id == commentId) {
+        const index = post.comments[i].disLikes.indexOf('gook');
+        const didDisLike = (index !== -1);
+        if (!didDisLike) {
+          // IF IT DOES NOT EXIST
+          post.comments[i].disLikes.push('gook');
+        } else {
+          // ALREADY disliked
+          post.comments[i].disLikes.splice(index, 1);
+        }
+      }
+    }
+    post.save((error, result) => {
+      if (error) throw error;
+      return res.json(result);
+    });
+  });
+});
 
 module.exports = router;

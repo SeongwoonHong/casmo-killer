@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 // import { SubmissionError } from 'redux-form';
 import Materialize from 'materialize-css';
 import ReplyNew from '../../ReplyNew/ReplyNew';
-import ReplyList from '../../ReplyList/ReplyList';
+import ReplyList from '../../ReplyList';
 import PostShow from '../../PostShow/PostShow';
 import PostInputForm from '../../PostInputForm';
 import LoadingCircle from '../../Loading/LoadingCircle';
@@ -21,7 +21,6 @@ class PostDetail extends Component {
       editMode: false,
       baseUrl
     };
-    this.toggleEdit = this.toggleEdit.bind(this);
   }
 
   componentDidMount() {
@@ -35,15 +34,15 @@ class PostDetail extends Component {
     this.props.resetPostProps();
   }
   onLikesHandler = () => {
-    this.props.giveLikesRequest(this.props.activePost.data._id);
+    this.props.giveLikesRequest(this.props.activePost.data._id, 'post');
   }
   onDislikesHandler = () => {
-    this.props.giveDislikesRequest(this.props.activePost.data._id);
+    this.props.giveDislikesRequest(this.props.activePost.data._id, 'post');
   }
   onDeleteHandler = () => {
     //
   }
-  toggleEdit() {
+  toggleEdit = () => {
     this.setState({
       editMode: !this.state.editMode
     });
@@ -66,7 +65,7 @@ class PostDetail extends Component {
   handleDelete = () => {
     return this.props.onDeleteClick().then(() => {
       if (this.props.deletePost.status === 'SUCCESS') {
-        Materialize.toast('Success!', 2000);
+        Materialize.toast('A post is deleted!', 2000);
         this.props.history.push(this.state.baseUrl);
       } else {
         Materialize.toast($(`<span style="color: #00c853">Error: ${this.props.editPost.error.message}</span>`), 3000);
@@ -86,7 +85,7 @@ class PostDetail extends Component {
 
   render() {
     const { data, status, error } = this.props.activePost;
-    // console.log(this.props.activePost);
+    const { user } = this.props;
     if (status === 'WAITING') {
       return (
         <div className="board_detail_loading">
@@ -130,21 +129,44 @@ class PostDetail extends Component {
           <Button
             text="Edit"
             onClick={this.toggleEdit}
-            onKeyDown={this.toggleEdit}
+            onKeyDown={() => {}}
             role="button"
             tabIndex={0}
             className="btn waves-effect teal waves-light edit"
             isLink={false}
           />
           <Button
-            onClick={this.props.onDeleteClick}
-            onKeyDown={this.props.onDeleteClick}
+            onClick={this.handleDelete}
+            onKeyDown={() => {}}
             role="button"
             tabIndex={0}
             className="btn waves-effect teal waves-light delete"
             text="Delete"
             isLink={false}
           />
+          {/* {
+            user.username === data.authorName &&
+            [
+              <Button
+                text="Edit"
+                onClick={this.toggleEdit}
+                onKeyDown={() => {}}
+                role="button"
+                tabIndex={0}
+                className="btn waves-effect teal waves-light edit"
+                isLink={false}
+              />,
+              <Button
+                onClick={this.handleDelete}
+                onKeyDown={() => {}}
+                role="button"
+                tabIndex={0}
+                className="btn waves-effect teal waves-light delete"
+                text="Delete"
+                isLink={false}
+              />
+            ]
+          } */}
         </div>
       </div>
     );

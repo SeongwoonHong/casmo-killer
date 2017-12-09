@@ -13,7 +13,8 @@ class RichTextEditor extends Component {
     };
   }
   componentDidMount() {
-    // console.log(this.props.input.value);
+    console.log('this.props.value');
+    console.log(this.props.value);
   }
   onChange = (value) => {
     this.setState({ value });
@@ -33,11 +34,4 @@ class RichTextEditor extends Component {
     );
   }
 }
-// RichTextEditor.defaultProps = {
-//   onChange: PropTypes.func
-// };
-//
-// RichTextEditor.propTypes = {
-//   onChange: () => { console.log('onChange func'); }
-// };
 export default RichTextEditor;

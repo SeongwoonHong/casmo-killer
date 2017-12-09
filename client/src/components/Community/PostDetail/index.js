@@ -10,7 +10,8 @@ function mapStateToProps(state, ownProps) {
     editPost: state.posts.editPost,
     newComment: state.posts.newComment,
     likes: state.posts.likes,
-    disLikes: state.posts.disLikes
+    disLikes: state.posts.disLikes,
+    user: state.user
   };
 }
 
@@ -38,11 +39,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     createReplyRequest: (comment, postId) => {
       return dispatch(actions.createReplyRequest(comment, postId));
     },
-    giveLikesRequest: (id) => {
-      return dispatch(actions.giveLikesRequest(id));
+    giveLikesRequest: (id, type) => {
+      return dispatch(actions.giveLikesRequest(id, type));
     },
-    giveDislikesRequest: (id) => {
-      return dispatch(actions.giveDislikesRequest(id));
+    giveDislikesRequest: (id, type) => {
+      return dispatch(actions.giveDislikesRequest(id, type));
     }
   };
 };

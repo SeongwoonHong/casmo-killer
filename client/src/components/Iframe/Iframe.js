@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import './Iframe.scss';
 
 class Iframe extends Component {
   componentDidMount() {
@@ -22,17 +23,19 @@ class Iframe extends Component {
     return (
       <iframe
         ref={el => this.iframe = el}
-        style={this.props.style}
         title="Iframe"
+        className="iframe"
       />
     );
   }
 }
 Iframe.defaultProps = {
-  style: ''
+  content: '',
+  stylesheets: ''
 };
 
 Iframe.propTypes = {
-  style: PropTypes.string
+  content: PropTypes.string,
+  stylesheets: PropTypes.string
 };
 export default Iframe;

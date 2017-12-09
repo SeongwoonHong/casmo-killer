@@ -15,7 +15,10 @@ const Post = new Schema({
     name: String,
     id: String,
     memo: String,
-    date: { type: Date, default: Date.now }
+    date: { type: Date, default: Date.now },
+    likes: [String],
+    disLikes: [String],
+    deleted: { type: Boolean, default: false }
   }],
   categories: [String],
   count: { type: Number, default: 0 },

@@ -312,17 +312,25 @@ export function giveLikesFailure(error) {
   };
 }
 
-export function giveLikesRequest(id) {
+export function giveLikesRequest(id, type, commentId) {
   return (dispatch) => {
 
     dispatch(giveLikes());
-
-    axios.post(`/api/post/likes/${id}`).then((response) => {
-      dispatch(giveLikesSuccess(response.data));
-    }).catch((e) => {
-      console.error(e);
-      dispatch(giveLikesFailure(e));
-    });
+    if (type === 'post') {
+      axios.post(`/api/post/likes/${id}`).then((response) => {
+        dispatch(giveLikesSuccess(response.data));
+      }).catch((e) => {
+        console.error(e);
+        dispatch(giveLikesFailure(e));
+      });
+    } else {
+      axios.post(`/api/post/comment/likes/${id}/${commentId}`).then((response) => {
+        dispatch(giveLikesSuccess(response.data));
+      }).catch((e) => {
+        console.error(e);
+        dispatch(giveLikesFailure(e));
+      });
+    }
   };
 }
 
@@ -346,16 +354,58 @@ export function giveDislikesFailure(error) {
   };
 }
 
-export function giveDislikesRequest(id) {
+export function giveDislikesRequest(id, type, commentId) {
   return (dispatch) => {
 
     dispatch(giveDislikes());
+    if (type === 'post') {
+      axios.post(`/api/post/disLikes/${id}`).then((response) => {
+        dispatch(giveDislikesSuccess(response.data));
+      }).catch((e) => {
+        console.error(e);
+        dispatch(giveDislikesFailure(e));
+      });
+    } else {
+      axios.post(`/api/post/comment/disLikes/${id}/${commentId}`).then((response) => {
+        dispatch(giveDislikesSuccess(response.data));
+      }).catch((e) => {
+        console.error(e);
+        dispatch(giveDislikesFailure(e));
+      });
+    }
 
-    axios.post(`/api/post/disLikes/${id}`).then((response) => {
-      dispatch(giveDislikesSuccess(response.data));
-    }).catch((e) => {
-      console.error(e);
-      dispatch(giveDislikesFailure(e));
-    });
+  };
+}
+
+export function deleteComment() {
+  return {
+    type: types.DELETE_COMMENT
+  };
+}
+
+export function deleteCommentFailure(error) {
+  return {
+    type: types.DELETE_COMMENT_FAILURE,
+    payload: error
+  };
+}
+
+export function deleteCommentSuccess(index) {
+  return {
+    type: types.DELETE_COMMENT_SUCCESS,
+    index
+  };
+}
+
+export function deleteCommentRequest(postId, commentId, index) {
+  return (dispatch) => {
+    dispatch(deleteComment());
+    return axios.post(`/api/post/${postId}/${commentId}`)
+      .then(() => {
+        dispatch(deleteCommentSuccess(index));
+      }).catch((error) => {
+        console.log(error);
+        dispatch(deleteCommentFailure(error));
+      });
   };
 }

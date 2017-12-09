@@ -20,5 +20,9 @@ export default {
     components: require('../components/Register'),
     props: {
     }
+  },
+  RichTextEditor: {
+    components: require('../components/RichTextEditor/RichTextEditor'),
+    props: {}
   }
 };

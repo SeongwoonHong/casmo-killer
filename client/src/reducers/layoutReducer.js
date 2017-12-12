@@ -6,9 +6,8 @@ const initialState = {
     breakPoint: breakPoint(window.innerWidth),
     isMainMenuVisible: false,
     isSubMenuVisible: breakPoint(window.innerWidth) === 'xl',
-    isUserMenuVisible: false,
     isSearchFormVisible: false,
-    isLoginModalOpen: false,
+    isUserDropdownOpen: false
   }
 };
 
@@ -31,19 +30,14 @@ export default function (state = initialState.layout, action) {
         isSubMenuVisible: action.payload !== null ? action.payload : !state.isSubMenuVisible
       });
 
-    case types.TOGGLE_USER_MENU:
-      return Object.assign({}, state, {
-        isUserMenuVisible: !state.isUserMenuVisible
-      });
-
     case types.TOGGLE_MAIN_MENU:
       return Object.assign({}, state, {
         isMainMenuVisible: !state.isMainMenuVisible
       });
 
-    case types.TOGGLE_LOGIN_MODAL:
+    case types.TOGGLE_USER_DROPDOWN:
       return Object.assign({}, state, {
-        isLoginModalOpen: !state.isLoginModalOpen
+        isUserDropdownOpen: action.isOpen !== null ? action.isOpen : !state.isUserDropdownOpen
       });
 
     default:

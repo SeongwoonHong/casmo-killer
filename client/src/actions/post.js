@@ -317,14 +317,14 @@ export function giveLikesRequest(id, type, commentId) {
 
     dispatch(giveLikes());
     if (type === 'post') {
-      axios.post(`/api/post/likes/${id}`).then((response) => {
+      return axios.post(`/api/post/likes/${id}`).then((response) => {
         dispatch(giveLikesSuccess(response.data));
       }).catch((e) => {
         console.error(e);
         dispatch(giveLikesFailure(e));
       });
     } else {
-      axios.post(`/api/post/comment/likes/${id}/${commentId}`).then((response) => {
+      return axios.post(`/api/post/comment/likes/${id}/${commentId}`).then((response) => {
         dispatch(giveLikesSuccess(response.data));
       }).catch((e) => {
         console.error(e);
@@ -400,12 +400,42 @@ export function deleteCommentSuccess(index) {
 export function deleteCommentRequest(postId, commentId, index) {
   return (dispatch) => {
     dispatch(deleteComment());
-    return axios.post(`/api/post/${postId}/${commentId}`)
+    return axios.post(`/api/post/comment/${postId}/${commentId}`)
       .then(() => {
         dispatch(deleteCommentSuccess(index));
       }).catch((error) => {
         console.log(error);
         dispatch(deleteCommentFailure(error));
       });
+  };
+}
+export function updateComment() {
+  return {
+    type: types.UPDATE_COMMENT
+  };
+}
+export function updateCommentSuccess(data) {
+  return {
+    type: types.UPDATE_COMMENT_SUCCESS,
+    payload: data
+  };
+}
+
+export function updateCommentFailure(error) {
+  return {
+    type: types.UPDATE_COMMENT_FAILURE,
+    payload: error
+  };
+}
+
+export function updateCommentRequest(postId, commentId, contents) {
+  return (dispatch) => {
+    dispatch(updateComment());
+    return axios.post(`/api/post/comment/update/${postId}/${commentId}`, { contents }).then((res) => {
+      dispatch(updateCommentSuccess(res.data));
+    }).catch((e) => {
+      throw e;
+      dispatch(updateCommentFailure(e));
+    });
   };
 }

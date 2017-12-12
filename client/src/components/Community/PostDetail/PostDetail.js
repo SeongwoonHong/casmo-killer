@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 // import { SubmissionError } from 'redux-form';
@@ -34,10 +35,14 @@ class PostDetail extends Component {
     this.props.resetPostProps();
   }
   onLikesHandler = () => {
-    this.props.giveLikesRequest(this.props.activePost.data._id, 'post');
+    if ((this.props.user.username !== this.props.activePost.data.authorName) && this.props.user.isLoggedIn) {
+      return this.props.giveLikesRequest(this.props.activePost.data._id, 'post');
+    }
   }
   onDislikesHandler = () => {
-    this.props.giveDislikesRequest(this.props.activePost.data._id, 'post');
+    if ((this.props.user.username !== this.props.activePost.data.authorName) && this.props.user.isLoggedIn) {
+      return this.props.giveDislikesRequest(this.props.activePost.data._id, 'post');
+    }
   }
   onDeleteHandler = () => {
     //
@@ -126,25 +131,7 @@ class PostDetail extends Component {
           />
         </div>
         <div className="card-action">
-          <Button
-            text="Edit"
-            onClick={this.toggleEdit}
-            onKeyDown={() => {}}
-            role="button"
-            tabIndex={0}
-            className="btn waves-effect teal waves-light edit"
-            isLink={false}
-          />
-          <Button
-            onClick={this.handleDelete}
-            onKeyDown={() => {}}
-            role="button"
-            tabIndex={0}
-            className="btn waves-effect teal waves-light delete"
-            text="Delete"
-            isLink={false}
-          />
-          {/* {
+          {
             user.username === data.authorName &&
             [
               <Button
@@ -153,6 +140,7 @@ class PostDetail extends Component {
                 onKeyDown={() => {}}
                 role="button"
                 tabIndex={0}
+                key="btn1"
                 className="btn waves-effect teal waves-light edit"
                 isLink={false}
               />,
@@ -161,12 +149,13 @@ class PostDetail extends Component {
                 onKeyDown={() => {}}
                 role="button"
                 tabIndex={0}
+                key="btn2"
                 className="btn waves-effect teal waves-light delete"
                 text="Delete"
                 isLink={false}
               />
             ]
-          } */}
+          }
         </div>
       </div>
     );
@@ -178,11 +167,14 @@ class PostDetail extends Component {
         <ReplyList
           comments={data.comments}
         />
-        <ReplyNew
-          onReply={this.handleReply}
-          title="댓글"
-          postId={data._id}
-        />
+        {
+          this.props.user.isLoggedIn
+          && <ReplyNew
+            onReply={this.handleReply}
+            title="댓글"
+            postId={data._id}
+          />
+        }
       </div>
     );
   }

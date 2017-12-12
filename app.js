@@ -1,17 +1,19 @@
-const mongoose = require('mongoose');
 const path = require('path');
-const express = require('express');
-const passport = require('passport');
-const expressJWT = require('express-jwt');
-const api = require('./server/routes');
-const keys = require('./client/config/keys/key');
 
+// loading local environment variables
+require('dotenv').config({
+  path: path.resolve(`./client/config/env/.env.${process.env.NODE_ENV}`)
+});
+
+const express = require('express');
 const app = express();
 
 const port = process.env.PORT || 4000;
 
 const webpackMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
+const morgan = require('morgan');
+const jwtMiddleware = require('./server/middlewares/jwtMiddleware');
 
 const openBrowser = require('react-dev-utils/openBrowser');
 
@@ -20,41 +22,27 @@ const isDev = process.env.NODE_ENV === 'development';
 const publicPath = `client/${isDev ? 'public' : 'build'}`;
 const indexFile = `index${isDev ? '.dev' : ''}.html`;
 
-/* mongodb connection */
-const db = mongoose.connection;
+const api = require('./server/routes');
 
-db.once('open', () => {
-  console.log('Connected to mongodb server');
-});
+// db connection
+require('./server/db/index');
 
-db.on('error', console.error);
-
-mongoose.Promise = global.Promise;
-
-mongoose.connect(keys.mongooseURI, {
-  useMongoClient: true
-});
-
+// webpack middlewares for development
 if (isDev) {
   const devServer = require('./client/config/scripts/dev')(port);
   app.use(webpackMiddleware(devServer.compiler, devServer.serverConfig));
   app.use(webpackHotMiddleware(devServer.compiler));
 }
 
-app.use(require('morgan')('dev'));
-app.use(require('body-parser').json());
-
+// default middlewares
+app.use(morgan('dev'));
+app.use(express.json({
+  limit: '50mb'
+}));
+app.use(jwtMiddleware);
 app.use(express.static(path.join(__dirname, publicPath)));
 
-// app.use(expressJWT({
-//   secret: keys.jwtSecretKey
-// }).unless({
-//   path: [/\/facebook/i]
-// }));
-
-app.use(passport.initialize());
-app.use(passport.session());
-
+// api endpoints
 app.use('/api', api);
 
 app.get('/*', (req, res) => {

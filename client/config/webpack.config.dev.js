@@ -54,6 +54,9 @@ module.exports = {
     extensions: ['.js', '.jsx', '.json'],
     alias: {
       // add aliases for import
+      actions: path.resolve('./client/src/actions'),
+      sharedComponents: path.resolve('./client/src/components/shared'),
+      sharedUtils: path.resolve('./client/src/utils')
     },
     plugins: [
       // restricts importing files from outside of src directory
@@ -116,7 +119,10 @@ module.exports = {
                 }
               },
               {
-                loader: require.resolve('sass-loader')
+                loader: require.resolve('sass-loader'),
+                options: {
+                  data: `@import "${path.resolve('./client/src/styles/index.scss')}";`
+                }
               },
               {
                 loader: require.resolve('postcss-loader'),

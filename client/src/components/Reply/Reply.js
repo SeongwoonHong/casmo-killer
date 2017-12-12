@@ -21,12 +21,10 @@ export default class Reply extends Component {
     };
   }
   componentWillMount() {
-    console.log(this.props.comment);
-    console.log(this.props.commentId);
-    console.log('===');
     this.props.initialize({
       [`comment${this.props.commentId}`]: this.props.comment
     });
+
   }
   componentDidMount = () => {
     animate.set(this.component, { autoAlpha: 0, y: '-20px' });
@@ -57,13 +55,13 @@ export default class Reply extends Component {
     this.animateOut().then(done);
   }
   likesHandler = (postId, type, commentId) => {
-    if (this.props.commentAuthorName === this.props.postAuthorName) {
+    if (this.props.user.isLoggedIn && (this.props.commentAuthorName !== this.props.user.username)) {
       this.clickAnimation(this.like);
       this.props.giveLikesRequest(postId, type, commentId);
     }
   }
   disLikesHandler = (postId, type, commentId) => {
-    if (this.props.commentAuthorName === this.props.postAuthorName) {
+    if (this.props.user.isLoggedIn && (this.props.commentAuthorName !== this.props.user.username)) {
       this.clickAnimation(this.disLike);
       this.props.giveDisLikesRequest(postId, type, commentId);
     }
@@ -78,9 +76,25 @@ export default class Reply extends Component {
       edit: !this.state.edit
     });
   }
+  validateAndPost = (values) => {
+    const { postId, commentId } = this.props;
+    const contents = values[`comment${this.props.commentId}`].trim();
+    if (typeof contents !== 'string' || !contents) {
+      Materialize.toast($('<span style="color: red">Content cannot be empty</span>'), 3000, 'rounded');
+      return;
+    }
+    return this.props.updateCommentRequest(postId, commentId, contents).then(() => {
+      if (this.props.updateComment.status === 'SUCCESS') {
+        Materialize.toast('<span style="color: teal">Your comment is updated!</span>', 2000, 'rounded');
+      } else {
+        Materialize.toast($('<span style="color: red">Content cannot be empty</span>'), 3000, 'rounded');
+      }
+      this.setState({ edit: false });
+    });
+  }
   render() {
     const {
-      postId, commentAuthorName, comment, date, commentId, postAuthorName, likes, disLikes
+      postId, commentAuthorName, comment, date, commentId, postAuthorName, likes, disLikes, handleSubmit
     } = this.props;
     const editView = (
       <Field
@@ -89,74 +103,75 @@ export default class Reply extends Component {
         component={renderTextArea}
       />
     );
-    return (
-      <div className="card reply" ref={el => this.component = el}>
-        <div className="card-content" key={postId}>
-          <div className="header">
-            <Link to="/"><img src="/testIcon.png" alt="" className="circle avartar_circle" /></Link>
-            <div className="header-info">
-              <div className="writer">{commentAuthorName}</div>
-              <div className="created">Created : <TimeAgo date={date} formatter={formatter} /></div>
-            </div>
-          </div>
-          { this.state.edit ? editView : <div className="comment">{comment}</div> }
-          <div className="preferences-panel">
-            <img
-              src="/like_icon.png"
-              alt=""
-              className="like-icon"
-              ref={el => this.like = el }
-              onClick={() => this.likesHandler(postId, 'comment', commentId)}
-              onKeyDown={() => {}}
-            />
-            <span className="likes">{likes.length}</span>
-            <img
-              src="/dislike_icon.png"
-              alt=""
-              className="dislike-icon"
-              ref={el => this.disLike = el}
-              onClick={() => this.disLikesHandler(postId, 'comment', commentId)}
-              onKeyDown={() => {}}
-            />
-            <span className="dislikes">{disLikes.length}</span>
-            <span
-              className="btn-delete"
-              onClick={() => {
-                if (this.state.edit) this.toggleEdit();
-                else this.onDeleteHandler();
-              }}
-              onKeyDown={() => {}}
-              role="presentation"
+    const buttons = (
+      <span>
+        <span
+          className="btn-delete btn"
+          onClick={() => {
+            if (this.state.edit) this.toggleEdit();
+            else this.onDeleteHandler();
+          }}
+          role="presentation"
+          onKeyDown={() => {}}
+        >
+          { this.state.edit ? 'Cancel' : 'Delete' }
+        </span>
+        {
+          this.state.edit ?
+            <button
+              type="submit"
+              className="btn btn-edit"
             >
-              { this.state.edit ? 'Cancel' : 'Delete' }
-            </span>
+              Save
+            </button> :
             <span
-              className="btn-edit"
+              className="btn-edit btn"
               onClick={this.toggleEdit}
               onKeyDown={() => {}}
               role="presentation"
             >
               Edit
             </span>
-            {/* <Button
-              text="Edit"
-              onClick={this.toggleEdit}
-              onKeyDown={() => {}}
-              role="button"
-              tabIndex={0}
-              className="btn waves-effect blue waves-light edit"
-              isLink={false}
-            />
-            <Button
-              text="Delete"
-              onClick={this.toggleEdit}
-              onKeyDown={() => {}}
-              role="button"
-              tabIndex={0}
-              className="btn waves-effect blue waves-light edit"
-              isLink={false}
-            /> */}
+        }
+      </span>
+    );
+    return (
+      <div className="card reply" ref={el => this.component = el}>
+        <div className="card-content" key={postId}>
+          <div className="header">
+            <Link to={`/userPage/${this.props.authorId}`}><img src={this.props.avatar} alt="" className="circle avartar_circle" /></Link>
+            <div className="header-info">
+              <div className="writer">{commentAuthorName}</div>
+              <div className="created">Created : <TimeAgo date={date} formatter={formatter} /></div>
+            </div>
           </div>
+          <form onSubmit={handleSubmit(this.validateAndPost)} ref={el => this.form = el}>
+            { this.state.edit ? editView : <div className="comment">{comment}</div> }
+
+            <div className="preferences-panel">
+              <img
+                src="/like_icon.png"
+                alt=""
+                className="like-icon"
+                ref={el => this.like = el }
+                onClick={() => this.likesHandler(postId, 'comment', commentId)}
+                onKeyDown={() => {}}
+              />
+              <span className="likes">{likes.length}</span>
+              <img
+                src="/dislike_icon.png"
+                alt=""
+                className="dislike-icon"
+                ref={el => this.disLike = el}
+                onClick={() => this.disLikesHandler(postId, 'comment', commentId)}
+                onKeyDown={() => {}}
+              />
+              <span className="dislikes">{disLikes.length}</span>
+              {
+                this.props.user.username === commentAuthorName ? buttons : undefined
+              }
+            </div>
+          </form>
         </div>
       </div>
     );

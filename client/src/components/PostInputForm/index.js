@@ -33,16 +33,18 @@ class PostInputForm extends Component {
     let authorName;
     let date;
     let postNum;
+    let authorId;
+    let avatar;
     if (this.props.formType === 'edit') {
       ({
-        authorName, date, postNum
+        authorName, date, postNum, authorId, avatar
       } = this.props.data);
     }
     const fieldClass = this.props.formType === 'edit' ? 'active' : '';
     const infoForEdit = (
       [
         <div className="header" key="header">
-          <Link to="/"><img src="/testIcon.png" alt="" className="circle avartar_circle" /></Link>
+          <Link to={`/userPage/${authorId}`}><img src={avatar} alt="" className="circle avartar_circle" /></Link>
           <div className="header-info">
             <div className="writer">{authorName}</div>
             <div className="created">Created : <TimeAgo date={date} formatter={formatter} /></div>

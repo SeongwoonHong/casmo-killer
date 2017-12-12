@@ -1,0 +1,43 @@
+.dropdown-content {
+    background-color: palette(Teal, 50);
+    display: block;
+    opacity: 1;
+    right: 0;
+    top: 50px;
+    > li {
+        > a,
+        > button {
+            @include flex-box(space-around);
+            color: palette(Teal, 900);
+            font-size: 14px;
+            width: 100%;
+            > .material-icons {
+                font-size: 20px;
+                margin-right: 10px;
+            }
+            > .notification-badge {
+                left: 4px;
+                top: 4px;
+            }
+        }
+        &:hover {
+            background-color: palette(Teal, 100);
+        }
+    }
+    @media screen and (min-width: 768px) {
+        > .notification {
+            display: none;
+        }
+    }
+    @media screen and (min-width: 992px) {
+        > li {
+            > a,
+            > button {
+                @include flex-box(flex-start);
+            }
+        }
+        &.logged-in {
+            width: 260px;
+        }
+    }
+}

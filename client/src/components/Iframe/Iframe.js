@@ -5,9 +5,25 @@ import './Iframe.scss';
 class Iframe extends Component {
   componentDidMount() {
     this._updateIframe();
+    this.resizeIframe();
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', () => {
+        this.resizeIframe();
+      }, true);
+    }
   }
   componentDidUpdate() {
     this._updateIframe();
+  }
+  componentWillUnmount() {
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('resize', () => {
+        this.resizeIframe();
+      }, false);
+    }
+  }
+  resizeIframe = () => {
+    this.iframe.style.height = `${this.iframe.contentDocument.body.getElementsByTagName('div')[0].scrollHeight + 30}px`;
   }
   _updateIframe() {
     const document = this.iframe.contentDocument;
@@ -25,6 +41,7 @@ class Iframe extends Component {
         ref={el => this.iframe = el}
         title="Iframe"
         className="iframe"
+        scrolling="no"
       />
     );
   }

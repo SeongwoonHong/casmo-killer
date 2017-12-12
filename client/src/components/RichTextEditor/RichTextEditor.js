@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import ReactRte from 'react-rte';
 // import { stateToHTML } from 'draft-js-export-html';
+import './RichTextEditor.scss';
 
 class RichTextEditor extends Component {
   constructor(props) {
@@ -30,6 +31,7 @@ class RichTextEditor extends Component {
         value={this.state.value}
         onChange={this.onChange}
         ref={el => this.editor = el}
+        className="react-rte"
       />
     );
   }

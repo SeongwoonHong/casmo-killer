@@ -1,9 +1,15 @@
+/* eslint-disable max-len */
 const express = require('express');
 const mongoose = require('mongoose');
-const Post = require('../models/post');
+const Post = require('../db/models/post');
+const comment = require('./comment');
+const isAuthenticated = require('../middlewares/isAuthenticated');
 
 const router = express.Router();
 const PER_PAGE = 10;
+
+// sub routes for comments
+router.use('/comment', comment);
 
 /* POST DETAIL */
 router.get('/detail/:id', (req, res) => {
@@ -128,7 +134,59 @@ router.get('/search/:searchWord/:boardId/:page', (req, res) => {
       });
   });
 });
+// GIVING LIKES FOR POSTS
+// @Params:
+//  postId: 좋아요 눌러질 포스트의 아이디
+router.post('/likes/:postId', isAuthenticated, (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.postId)) {
+    return res.status(400).json({
+      message: 'INVALID POST ID'
+    });
+  }
+  Post.findById(req.params.postId, (err, post) => {
+    if (err) throw err;
+    if (!post) return res.status(404).json({ message: 'NO SUCH POST' });
+    const index = post.likes.indexOf(req.user.username);
+    const didLike = (index !== -1);
+    if (!didLike) {
+      post.likes.push(req.user.username);
+    } else {
+      post.likes.splice(index, 1);
+    }
+    post.save((error, result) => {
+      if (error) throw error;
+      return res.json(result);
+    });
+  });
+});
 
+// GIVING DISLIKES FOR POSTS
+// @Params:
+//  postId: 싫어요 눌러질 포스트의 아이디
+router.post('/disLikes/:postId', isAuthenticated, (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.postId)) {
+    return res.status(400).json({
+      message: 'INVALID POST ID'
+    });
+  }
+
+  Post.findById(req.params.postId, (err, post) => {
+    if (err) throw err;
+    if (!post) return res.status(404).json({ message: 'NO SUCH POST' });
+
+    const index = post.disLikes.indexOf(req.user.username); // 테스팅 목적
+    const didDislike = (index !== -1);
+    if (!didDislike) {
+      post.disLikes.push(req.user.username);
+    } else {
+      post.disLikes.splice(index, 1);
+    }
+    post.save((error, result) => {
+      if (error) throw error;
+      return res.json(result);
+    });
+  });
+});
 /* CREATE REPLY */
 router.post('/reply', (req, res) => {
   const { body } = req;
@@ -152,7 +210,7 @@ router.post('/reply', (req, res) => {
 
   Post.findOne({ _id: req.body.postId }, (err, rawContent) => {
     if (err) throw err;
-    rawContent.comments.unshift({ name: 'gook', id: 'gook', memo: comment });
+    rawContent.comments.push({ name: req.user.username, id: req.user._id, memo: comment, avatar: req.user.avatar });
     rawContent.save((error, replyResult) => {
       if (error) throw error;
       res.json(replyResult);
@@ -161,7 +219,7 @@ router.post('/reply', (req, res) => {
 });
 
 /* SUBMIT POST */
-router.post('/:boardId', (req, res) => {
+router.post('/:boardId', isAuthenticated, (req, res) => {
   const { body } = req;
   const { title } = body;
   const { contents } = body;
@@ -179,11 +237,10 @@ router.post('/:boardId', (req, res) => {
       message: 'Error title and content are all required!'
     });
   }
-
-  req.body.authorName = 'gook';
-  req.body.authorId = 'gook';
+  req.body.authorName = req.user.username;
+  req.body.authorId = req.user._id;
   req.body.boardId = req.params.boardId;
-
+  req.body.avatar = req.user.avatar;
   Post.create(req.body, (err, postResult) => {
     if (err) {
       console.log(err);
@@ -211,23 +268,6 @@ router.delete('/:id', (req, res) => {
         result: 'Post was deleted'
       });
     });
-});
-
-// DELETING COMMENTS
-// @Params:
-//  postId: 삭제될 코멘트가있는 포스트의 아이디
-//  commentId: 삭제될 코멘트의 아이디
-router.post('/:postId/:commentId', (req, res) => {
-  const { postId, commentId } = req.params;
-  Post.update(
-    { _id: postId, 'comments._id': commentId },
-    { $set: { 'comments.$.deleted': true } },
-    (err, result) => {
-      if (err) throw err;
-      if (!result) res.status(404).json({ message: 'NO SUCH COMMENT' });
-      return res.json(result);
-    }
-  );
 });
 
 /* EDIT POST */
@@ -267,142 +307,5 @@ router.put('/:id', (req, res) => {
     });
 });
 
-
-// GIVING LIKES FOR POSTS
-// @Params:
-//  postId: 좋아요 눌러질 포스트의 아이디
-router.post('/likes/:postId', (req, res) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.postId)) {
-    return res.status(400).json({
-      message: 'INVALID POST ID'
-    });
-  }
-  Post.findById(req.params.postId, (err, post) => {
-    if (err) throw err;
-    if (!post) return res.status(404).json({ message: 'NO SUCH POST' });
-    const index = post.likes.indexOf('gook'); // 테스팅 목적
-    const didLike = (index !== -1);
-    if (!didLike) {
-      // IF IT DOES NOT EXIST
-      post.likes.push('gook');
-    } else {
-      // ALREADY liked
-      post.likes.splice(index, 1);
-    }
-    post.save((error, result) => {
-      if (error) throw error;
-      return res.json(result);
-    });
-  });
-});
-
-// GIVING DISLIKES FOR POSTS
-// @Params:
-//  postId: 싫어요 눌러질 포스트의 아이디
-router.post('/disLikes/:postId', (req, res) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.postId)) {
-    return res.status(400).json({
-      message: 'INVALID POST ID'
-    });
-  }
-
-  Post.findById(req.params.postId, (err, post) => {
-    if (err) throw err;
-    if (!post) return res.status(404).json({ message: 'NO SUCH POST' });
-
-    const index = post.disLikes.indexOf('gook'); // 테스팅 목적
-    const didDislike = (index !== -1);
-    if (!didDislike) {
-      // IF IT DOES NOT EXIST
-      post.disLikes.push('gook');
-    } else {
-      // ALREADY disliked
-      post.disLikes.splice(index, 1);
-    }
-    post.save((error, result) => {
-      if (error) throw error;
-      return res.json(result);
-    });
-  });
-});
-
-// GIVING LIKES FOR COMMENTS
-// @Params:
-//  postId: 좋아요 눌러질 포스트의 아이디
-//  commentId: 좋아요 눌러질 코멘트 아이디
-router.post('/comment/likes/:postId/:commentId', (req, res) => {
-  const { postId, commentId } = req.params;
-  if (!mongoose.Types.ObjectId.isValid(postId)) {
-    return res.status(400).json({
-      message: 'INVALID POST ID'
-    });
-  }
-  if (!mongoose.Types.ObjectId.isValid(commentId)) {
-    return res.status(400).json({
-      message: 'INVALID COMMENT ID'
-    });
-  }
-  Post.findById(postId, (err, post) => {
-    if (err) throw err;
-    if (!post) return res.status(404).json({ message: 'NO SUCH POST' });
-    for (let i = 0; i < post.comments.length; i += 1) {
-      if (post.comments[i]._id == commentId) {
-        const index = post.comments[i].likes.indexOf('gook');
-        const didLike = (index !== -1);
-        console.log(didLike);
-        if (!didLike) {
-          // IF IT DOES NOT EXIST
-          post.comments[i].likes.push('gook');
-        } else {
-          // ALREADY disliked
-          post.comments[i].likes.splice(index, 1);
-        }
-      }
-    }
-    post.save((error, result) => {
-      if (error) throw error;
-      return res.json(result);
-    });
-  });
-});
-
-// GIVING DISLIKES FOR COMMENTS
-// @Params:
-//  postId: 싫어요 눌러질 포스트의 아이디
-//  commentId: 싫어요 눌러질 코멘트 아이디
-router.post('/comment/disLikes/:postId/:commentId', (req, res) => {
-  const { postId, commentId } = req.params;
-  if (!mongoose.Types.ObjectId.isValid(postId)) {
-    return res.status(400).json({
-      message: 'INVALID POST ID'
-    });
-  }
-  if (!mongoose.Types.ObjectId.isValid(commentId)) {
-    return res.status(400).json({
-      message: 'INVALID COMMENT ID'
-    });
-  }
-  Post.findById(postId, (err, post) => {
-    if (err) throw err;
-    if (!post) return res.status(404).json({ message: 'NO SUCH POST' });
-    for (let i = 0; i < post.comments.length; i += 1) {
-      if (post.comments[i]._id == commentId) {
-        const index = post.comments[i].disLikes.indexOf('gook');
-        const didDisLike = (index !== -1);
-        if (!didDisLike) {
-          // IF IT DOES NOT EXIST
-          post.comments[i].disLikes.push('gook');
-        } else {
-          // ALREADY disliked
-          post.comments[i].disLikes.splice(index, 1);
-        }
-      }
-    }
-    post.save((error, result) => {
-      if (error) throw error;
-      return res.json(result);
-    });
-  });
-});
 
 module.exports = router;

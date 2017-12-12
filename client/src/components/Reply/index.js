@@ -6,7 +6,8 @@ import * as actions from '../../actions/post';
 
 const mapStateToProps = (state) => {
   return {
-    state
+    updateComment: state.posts.updateComment,
+    user: state.user
   };
 };
 
@@ -20,11 +21,14 @@ const mapDispatchToProps = (dispatch) => {
     },
     deleteCommentRequest: (postId, commentId, index) => {
       return dispatch(actions.deleteCommentRequest(postId, commentId, index));
+    },
+    updateCommentRequest: (postId, commentId, contents) => {
+      return dispatch(actions.updateCommentRequest(postId, commentId, contents));
     }
   };
 };
 
 export default ConnectTransitionWrapper()(
-  reduxForm({ form: 'PostForm' })(
+  reduxForm({  })(
     connect(mapStateToProps, mapDispatchToProps, undefined, { withRef: true }
     )(Reply)));

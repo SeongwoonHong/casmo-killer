@@ -21,7 +21,8 @@ class PreferencesPanel extends Component {
     TweenMax.killTweensOf(this.like);
     TweenMax.killTweensOf(this.disLike);
   }
-  likesHandler = () => {
+  likesHandler = async () => {
+    // this.props.onLikesHandler().then(() => this.clickAnimation(this.like));
     this.clickAnimation(this.like);
     this.props.onLikesHandler();
   }

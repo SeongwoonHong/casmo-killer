@@ -26,11 +26,10 @@ class PostShow extends Component {
   }
   render() {
     const { activePost } = this.props;
-
     return (
       <div className="postShow">
         <div className="header" ref={el => this.component[0] = el} >
-          <Link to="/"><img src="/testIcon.png" alt="" className="circle avartar_circle" /></Link>
+          <Link to={`/userPage/${activePost.authorId}`}><img src={activePost.avatar} alt="" className="circle avartar_circle" /></Link>
           <div className="header-info">
             <div className="writer">{activePost.authorName}</div>
             <div className="created">Created : <TimeAgo date={activePost.date} formatter={formatter} /></div>

@@ -50,7 +50,7 @@ const initialState = {
     status: 'INIT',
     error: null
   },
-  fetchComment: {
+  updateComment: {
     status: 'INIT',
     error: null
   }
@@ -380,6 +380,37 @@ export default function post(state = initialState, action) {
       return {
         ...state,
         deleteComment: {
+          status: 'FAILURE',
+          error: action.payload
+        }
+      };
+    case types.UPDATE_COMMENT:
+      return {
+        ...state,
+        updateComment: {
+          status: 'WAITING',
+          error: null
+        }
+      };
+    case types.UPDATE_COMMENT_SUCCESS:
+      return {
+        ...state,
+        activePost: {
+          ...state.activePost,
+          data: {
+            ...state.activePost.data,
+            comments: action.payload
+          }
+        },
+        updateComment: {
+          status: 'SUCCESS',
+          error: null
+        }
+      };
+    case types.UPDATE_COMMENT_FAILURE:
+      return {
+        ...state,
+        updateComment: {
           status: 'FAILURE',
           error: action.payload
         }

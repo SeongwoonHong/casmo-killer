@@ -20,9 +20,12 @@ class ReplyList extends Component {
             key={comment.date}
             postId={this.props.activePost._id}
             postAuthorName={this.props.activePost.authorName}
+            authorId={this.props.activePost.authorId}
+            avatar={comment.avatar}
             likes={comment.likes}
             disLikes={comment.disLikes}
             index={index}
+            form={`form-${index}`}
             />
         );
       });

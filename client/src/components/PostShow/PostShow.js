@@ -32,7 +32,7 @@ class PostShow extends Component {
           <Link to={`/userPage/${activePost.authorId}`}><img src={activePost.avatar} alt="" className="circle avartar_circle" /></Link>
           <div className="header-info">
             <div className="writer">{activePost.authorName}</div>
-            <div className="created">Created : <TimeAgo date={activePost.date} formatter={formatter} /></div>
+            <div className="created">Created : <TimeAgo date={activePost.date} formatter={formatter} />{ activePost.updated.length > 0 && <span> (edited)</span>}</div>
           </div>
         </div>
         <div className="title" ref={el => this.component[1] = el}>

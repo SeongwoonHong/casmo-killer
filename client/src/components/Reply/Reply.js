@@ -94,7 +94,7 @@ export default class Reply extends Component {
   }
   render() {
     const {
-      postId, commentAuthorName, comment, date, commentId, postAuthorName, likes, disLikes, handleSubmit
+      postId, commentAuthorName, comment, date, commentId, postAuthorName, likes, disLikes, handleSubmit, isEdited
     } = this.props;
     const editView = (
       <Field
@@ -142,7 +142,7 @@ export default class Reply extends Component {
             <Link to={`/userPage/${this.props.authorId}`}><img src={this.props.avatar} alt="" className="circle avartar_circle" /></Link>
             <div className="header-info">
               <div className="writer">{commentAuthorName}</div>
-              <div className="created">Created : <TimeAgo date={date} formatter={formatter} /></div>
+              <div className="created">Created : <TimeAgo date={date} formatter={formatter} />{ isEdited && <span> (edited)</span>}</div>
             </div>
           </div>
           <form onSubmit={handleSubmit(this.validateAndPost)} ref={el => this.form = el}>

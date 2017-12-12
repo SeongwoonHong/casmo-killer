@@ -22,6 +22,7 @@ class ReplyList extends Component {
             postAuthorName={this.props.activePost.authorName}
             authorId={this.props.activePost.authorId}
             avatar={comment.avatar}
+            isEdited={comment.isEdited}
             likes={comment.likes}
             disLikes={comment.disLikes}
             index={index}

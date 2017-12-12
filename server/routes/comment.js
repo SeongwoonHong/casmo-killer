@@ -30,6 +30,7 @@ router.post('/update/:postId/:commentId', isAuthenticated, (req, res) => {
     for (let i = 0; i < post.comments.length; i += 1) {
       if (post.comments[i]._id == commentId) {
         post.comments[i].memo = contents;
+        post.comments[i].isEdited = true;
       }
     }
     post.save((error, result) => {

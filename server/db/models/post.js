@@ -19,7 +19,8 @@ const Post = new Schema({
     likes: [String],
     disLikes: [String],
     deleted: { type: Boolean, default: false },
-    avatar: String
+    avatar: String,
+    isEdited: { type: Boolean, default: false }
   }],
   categories: [String],
   count: { type: Number, default: 0 },

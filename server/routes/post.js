@@ -271,7 +271,7 @@ router.delete('/:id', (req, res) => {
 });
 
 /* EDIT POST */
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   const { body } = req;
   const { title } = body;
   const { contents } = body;
@@ -290,7 +290,7 @@ router.put('/:id', (req, res) => {
     });
   }
 
-  Post.findOne({ _id: req.params.id }, (err, originContent) => {
+  await Post.findOne({ _id: req.params.id }, (err, originContent) => {
     if (err) throw err;
     originContent.updated.push({ title: originContent.title, contents: originContent.contents });
     originContent.save((errOrigin) => {

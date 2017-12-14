@@ -5,7 +5,8 @@ import Board from './Board';
 const mapStateToProps = (state) => {
   return {
     postsList: state.posts.list,
-    pagination: state.posts.pagination
+    pagination: state.posts.pagination,
+    user: state.user
   };
 };
 

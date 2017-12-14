@@ -19,7 +19,12 @@ class Button extends Component {
       return this.animateIn();
     }
     return 0;
-  };
+  }
+  componentWillUnmount = () => {
+    const animateText = [...this.component.querySelectorAll('.animate-text')];
+    TweenMax.killTweensOf(this.component);
+    TweenMax.killTweensOf(animateText);
+  }
   onMouseEnterHandler = () => {
     animate.to(this.component, 0.2, { scale: 1.1, ease: Expo.easeOut })
       .then(() => animate.to(this.component, 0.2, { scale: 0.9, ease: Expo.easeOut }))
@@ -49,9 +54,8 @@ class Button extends Component {
   };
   componentWillAppear = (done) => {
     this.animateIn().then(done);
-  };
-
-  render() {
+  }
+  renderButtonWithLink = () => {
     return (
       <Link to={ this.props.to } style={ { marginRight: '1%', ...this.props.style } }>
         <button
@@ -74,10 +78,37 @@ class Button extends Component {
       </Link>
     );
   }
+  renderButton = () => {
+    return (
+      <button
+        id={this.props.id}
+        className={classnames(this.props.className)}
+        type={this.props.type}
+        name={this.props.name}
+        disabled={this.props.disabled}
+        tab-index={this.props.tabIndex}
+        aria-label={this.props.ariaLabel}
+        role={this.props.role}
+        onKeyDown={this.props.onKeyDown}
+        onClick={this.props.onClick}
+        onMouseEnter={this.onMouseEnterHandler}
+        onMouseLeave={this.onMouseLeaveHandler}
+        ref={el => this.component = el}
+        style={this.props.style}
+        >
+        { this.getSpanText(this.props.text) }
+      </button>
+    );
+  }
+  render() {
+    return (
+      this.props.isLink ? this.renderButtonWithLink() : this.renderButton()
+    );
+  }
 }
 
 Button.defaultProps = {
-  id: 'default',
+  id: '',
   text: '',
   type: '',
   name: '',
@@ -95,7 +126,8 @@ Button.defaultProps = {
   },
   onKeyDown: () => {
   },
-  animateAtDidMount: true
+  animateAtDidMount: true,
+  isLink: true
 };
 
 Button.propTypes = {
@@ -113,6 +145,7 @@ Button.propTypes = {
   role: PropTypes.string,
   delay: PropTypes.number,
   to: PropTypes.string,
-  animateAtDidMount: PropTypes.bool
+  animateAtDidMount: PropTypes.bool,
+  isLink: PropTypes.bool
 };
 export default Button;

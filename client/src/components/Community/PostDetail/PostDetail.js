@@ -1,12 +1,16 @@
+/* eslint-disable max-len */
 import React, { Component } from 'react';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+// import { SubmissionError } from 'redux-form';
 import Materialize from 'materialize-css';
 import ReplyNew from '../../ReplyNew/ReplyNew';
-import ReplyList from '../../ReplyList/ReplyList';
+import ReplyList from '../../ReplyList';
 import PostShow from '../../PostShow/PostShow';
 import PostInputForm from '../../PostInputForm';
 import LoadingCircle from '../../Loading/LoadingCircle';
 import BreadCrumbs from '../../BreadCrumbs/BreadCrumbs';
+import Button from '../../Button/Button';
+// import { editPost, editPostFailure, editPostSuccess } from '../../../actions/post';
 import './PostDetail.scss';
 
 class PostDetail extends Component {
@@ -18,7 +22,6 @@ class PostDetail extends Component {
       editMode: false,
       baseUrl
     };
-    this.toggleEdit = this.toggleEdit.bind(this);
   }
 
   componentDidMount() {
@@ -31,8 +34,20 @@ class PostDetail extends Component {
     // always reset that global state back to null when you REMOUNT
     this.props.resetPostProps();
   }
-
-  toggleEdit() {
+  onLikesHandler = () => {
+    if ((this.props.user.username !== this.props.activePost.data.authorName) && this.props.user.isLoggedIn) {
+      return this.props.giveLikesRequest(this.props.activePost.data._id, 'post');
+    }
+  }
+  onDislikesHandler = () => {
+    if ((this.props.user.username !== this.props.activePost.data.authorName) && this.props.user.isLoggedIn) {
+      return this.props.giveDislikesRequest(this.props.activePost.data._id, 'post');
+    }
+  }
+  onDeleteHandler = () => {
+    //
+  }
+  toggleEdit = () => {
     this.setState({
       editMode: !this.state.editMode
     });
@@ -55,7 +70,7 @@ class PostDetail extends Component {
   handleDelete = () => {
     return this.props.onDeleteClick().then(() => {
       if (this.props.deletePost.status === 'SUCCESS') {
-        Materialize.toast('Success!', 2000);
+        Materialize.toast('A post is deleted!', 2000);
         this.props.history.push(this.state.baseUrl);
       } else {
         Materialize.toast($(`<span style="color: #00c853">Error: ${this.props.editPost.error.message}</span>`), 3000);
@@ -73,10 +88,9 @@ class PostDetail extends Component {
     });
   }
 
-
   render() {
     const { data, status, error } = this.props.activePost;
-
+    const { user } = this.props;
     if (status === 'WAITING') {
       return (
         <div className="board_detail_loading">
@@ -112,26 +126,36 @@ class PostDetail extends Component {
         <div className="card-content">
           <PostShow
             activePost={data}
+            onLikesHandler={this.onLikesHandler}
+            onDislikesHandler={this.onDislikesHandler}
           />
         </div>
         <div className="card-action">
-          <Link to={this.state.baseUrl}>Back</Link>
-          <a
-            onClick={this.toggleEdit}
-            onKeyDown={this.toggleEdit}
-            role="button"
-            tabIndex={0}
-          >
-            Edit
-          </a>
-          <a
-            onClick={this.handleDelete}
-            onKeyDown={this.handleDelete}
-            role="button"
-            tabIndex={0}
-          >
-            Delete
-          </a>
+          {
+            user.username === data.authorName &&
+            [
+              <Button
+                text="Edit"
+                onClick={this.toggleEdit}
+                onKeyDown={() => {}}
+                role="button"
+                tabIndex={0}
+                key="btn1"
+                className="btn waves-effect teal waves-light edit"
+                isLink={false}
+              />,
+              <Button
+                onClick={this.handleDelete}
+                onKeyDown={() => {}}
+                role="button"
+                tabIndex={0}
+                key="btn2"
+                className="btn waves-effect teal waves-light delete"
+                text="Delete"
+                isLink={false}
+              />
+            ]
+          }
         </div>
       </div>
     );
@@ -143,11 +167,14 @@ class PostDetail extends Component {
         <ReplyList
           comments={data.comments}
         />
-        <ReplyNew
-          onReply={this.handleReply}
-          title="댓글"
-          postId={data._id}
-        />
+        {
+          this.props.user.isLoggedIn
+          && <ReplyNew
+            onReply={this.handleReply}
+            title="댓글"
+            postId={data._id}
+          />
+        }
       </div>
     );
   }

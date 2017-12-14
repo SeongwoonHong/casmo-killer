@@ -56,7 +56,7 @@ class Board extends Component {
       <div className="board">
         <BreadCrumbs url={this.state.currentUrl} />
         <div className="board_newPost right">
-          <Link className="btn-floating btn-large teal" to={`${this.props.match.url}/new`}>
+          <Link className="btn-floating btn-large teal" to={this.props.user.isLoggedIn ? `${this.props.match.url}/new` : `${this.props.match.url}`}>
             <i className="large material-icons">mode_edit</i>
           </Link>
         </div>

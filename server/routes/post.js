@@ -1,8 +1,15 @@
+/* eslint-disable max-len */
 const express = require('express');
+const mongoose = require('mongoose');
 const Post = require('../db/models/post');
+const comment = require('./comment');
+const isAuthenticated = require('../middlewares/isAuthenticated');
 
 const router = express.Router();
 const PER_PAGE = 10;
+
+// sub routes for comments
+router.use('/comment', comment);
 
 /* POST DETAIL */
 router.get('/detail/:id', (req, res) => {
@@ -127,7 +134,59 @@ router.get('/search/:searchWord/:boardId/:page', (req, res) => {
       });
   });
 });
+// GIVING LIKES FOR POSTS
+// @Params:
+//  postId: 좋아요 눌러질 포스트의 아이디
+router.post('/likes/:postId', isAuthenticated, (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.postId)) {
+    return res.status(400).json({
+      message: 'INVALID POST ID'
+    });
+  }
+  Post.findById(req.params.postId, (err, post) => {
+    if (err) throw err;
+    if (!post) return res.status(404).json({ message: 'NO SUCH POST' });
+    const index = post.likes.indexOf(req.user.username);
+    const didLike = (index !== -1);
+    if (!didLike) {
+      post.likes.push(req.user.username);
+    } else {
+      post.likes.splice(index, 1);
+    }
+    post.save((error, result) => {
+      if (error) throw error;
+      return res.json(result);
+    });
+  });
+});
 
+// GIVING DISLIKES FOR POSTS
+// @Params:
+//  postId: 싫어요 눌러질 포스트의 아이디
+router.post('/disLikes/:postId', isAuthenticated, (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.postId)) {
+    return res.status(400).json({
+      message: 'INVALID POST ID'
+    });
+  }
+
+  Post.findById(req.params.postId, (err, post) => {
+    if (err) throw err;
+    if (!post) return res.status(404).json({ message: 'NO SUCH POST' });
+
+    const index = post.disLikes.indexOf(req.user.username); // 테스팅 목적
+    const didDislike = (index !== -1);
+    if (!didDislike) {
+      post.disLikes.push(req.user.username);
+    } else {
+      post.disLikes.splice(index, 1);
+    }
+    post.save((error, result) => {
+      if (error) throw error;
+      return res.json(result);
+    });
+  });
+});
 /* CREATE REPLY */
 router.post('/reply', (req, res) => {
   const { body } = req;
@@ -151,7 +210,7 @@ router.post('/reply', (req, res) => {
 
   Post.findOne({ _id: req.body.postId }, (err, rawContent) => {
     if (err) throw err;
-    rawContent.comments.unshift({ name: 'gook', id: 'gook', memo: comment });
+    rawContent.comments.push({ name: req.user.username, id: req.user._id, memo: comment, avatar: req.user.avatar });
     rawContent.save((error, replyResult) => {
       if (error) throw error;
       res.json(replyResult);
@@ -160,7 +219,7 @@ router.post('/reply', (req, res) => {
 });
 
 /* SUBMIT POST */
-router.post('/:boardId', (req, res) => {
+router.post('/:boardId', isAuthenticated, (req, res) => {
   const { body } = req;
   const { title } = body;
   const { contents } = body;
@@ -178,11 +237,10 @@ router.post('/:boardId', (req, res) => {
       message: 'Error title and content are all required!'
     });
   }
-
-  req.body.authorName = 'gook';
-  req.body.authorId = 'gook';
+  req.body.authorName = req.user.username;
+  req.body.authorId = req.user._id;
   req.body.boardId = req.params.boardId;
-
+  req.body.avatar = req.user.avatar;
   Post.create(req.body, (err, postResult) => {
     if (err) {
       console.log(err);
@@ -212,9 +270,8 @@ router.delete('/:id', (req, res) => {
     });
 });
 
-
 /* EDIT POST */
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   const { body } = req;
   const { title } = body;
   const { contents } = body;
@@ -233,7 +290,7 @@ router.put('/:id', (req, res) => {
     });
   }
 
-  Post.findOne({ _id: req.params.id }, (err, originContent) => {
+  await Post.findOne({ _id: req.params.id }, (err, originContent) => {
     if (err) throw err;
     originContent.updated.push({ title: originContent.title, contents: originContent.contents });
     originContent.save((errOrigin) => {
@@ -249,69 +306,6 @@ router.put('/:id', (req, res) => {
       res.json(result);
     });
 });
-
-//
-// /*
-//     TOGGLES STAR OF POST: POST /api/post/star/:id
-//     ERROR CODES
-//         1: INVALID ID
-//         2: NOT LOGGED IN
-//         3: NO RESOURCE
-// */
-// router.post('/star/:id', (req, res) => {
-//   // CHECK POST ID VALIDITY
-//   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-//     return res.status(400).json({
-//       error: 'INVALID ID',
-//       code: 1
-//     });
-//   }
-//
-//   // CHECK LOGIN STATUS
-//   if (typeof req.session.loginInfo === 'undefined') {
-//     return res.status(403).json({
-//       error: 'NOT LOGGED IN',
-//       code: 2
-//     });
-//   }
-//
-//   // FIND POST
-//   Post.findById(req.params.id, (err, post) => {
-//     if (err) throw err;
-//
-//     // POST DOES NOT EXIST
-//     if (!post) {
-//       return res.status(404).json({
-//         error: 'NO RESOURCE',
-//         code: 3
-//       });
-//     }
-//
-//     // GET INDEX OF USERNAME IN THE ARRAY
-//     const index = post.starred.indexOf(req.session.loginInfo.username);
-//
-//     // CHECK WHETHER THE USER ALREADY HAS GIVEN A STAR
-//     const hasStarred = (index !== -1);
-//
-//     if (!hasStarred) {
-//       // IF IT DOES NOT EXIST
-//       post.starred.push(req.session.loginInfo.username);
-//     } else {
-//       // ALREADY starred
-//       post.starred.splice(index, 1);
-//     }
-//
-//     // SAVE THE POST
-//     post.save((error, result) => {
-//       if (error) throw error;
-//       res.json({
-//         success: true,
-//         has_starred: !hasStarred,
-//         result,
-//       });
-//     });
-//   });
-// });
 
 
 module.exports = router;

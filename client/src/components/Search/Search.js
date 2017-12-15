@@ -25,23 +25,19 @@ class Search extends Component {
 
   render() {
     return (
-      <div className="search center row">
-        <div className="col s12">
-          <div className="row">
-            <div className="input-field col s6 s12">
-              <form onSubmit={this.handleSearch}>
-                <i className="material-icons prefix">search</i>
-                <input
-                  type="text"
-                  id="search"
-                  className="validate"
-                  value={this.state.search}
-                  onChange={this.handleChange}
-                />
-                <label htmlFor="search">Search</label>
-              </form>
-            </div>
-          </div>
+      <div className="search">
+        <div className="input-field">
+          <form onSubmit={this.handleSearch}>
+            <i className="material-icons prefix">search</i>
+            <input
+              type="text"
+              id="search"
+              className="validate"
+              value={this.state.search}
+              onChange={this.handleChange}
+            />
+            <label htmlFor="search">Search</label>
+          </form>
         </div>
       </div>
     );

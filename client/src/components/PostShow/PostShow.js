@@ -5,6 +5,7 @@ import TimeAgo from 'react-timeago';
 import krStrings from 'react-timeago/lib/language-strings/ko';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import animate from 'gsap-promise';
+import PlainBtn from 'sharedComponents/PlainBtn';
 import PreferencesPanel from '../PreferencesPanel';
 import Iframe from '../Iframe/Iframe';
 import './PostShow.scss';
@@ -29,9 +30,19 @@ class PostShow extends Component {
     return (
       <div className="postShow">
         <div className="header" ref={el => this.component[0] = el} >
-          <Link to={`/userPage/${activePost.authorId}`}><img src={activePost.avatar} alt="" className="circle avartar_circle" /></Link>
+          <img src={activePost.author.avatar} alt="" className="circle avartar_circle" />
           <div className="header-info">
-            <div className="writer">{activePost.authorName}</div>
+            <div className="writer">
+              <div className="user-btn">
+                <PlainBtn
+                  onClick={
+                    () => { this.props.openUserInfoModal(activePost.author); }
+                  }
+                >
+                  <a href="#">{activePost.author.username}</a>
+                </PlainBtn>
+              </div>
+            </div>
             <div className="created">Created : <TimeAgo date={activePost.date} formatter={formatter} />{ activePost.updated.length > 0 && <span> (edited)</span>}</div>
           </div>
         </div>

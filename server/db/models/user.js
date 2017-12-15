@@ -10,7 +10,10 @@ const UserSchema = new Schema({
   },
   strategy: String,
   email: String,
-  password: String,
+  password: {
+    type: String,
+    select: false
+  },
   username: String,
   avatar: String,
   social: {

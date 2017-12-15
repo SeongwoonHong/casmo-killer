@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
+import * as actions from 'actions';
 import PostDetail from './PostDetail';
-import * as actions from '../../../actions/post';
 
 function mapStateToProps(state, ownProps) {
   return {
@@ -44,6 +44,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     giveDislikesRequest: (id, type) => {
       return dispatch(actions.giveDislikesRequest(id, type));
+    },
+    openUserInfoModal: (userInfo) => {
+      dispatch(actions.openUserInfoModal(userInfo));
     }
   };
 };

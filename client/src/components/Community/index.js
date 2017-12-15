@@ -4,6 +4,7 @@ import RequireAuthentication from 'sharedComponents/RequireAuthentication/Requir
 import CommunityHome from './Root';
 import Board from './Board';
 import PostNew from './PostNew';
+import BoardNew from './BoardNew';
 import PostDetail from './PostDetail';
 
 
@@ -13,10 +14,12 @@ class CommunityWrapper extends Component {
     return (
       <div className="community">
         <Switch>
+          <Route path="/community/communityAll" component={ CommunityHome } />
+          <Route path="/community/newboard" component={BoardNew} />
           <Route path="/community/:boardId/new" component={RequireAuthentication(PostNew, '/community/general')} />
           <Route path="/community/:boardId/:postId" component={PostDetail} />
           <Route path="/community/:boardId" component={Board} />
-          <Route path="/" component={ CommunityHome } />
+          {/* <Route path="/" component="" /> */}
         </Switch>
       </div>
     );

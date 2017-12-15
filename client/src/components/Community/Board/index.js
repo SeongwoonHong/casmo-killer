@@ -1,11 +1,12 @@
 import { connect } from 'react-redux';
-import * as actions from '../../../actions/post';
+import * as actions from 'actions';
 import Board from './Board';
 
 const mapStateToProps = (state) => {
   return {
     postsList: state.posts.list,
-    pagination: state.posts.pagination
+    pagination: state.posts.pagination,
+    boardAuthor: state.posts.boardAuthor
   };
 };
 
@@ -30,6 +31,9 @@ const mapDispatchToProps = (dispatch) => {
       } else {
         dispatch(actions.searchPostsRequest(searchWord, boardId, page, sort));
       }
+    },
+    openUserInfoModal: (userInfo) => {
+      dispatch(actions.openUserInfoModal(userInfo));
     }
   };
 };

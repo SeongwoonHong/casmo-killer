@@ -23,6 +23,9 @@ const initialState = {
   pagination: {
     pageCount: 1
   },
+  boardAuthor: {
+    author: null
+  },
   activePost: {
     status: 'INIT',
     data: null,
@@ -31,12 +34,16 @@ const initialState = {
   newComment: {
     status: 'INIT',
     error: null
+  },
+  userList: {
+    status: 'INIT',
+    data: [],
+    error: null
   }
 };
 
 export default function post(state = initialState, action) {
   switch (action.type) {
-
 
     // FETCH POST
     case types.FETCH_POSTS:
@@ -53,6 +60,9 @@ export default function post(state = initialState, action) {
         },
         pagination: {
           pageCount: { $set: action.payload.meta.pagination }
+        },
+        boardAuthor: {
+          author: { $set: action.payload.meta.author }
         }
       });
     case types.FETCH_POSTS_FAILURE:
@@ -84,6 +94,28 @@ export default function post(state = initialState, action) {
     case types.SEARCH_POSTS_FAILURE:
       return update(state, {
         list: {
+          status: { $set: 'FAILURE' },
+          error: { $set: action.payload.response.data }
+        }
+      });
+
+      // SEARCH USER POSTS
+    case types.SEARCH_USER_POSTS:
+      return update(state, {
+        userList: {
+          status: { $set: 'WAITING' },
+        }
+      });
+    case types.SEARCH_USER_POSTS_SUCCESS:
+      return update(state, {
+        userList: {
+          status: { $set: 'SUCCESS' },
+          data: { $set: action.payload.posts }
+        }
+      });
+    case types.SEARCH_USER_POSTS_FAILURE:
+      return update(state, {
+        userList: {
           status: { $set: 'FAILURE' },
           error: { $set: action.payload.response.data }
         }

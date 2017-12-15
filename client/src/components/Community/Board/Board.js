@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import ReactPaginate from 'react-paginate';
 import Materialize from 'materialize-css';
 import { Link } from 'react-router-dom';
+import LoadingCircle from 'sharedComponents/LoadingCircle';
+import PlainBtn from 'sharedComponents/PlainBtn';
 import Search from '../../Search/Search';
 import PostList from '../../PostList/PostList';
-import LoadingCircle from '../../Loading/LoadingCircle';
 import BreadCrumbs from '../../BreadCrumbs/BreadCrumbs';
 import Sort from '../../Sort/Sort';
 import './Board.scss';
@@ -13,6 +14,9 @@ class Board extends Component {
   constructor(props) {
     super(props);
     const baseUrl = props.location.pathname;
+    const indexOfPost = this.props.location.pathname.lastIndexOf('/');
+    const basePostUrl = baseUrl.substring(0, indexOfPost);
+
     const page = props.location.state === undefined ? 0 : props.location.state.page;
     const selected = props.location.state === undefined ? 0 : props.location.state.selected;
 
@@ -20,6 +24,7 @@ class Board extends Component {
       page,
       boardId: props.match.params.boardId,
       baseUrl,
+      basePostUrl,
       sortInfo: {
         selected,
         listKor: ['최신순', '댓글순', '조회순'],
@@ -71,8 +76,9 @@ class Board extends Component {
   render() {
     const { data, status, error } = this.props.postsList;
     const { pageCount } = this.props.pagination;
+    const { boardAuthor } = this.props;
 
-    if (status === 'WAITING') {
+    if (status === 'WAITING' || boardAuthor.author === null) {
       return (
         <div className="board_loading">
           <LoadingCircle />
@@ -86,19 +92,32 @@ class Board extends Component {
         </div>
       );
     }
-
     return (
       <div className="board">
         <div className="row">
           <div className="board_breadcrumbs">
             <BreadCrumbs url={this.state.baseUrl} />
           </div>
-          <div className="board_newPost col s12">
-            <Link
-              className="btn-floating btn-large teal right"
-              to={`${this.state.baseUrl}/new`}>
-              <i className="large material-icons">mode_edit</i>
-            </Link>
+          <div className="board_header">
+            <div className="board_newPost col s12">
+              <div className="board_header_manager">
+                관리자:
+                <div className="user-btn">
+                  <PlainBtn
+                    onClick={
+                      () => { this.props.openUserInfoModal(this.props.boardAuthor.author); }
+                    }
+                  >
+                    <a href="#">{this.props.boardAuthor.author ? this.props.boardAuthor.author.username : null}</a>
+                  </PlainBtn>
+                </div>
+              </div>
+              <Link
+                className="btn-floating btn-large teal right"
+                to={`${this.state.baseUrl}/new`}>
+                <i className="large material-icons">mode_edit</i>
+              </Link>
+            </div>
           </div>
         </div>
         <div className="board_side row valign-wrapper">
@@ -118,7 +137,7 @@ class Board extends Component {
         <div className="board_postList">
           <PostList
             postsList={data}
-            baseUrl={this.state.baseUrl}
+            baseUrl={this.state.basePostUrl}
             page={this.state.page}
             selected={this.state.sortInfo.selected}
           />

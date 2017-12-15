@@ -1,9 +1,11 @@
 import { connect } from 'react-redux';
+import * as actions from 'actions';
+
 import TopNavigation from './TopNavigation';
-import * as actions from '../../../actions/index';
 
 const mapStateToProps = (state) => {
   return {
+    user: state.user,
     layout: state.layout
   };
 };
@@ -11,8 +13,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     toggleMenu: () => dispatch(actions.toggleMenu()),
-    toggleUserMenu: () => dispatch(actions.toggleUserMenu()),
-    toggleSearchForm: () => dispatch(actions.toggleSearchForm())
+    toggleSearchForm: () => dispatch(actions.toggleSearchForm()),
+    openAuthModal: authType => dispatch(actions.openAuthModal(authType)),
+    toggleUserDropdown: (isOpen) => dispatch(actions.toggleUserDropdown(isOpen))
   };
 };
 

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import LoadingCircle from '../../Loading/LoadingCircle';
 import BreadCrumbs from '../../BreadCrumbs/BreadCrumbs';
 import Button from '../../Button/Button';
+import './Community.scss';
 
 class Community extends Component {
   constructor(props) {

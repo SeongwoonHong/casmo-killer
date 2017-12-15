@@ -6,23 +6,8 @@ export default {
     props: {
     }
   },
-  Login: {
-    components: require('../components/Login'),
-    props: {
-    }
-  },
   Button: {
     components: require('../components/Button/Button'),
-    props: {
-    }
-  },
-  Register: {
-    components: require('../components/Register'),
-    props: {
-    }
-  },
-  BoardNew: {
-    components: require('../components/Community/BoardNew'),
     props: {
     }
   }

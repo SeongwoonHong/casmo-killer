@@ -1,7 +1,7 @@
 import React from 'react';
 import TransitionGroup from 'react-transition-group-plus';
 import classnames from 'classnames';
-import SpanAnimatedText from '../../SpanAnimatedText/SpanAnimatedText';
+import SpanAnimatedText from 'sharedComponents/SpanAnimatedText';
 
 const renderField = ({
   input, label, type, icon, meta: {

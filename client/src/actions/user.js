@@ -1,36 +1,27 @@
-import { setToken, removeToken } from '../utils/cookies';
-
 import * as types from './types';
 
-export const loginSuccess = (token) => {
-
-  return (dispatch) => {
-
-    setToken(token)
-      .then((cookie) => {
-        dispatch({
-          type: types.LOGIN_SUCCESS,
-          token: cookie
-        });
-      })
-      .catch(() => {
-        console.log('Failed to set the cookie for the token.');
-      });
-
+export const loginSuccess = (payload) => {
+  return {
+    type: types.LOGIN_SUCCESS,
+    payload
   };
 };
 
 export const logout = () => {
-
-  return (dispatch) => {
-
-    removeToken()
-      .then(() => {
-        dispatch({
-          type: types.LOGOUT
-        });
-      });
-
+  return {
+    type: types.LOGOUT
   };
+};
 
+export const openUserInfoModal = (userInfo) => {
+  return {
+    type: types.OPEN_USERINFO_MODAL,
+    userInfo
+  };
+};
+
+export const closeUserInfoModal = () => {
+  return {
+    type: types.CLOSE_USERINFO_MODAL
+  };
 };

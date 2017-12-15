@@ -56,16 +56,54 @@ export function searchPostsFailure(error) {
     error
   };
 }
+
+export function searchUserPosts() {
+  return {
+    type: types.SEARCH_USER_POSTS
+  };
+}
+export function searchUserPostsSuccess(posts) {
+  return {
+    type: types.SEARCH_USER_POSTS_SUCCESS,
+    payload: posts
+  };
+}
+
+export function searchUserPostsFailure(error) {
+  return {
+    type: types.SEARCH_USER_POSTS_FAILURE,
+    error
+  };
+}
+
 export function searchPostsRequest(searchWord, boardId, page) {
   return (dispatch) => {
-    dispatch(searchPosts());
+    if (boardId === null) {
+      dispatch(searchUserPosts());
+    } else {
+      dispatch(searchPosts());
+    }
     // API request
-    return axios.get(`/api/post/search/${searchWord}/${boardId}/${page}`)
+    let url;
+    if (boardId === null) {
+      url = `/api/post/search/userModalInfo/${searchWord}`;
+    } else {
+      url = `/api/post/search/${searchWord}/${boardId}/${page}`;
+    }
+    return axios.get(url)
       .then((response) => {
-        dispatch(searchPostsSuccess(response.data));
+        if (boardId === null) {
+          dispatch(searchUserPostsSuccess(response.data));
+        } else {
+          dispatch(searchPostsSuccess(response.data));
+        }
       }).catch((error) => {
         console.log(error);
-        dispatch(searchPostsFailure(error));
+        if (boardId === null) {
+          dispatch(searchUserPostsFailure(error));
+        } else {
+          dispatch(searchPostsFailure(error));
+        }
       });
   };
 }

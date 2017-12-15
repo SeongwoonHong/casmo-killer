@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
-import * as actions from '../../../../actions/index';
+import * as actions from 'actions';
+
 import UserMenu from './UserMenu';
 
 const mapStateToProps = (state) => {
@@ -11,8 +12,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    toggleUserMenu: () => dispatch(actions.toggleUserMenu()),
-    toggleLoginModal: () => dispatch(actions.toggleLoginModal())
+    toggleUserDropdown: isOpen => dispatch(actions.toggleUserDropdown(isOpen)),
+    openAuthModal: authType => dispatch(actions.openAuthModal(authType))
   };
 };
 

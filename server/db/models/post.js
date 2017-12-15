@@ -13,14 +13,22 @@ const Post = new Schema({
   comments: [{
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     memo: String,
-    date: { type: Date, default: Date.now }
+    date: { type: Date, default: Date.now },
+    likes: [String],
+    disLikes: [String],
+    deleted: { type: Boolean, default: false },
+    isEdited: { type: Boolean, default: false }
   }],
   categories: [String],
   commentsCount: { type: Number, default: 0 },
   count: { type: Number, default: 0 }, // View
   date: { type: Date, default: Date.now },
   updated: [{ title: String, contents: String, date: { type: Date, default: Date.now } }],
-  deleted: { type: Boolean, default: false } // true => deleted
+  deleted: { type: Boolean, default: false }, // true => deleted
+  likes: [String],
+  disLikes: [String],
+  isOwner: { type: Boolean, default: false },
+  avatar: String
 });
 
 Post.plugin(AutoIncrement, { inc_field: 'postNum' });

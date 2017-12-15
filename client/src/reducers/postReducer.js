@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import update from 'react-addons-update';
 import * as types from '../actions/types';
 
@@ -39,10 +40,27 @@ const initialState = {
     status: 'INIT',
     data: [],
     error: null
+  },
+  likes: {
+    status: 'INIT',
+    error: null
+  },
+  disLikes: {
+    status: 'INIT',
+    error: null
+  },
+  deleteComment: {
+    status: 'INIT',
+    error: null
+  },
+  updateComment: {
+    status: 'INIT',
+    error: null
   }
 };
 
 export default function post(state = initialState, action) {
+  console.log(action);
   switch (action.type) {
 
     // FETCH POST
@@ -244,7 +262,7 @@ export default function post(state = initialState, action) {
       return update(state, {
         newComment: {
           status: { $set: 'FAILURE' },
-          error: { $set: action.payload.response.data }
+          error: { $set: action.payload.message }
         }
       });
 
@@ -277,6 +295,130 @@ export default function post(state = initialState, action) {
           error: { $set: null }
         }
       });
+
+    // LIKES
+    case types.GIVE_LIKES:
+      return {
+        ...state,
+        likes: {
+          status: 'WAITING',
+          error: null
+        }
+      };
+    case types.GIVE_LIKES_SUCCESS:
+      return {
+        ...state,
+        activePost: {
+          ...state.list,
+          status: 'SUCCESS',
+          data: action.payload.post
+        },
+        likes: {
+          status: 'SUCCESS',
+          error: null
+        }
+      };
+    case types.GIVE_LIKES_FAILURE:
+      return {
+        ...state,
+        likes: {
+          status: 'FAILURE',
+          error: action.payload
+        }
+      };
+    // DISLIKES
+    case types.GIVE_DISLIKES:
+      return {
+        ...state,
+        disLikes: {
+          status: 'WAITING',
+          error: null
+        }
+      };
+    case types.GIVE_DISLIKES_SUCCESS:
+      return {
+        ...state,
+        activePost: {
+          ...state.list,
+          status: 'SUCCESS',
+          data: action.payload.post
+        },
+        disLikes: {
+          status: 'SUCCESS',
+          error: null
+        }
+      };
+    case types.GIVE_DISLIKES_FAILURE:
+      return {
+        ...state,
+        disLikes: {
+          status: 'FAILURE',
+          error: action.payload
+        }
+      };
+    // DELETE COMMENTS
+    case types.DELETE_COMMENT:
+      return {
+        ...state,
+        deleteComment: {
+          status: 'WAITING',
+          error: null
+        }
+      };
+    case types.DELETE_COMMENT_SUCCESS:
+      return {
+        ...state,
+        activePost: {
+          ...state.activePost,
+          data: {
+            ...state.activePost.data,
+            comments: state.activePost.data.comments.slice(0, action.index).concat(state.activePost.data.comments.slice(action.index + 1, state.activePost.data.comments.length))
+          }
+        },
+        deleteComment: {
+          status: 'SUCCESS',
+          error: null
+        }
+      };
+    case types.DELETE_COMMENT_FAILURE:
+      return {
+        ...state,
+        deleteComment: {
+          status: 'FAILURE',
+          error: action.payload
+        }
+      };
+    case types.UPDATE_COMMENT:
+      return {
+        ...state,
+        updateComment: {
+          status: 'WAITING',
+          error: null
+        }
+      };
+    case types.UPDATE_COMMENT_SUCCESS:
+      return {
+        ...state,
+        activePost: {
+          ...state.activePost,
+          data: {
+            ...state.activePost.data,
+            comments: action.payload
+          }
+        },
+        updateComment: {
+          status: 'SUCCESS',
+          error: null
+        }
+      };
+    case types.UPDATE_COMMENT_FAILURE:
+      return {
+        ...state,
+        updateComment: {
+          status: 'FAILURE',
+          error: action.payload
+        }
+      };
     default:
       return state;
   }

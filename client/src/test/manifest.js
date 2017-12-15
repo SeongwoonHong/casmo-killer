@@ -10,5 +10,9 @@ export default {
     components: require('../components/Button/Button'),
     props: {
     }
+  },
+  RichTextEditor: {
+    components: require('../components/RichTextEditor/RichTextEditor'),
+    props: {}
   }
 };

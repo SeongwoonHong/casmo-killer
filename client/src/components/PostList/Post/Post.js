@@ -31,7 +31,7 @@ export default class Post extends Component {
             <div className="collection-item avatar">
               <div className="avartar_info">
                 <img src="/testIcon.png" alt="" className="circle avartar_circle" />
-                <span className="authorName"><a href="#!">{authorName}</a></span>
+                <span className="authorName"><a href="#!">{authorName.username}</a></span>
                 <p><TimeAgo date={date} formatter={formatter} /></p>
               </div>
             </div>
@@ -54,7 +54,7 @@ Post.defaultProps = {
   id: '',
   postNum: 0,
   title: '',
-  authorName: '',
+  authorName: {},
   count: 0,
   page: 0,
   selected: 0
@@ -64,7 +64,7 @@ Post.propTypes = {
   id: PropTypes.string,
   postNum: PropTypes.number,
   title: PropTypes.string,
-  authorName: PropTypes.string,
+  authorName: PropTypes.object,
   count: PropTypes.number,
   page: PropTypes.number,
   selected: PropTypes.number

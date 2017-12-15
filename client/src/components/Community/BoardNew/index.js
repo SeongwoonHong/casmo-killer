@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
+import * as actions from 'actions';
 import BoardNew from './BoardNew';
-import * as actions from '../../../actions/board';
 
 function mapStateToProps(state) {
   return {

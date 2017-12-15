@@ -1,5 +1,5 @@
 const express = require('express');
-const Board = require('../models/board');
+const Board = require('../db/models/board');
 
 const router = express.Router();
 
@@ -37,9 +37,7 @@ router.post('/', (req, res) => {
         message: `Title Error - Cant use board ID ${boardId}!`
       });
     }
-
-    req.body.authorName = 'gook';
-    req.body.authorId = 'gook';
+    req.body.author = req.user._id;
 
     Board.create(req.body, (error, boardResult) => {
       if (error) {

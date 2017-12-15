@@ -3,16 +3,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import classnames from 'classnames';
-import * as actions from './actions';
+import axios from 'axios';
+import * as actions from 'actions';
 import './App.scss';
 
 import TopNavigation from './components/Navigations/TopNavigation';
 import MainMenu from './components/Navigations/MainMenu';
+import AuthModal from './components/AuthModal';
+import UserInfoModal from './components/UserInfoModal';
 
 import { MainMenuRoutes } from './routers';
 
 import breakPoint from './utils/breakPoint';
-import Login from './components/Login';
 
 class App extends Component {
 
@@ -25,6 +27,10 @@ class App extends Component {
         }
       }, false);
     }
+
+    axios.get('/api/user/validate').then((res) => {
+      this.props.loginSuccess(res.data);
+    });
 
   }
 
@@ -40,31 +46,30 @@ class App extends Component {
 
   render() {
 
+    const { layout } = this.props;
+
+    const RootComponents = MainMenuRoutes.map(route => (
+      <Route
+        key={ route.path }
+        exact={ route.exact }
+        path={ route.path }
+        component={ route.main }
+      />
+    ));
+
     return (
       <div className="app">
         <TopNavigation />
         <div className={ classnames('app-wrapper', {
-          widened: this.props.layout.isMainMenuVisible
+          widened: layout.isMainMenuVisible
         }) }>
           <Route path="/" component={ MainMenu } />
           <div className="container">
             <Switch>
-              {
-                MainMenuRoutes.map(route => (
-                  <Route
-                    key={ route.path }
-                    exact={ route.exact }
-                    path={ route.path }
-                    component={ route.main }
-                  />
-                ))
-              }
+              { RootComponents }
             </Switch>
-            {
-              this.props.layout.isLoginModalOpen
-                ? <Login />
-                : null
-            }
+            <AuthModal />
+            <UserInfoModal />
           </div>
         </div>
       </div>
@@ -82,6 +87,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    loginSuccess: payload => dispatch(actions.loginSuccess(payload)),
     updateBreakPoint: (size) => {
       dispatch(actions.updateBreakPoint(size));
     },

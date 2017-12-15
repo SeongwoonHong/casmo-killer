@@ -1,16 +1,18 @@
-import jwtDecode from 'jwt-decode';
-
 import * as types from '../actions/types';
-import { getToken } from '../utils/cookies';
 
-const initialState = (token => ({
+const initialState = {
   user: {
-    isLoggedIn: token !== undefined,
-    _id: token ? jwtDecode(token)._id : null,
-    username: token ? jwtDecode(token).username : null,
-    avatar: token ? jwtDecode(token).avatar : null,
+    isLoggedIn: false,
+    _id: null,
+    username: null,
+    avatar: null
+  },
+  userModalInfo: {
+    _id: null,
+    username: null,
+    avatar: null
   }
-}))(getToken());
+};
 
 export default function (state = initialState.user, action) {
 
@@ -19,13 +21,29 @@ export default function (state = initialState.user, action) {
     case types.LOGIN_SUCCESS:
       return Object.assign({}, state, {
         isLoggedIn: true,
-        _id: jwtDecode(action.token)._id,
-        username: jwtDecode(action.token).username,
-        avatar: jwtDecode(action.token).avatar
+        _id: action.payload._id,
+        username: action.payload.username,
+        avatar: action.payload.avatar || null
       });
 
     case types.LOGOUT:
       return initialState.user;
+    case types.OPEN_USERINFO_MODAL:
+      return Object.assign({}, state, {
+        userModalInfo: {
+          _id: action.userInfo._id,
+          username: action.userInfo.username,
+          avatar: action.userInfo.avatar
+        }
+      });
+    case types.CLOSE_USERINFO_MODAL:
+      return Object.assign({}, state, {
+        userModalInfo: {
+          _id: null,
+          username: null,
+          avatar: null
+        }
+      });
 
     default:
       return state;

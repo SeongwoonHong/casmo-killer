@@ -30,8 +30,6 @@ class UserMenu extends Component {
 
   toggleDropdown(event) {
 
-    console.log(ReactDOM.findDOMNode(this).contains(event.target));
-
     if (!ReactDOM.findDOMNode(this).contains(event.target)) {
       if (this.props.layout.isUserDropdownOpen) {
         setTimeout(() => {

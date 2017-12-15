@@ -21,6 +21,7 @@ class PostList extends Component {
             date={post.date}
             page={this.props.page}
             selected={this.props.selected}
+            openUserInfoModal={this.props.openUserInfoModal}
           />
         );
       });

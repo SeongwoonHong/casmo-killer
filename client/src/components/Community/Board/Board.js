@@ -140,6 +140,7 @@ class Board extends Component {
             baseUrl={this.state.basePostUrl}
             page={this.state.page}
             selected={this.state.sortInfo.selected}
+            openUserInfoModal={this.props.openUserInfoModal}
           />
         </div>
         <div className="board_page center">

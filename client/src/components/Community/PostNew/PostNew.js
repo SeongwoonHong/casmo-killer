@@ -17,7 +17,7 @@ class PostNew extends Component {
   validateAndCreatePost= (values) => {
     return this.props.createPostRequest(values, this.state.boardId).then(() => {
       if (this.props.newPost.status === 'SUCCESS') {
-        this.props.history.push({ pathname: `${this.state.currentUrl}/${this.props.newPost.data._id}`, state: 'new' }).then(
+        this.props.history.push(`${this.state.currentUrl}/${this.props.newPost.data._id}`).then(
           () => {
             Materialize.toast('Success!', 2000);
           }

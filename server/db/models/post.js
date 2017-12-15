@@ -5,25 +5,23 @@ const timestamps = require('mongoose-timestamp');
 const { Schema } = mongoose;
 
 const Post = new Schema({
-  authorId: String,
-  authorName: String,
+  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   // password: { type: String, select: false },
   title: String,
   contents: String,
   boardId: String,
   comments: [{
-    name: String,
-    id: String,
+    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     memo: String,
     date: { type: Date, default: Date.now },
     likes: [String],
     disLikes: [String],
     deleted: { type: Boolean, default: false },
-    avatar: String,
     isEdited: { type: Boolean, default: false }
   }],
   categories: [String],
-  count: { type: Number, default: 0 },
+  commentsCount: { type: Number, default: 0 },
+  count: { type: Number, default: 0 }, // View
   date: { type: Date, default: Date.now },
   updated: [{ title: String, contents: String, date: { type: Date, default: Date.now } }],
   deleted: { type: Boolean, default: false }, // true => deleted

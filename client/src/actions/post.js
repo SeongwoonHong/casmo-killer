@@ -18,55 +18,21 @@ export function fetchPostsSuccess(posts) {
 export function fetchPostsFailure(error) {
   return {
     type: types.FETCH_POSTS_FAILURE,
-    error
+    payload: error
   };
 }
 
-export function fetchPostsRequest(boardId, page) {
+export function fetchPostsRequest(boardId, page, sort) {
   return (dispatch) => {
     // Inform Login API is starting
     dispatch(fetchPosts());
     // API request
-    return axios.get(`/api/post/${boardId}/${page}`)
+    return axios.get(`/api/post/${boardId}/${page}/${sort}`)
       .then((response) => {
         dispatch(fetchPostsSuccess(response.data));
       }).catch((error) => {
         console.log(error);
         dispatch(fetchPostsFailure(error));
-      });
-  };
-}
-
-// FETCH BOARDS
-export function fetchBoards() {
-  return {
-    type: types.FETCH_BOARDS
-  };
-}
-export function fetchBoardsSuccess(posts) {
-  return {
-    type: types.FETCH_BOARDS_SUCCESS,
-    payload: posts
-  };
-}
-
-export function fetchBoardsFailure(error) {
-  return {
-    type: types.FETCH_BOARDS_FAILURE,
-    payload: error
-  };
-}
-export function fetchBoardsRequest() {
-  return (dispatch) => {
-    // Inform Login API is starting
-    dispatch(fetchBoards());
-    // API request
-    return axios.get('/api/post/board')
-      .then((response) => {
-        dispatch(fetchBoardsSuccess(response.data));
-      }).catch((error) => {
-        console.log(error);
-        dispatch(fetchBoardsFailure(error));
       });
   };
 }
@@ -90,16 +56,54 @@ export function searchPostsFailure(error) {
     error
   };
 }
+
+export function searchUserPosts() {
+  return {
+    type: types.SEARCH_USER_POSTS
+  };
+}
+export function searchUserPostsSuccess(posts) {
+  return {
+    type: types.SEARCH_USER_POSTS_SUCCESS,
+    payload: posts
+  };
+}
+
+export function searchUserPostsFailure(error) {
+  return {
+    type: types.SEARCH_USER_POSTS_FAILURE,
+    error
+  };
+}
+
 export function searchPostsRequest(searchWord, boardId, page) {
   return (dispatch) => {
-    dispatch(searchPosts());
+    if (boardId === null) {
+      dispatch(searchUserPosts());
+    } else {
+      dispatch(searchPosts());
+    }
     // API request
-    return axios.get(`/api/post/search/${searchWord}/${boardId}/${page}`)
+    let url;
+    if (boardId === null) {
+      url = `/api/post/search/userModalInfo/${searchWord}`;
+    } else {
+      url = `/api/post/search/${searchWord}/${boardId}/${page}`;
+    }
+    return axios.get(url)
       .then((response) => {
-        dispatch(searchPostsSuccess(response.data));
+        if (boardId === null) {
+          dispatch(searchUserPostsSuccess(response.data));
+        } else {
+          dispatch(searchPostsSuccess(response.data));
+        }
       }).catch((error) => {
         console.log(error);
-        dispatch(searchPostsFailure(error));
+        if (boardId === null) {
+          dispatch(searchUserPostsFailure(error));
+        } else {
+          dispatch(searchPostsFailure(error));
+        }
       });
   };
 }
@@ -174,6 +178,7 @@ export function createPostRequest(contents, boardId) {
   };
 }
 
+// EDIT Post
 export function editPost() {
   return {
     type: types.EDIT_POST
@@ -272,7 +277,7 @@ export function createReplyRequest(comment, postId) {
     comment,
     postId
   };
-
+  console.log(data);
   return (dispatch) => {
     dispatch(createReply());
     // tokenFromStorage
@@ -288,7 +293,7 @@ export function createReplyRequest(comment, postId) {
 
 export function resetNewReply() {
   return {
-    type: types.RESET_NEW_REPLY
+    type: types.RESET_NEW_BOARD
   };
 }
 

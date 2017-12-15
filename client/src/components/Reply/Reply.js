@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import TimeAgo from 'react-timeago';
 import krStrings from 'react-timeago/lib/language-strings/ko';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
-import { Link } from 'react-router-dom';
+import PlainBtn from 'sharedComponents/PlainBtn';
 import animate from 'gsap-promise';
 import { Field } from 'redux-form';
 import Materialize from 'materialize-css';
@@ -94,7 +94,7 @@ export default class Reply extends Component {
   }
   render() {
     const {
-      postId, commentAuthorName, comment, date, commentId, postAuthorName, likes, disLikes, handleSubmit, isEdited
+      postId, commentAuthor, comment, date, commentId, postAuthor, likes, disLikes, handleSubmit, isEdited
     } = this.props;
     const editView = (
       <Field
@@ -139,9 +139,17 @@ export default class Reply extends Component {
       <div className="card reply" ref={el => this.component = el}>
         <div className="card-content" key={postId}>
           <div className="header">
-            <Link to={`/userPage/${this.props.authorId}`}><img src={this.props.avatar} alt="" className="circle avartar_circle" /></Link>
+            <img src={postAuthor.avatar} alt="" className="circle avartar_circle" />
             <div className="header-info">
-              <div className="writer">{commentAuthorName}</div>
+              <div className="writer">
+                <PlainBtn
+                  onClick={
+                    () => { this.props.openUserInfoModal(postAuthor); }
+                  }
+                >
+                  <a href="#">{postAuthor.username}</a>
+                </PlainBtn>
+              </div>
               <div className="created">Created : <TimeAgo date={date} formatter={formatter} />{ isEdited && <span> (edited)</span>}</div>
             </div>
           </div>
@@ -168,7 +176,7 @@ export default class Reply extends Component {
               />
               <span className="dislikes">{disLikes.length}</span>
               {
-                this.props.user.username === commentAuthorName ? buttons : undefined
+                this.props.user.username === commentAuthor.username ? buttons : undefined
               }
             </div>
           </form>
@@ -180,14 +188,16 @@ export default class Reply extends Component {
 
 Reply.defaultProps = {
   postId: '',
-  commentAuthorName: '',
+  commentAuthor: null,
+  postAuthor: null,
   comment: '',
   date: '',
 };
 
 Reply.propTypes = {
   postId: PropTypes.string,
-  commentAuthorName: PropTypes.string,
+  commentAuthor: PropTypes.object,
+  postAuthor: PropTypes.object,
   comment: PropTypes.string,
   date: PropTypes.string,
 };

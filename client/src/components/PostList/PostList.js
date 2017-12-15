@@ -12,13 +12,16 @@ class PostList extends Component {
           <Post
             id={post._id}
             postNum={post.postNum}
-            authorName={post.authorName}
+            authorName={post.author}
             comments={post.comments.length}
             title={post.title}
             count={post.count}
             key={post._id}
-            baseUrl={baseUrl}
+            baseUrl={`${baseUrl}/${post.boardId}`}
             date={post.date}
+            page={this.props.page}
+            selected={this.props.selected}
+            openUserInfoModal={this.props.openUserInfoModal}
           />
         );
       });
@@ -34,12 +37,16 @@ class PostList extends Component {
 
 PostList.defaultProps = {
   postsList: [],
-  baseUrl: ''
+  baseUrl: '',
+  page: 0,
+  selected: 0
 };
 
 PostList.propTypes = {
   postsList: PropTypes.array,
-  baseUrl: PropTypes.string
+  baseUrl: PropTypes.string,
+  page: PropTypes.number,
+  selected: PropTypes.number
 };
 
 export default PostList;

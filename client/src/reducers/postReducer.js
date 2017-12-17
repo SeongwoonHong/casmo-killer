@@ -24,18 +24,21 @@ const initialState = {
   pagination: {
     pageCount: 1
   },
+  boardAuthor: {
+    author: null
+  },
   activePost: {
     status: 'INIT',
     data: null,
     error: null
   },
-  boardList: {
-    status: 'INIT',
-    data: [],
-    error: null
-  },
   newComment: {
     status: 'INIT',
+    error: null
+  },
+  userList: {
+    status: 'INIT',
+    data: [],
     error: null
   },
   likes: {
@@ -63,8 +66,8 @@ const initialState = {
 };
 
 export default function post(state = initialState, action) {
+  console.log(action);
   switch (action.type) {
-
 
     // FETCH POST
     case types.FETCH_POSTS:
@@ -81,6 +84,9 @@ export default function post(state = initialState, action) {
         },
         pagination: {
           pageCount: { $set: action.payload.meta.pagination }
+        },
+        boardAuthor: {
+          author: { $set: action.payload.meta.author }
         }
       });
     case types.FETCH_POSTS_FAILURE:
@@ -112,6 +118,28 @@ export default function post(state = initialState, action) {
     case types.SEARCH_POSTS_FAILURE:
       return update(state, {
         list: {
+          status: { $set: 'FAILURE' },
+          error: { $set: action.payload.response.data }
+        }
+      });
+
+      // SEARCH USER POSTS
+    case types.SEARCH_USER_POSTS:
+      return update(state, {
+        userList: {
+          status: { $set: 'WAITING' },
+        }
+      });
+    case types.SEARCH_USER_POSTS_SUCCESS:
+      return update(state, {
+        userList: {
+          status: { $set: 'SUCCESS' },
+          data: { $set: action.payload.posts }
+        }
+      });
+    case types.SEARCH_USER_POSTS_FAILURE:
+      return update(state, {
+        userList: {
           status: { $set: 'FAILURE' },
           error: { $set: action.payload.response.data }
         }
@@ -240,33 +268,9 @@ export default function post(state = initialState, action) {
       return update(state, {
         newComment: {
           status: { $set: 'FAILURE' },
-          error: { $set: action.payload.response.data }
+          error: { $set: action.payload.message }
         }
       });
-
-
-      // FETCH BOARDS
-    case types.FETCH_BOARDS:
-      return update(state, {
-        boardList: {
-          status: { $set: 'WAITING' },
-        }
-      });
-    case types.FETCH_BOARDS_SUCCESS:
-      return update(state, {
-        boardList: {
-          status: { $set: 'SUCCESS' },
-          data: { $set: action.payload }
-        }
-      });
-    case types.FETCH_BOARDS_FAILURE:
-      return update(state, {
-        boardList: {
-          status: { $set: 'FAILURE' },
-          error: { $set: action.payload.response.data }
-        }
-      });
-
 
       // RESET
     case types.RESET_NEW_REPLY:

@@ -6,6 +6,11 @@ const initialState = {
     _id: null,
     username: null,
     avatar: null
+  },
+  userModalInfo: {
+    _id: null,
+    username: null,
+    avatar: null
   }
 };
 
@@ -23,6 +28,22 @@ export default function (state = initialState.user, action) {
 
     case types.LOGOUT:
       return initialState.user;
+    case types.OPEN_USERINFO_MODAL:
+      return Object.assign({}, state, {
+        userModalInfo: {
+          _id: action.userInfo._id,
+          username: action.userInfo.username,
+          avatar: action.userInfo.avatar
+        }
+      });
+    case types.CLOSE_USERINFO_MODAL:
+      return Object.assign({}, state, {
+        userModalInfo: {
+          _id: null,
+          username: null,
+          avatar: null
+        }
+      });
 
     default:
       return state;

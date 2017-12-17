@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
-import * as actions from '../../../actions/post';
+import * as actions from 'actions';
 import Community from './Community';
 
 const mapStateToProps = (state) => {
   return {
-    boardList: state.posts.boardList
+    boardList: state.boards.boardList
   };
 };
 

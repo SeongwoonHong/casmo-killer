@@ -22,8 +22,8 @@ const CommunityRoutes = [
     path: '/favourites'
   },
   {
-    name: '너의 커뮤니티',
-    path: '/mycommunities'
+    name: '커뮤니티 All',
+    path: '/communityAll'
   }
 ];
 

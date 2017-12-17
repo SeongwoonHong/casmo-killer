@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const Post = require('../db/models/post');
 const comment = require('./comment');
 const isAuthenticated = require('../middlewares/isAuthenticated');
+const Board = require('../db/models/board');
 
 const router = express.Router();
 const PER_PAGE = 10;
@@ -13,74 +14,62 @@ router.use('/comment', comment);
 
 /* POST DETAIL */
 router.get('/detail/:id', (req, res) => {
+  console.log('detail here');
   Post.findById({
     _id: req.params.id
-  }, (err, post) => {
-    if (err) {
-      console.log(err);
-      return res.status(500).json({
-        message: 'Could not retrieve post w/ that id'
-      });
-    }
-    if (!post) {
-      return res.status(404).json({
-        message: 'Post not found'
-      });
-    }
+  })
+    .populate('author')
+    .populate('comments.author')
+    .exec((err, post) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          message: 'Could not retrieve post w/ that id'
+        });
+      }
+      if (!post) {
+        return res.status(404).json({
+          message: 'Post not found'
+        });
+      }
 
-    post.count += 1;
-    post.save((errCount) => { // view count
-      if (errCount) throw errCount;
-    });
-    res.json(post);
-  });
-});
-
-/* GET POST LIST */
-router.get('/board', (req, res) => {
-  Post.distinct('boardId')
-    .exec((err, boards) => {
-      if (err) throw err;
-      res.json(boards);
+      post.count += 1;
+      post.save((errCount) => { // view count
+        if (errCount) throw errCount;
+      });
+      res.json(post);
     });
 });
 
-/* GET POST LIST */
-router.get('/:boardId/:page', (req, res) => {
-  const skipSize = (req.params.page - 1) * PER_PAGE;
-  let pageNum = 1;
+/* GET SEARCH USER POSTS */
+router.get('/search/userModalInfo/:searchWord', (req, res) => {
+  const { searchWord } = req.params;
+  const searchCondition = { $regex: searchWord };
+  searchOption = {
+    deleted: false,
+    authorName: searchCondition
+  };
 
-  Post.count({ deleted: false, boardId: req.params.boardId }, (err, totalCount) => {
-    if (err) throw err;
+  Post
+    .find(searchOption)
+    .populate('author')
+    .sort({
+      postNum: -1
+    })
+    .exec((error, posts) => {
+      if (error) {
+        console.log(error);
+        return res.status(500).json({
+          message: 'Could not retrieve posts'
+        });
+      }
 
-    pageNum = Math.ceil(totalCount / PER_PAGE);
-    Post
-      .find({ deleted: false, boardId: req.params.boardId })
-      .sort({
-        postNum: -1
-      })
-      .skip(skipSize)
-      .limit(PER_PAGE)
-      .exec((error, posts) => {
-        if (error) {
-          console.log(error);
-          return res.status(500).json({
-            message: 'Could not retrieve posts'
-          });
-        }
+      const json = {
+        posts
+      };
+      res.json(json);
+    });
 
-        const meta = {
-          limit: PER_PAGE,
-          pagination: pageNum
-        };
-
-        const json = {
-          meta,
-          posts
-        };
-        res.json(json);
-      });
-  });
 });
 
 /* GET SEARCH POSTS */
@@ -89,29 +78,35 @@ router.get('/search/:searchWord/:boardId/:page', (req, res) => {
   let pageNum = 1;
   const { searchWord } = req.params;
   const searchCondition = { $regex: searchWord };
-  Post.count({
-    deleted: false,
-    boardId: req.params.boardId,
-    $or: [
-      { title: searchCondition },
-      { contents: searchCondition },
-      { writer: searchCondition }
-    ]
-  }, (err, totalCount) => {
+  let searchOption;
+  if (req.params.boardId === 'userModalInfo') {
+    searchOption = {
+      deleted: false,
+      authorName: searchCondition
+    };
+  } else {
+    searchOption = {
+      deleted: false,
+      boardId: req.params.boardId,
+      $or: [
+        { title: searchCondition },
+        { contents: searchCondition },
+        { authorName: searchCondition }
+      ]
+    };
+  }
+  Post.count(searchOption, (err, totalCount) => {
+    console.log(totalCount);
+    console.log(searchOption);
+    console.log(req.params.searchWord);
     if (err) throw err;
     pageNum = Math.ceil(totalCount / PER_PAGE);
     Post
-      .find({
-        deleted: false,
-        boardId: req.params.boardId,
-        $or: [
-          { title: searchCondition },
-          { contents: searchCondition },
-          { writer: searchCondition }]
-      })
+      .find(searchOption)
       .sort({
         postNum: -1
       })
+      .populate('author')
       .skip(skipSize)
       .limit(PER_PAGE)
       .exec((error, posts) => {
@@ -194,6 +189,57 @@ router.post('/disLikes/:postId', isAuthenticated, (req, res) => {
     });
   });
 });
+/* GET POST LIST */
+router.get('/:boardId/:page/:sortType', (req, res) => {
+  const skipSize = (req.params.page - 1) * PER_PAGE;
+  let pageNum = 1;
+  const sortObject = {};
+  const stype = req.params.sortType;
+  sortObject[stype] = -1;
+
+  Board.findOne({ boardId: req.params.boardId })
+    .populate('author')
+    .exec((errBoard, resultBoard) => {
+      if (resultBoard) {
+        Post.count({ deleted: false, boardId: req.params.boardId }, (err, totalCount) => {
+          if (err) throw err;
+
+          pageNum = Math.ceil(totalCount / PER_PAGE);
+          Post
+            .find({ deleted: false, boardId: req.params.boardId })
+            .populate('author')
+            .sort(sortObject)
+            .skip(skipSize)
+            .limit(PER_PAGE)
+            .exec((error, posts) => {
+              if (error) {
+                console.log(error);
+                return res.status(500).json({
+                  message: 'Could not retrieve posts'
+                });
+              }
+
+              const meta = {
+                limit: PER_PAGE,
+                pagination: pageNum,
+                author: resultBoard.author
+              };
+
+              const json = {
+                meta,
+                posts
+              };
+              res.json(json);
+            });
+        });
+      } else {
+        return res.status(400).json({
+          message: `There is no board ${req.params.boardId}`
+        });
+      }
+    });
+});
+
 /* CREATE REPLY */
 router.post('/reply', (req, res) => {
   const { body } = req;
@@ -253,8 +299,8 @@ router.post('/:boardId', isAuthenticated, (req, res) => {
       message: 'Error title and content are all required!'
     });
   }
-  req.body.authorName = req.user.username;
-  req.body.authorId = req.user._id;
+
+  req.body.author = req.user._id;
   req.body.boardId = req.params.boardId;
   req.body.avatar = req.user.avatar;
   Post.create(req.body, (err, postResult) => {

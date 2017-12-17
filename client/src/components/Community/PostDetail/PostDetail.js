@@ -128,11 +128,12 @@ class PostDetail extends Component {
             activePost={data}
             onLikesHandler={this.onLikesHandler}
             onDislikesHandler={this.onDislikesHandler}
+            openUserInfoModal={this.props.openUserInfoModal}
           />
         </div>
         <div className="card-action">
           {
-            user.username === data.authorName &&
+            user.username === data.author.username &&
             [
               <Button
                 text="Edit"
@@ -166,6 +167,7 @@ class PostDetail extends Component {
         { this.state.editMode ? editView : detailView }
         <ReplyList
           comments={data.comments}
+          openUserInfoModal={this.props.openUserInfoModal}
         />
         {
           this.props.user.isLoggedIn

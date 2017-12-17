@@ -1,3 +1,6 @@
+* {
+  box-sizing: border-box;
+}
 .board {
   margin-top: 10px;
   .row {
@@ -7,4 +10,10 @@
 
 .board_loading {
   text-align: center;
+}
+
+.board_header_manager {
+  display: inline-block;
+  color: #888;
+  font-size: 80%;
 }

@@ -10,6 +10,7 @@ import './App.scss';
 import TopNavigation from './components/Navigations/TopNavigation';
 import MainMenu from './components/Navigations/MainMenu';
 import AuthModal from './components/AuthModal';
+import UserInfoModal from './components/UserInfoModal';
 
 import { MainMenuRoutes } from './routers';
 
@@ -67,6 +68,7 @@ class App extends Component {
               { RootComponents }
             </Switch>
             <AuthModal />
+            <UserInfoModal />
           </div>
         </div>
       </div>

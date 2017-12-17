@@ -146,6 +146,10 @@ router.post('/likes/:postId', isAuthenticated, (req, res) => {
   Post.findById(req.params.postId, (err, post) => {
     if (err) throw err;
     if (!post) return res.status(404).json({ message: 'NO SUCH POST' });
+    const didDisLike = post.disLikes.indexOf(req.user.username) !== -1;
+    if (didDisLike) {
+      post.disLikes.splice(post.disLikes.indexOf(req.user.username), 1);
+    }
     const index = post.likes.indexOf(req.user.username);
     const didLike = (index !== -1);
     if (!didLike) {
@@ -173,8 +177,11 @@ router.post('/disLikes/:postId', isAuthenticated, (req, res) => {
   Post.findById(req.params.postId, (err, post) => {
     if (err) throw err;
     if (!post) return res.status(404).json({ message: 'NO SUCH POST' });
-
-    const index = post.disLikes.indexOf(req.user.username); // 테스팅 목적
+    const didLike = post.likes.indexOf(req.user.username) !== -1;
+    if (didLike) {
+      post.likes.splice(post.disLikes.indexOf(req.user.username), 1);
+    }
+    const index = post.disLikes.indexOf(req.user.username);
     const didDislike = (index !== -1);
     if (!didDislike) {
       post.disLikes.push(req.user.username);
@@ -191,6 +198,7 @@ router.post('/disLikes/:postId', isAuthenticated, (req, res) => {
 router.post('/reply', (req, res) => {
   const { body } = req;
   const { comment } = body;
+  const { parentAuthor, parentCommentId, parentContent } = body.parentReply;
   // simulate error if title, categories and content are all "test"
   // This is demo field-validation error upon submission.
   if (comment === 'test') {
@@ -210,7 +218,15 @@ router.post('/reply', (req, res) => {
 
   Post.findOne({ _id: req.body.postId }, (err, rawContent) => {
     if (err) throw err;
-    rawContent.comments.push({ name: req.user.username, id: req.user._id, memo: comment, avatar: req.user.avatar });
+    rawContent.comments.push({
+      name: req.user.username,
+      id: req.user._id,
+      memo: comment,
+      avatar: req.user.avatar,
+      parentAuthor,
+      parentCommentId,
+      parentContent
+    });
     rawContent.save((error, replyResult) => {
       if (error) throw error;
       res.json(replyResult);

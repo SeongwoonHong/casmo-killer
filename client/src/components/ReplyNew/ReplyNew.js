@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from '../Button/Button';
+import ReplyOnReply from '../ReplyOnReply/ReplyOnReply';
 
 class ReplyNew extends Component {
   constructor(props) {
@@ -20,7 +21,7 @@ class ReplyNew extends Component {
 
   handleReply() {
     if (this.state.comment.trim() !== '') {
-      this.props.onReply(this.state.comment, this.props.postId);
+      this.props.onReply(this.state.comment, this.props.postId, this.props.replyComment);
       this.setState({
         comment: ''
       });
@@ -29,9 +30,18 @@ class ReplyNew extends Component {
 
   render() {
     return (
-      <div className="card">
+      <div className="card reply-new">
         <div className="card-content">
-          <label htmlFor="reply">{this.props.title}</label>
+          {/* <label htmlFor="reply">{this.props.title}</label> */}
+          {
+            this.props.replyComment.status === 'WAITING' &&
+            <ReplyOnReply
+              author={this.props.replyComment.parentAuthor}
+              content={this.props.replyComment.parentContent}
+              replyCommentReset={this.props.replyCommentReset}
+              isCloseButton
+            />
+          }
           <textarea
             id="reply"
             className="materialize-textarea"

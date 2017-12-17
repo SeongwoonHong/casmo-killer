@@ -27,6 +27,9 @@ class ReplyList extends Component {
             disLikes={comment.disLikes}
             index={index}
             form={`form-${index}`}
+            parentAuthor={comment.parentAuthor}
+            parentCommentId={comment.parentCommentId}
+            parentContent={comment.parentContent}
             />
         );
       });

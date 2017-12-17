@@ -1,6 +1,8 @@
 html {
-    height: 100vh;
-    overflow-y: hidden;
+    // height: 100vh;
+    // overflow-y: hidden;
+    height: 100%;
+    overflow: auto;
 }
 
 body {
@@ -8,10 +10,13 @@ body {
 }
 
 .app {
-    height: 100vh;
+    // height: 100vh;
+    height: 100%;
     min-width: 320px;
 }
-
+textarea {
+  height: 2rem;
+}
 .app-wrapper {
     display: flex;
     height: calc(100% - 50px);

@@ -267,10 +267,11 @@ export function createReplyFailure(error) {
   };
 }
 
-export function createReplyRequest(comment, postId) {
+export function createReplyRequest(comment, postId, parentReply = {}) {
   const data = {
     comment,
-    postId
+    postId,
+    parentReply
   };
 
   return (dispatch) => {
@@ -278,6 +279,7 @@ export function createReplyRequest(comment, postId) {
     // tokenFromStorage
     return axios.post('/api/post/reply', data)
       .then((response) => {
+        dispatch(replyCommentReset());
         dispatch(createReplySuccess(response.data));
       }).catch((error) => {
         console.log(error);
@@ -434,8 +436,27 @@ export function updateCommentRequest(postId, commentId, contents) {
     return axios.post(`/api/post/comment/update/${postId}/${commentId}`, { contents }).then((res) => {
       dispatch(updateCommentSuccess(res.data));
     }).catch((e) => {
-      throw e;
       dispatch(updateCommentFailure(e));
     });
   };
 }
+
+export function replyComment(data) {
+  return {
+    type: types.REPLY_COMMENT_WAITING,
+    payload: { data }
+  };
+}
+
+export function replyCommentReset() {
+  return {
+    type: types.REPLY_COMMENT_RESET
+  };
+}
+
+// export function replyCommentRequest() {
+//   return (dispatch) => {
+//     dispatch(replyComment());
+//     return axios.post('/api/post/comment/reply')
+//   }
+// }

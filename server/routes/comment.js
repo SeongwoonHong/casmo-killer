@@ -62,8 +62,11 @@ router.post('/likes/:postId/:commentId', isAuthenticated, (req, res) => {
     for (let i = 0; i < post.comments.length; i += 1) {
       if (post.comments[i]._id == commentId) {
         const index = post.comments[i].likes.indexOf(req.user.username);
+        const didDisLike = post.comments[i].disLikes.indexOf(req.user.username) !== -1;
+        if (didDisLike) {
+          post.comments[i].disLikes.splice(post.comments[i].disLikes.indexOf(req.user.username), 1);
+        }
         const didLike = (index !== -1);
-        console.log(didLike);
         if (!didLike) {
           // IF IT DOES NOT EXIST
           post.comments[i].likes.push(req.user.username);
@@ -102,6 +105,10 @@ router.post('/disLikes/:postId/:commentId', isAuthenticated, (req, res) => {
     for (let i = 0; i < post.comments.length; i += 1) {
       if (post.comments[i]._id == commentId) {
         const index = post.comments[i].disLikes.indexOf(req.user.username);
+        const didLike = post.comments[i].likes.indexOf(req.user.username) !== -1;
+        if (didLike) {
+          post.comments[i].likes.splice(post.comments[i].likes.indexOf(req.user.username), 1);
+        }
         const didDisLike = (index !== -1);
         if (!didDisLike) {
           // IF IT DOES NOT EXIST

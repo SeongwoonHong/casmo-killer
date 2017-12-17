@@ -11,7 +11,8 @@ function mapStateToProps(state, ownProps) {
     newComment: state.posts.newComment,
     likes: state.posts.likes,
     disLikes: state.posts.disLikes,
-    user: state.user
+    user: state.user,
+    replyComment: state.replyComment
   };
 }
 
@@ -36,8 +37,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       // clean up both activePost(currrently open) and deletedPost(open and being deleted) states
       dispatch(actions.resetPostProps());
     },
-    createReplyRequest: (comment, postId) => {
-      return dispatch(actions.createReplyRequest(comment, postId));
+    createReplyRequest: (comment, postId, parentReply) => {
+      return dispatch(actions.createReplyRequest(comment, postId, parentReply));
     },
     giveLikesRequest: (id, type) => {
       return dispatch(actions.giveLikesRequest(id, type));

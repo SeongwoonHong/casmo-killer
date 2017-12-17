@@ -20,7 +20,10 @@ const Post = new Schema({
     disLikes: [String],
     deleted: { type: Boolean, default: false },
     avatar: String,
-    isEdited: { type: Boolean, default: false }
+    isEdited: { type: Boolean, default: false },
+    parentAuthor: String,
+    parentCommentId: String,
+    parentContent: String
   }],
   categories: [String],
   count: { type: Number, default: 0 },

@@ -19,19 +19,6 @@ export const set = (key, value) => {
 
 export const get = (key) => {
 
-  return new Promise((resolve, reject) => {
-
-    try {
-
-      const value = localStorage.getItem(key);
-      resolve(JSON.parse(value));
-
-    } catch (error) {
-
-      reject(error);
-
-    }
-
-  });
+  return JSON.parse(localStorage.getItem(key));
 
 };

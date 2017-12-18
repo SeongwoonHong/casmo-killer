@@ -47,7 +47,6 @@ class UserMenu extends Component {
       return;
     }
 
-    console.log('shit');
     event.stopPropagation();
     event.preventDefault();
 

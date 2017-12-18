@@ -28,9 +28,7 @@ class App extends Component {
       }, false);
     }
 
-    axios.get('/api/user/validate').then((res) => {
-      this.props.loginSuccess(res.data);
-    });
+    this.verifyLoginStatus();
 
   }
 
@@ -42,6 +40,14 @@ class App extends Component {
       });
     }
 
+  }
+
+  verifyLoginStatus() {
+    axios
+      .get('/api/user/validate')
+      .then((res) => {
+        this.props.loginSuccess(res.data);
+      });
   }
 
   render() {

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import animate from 'gsap-promise';
 
 import ModalContainer from 'sharedComponents/ModalContainer';
 import LoadingCircle from 'sharedComponents/LoadingCircle';
@@ -12,24 +11,6 @@ import Register from './Register';
 import './AuthModal.scss';
 
 class AuthModal extends Component {
-
-  componentDidMount() {
-
-    if (this.props.auth.type !== null) {
-
-      animate.set(this.component, {
-        autoAlpha: 0,
-        y: '-20%'
-      });
-
-      animate.all([
-        animate.to(this.component, 1, { autoAlpha: 1 }),
-        animate.to(this.component, 0.5, { y: '0%' })
-      ]);
-
-    }
-
-  }
 
   // this will take userInfo object and
   // redirect to register form
@@ -51,7 +32,6 @@ class AuthModal extends Component {
     if (currentUser.isLoggedIn) {
       this.props.closeAuthModal();
     }
-
 
   };
 
@@ -80,7 +60,6 @@ class AuthModal extends Component {
 
       return (
         <ModalContainer
-          ref={ el => this.component = el }
           onClose={ closeAuthModal }>
           <div className="auth-modal-body">
             { processingOverlay(auth.isProcessing) }

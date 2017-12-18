@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
+import PlainBtn from 'sharedComponents/PlainBtn';
+
 import './TopNavigation.scss';
 
 import SearchForm from '../SearchForm/SearchForm';
@@ -13,16 +15,11 @@ class TopNavigation extends Component {
 
     return (
       <header className="teal darken-4 z-depth-2 top-main-nav">
-        <a
-          role="button"
-          tabIndex={ 0 }
-          onClick={ this.props.toggleMenu }
-          onKeyDown={ () => {} }
-          className="btn teal darken-4 hide-in-dt">
-          <i className="material-icons teal-text-text-lighten-5">
+        <PlainBtn onClick={ this.props.toggleMenu }>
+          <i className="material-icons">
             dehaze
           </i>
-        </a>
+        </PlainBtn>
         <h1>
           <Link to="/" className="teal-text text-lighten-5">
             CK BOARD
@@ -35,7 +32,9 @@ class TopNavigation extends Component {
             ? (
               <UserDropdown
                 user={ this.props.user }
-                openAuthModal={ this.props.openAuthModal } />
+                openAuthModal={ this.props.openAuthModal }
+                logout={ this.props.logout }
+              />
             )
             : null
         }

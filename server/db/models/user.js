@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const bcrypt = require('bcryptjs');
-const token = require('../../utils/jwtUtils');
+const jwtUtils = require('../../utils/jwtUtils');
 
 const UserSchema = new Schema({
   createdAt: {
@@ -126,7 +126,7 @@ UserSchema.methods.generateToken = function () {
 
   const { _id, username, avatar } = this;
 
-  return token.sign({
+  return jwtUtils.sign({
     _id,
     username,
     avatar

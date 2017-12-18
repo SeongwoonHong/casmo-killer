@@ -9,6 +9,15 @@ const socialAuthUtils = require('../utils/socialAuthUtils');
 
 const User = require('../db/models/user');
 
+router.get('/logout', (req, res) => {
+  res
+    .cookie('ckToken', null, {
+      maxAge: 0,
+      httpOnly: true
+    })
+    .send();
+});
+
 router.get('/validate', async (req, res) => {
 
   if (!req.user) {
@@ -20,10 +29,13 @@ router.get('/validate', async (req, res) => {
     const user = await User.findById(req.user._id);
 
     if (!user) {
-      return res.cookie('ckToken', null, {
-        maxAge: 0,
-        httpOnly: true
-      }).status(401).send();
+      return res
+        .cookie('ckToken', null, {
+          maxAge: 0,
+          httpOnly: true
+        })
+        .status(401)
+        .send();
     }
 
     return res.send({

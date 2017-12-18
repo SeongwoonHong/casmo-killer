@@ -36,9 +36,7 @@ if (isDev) {
 
 // default middlewares
 app.use(morgan('dev'));
-app.use(express.json({
-  limit: '50mb'
-}));
+app.use(express.json());
 app.use(jwtMiddleware);
 app.use(express.static(path.join(__dirname, publicPath)));
 

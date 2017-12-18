@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import * as actions from 'actions';
 
 import Register from './Register';
 
@@ -9,10 +8,4 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    startAuthProcess: () => dispatch(actions.startAuthProcess())
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Register);
+export default connect(mapStateToProps, null)(Register);

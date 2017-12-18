@@ -22,7 +22,7 @@ const imgCloud = {
         ]
       }, (error, result) => {
         if (error) {
-          reject();
+          reject(error);
         }
         resolve(result.eager[0].secure_url);
       });

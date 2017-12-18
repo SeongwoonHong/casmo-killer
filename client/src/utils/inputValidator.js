@@ -15,19 +15,17 @@ class InputValidator {
   }
 
   static isPassword(password) {
-    const regex = /^[a-zA-Z0-9~!@#$%^&*()_+,.\]\]\\[/\\]{6,30}$/;
+    const regex = /^[a-zA-Z0-9~!@#$%^&*()_+,.\]\]\\[/\\]{6,20}$/;
     return regex.test(password);
   }
 
-  static isUsername(username) {
-    const regex = /^[a-zA-Z0-9]{4,20}/;
-    return regex.test(username);
+  static hasWhiteSpace(string) {
+    return /\s/g.test(string);
   }
 
-  static isImage(uri) {
-    // const regex = /^(data:image\/)([\w\/\+]+);(charset=[\w-]+|base64).*,(.*)/gi;
-    const regex = /^(data:image\/)([\w/+]+);(charset=[\w-]+|base64).*,(.*)/gi;
-    return regex.test(uri);
+  static isUsername(username) {
+    const regex = /^[a-zA-Z0-9ㄱ-ㅎ가-힣]{4,20}/;
+    return regex.test(username);
   }
 
 }

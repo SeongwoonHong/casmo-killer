@@ -14,43 +14,26 @@ class Login extends Component {
 
     super(props);
 
-    this.initialState = {
-      strategy: props.auth.strategy,
-      username: props.auth.username || '',
-      avatar: props.auth.avatar || '',
-      social: props.social
-        ? {
-          id: props.social.id,
-          accessToken: props.social.accessToken
-        }
-        : null,
+    this.state = {
+      username: props.auth.username
+        ? props.auth.username.replace(/\s/g, '')
+        : '',
+      avatar: props.auth.avatar || null,
       message: [],
       isLoading: false
     };
 
-    this.state = this.initialState;
-
   }
 
   onChangeHandler = (e) => {
-
-    this.setState({
-      [e.target.name]: inputValidator.trim(e.target.value)
-    });
-
+    this.setState({ [e.target.name]: inputValidator.trim(e.target.value) });
   };
 
   onSubmitHandler = (e) => {
 
     e.preventDefault();
-
-    const { auth } = this.props;
-
-    this.setState({
-      isLoading: true
-    });
-
-    this.onLocalRegister(auth.strategy);
+    this.setState({ isLoading: true });
+    this.onRegistrationSubmit();
 
   };
 
@@ -60,23 +43,19 @@ class Login extends Component {
     const image = e.target.files[0];
 
     reader.onloadend = () => {
-      this.setState({
-        avatar: reader.result
-      });
+      this.setState({ avatar: reader.result });
     };
 
     reader.readAsDataURL(image);
 
   };
 
-  async onLocalRegister(isSocial) {
+  async onRegistrationSubmit() {
 
     const { auth, onSuccess } = this.props;
+    const { username, avatar } = this.state;
 
-    const {
-      username,
-      avatar
-    } = this.state;
+    const isSocial = auth.strategy !== 'local' && auth.strategy !== null;
 
     const messages = [];
 
@@ -84,13 +63,17 @@ class Login extends Component {
 
       messages.push('Please enter your username.');
 
-    } else if (this.state.username.length < 4) {
+    } else if (username.length < 4) {
 
       messages.push('Username must be more than 4 characters.');
 
-    } else if (this.state.username.length > 20) {
+    } else if (username.length > 20) {
 
       messages.push('Username must be less than 20 characters.');
+
+    } else if (inputValidator.hasWhiteSpace(username)) {
+
+      messages.push('Username cannot have any space between words.');
 
     } else if (!inputValidator.isUsername(username)) {
 
@@ -98,10 +81,18 @@ class Login extends Component {
 
     } else {
 
-      const { data } = await axios.get(`/api/user/validate/username/${username}`);
+      try {
 
-      if (data.isDuplicate) {
-        messages.push('The username is already registered.');
+        // simply check if the username's been taken
+        const { data } = await axios.get(`/api/user/validate/username/${username}`);
+
+        if (data.isDuplicate) {
+          messages.push('The username is already registered.');
+        }
+
+      } catch (error) {
+        console.error(error.response.data.error);
+        messages.push(error.response.data.message);
       }
 
     }
@@ -115,53 +106,43 @@ class Login extends Component {
 
     } else {
 
-      this.setState({
-        message: this.initialState.message
-      });
+      this.setState({ message: [] });
 
-      // const userData = new FormData();
-      //
-      // userData.append('email', auth.email);
-      // userData.append('username', username);
-      // userData.append('avatar', avatar || '');
-      //
-      // if (isSocial) {
-      //   userData.append('strategy', auth.strategy);
-      //   userData.append('social', auth.social);
-      // } else {
-      //   userData.append('password', auth.password);
-      // }
+      // need to use formData for uploading avatar img
+      const userData = new FormData();
 
-      const userData = isSocial
-        ? {
-          strategy: auth.strategy,
-          email: auth.email,
-          username,
-          avatar,
-          social: auth.social
-        }
-        : {
-          email: auth.email,
-          password: auth.password,
-          username,
-          avatar
-        };
+      userData.append('email', auth.email);
+      userData.append('username', username);
+
+      if (avatar) {
+        userData.append('avatar', avatar);
+      }
+
+      if (auth.strategy !== null) {
+        userData.append('strategy', auth.strategy);
+        userData.append('socialId', auth.social.id);
+        userData.append('socialToken', auth.social.accessToken);
+      } else {
+        userData.append('password', auth.password);
+      }
 
       try {
 
-        const { data } = await axios.post(`/api/user/signup/${isSocial ? 'social' : 'local'}`, userData);
+        const endPoint = `/api/user/signup/${isSocial ? 'social' : 'local'}`;
+        const { data } = await axios.post(endPoint, userData);
 
-        this.setState({
-          isLoading: false
-        });
+        this.setState({ isLoading: false });
 
+        // registration success
         onSuccess(data);
 
       } catch (error) {
 
+        // registration failure with messages
+        console.error(error.response.data.error);
         this.setState({
           isLoading: false,
-          message: [error.response.data]
+          message: [error.response.data.message]
         });
 
       }
@@ -183,8 +164,9 @@ class Login extends Component {
           text="Almost done !!!"
           animateAtDidMount
         />
-        <form onSubmit={ this.onSubmitHandler } noValidate>
-
+        <form
+          noValidate
+          onSubmit={ this.onSubmitHandler }>
           {
             this.state.message.length > 0
               ? (
@@ -200,8 +182,7 @@ class Login extends Component {
               )
               : null
           }
-
-          <div className="input-field">
+          <div className="input-field for-username">
             <i className="material-icons prefix">person</i>
             <input
               type="text"
@@ -239,7 +220,6 @@ class Login extends Component {
               )
               : null
           }
-
           <button
             type="submit"
             className="btn"

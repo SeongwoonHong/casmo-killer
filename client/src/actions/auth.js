@@ -7,15 +7,16 @@ export const openAuthModal = (authType = 'login') => {
   };
 };
 
-export const closeAuthModal = () => {
-  return {
-    type: types.CLOSE_AUTH_MODAL
-  };
-};
-
 export const redirectToRegister = () => {
   return {
     type: types.REDIRECT_TO_REGISTER
+  };
+};
+
+export const setUserForRegister = (payload) => {
+  return {
+    type: types.SET_USER_FOR_REGISTER,
+    payload
   };
 };
 
@@ -37,9 +38,8 @@ export const stopAuthProcess = () => {
   };
 };
 
-export const setUserForRegister = (payload) => {
+export const closeAuthModal = () => {
   return {
-    type: types.SET_USER_FOR_REGISTER,
-    payload
+    type: types.CLOSE_AUTH_MODAL
   };
 };

@@ -12,8 +12,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     redirectToRegister: () => dispatch(actions.redirectToRegister()),
-    redirectToLogin: () => dispatch(actions.redirectToLogin()),
-    setUserForRegister: payload => dispatch(actions.setUserForRegister(payload))
+    redirectToLogin: () => dispatch(actions.redirectToLogin())
   };
 }
 

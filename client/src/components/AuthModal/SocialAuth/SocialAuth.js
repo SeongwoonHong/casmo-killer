@@ -16,9 +16,7 @@ class Social extends Component {
 
     super(props);
 
-    this.state = {
-      message: []
-    };
+    this.state = { message: [] };
 
     this.onSuccess = this.onSuccess.bind(this);
 
@@ -26,26 +24,32 @@ class Social extends Component {
 
   async onSuccess(payload) {
 
-    this.props.startAuthProcess();
+    const {
+      startAuthProcess,
+      stopAuthProcess,
+      onRegister,
+      onSuccess
+    } = this.props;
 
+    startAuthProcess();
 
     try {
 
-      const { data } = await axios.post(`/api/user/validate/social/${payload.provider}`, payload);
+      const { data } = await axios.post('/api/user/validate/social', payload);
 
       if (data.shouldRegister) {
-        return this.props.onRegister(data.profile);
+        onRegister(data.profile);
+        return;
       }
 
-      this.props.onSuccess(data);
+      onSuccess(data);
 
     } catch (error) {
 
-      this.props.stopAuthProcess();
+      stopAuthProcess();
 
-      return this.setState({
-        message: [error.response.data]
-      });
+      console.error(error.response.data.error);
+      this.setState({ message: [error.response.data.message] });
 
     }
 
@@ -61,7 +65,10 @@ class Social extends Component {
 
     return (
       <div key={ 1 } className="social-auth">
-        <SpanAnimatedText text="Connect with" animateAtDidMount />
+        <SpanAnimatedText
+          text="Connect with"
+          animateAtDidMount
+        />
         {
           this.state.message.map((msg) => {
             return (

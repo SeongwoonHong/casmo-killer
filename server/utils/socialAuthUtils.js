@@ -12,7 +12,7 @@ const socialAuthUtils = {
           username: response.data.name,
           avatar: response.data.picture.data.url,
           social: {
-            id: response.data.id.toString(),
+            id: response.data.id,
             accessToken,
           }
         };
@@ -33,7 +33,7 @@ const socialAuthUtils = {
           username: response.data.displayName,
           avatar: response.data.image.url,
           social: {
-            id: response.id.toString(),
+            id: response.data.id,
             accessToken
           }
         };
@@ -54,7 +54,7 @@ const socialAuthUtils = {
           username: response.data.properties.nickname,
           avatar: response.data.properties.profile_image,
           social: {
-            id: response.data.id.toString(),
+            id: response.data.id,
             accessToken
           }
         };

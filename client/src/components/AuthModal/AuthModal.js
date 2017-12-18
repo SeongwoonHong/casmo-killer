@@ -31,17 +31,14 @@ class AuthModal extends Component {
 
   }
 
+  // this will take userInfo object and
+  // redirect to register form
   onRegister = (userInfo) => {
-
-    console.log(userInfo);
-
     this.props.setUserForRegister(userInfo);
-
   };
 
+  // this is when login is successful
   onSuccess = async (userInfo) => {
-
-    console.log(userInfo);
 
     this.props.startAuthProcess();
 

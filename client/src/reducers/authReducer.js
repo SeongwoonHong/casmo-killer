@@ -26,27 +26,14 @@ export default function (state = initialState.auth, action) {
         type: action.authType
       });
 
-    case types.CLOSE_AUTH_MODAL:
-      return initialState.auth;
-
-    case types.REDIRECT_TO_REGISTER:
-      return Object.assign({}, state, {
-        type: 'register'
-      });
-
     case types.REDIRECT_TO_LOGIN:
       return Object.assign({}, state, {
         type: 'login'
       });
 
-    case types.START_AUTH_PROCESS:
+    case types.REDIRECT_TO_REGISTER:
       return Object.assign({}, state, {
-        isProcessing: true
-      });
-
-    case types.STOP_AUTH_PROCESS:
-      return Object.assign({}, state, {
-        isProcessing: false
+        type: 'register'
       });
 
     case types.SET_USER_FOR_REGISTER:
@@ -65,6 +52,19 @@ export default function (state = initialState.auth, action) {
           }
           : state.social
       });
+
+    case types.START_AUTH_PROCESS:
+      return Object.assign({}, state, {
+        isProcessing: true
+      });
+
+    case types.STOP_AUTH_PROCESS:
+      return Object.assign({}, state, {
+        isProcessing: false
+      });
+
+    case types.CLOSE_AUTH_MODAL:
+      return initialState.auth;
 
     default:
       return state;

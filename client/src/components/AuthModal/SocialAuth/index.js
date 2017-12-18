@@ -11,7 +11,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    redirectToRegister: () => dispatch(actions.redirectToRegister()),
     startAuthProcess: () => dispatch(actions.startAuthProcess()),
     stopAuthProcess: () => dispatch(actions.stopAuthProcess())
   };

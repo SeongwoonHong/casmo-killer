@@ -26,15 +26,52 @@ const UserSchema = new Schema({
   }
 });
 
-UserSchema.statics.registerSocialUser = function (profile) {
+UserSchema.statics.findUserByEmail = function (email) {
 
-  const newUser = new this(profile);
+  return this.findOne({ email }).select('+password');
+
+};
+
+UserSchema.statics.findUserByUsername = function (username) {
+
+  return this.findOne({ username });
+
+};
+
+UserSchema.statics.registerSocialUser = function (newSocialUser) {
+
+  const {
+    strategy,
+    email,
+    username,
+    avatar,
+    socialId,
+    socialToken
+  } = newSocialUser;
+
+  const newUser = new this({
+    strategy,
+    email,
+    username,
+    avatar: avatar || null,
+    social: {
+      id: socialId,
+      accessTokeN: socialToken
+    }
+  });
 
   return newUser.save();
 
 };
 
-UserSchema.statics.registerLocalUser = function ({ email, password, username, avatar }) {
+UserSchema.statics.registerLocalUser = function (newLocalUser) {
+
+  const {
+    email,
+    password,
+    username,
+    avatar
+  } = newLocalUser;
 
   const newUser = new this({
     strategy: 'local',
@@ -45,18 +82,6 @@ UserSchema.statics.registerLocalUser = function ({ email, password, username, av
   });
 
   return newUser.save();
-
-};
-
-UserSchema.statics.findUserByEmail = function (email) {
-
-  return this.findOne({ email });
-
-};
-
-UserSchema.statics.findUserByUsername = function (username) {
-
-  return this.findOne({ username });
 
 };
 

@@ -27,26 +27,20 @@ class Login extends Component {
   }
 
   onChangeHandler = (e) => {
-
-    this.setState({
-      [e.target.name]: inputValidator.trim(e.target.value)
-    });
-
+    this.setState({ [e.target.name]: inputValidator.trim(e.target.value) });
   };
 
   onSubmitHandler = (e) => {
 
     e.preventDefault();
 
-    const { auth } = this.props;
+    this.setState({ isLoading: true });
 
-    this.setState({
-      isLoading: true
-    });
-
-    if (auth.type === 'login') {
+    // auth.type determines whether this form is being
+    // used for login or registration
+    if (this.props.auth.type === 'login') {
       this.onLogin();
-    } else if (auth.type === 'register') {
+    } else if (this.props.auth.type === 'register') {
       this.onRegister();
     }
 
@@ -66,9 +60,7 @@ class Login extends Component {
 
     } else {
 
-      this.setState({
-        message: []
-      });
+      this.setState({ message: [] });
 
       const payload = { email, password };
 
@@ -76,13 +68,16 @@ class Login extends Component {
 
         const { data } = await axios.post('/api/user/signin/local', payload);
 
+        // login success
         onSuccess(data);
 
       } catch (error) {
 
+        // login failure with messages
+        console.error(error.response.data.error);
         this.setState({
           isLoading: false,
-          message: [error.response.data]
+          message: [error.response.data.message]
         });
 
       }
@@ -107,10 +102,20 @@ class Login extends Component {
 
     } else {
 
-      const { data } = await axios.get(`/api/user/validate/email/${email}`);
+      try {
 
-      if (data.isDuplicate) {
-        messages.push('The email address is already registered.');
+        // simply check if the email's been taken
+        const { data } = await axios.get(`/api/user/validate/email/${email}`);
+
+        if (data.isDuplicate) {
+          messages.push('The email address is already registered.');
+        }
+
+      } catch (error) {
+
+        console.error(error.response.error);
+        messages.push(error.response.data.message);
+
       }
 
     }
@@ -121,17 +126,19 @@ class Login extends Component {
 
     } else if (password.length < 6) {
 
-      messages.push('Password must be more than 4 characters.');
+      messages.push('Password must be more than 6 characters.');
 
-    } else if (password.length > 30) {
+    } else if (password.length > 20) {
 
       messages.push('Password must be less than 20 characters.');
 
-    } else if (!inputValidator.isPassword(password)) {
+    // holding off on password validation
+    // until we decide on password rules
+    }/* else if (!inputValidator.isPassword(password)) {
 
       messages.push('The provided password is not valid.');
 
-    }
+    } */
 
     if (messages.length > 0) {
 
@@ -147,6 +154,7 @@ class Login extends Component {
         message: []
       });
 
+      // redirect to registration form with email & password
       onRegister({ email, password });
 
     }
@@ -155,11 +163,9 @@ class Login extends Component {
 
   typeToggle = () => {
 
-    const { auth } = this.props;
-
     this.setState(this.initialState);
 
-    if (auth.type === 'login') {
+    if (this.props.auth.type === 'login') {
       this.props.redirectToRegister();
     } else {
       this.props.redirectToLogin();

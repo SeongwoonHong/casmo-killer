@@ -36,7 +36,7 @@ router.get('/validate', async (req, res) => {
 
     return res
       .status(500)
-      .send('Internal server error. Try again in a few minutes.');
+      .send('Internal server error.');
 
   }
 
@@ -54,7 +54,10 @@ router.get('/validate/email/:email', async (req, res) => {
 
     return res
       .status(500)
-      .send('Internal server error. Try again in a few minutes.');
+      .send({
+        error,
+        message: 'Internal server error.'
+      });
 
   }
 
@@ -72,25 +75,33 @@ router.get('/validate/username/:username', async (req, res) => {
 
     return res
       .status(500)
-      .send('Internal server error. Try again in a few minutes.');
+      .send({
+        error,
+        message: 'Internal server error.'
+      });
 
   }
 
 });
 
-router.post('/validate/social/:provider', async (req, res) => {
+router.post('/validate/social', async (req, res) => {
 
   let profile = null;
 
   try {
 
-    profile = await socialAuthUtils[req.params.provider](req.body.accessToken);
+    const { provider, accessToken } = req.body;
+
+    profile = await socialAuthUtils[provider](accessToken);
 
   } catch (error) {
 
     return res
       .status(500)
-      .send('Failed to retrieve your social profile. Try again in a few minutes.');
+      .send({
+        error,
+        message: 'Failed to retrieve your social profile.'
+      });
 
   }
 
@@ -98,7 +109,9 @@ router.post('/validate/social/:provider', async (req, res) => {
 
     return res
       .status(500)
-      .send('Failed to retrieve your social profile. Try again in a few minutes.');
+      .send({
+        message: 'Failed to retrieve your social profile.'
+      });
 
   }
 
@@ -112,7 +125,10 @@ router.post('/validate/social/:provider', async (req, res) => {
 
     return res
       .status(500)
-      .send('Internal server error. Try again in a few minutes.');
+      .send({
+        error,
+        message: 'Internal server error.'
+      });
 
   }
 
@@ -126,38 +142,49 @@ router.post('/validate/social/:provider', async (req, res) => {
 
   }
 
-  if (dupUser.strategy === profile.strategy && dupUser.social.id === profile.social.id) {
+  if (
+    dupUser.strategy === profile.strategy &&
+    dupUser.social.id === profile.social.id
+  ) {
 
     // if it's an existing user, just log in
     const accessToken = await dupUser.generateToken();
 
-    return res.cookie('ckToken', accessToken, {
-      httpOnly: true,
-      maxAge: 604800
-    }).send({
-      _id: dupUser._id,
-      username: dupUser.username,
-      avatar: dupUser.avatar
-    });
+    return res
+      .cookie('ckToken', accessToken, {
+        httpOnly: true,
+        maxAge: 604800
+      }).send({
+        _id: dupUser._id,
+        username: dupUser.username,
+        avatar: dupUser.avatar
+      });
 
   }
 
   return res
     .status(403)
-    .send('Your email is already registered.');
+    .send({
+      message: 'Your email is already registered.'
+    });
 
 });
 
 router.post('/signin/local', async (req, res) => {
 
-  const result = Joi.validate(req.body, Joi.object({
-    email: Joi.string().email().required(),
-    password: Joi.string().regex(/^[a-zA-Z0-9~!@#$%^&*()_+,.\]\]\\[/\\]{6,30}$/).min(6).max(30).required()
+  const validations = Joi.validate(req.body, Joi.object({
+    email: Joi.string().required(),
+    password: Joi.string().required()
   }));
 
-  if (result.error) {
+  if (validations.error) {
 
-    return res.status(400).send('Incorrect username or password.');
+    return res
+      .status(400)
+      .send({
+        error: validations.error,
+        message: 'Incorrect username or password.'
+      });
 
   }
 
@@ -182,7 +209,9 @@ router.post('/signin/local', async (req, res) => {
 
         return res
           .status(403)
-          .send(`Your email is already registered with ${provider}.`);
+          .send({
+            message: `Your email is already registered with ${provider}.`
+          });
       }
 
       const verified = await user.verifyPassword(password);
@@ -190,31 +219,41 @@ router.post('/signin/local', async (req, res) => {
       if (!verified) {
         return res
           .status(403)
-          .send('Incorrect email or password.');
+          .send({
+            message: 'Incorrect email or password.'
+          });
       }
 
       const accessToken = await user.generateToken();
 
-      return res.cookie('ckToken', accessToken, {
-        httpOnly: true,
-        maxAge: 604800
-      }).send({
-        _id,
-        username,
-        avatar
-      });
+      return res
+        .cookie('ckToken', accessToken, {
+          httpOnly: true,
+          maxAge: 604800
+        }).send({
+          _id,
+          username,
+          avatar
+        });
 
     }
 
     return res
       .status(403)
-      .send('No account exists with this email address.');
+      .send({
+        message: 'No account exists with this email address.'
+      });
 
   } catch (error) {
 
+    // TODO: need to find a way to parse mongodb error
+    // and send it back to the client
     return res
       .status(500)
-      .send('Internal server error. Try again in a few minutes.');
+      .send({
+        error,
+        message: 'Internal server error.'
+      });
 
   }
 
@@ -222,17 +261,21 @@ router.post('/signin/local', async (req, res) => {
 
 router.post('/signup/local', upload.any(), async (req, res) => {
 
-  const result = Joi.validate(req.body, Joi.object({
+  const validations = Joi.validate(req.body, Joi.object({
     email: Joi.string().email().required(),
-    password: Joi.string().regex(/^[a-zA-Z0-9~!@#$%^&*()_+,.\]\]\\[/\\]{6,30}$/).min(6).max(30).required(),
-    username: Joi.string().regex(/^[a-zA-Z0-9]{4,20}/).min(4).max(20).required(),
-    avatar: Joi.string().allow('')
+    username: Joi.string().required(),
+    avatar: Joi.string().allow(''),
+    password: Joi.string().required()
   }));
 
-  if (result.error) {
+  if (validations.error) {
 
-    console.log(result);
-    return res.status(400).send('Incorrect user information provided.');
+    return res
+      .status(400)
+      .send({
+        error: validations.error,
+        message: 'Incorrect user information provided.'
+      });
 
   }
 
@@ -255,7 +298,10 @@ router.post('/signup/local', upload.any(), async (req, res) => {
 
       return res
         .status(500)
-        .send('Failed to upload the profile photo. Try again in a few minutes.');
+        .send({
+          error,
+          message: 'Failed to upload the profile photo.'
+        });
 
     }
 
@@ -272,20 +318,24 @@ router.post('/signup/local', upload.any(), async (req, res) => {
 
     const accessToken = await user.generateToken();
 
-    return res.cookie('ckToken', accessToken, {
-      httpOnly: true,
-      maxAge: 604800
-    }).send({
-      _id: user._id,
-      username: user.username,
-      avatar: user.avatar
-    });
+    return res
+      .cookie('ckToken', accessToken, {
+        httpOnly: true,
+        maxAge: 604800
+      }).send({
+        _id: user._id,
+        username: user.username,
+        avatar: user.avatar
+      });
 
   } catch (error) {
 
     return res
       .status(500)
-      .send('Internal server error. Try again in a few minutes.');
+      .send({
+        error,
+        message: 'Internal server error.'
+      });
 
   }
 
@@ -293,45 +343,87 @@ router.post('/signup/local', upload.any(), async (req, res) => {
 
 router.post('/signup/social', upload.any(), async (req, res) => {
 
-  const result = Joi.validate(req.body, Joi.object({
-    strategy: Joi.string().valid(['facebook', 'google', 'kakao']),
+  const validations = Joi.validate(req.body, Joi.object({
     email: Joi.string().email().required(),
-    username: Joi.string().regex(/^[a-zA-Z0-9]{4,20}/).min(4).max(20).required(),
+    username: Joi.string().required(),
     avatar: Joi.string().allow(''),
-    social: Joi.object({
-      id: Joi.string().required(),
-      accessToken: Joi.string().required()
-    })
+    strategy: Joi.string().valid(['facebook', 'google', 'kakao']),
+    socialId: Joi.string().required(),
+    socialToken: Joi.string().required(),
   }));
 
-  if (result.error) {
+  if (validations.error) {
 
-    console.log(req.body);
-    console.log(result);
-    return res.status(400).send('Incorrect user information provided.');
+    return res
+      .status(400)
+      .send({
+        error: validations.error,
+        message: 'Incorrect user information provided.'
+      });
+
+  }
+
+  const {
+    strategy,
+    email,
+    username,
+    avatar,
+    socialId,
+    socialToken
+  } = req.body;
+
+  let avatarUrl;
+
+  if (avatar) {
+
+    try {
+
+      avatarUrl = await imgCloudUtils.upload(avatar, username);
+
+    } catch (error) {
+
+      return res
+        .status(500)
+        .send({
+          error,
+          message: 'Failed to register the profile photo.'
+        });
+
+    }
 
   }
 
   try {
 
-    const user = await User.registerSocialUser(req.body);
+    const user = await User.registerSocialUser({
+      strategy,
+      email,
+      username,
+      avatar: avatarUrl || null,
+      socialId,
+      socialToken
+    });
 
     const accessToken = await user.generateToken();
 
-    return res.cookie('ckToken', accessToken, {
-      httpOnly: true,
-      maxAge: 604800
-    }).send({
-      _id: user._id,
-      username: user.username,
-      avatar: user.avatar
-    });
+    return res
+      .cookie('ckToken', accessToken, {
+        httpOnly: true,
+        maxAge: 604800
+      }).send({
+        _id: user._id,
+        username: user.username,
+        avatar: user.avatar
+      });
 
   } catch (error) {
 
     return res
       .status(500)
-      .send('Internal server error. Try again in a few minutes.');
+      .send({
+        error,
+        message: 'Internal server error.'
+      });
 
   }
 

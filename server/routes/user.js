@@ -28,6 +28,8 @@ router.get('/validate', async (req, res) => {
 
     const user = await User.findById(req.user._id);
 
+    console.log(user);
+
     if (!user) {
       return res
         .cookie('ckToken', null, {
@@ -165,7 +167,7 @@ router.post('/validate/social', async (req, res) => {
     return res
       .cookie('ckToken', accessToken, {
         httpOnly: true,
-        maxAge: 604800
+        maxAge: 1000 * 60 * 60 * 24 * 7
       }).send({
         _id: dupUser._id,
         username: dupUser.username,
@@ -241,7 +243,7 @@ router.post('/signin/local', async (req, res) => {
       return res
         .cookie('ckToken', accessToken, {
           httpOnly: true,
-          maxAge: 604800
+          maxAge: 1000 * 60 * 60 * 24 * 7
         }).send({
           _id,
           username,
@@ -333,7 +335,7 @@ router.post('/signup/local', upload.any(), async (req, res) => {
     return res
       .cookie('ckToken', accessToken, {
         httpOnly: true,
-        maxAge: 604800
+        maxAge: 1000 * 60 * 60 * 24 * 7
       }).send({
         _id: user._id,
         username: user.username,
@@ -421,7 +423,7 @@ router.post('/signup/social', upload.any(), async (req, res) => {
     return res
       .cookie('ckToken', accessToken, {
         httpOnly: true,
-        maxAge: 604800
+        maxAge: 1000 * 60 * 60 * 24 * 7
       }).send({
         _id: user._id,
         username: user.username,

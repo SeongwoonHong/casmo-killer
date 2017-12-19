@@ -18,6 +18,18 @@
             line-height: 50px;
         }
     }
+    .notification {
+        .notification-badge {
+            color: #e0f2f1;
+            background-color: palette(Red, 500);
+            border: 1px solid palette(Teal, 50);
+            border-radius: 50%;
+            font-size: 10px;
+            line-height: normal;
+            padding: 1px 3px;
+            position: absolute;
+        }
+    }
     > h1 {
         font-size: 20px;
         font-weight: 700;

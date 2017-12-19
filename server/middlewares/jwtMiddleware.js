@@ -45,9 +45,11 @@ const jwtMiddleware = async (req, res, next) => {
         avatar: user.avatar
       }, 'user');
 
+      console.log(freshToken);
+
       return res.cookie('ckToken', freshToken, {
         httpOnly: true,
-        maxAge: 604800
+        maxAge: 1000 * 60 * 60 * 24 * 7
       });
 
     }

@@ -278,7 +278,6 @@ export function createReplyRequest(comment, postId, parentReply = {}) {
     postId,
     parentReply
   };
-  console.log(data);
   return (dispatch) => {
     dispatch(createReply());
     // tokenFromStorage

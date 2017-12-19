@@ -26,6 +26,7 @@ class PostDetail extends Component {
 
   componentDidMount() {
     this.props.fetchPostRequest(this.props.postId);
+    console.log(this.props.activePost);
   }
 
   componentWillUnmount() {

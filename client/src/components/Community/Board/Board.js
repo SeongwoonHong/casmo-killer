@@ -92,13 +92,6 @@ class Board extends Component {
         </div>
       );
     }
-    const boardNewPost = (
-      <div className="board_newPost right">
-        <Link className="btn-floating btn-large teal" to={this.props.user.isLoggedIn ? `${this.props.match.url}/new` : `${this.props.match.url}`}>
-          <i className="large material-icons">mode_edit</i>
-        </Link>
-      </div>
-    );
     return (
       <div className="board">
         <div className="row">
@@ -119,11 +112,14 @@ class Board extends Component {
                   </PlainBtn>
                 </div>
               </div>
-              <Link
-                className="btn-floating btn-large teal right"
-                to={`${this.state.baseUrl}/new`}>
-                <i className="large material-icons">mode_edit</i>
-              </Link>
+              {
+                this.props.user.isLoggedIn &&
+                <Link
+                  className="btn-floating btn-large teal right"
+                  to={`${this.state.baseUrl}/new`}>
+                  <i className="large material-icons">mode_edit</i>
+                </Link>
+              }
             </div>
           </div>
         </div>

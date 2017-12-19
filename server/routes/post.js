@@ -14,7 +14,6 @@ router.use('/comment', comment);
 
 /* POST DETAIL */
 router.get('/detail/:id', (req, res) => {
-  console.log('detail here');
   Post.findById({
     _id: req.params.id
   })
@@ -96,9 +95,6 @@ router.get('/search/:searchWord/:boardId/:page', (req, res) => {
     };
   }
   Post.count(searchOption, (err, totalCount) => {
-    console.log(totalCount);
-    console.log(searchOption);
-    console.log(req.params.searchWord);
     if (err) throw err;
     pageNum = Math.ceil(totalCount / PER_PAGE);
     Post
@@ -255,7 +251,6 @@ router.post('/reply', (req, res) => {
       }
     });
   }
-
   if (!comment) {
     return res.status(400).json({
       message: 'Error: content is required!'
@@ -265,8 +260,7 @@ router.post('/reply', (req, res) => {
   Post.findOne({ _id: req.body.postId }, (err, rawContent) => {
     if (err) throw err;
     rawContent.comments.push({
-      name: req.user.username,
-      id: req.user._id,
+      author: req.user._id,
       memo: comment,
       avatar: req.user.avatar,
       parentAuthor,

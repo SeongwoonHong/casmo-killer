@@ -56,13 +56,13 @@ export default class Reply extends Component {
     this.animateOut().then(done);
   }
   likesHandler = (postId, type, commentId) => {
-    if (this.props.user.isLoggedIn && (this.props.commentAuthorName !== this.props.user.username)) {
+    if (this.props.user.isLoggedIn && (this.props.commentAuthor !== this.props.user.username)) {
       this.clickAnimation(this.like);
       this.props.giveLikesRequest(postId, type, commentId);
     }
   }
   disLikesHandler = (postId, type, commentId) => {
-    if (this.props.user.isLoggedIn && (this.props.commentAuthorName !== this.props.user.username)) {
+    if (this.props.user.isLoggedIn && (this.props.commentAuthor !== this.props.user.username)) {
       this.clickAnimation(this.disLike);
       this.props.giveDisLikesRequest(postId, type, commentId);
     }
@@ -185,7 +185,6 @@ export default class Reply extends Component {
                 onKeyDown={() => {}}
               />
               <span className="dislikes">{disLikes.length}</span>
-<<<<<<< HEAD
               <span className="buttons">
                 {
                   this.props.user.isLoggedIn &&
@@ -198,7 +197,7 @@ export default class Reply extends Component {
                       TweenMax.to(window, 1, { scrollTo: { y: offset, autoKill: true }, ease: Bounce.easeOut });
                       this.state.edit && this.toggleEdit();
                       this.props.replyComment({
-                        comment, commentId, commentAuthorName, postId
+                        comment, commentId, commentAuthor, postId
                       });
                     }}
                   >
@@ -206,14 +205,9 @@ export default class Reply extends Component {
                   </i>
                 }
                 {
-                  this.props.user.username === commentAuthorName ? buttons : undefined
+                  this.props.user.username === commentAuthor ? buttons : undefined
                 }
               </span>
-=======
-              {
-                this.props.user.username === commentAuthor.username ? buttons : undefined
-              }
->>>>>>> master
             </div>
           </form>
         </div>
@@ -232,7 +226,7 @@ Reply.defaultProps = {
 
 Reply.propTypes = {
   postId: PropTypes.string,
-  commentAuthor: PropTypes.object,
+  commentAuthor: PropTypes.string,
   postAuthor: PropTypes.object,
   comment: PropTypes.string,
   date: PropTypes.string,

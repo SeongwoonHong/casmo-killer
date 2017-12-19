@@ -5,6 +5,7 @@ import CommunityWrapper from '../components/Community/index';
 import Restaurants from '../components/Restaurants';
 import QnA from '../components/QnA';
 import Info from '../components/Info';
+import User from '../components/User';
 
 import SubMenu from '../components/Navigations/MainMenu/SubMenu/SubMenu';
 
@@ -129,5 +130,10 @@ export const MainMenuRoutes = [
         />
       );
     }
+  },
+  {
+    name: 'User',
+    path: '/user',
+    main: User
   }
 ];

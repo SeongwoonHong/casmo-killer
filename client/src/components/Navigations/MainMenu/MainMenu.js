@@ -16,7 +16,7 @@ class MainMenu extends Component {
 
     const MenuLinks = (routes) => {
       return routes.map((route) => {
-        if (route.name) {
+        if (route.name && route.icon) {
           return (
             <li key={ route.name }>
               <NavLink

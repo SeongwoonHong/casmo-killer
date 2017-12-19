@@ -7,7 +7,7 @@
     > li {
         > a,
         > button {
-            @include flex-box(space-around);
+            @include flex-box(flex-start);
             color: palette(Teal, 900);
             font-size: 14px;
             width: 100%;

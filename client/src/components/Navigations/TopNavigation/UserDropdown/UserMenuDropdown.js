@@ -24,15 +24,9 @@ const UserMenuDropdown = (props) => {
           </Link>
         </li>
         <li>
-          <Link to="/">
-            <i className="material-icons">account_circle</i>
-            <span>Profiles</span>
-          </Link>
-        </li>
-        <li>
-          <Link to="/">
+          <Link to="/user/account">
             <i className="material-icons">settings</i>
-            <span>Settings</span>
+            <span>My Account</span>
           </Link>
         </li>
         <li className="divider" />

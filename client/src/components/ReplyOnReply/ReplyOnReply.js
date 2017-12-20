@@ -23,9 +23,7 @@ class ReplyOnReply extends Component {
         <div className="reply-author">
           { author }
         </div>
-        <textarea readOnly className="reply-content">
-          { content }
-        </textarea>
+        <textarea readOnly className="reply-content" value={content} />
       </div>
     );
   }

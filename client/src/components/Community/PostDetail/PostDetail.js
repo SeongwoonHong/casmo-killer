@@ -26,7 +26,6 @@ class PostDetail extends Component {
 
   componentDidMount() {
     this.props.fetchPostRequest(this.props.postId);
-    console.log(this.props.activePost);
   }
 
   componentWillUnmount() {
@@ -36,12 +35,12 @@ class PostDetail extends Component {
     this.props.resetPostProps();
   }
   onLikesHandler = () => {
-    if ((this.props.user.username !== this.props.activePost.data.authorName) && this.props.user.isLoggedIn) {
+    if ((this.props.user.username !== this.props.activePost.data.author.username) && this.props.user.isLoggedIn) {
       return this.props.giveLikesRequest(this.props.activePost.data._id, 'post');
     }
   }
   onDislikesHandler = () => {
-    if ((this.props.user.username !== this.props.activePost.data.authorName) && this.props.user.isLoggedIn) {
+    if ((this.props.user.username !== this.props.activePost.data.author.username) && this.props.user.isLoggedIn) {
       return this.props.giveDislikesRequest(this.props.activePost.data._id, 'post');
     }
   }

@@ -11,6 +11,7 @@ class UserMenu extends Component {
     super(props);
 
     this.toggleDropdown = this.toggleDropdown.bind(this);
+    this.clickToToggle = this.clickToToggle.bind(this);
 
   }
 
@@ -81,8 +82,8 @@ class UserMenu extends Component {
         className={ classnames('user-profile', {
           loggedIn: user.isLoggedIn
         }) }
-        onMouseDown={ this.clickToToggle.bind(this) }
-        onTouchEnd={ this.clickToToggle.bind(this) }
+        onMouseDown={ this.clickToToggle }
+        onTouchEnd={ this.clickToToggle }
         onKeyDown={ () => {} }>
         {
           currentUser.isLoggedIn

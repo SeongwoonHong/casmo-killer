@@ -11,7 +11,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    toggleMenu: () => dispatch(actions.toggleMenu())
+    loginSuccess: payload => dispatch(actions.loginSuccess(payload))
   };
 };
 

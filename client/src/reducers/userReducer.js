@@ -4,6 +4,7 @@ const initialState = {
   user: {
     isLoggedIn: false,
     _id: null,
+    email: null,
     username: null,
     avatar: null
   },
@@ -22,6 +23,7 @@ export default function (state = initialState.user, action) {
       return Object.assign({}, state, {
         isLoggedIn: true,
         _id: action.payload._id,
+        email: action.payload.email,
         username: action.payload.username,
         avatar: action.payload.avatar || null
       });

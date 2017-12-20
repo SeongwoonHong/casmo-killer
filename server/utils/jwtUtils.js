@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+
 const { REACT_APP_jwtSecretKey: jwtSecret } = process.env;
 
 const jwtUtils = {
@@ -7,7 +8,7 @@ const jwtUtils = {
     return new Promise((resolve, reject) => {
       jwt.sign(payload, jwtSecret, {
         issuer: 'ckboard.com',
-        expiresIn: 604800,
+        expiresIn: '7d',
         subject
       }, (error, token) => {
         if (error) {

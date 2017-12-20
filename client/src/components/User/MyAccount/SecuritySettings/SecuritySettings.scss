@@ -1,0 +1,27 @@
+.for-security {
+    > .settings-fields {
+        > .plain-btn {
+            float: right;
+            font-size: 12px;
+            margin: 15px 0 0;
+            padding: 10px 15px;
+            &:focus,
+            &:hover {
+                background-color: palette(Teal, 900);
+            }
+            > .preloader-wrapper {
+                @include rectanglify(14px);
+            }
+        }
+    }
+    > .button-group {
+        @include flex-box(space-around);
+        padding: 15px;
+        > button {
+            float: none;
+            margin: 0;
+            max-width: 200px;
+            width: 45%;
+        }
+    }
+}

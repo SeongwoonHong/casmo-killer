@@ -14,10 +14,11 @@ class RichTextEditor extends Component {
     };
   }
   componentDidMount() {
-    console.log('this.props.value');
-    console.log(this.props.value);
+    // console.log('this.props.value');
+    // console.log(this.props.value);
   }
   onChange = (value) => {
+    console.log(value);
     this.setState({ value });
     // const htmlPre = '<!DOCTYPE html><html><body><div data-contents="true">';
     // const htmlPost = '</div></body></html>';

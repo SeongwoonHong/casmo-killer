@@ -23,7 +23,9 @@ class Iframe extends Component {
     }
   }
   resizeIframe = () => {
-    this.iframe.style.height = `${this.iframe.contentDocument.body.getElementsByTagName('div')[0].scrollHeight + 30}px`;
+    if (this.iframe) {
+      this.iframe.style.height = `${this.iframe.contentDocument.body.getElementsByTagName('div')[0].scrollHeight + 30}px`;
+    }
   }
   _updateIframe() {
     const document = this.iframe.contentDocument;

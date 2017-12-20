@@ -11,6 +11,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    closeModal: () => dispatch(actions.closeAuthModal()),
     redirectToRegister: () => dispatch(actions.redirectToRegister()),
     redirectToLogin: () => dispatch(actions.redirectToLogin())
   };

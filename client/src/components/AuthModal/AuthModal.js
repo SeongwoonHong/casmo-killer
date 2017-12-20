@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 import ModalContainer from 'sharedComponents/ModalContainer';
 import LoadingCircle from 'sharedComponents/LoadingCircle';
@@ -14,7 +15,7 @@ class AuthModal extends Component {
 
   // this will take userInfo object and
   // redirect to register form
-  onRegister = (userInfo) => {
+  onSocialRegister = (userInfo) => {
     this.props.setUserForRegister(userInfo);
   };
 
@@ -68,11 +69,10 @@ class AuthModal extends Component {
                 ? ([
                   <SocialAuth
                     key={ 0 }
-                    onRegister={ this.onRegister }
+                    onRegister={ this.onSocialRegister }
                     onSuccess={ this.onSuccess } />,
                   <LocalAuth
                     key={ 1 }
-                    onRegister={ this.onRegister }
                     onSuccess={ this.onSuccess } />
                 ])
                 : <Register onSuccess={ this.onSuccess } />

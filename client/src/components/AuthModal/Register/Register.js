@@ -41,6 +41,7 @@ class Login extends Component {
 
     const reader = new FileReader();
     const image = e.target.files[0];
+    console.log(image.size);
 
     reader.onloadend = () => {
       this.setState({ avatar: reader.result });

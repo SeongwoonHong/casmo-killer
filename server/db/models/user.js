@@ -20,11 +20,21 @@ const UserSchema = new Schema({
     id: String,
     accessToken: String
   },
+  verified: {
+    type: Boolean,
+    default: false
+  },
   privilege: {
     type: String,
     default: 'newbie'
   }
 });
+
+UserSchema.statics.findUserById = function (id) {
+
+  return this.findById(id).select('+password');
+
+};
 
 UserSchema.statics.findUserByEmail = function (email) {
 
@@ -124,10 +134,11 @@ UserSchema.methods.verifyPassword = function (password) {
 
 UserSchema.methods.generateToken = function () {
 
-  const { _id, username, avatar } = this;
+  const { _id, email, username, avatar } = this;
 
   return jwtUtils.sign({
     _id,
+    email,
     username,
     avatar
   }, 'user');

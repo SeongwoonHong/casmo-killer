@@ -12,10 +12,10 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    loginSuccess: payload => dispatch(actions.loginSuccess(payload)),
     closeAuthModal: () => dispatch(actions.closeAuthModal()),
     startAuthProcess: () => dispatch(actions.startAuthProcess()),
-    setUserForRegister: payload => dispatch(actions.setUserForRegister(payload)),
-    loginSuccess: payload => dispatch(actions.loginSuccess(payload))
+    setUserForRegister: payload => dispatch(actions.setUserForRegister(payload))
   };
 }
 

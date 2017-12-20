@@ -1,3 +1,4 @@
+import axios from 'axios';
 import * as types from './types';
 
 export const loginSuccess = (payload) => {
@@ -8,8 +9,15 @@ export const loginSuccess = (payload) => {
 };
 
 export const logout = () => {
-  return {
-    type: types.LOGOUT
+  return (dispatch) => {
+    axios
+      .post('/api/user/logout')
+      .then(() => {
+        dispatch({
+          type: types.LOGOUT
+        });
+      })
+      .catch(err => console.error(err));
   };
 };
 

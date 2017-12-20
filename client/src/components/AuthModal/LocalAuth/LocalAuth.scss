@@ -1,5 +1,9 @@
 .local-auth {
     > form {
+        > .submit-message {
+            margin: 25px auto;
+            width: 90%;
+        }
         > .input-field {
             margin: 0 auto;
             > .material-icons {
@@ -64,6 +68,10 @@
             color: palette(Teal, 700);
             font-size: 12px;
             text-decoration: underline;
+            &:hover,
+            &:focus {
+                background-color: transparent;
+            }
         }
     }
     @media screen and (Min-width: 768px) {

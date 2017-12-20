@@ -19,7 +19,11 @@ class Login extends Component {
       email: '',
       password: '',
       message: [],
-      isLoading: false
+      isLoading: false,
+      operation: {
+        isSuccess: false,
+        message: ''
+      }
     };
 
     this.state = this.initialState;
@@ -93,73 +97,58 @@ class Login extends Component {
     const messages = [];
 
     if (inputValidator.isEmpty(email)) {
-
       messages.push('Please enter your email.');
-
     } else if (!inputValidator.isEmail(email)) {
-
       messages.push('The provided email address is not valid.');
-
     } else {
-
       try {
-
         // simply check if the email's been taken
         const { data } = await axios.get(`/api/user/validate/email/${email}`);
-
         if (data.isDuplicate) {
           messages.push('The email address is already registered.');
         }
-
       } catch (error) {
-
         console.error(error.response.error);
         messages.push(error.response.data.message);
-
       }
-
     }
 
-    if (inputValidator.isEmpty(password)) {
-
-      messages.push('Please enter your password.');
-
-    } else if (password.length < 6) {
-
-      messages.push('Password must be more than 6 characters.');
-
-    } else if (password.length > 20) {
-
-      messages.push('Password must be less than 20 characters.');
-
-    // holding off on password validation
-    // until we decide on password rules
-    }/* else if (!inputValidator.isPassword(password)) {
-
-      messages.push('The provided password is not valid.');
-
-    } */
-
     if (messages.length > 0) {
-
       this.setState({
         isLoading: false,
         message: messages
       });
-
     } else {
-
-      this.setState({
-        isLoading: false,
-        message: []
-      });
-
-      // redirect to registration form with email & password
-      onRegister({ email, password });
-
+      this.onLocalRegister(email);
     }
 
+    /*if (inputValidator.isEmpty(password)) {
+      messages.push('Please enter your password.');
+    } else if (password.length < 6) {
+      messages.push('Password must be more than 6 characters.');
+    } else if (password.length > 20) {
+      messages.push('Password must be less than 20 characters.');
+    // holding off on password validation
+    // until we decide on password rules
+    } else if (!inputValidator.isPassword(password)) {
+      messages.push('The provided password is not valid.');
+    }*/
   }
+
+  onLocalRegister = (email) => {
+    axios
+      .post('/api/user/signup/request', { email })
+      .then((res) => {
+        this.setState({
+          isLoading: false,
+          message: [],
+          operation: {
+            isSuccess: true,
+            message: res.data.message
+          }
+        });
+      });
+  };
 
   typeToggle = () => {
 
@@ -198,38 +187,66 @@ class Login extends Component {
               );
             })
           }
-          <div key={ 0 } className="input-field">
-            <i className="material-icons prefix">email</i>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Email Address"
-              disabled={ this.state.isLoading }
-              onChange={ this.onChangeHandler }
-              value={ this.state.email } />
-          </div>
-          <div key={ 1 } className="input-field">
-            <i className="material-icons prefix">lock</i>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Password"
-              disabled={ this.state.isLoading }
-              onChange={ this.onChangeHandler }
-              value={ this.state.password } />
-          </div>
-          <button
-            type="submit"
-            className="btn"
-            disabled={ this.state.isLoading }>
-            {
-              this.state.isLoading
-                ? <LoadingCircle color="#004D40" />
-                : formText
-            }
-          </button>
+          {
+            this.state.operation.isSuccess
+              ? (
+                <div className="submit-message success">
+                  <p>{ this.state.operation.message }</p>
+                </div>
+              )
+              : (
+                <div key={ 0 } className="input-field">
+                  <i className="material-icons prefix">email</i>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Email Address"
+                    disabled={ this.state.isLoading }
+                    onChange={ this.onChangeHandler }
+                    value={ this.state.email } />
+                </div>
+              )
+          }
+          {
+            isLogin
+              ? (
+                <div key={ 1 } className="input-field">
+                  <i className="material-icons prefix">lock</i>
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Password"
+                    disabled={ this.state.isLoading }
+                    onChange={ this.onChangeHandler }
+                    value={ this.state.password } />
+                </div>
+              )
+              : null
+          }
+          {
+            this.state.operation.isSuccess
+              ? (
+                <button
+                  className="btn"
+                  onClick={ this.props.closeModal }>
+                  Close
+                </button>
+              )
+              : (
+                <button
+                  type="submit"
+                  className="btn"
+                  disabled={ this.state.isLoading }>
+                  {
+                    this.state.isLoading
+                      ? <LoadingCircle color="#004D40" />
+                      : formText
+                  }
+                </button>
+              )
+          }
         </form>
         <div className="other-options">
           <PlainBtn onClick={ this.typeToggle }>

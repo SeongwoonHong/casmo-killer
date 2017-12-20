@@ -7,6 +7,8 @@ const upload = multer();
 const isAuthenticated = require('../middlewares/isAuthenticated');
 const imgCloudUtils = require('../utils/imgCloudUtils');
 const socialAuthUtils = require('../utils/socialAuthUtils');
+const jwtUtils = require('../utils/jwtUtils');
+const mailUtils = require('../utils/mailer');
 
 const User = require('../db/models/user');
 
@@ -493,6 +495,36 @@ router.post('/signup/social', upload.any(), async (req, res) => {
 
 });
 
+router.post('/signup/request', async (req, res) => {
+
+  const validations = Joi.validate(req.body, Joi.object({
+    email: Joi.string().email().required()
+  }));
+
+  if (validations.error) {
+
+    return res
+      .status(400)
+      .send({
+        error: validations.error,
+        message: 'Incorrect email provided.'
+      });
+
+  }
+
+  const { email } = req.body;
+
+  // TODO: better error handling
+  const token = await jwtUtils.sign({ email }, '24hrs');
+
+  const { envelope } = await mailUtils.sendVerification(token, email);
+
+  return res.send({
+    message: `Verification email has been sent to ${envelope.to}`
+  });
+
+});
+
 router.put('/update/password', isAuthenticated, async (req, res) => {
 
   const validations = Joi.validate(req.body, Joi.object({
@@ -615,6 +647,14 @@ router.put('/update/all', isAuthenticated, async (req, res) => {
       });
 
   }
+
+});
+
+router.get('/verify/email/:email', async (req, res) => {
+
+  const { email } = await jwtUtils.verify(req.params.email);
+
+  res.send(email);
 
 });
 

@@ -150,7 +150,13 @@ router.post('/likes/:postId', isAuthenticated, (req, res) => {
     }
     post.save((error, result) => {
       if (error) throw error;
-      return res.json(result);
+      post
+        .populate('comments.author')
+        .populate('author', (err2, finalResult) => {
+          if (err2) throw err2;
+          return res.json(finalResult);
+        });
+      // return res.json(result);
     });
   });
 });
@@ -181,7 +187,12 @@ router.post('/disLikes/:postId', isAuthenticated, (req, res) => {
     }
     post.save((error, result) => {
       if (error) throw error;
-      return res.json(result);
+      post
+        .populate('comments.author')
+        .populate('author', (err2, finalResult) => {
+          if (err2) throw err2;
+          return res.json(finalResult);
+        });
     });
   });
 });
@@ -269,7 +280,11 @@ router.post('/reply', (req, res) => {
     });
     rawContent.save((error, replyResult) => {
       if (error) throw error;
-      res.json(replyResult);
+      rawContent
+        .populate('author')
+        .populate('comments.author', (errComment, commentResult) => {
+          return res.json(commentResult);
+        });
     });
   });
 });
@@ -355,11 +370,16 @@ router.put('/:id', async (req, res) => {
   });
 
   Post.findOneAndUpdate({ _id: req.params.id },
-    req.body, { runValidators: true, new: true }, (err, result) => {
+    req.body, { runValidators: true, new: true }, (err, post) => {
       if (err) {
         throw err;
       }
-      res.json(result);
+      post
+        .populate('author')
+        .populate('comments.author', (error, result) => {
+          if (error) throw error;
+          res.json(result);
+        });
     });
 });
 

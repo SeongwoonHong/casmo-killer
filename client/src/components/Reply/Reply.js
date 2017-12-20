@@ -93,9 +93,20 @@ export default class Reply extends Component {
       this.setState({ edit: false });
     });
   }
+  replyComment = () => {
+    const {
+      comment, commentId, commentAuthor, postId
+    } = this.props;
+    const offset = document.getElementById('root').offsetHeight;
+    TweenMax.to(window, 1, { scrollTo: { y: offset, autoKill: true }, ease: Bounce.easeOut });
+    this.state.edit && this.toggleEdit();
+    this.props.replyComment({
+      comment, commentId, commentAuthor, postId
+    });
+  }
   render() {
     const {
-      postId, commentAuthor, comment, date, commentId, postAuthor, likes, disLikes, handleSubmit, isEdited, parentAuthor, parentCommentId, parentContent
+      postId, commentAuthor, comment, date, commentId, likes, disLikes, handleSubmit, isEdited, parentAuthor, parentCommentId, parentContent, avatar
     } = this.props;
     const editView = (
       <Field
@@ -142,15 +153,15 @@ export default class Reply extends Component {
       <div className="card reply" ref={el => this.component = el}>
         <div className="card-content" key={postId}>
           <div className="header">
-            <img src={postAuthor.avatar} alt="" className="circle avartar_circle" />
+            <img src={avatar} alt="" className="circle avartar_circle" />
             <div className="header-info">
               <div className="writer">
                 <PlainBtn
                   onClick={
-                    () => { this.props.openUserInfoModal(postAuthor); }
+                    () => { this.props.openUserInfoModal(commentAuthor); }
                   }
                 >
-                  <a href="#">{postAuthor.username}</a>
+                  <a href="#">{commentAuthor}</a>
                 </PlainBtn>
               </div>
               <div className="created">Created : <TimeAgo date={date} formatter={formatter} />{ isEdited && <span> (edited)</span>}</div>
@@ -164,7 +175,7 @@ export default class Reply extends Component {
             />
           }
           <form name="replyForm" onSubmit={handleSubmit(this.validateAndPost)} ref={el => this.form = el}>
-            { this.state.edit ? editView : <textarea readOnly className="comment">{comment}</textarea> }
+            { this.state.edit ? editView : <textarea readOnly className="comment" value={comment} /> }
 
             <div className="preferences-panel">
               <img
@@ -192,14 +203,7 @@ export default class Reply extends Component {
                     className="material-icons reply"
                     role="presentation"
                     onKeyDown={() => {}}
-                    onClick={() => {
-                      const offset = document.getElementById('root').offsetHeight;
-                      TweenMax.to(window, 1, { scrollTo: { y: offset, autoKill: true }, ease: Bounce.easeOut });
-                      this.state.edit && this.toggleEdit();
-                      this.props.replyComment({
-                        comment, commentId, commentAuthor, postId
-                      });
-                    }}
+                    onClick={this.replyComment}
                   >
                     reply
                   </i>

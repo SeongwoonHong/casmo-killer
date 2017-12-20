@@ -429,7 +429,7 @@ export default function post(state = initialState, action) {
         ...state,
         replyComment: {
           status: 'WAITING',
-          parentAuthor: action.payload.data.commentAuthorName,
+          parentAuthor: action.payload.data.commentAuthor,
           parentCommentId: action.payload.data.commentId,
           parentContent: action.payload.data.comment
         }

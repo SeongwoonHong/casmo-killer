@@ -35,7 +35,10 @@ router.post('/update/:postId/:commentId', isAuthenticated, (req, res) => {
     }
     post.save((error, result) => {
       if (error) throw error;
-      return res.json(result.comments);
+      post
+        .populate('comments.author', (errComment, commentResult) => {
+          return res.json(commentResult.comments);
+        });
     });
   });
 });
@@ -78,7 +81,12 @@ router.post('/likes/:postId/:commentId', isAuthenticated, (req, res) => {
     }
     post.save((error, result) => {
       if (error) throw error;
-      return res.json(result);
+      post
+        .populate('author')
+        .populate('comments.author', (errComment, commentResult) => {
+          if (errComment) throw errComment;
+          return res.json(commentResult);
+        });
     });
   });
 });
@@ -121,7 +129,12 @@ router.post('/disLikes/:postId/:commentId', isAuthenticated, (req, res) => {
     }
     post.save((error, result) => {
       if (error) throw error;
-      return res.json(result);
+      post
+        .populate('author')
+        .populate('comments.author', (errComment, commentResult) => {
+          if (errComment) throw errComment;
+          return res.json(commentResult);
+        });
     });
   });
 });

@@ -329,14 +329,13 @@ export function giveLikesRequest(id, type, commentId) {
         console.error(e);
         dispatch(giveLikesFailure(e));
       });
-    } else {
-      return axios.post(`/api/post/comment/likes/${id}/${commentId}`).then((response) => {
-        dispatch(giveLikesSuccess(response.data));
-      }).catch((e) => {
-        console.error(e);
-        dispatch(giveLikesFailure(e));
-      });
     }
+    return axios.post(`/api/post/comment/likes/${id}/${commentId}`).then((response) => {
+      dispatch(giveLikesSuccess(response.data));
+    }).catch((e) => {
+      console.error(e);
+      dispatch(giveLikesFailure(e));
+    });
   };
 }
 

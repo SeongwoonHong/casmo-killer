@@ -97,8 +97,8 @@ export default class Reply extends Component {
     const {
       comment, commentId, commentAuthor, postId
     } = this.props;
-    const offset = document.getElementById('root').offsetHeight;
-    TweenMax.to(window, 1, { scrollTo: { y: offset, autoKill: true }, ease: Bounce.easeOut });
+    const offset = document.querySelector('.community').offsetHeight;
+    TweenMax.to(document.querySelector('.app-wrapper .container'), 1, { scrollTo: { y: offset, autoKill: true }, ease: Bounce.easeOut });
     this.state.edit && this.toggleEdit();
     this.props.replyComment({
       comment, commentId, commentAuthor, postId
@@ -175,7 +175,7 @@ export default class Reply extends Component {
             />
           }
           <form name="replyForm" onSubmit={handleSubmit(this.validateAndPost)} ref={el => this.form = el}>
-            { this.state.edit ? editView : <textarea readOnly className="comment" value={comment} /> }
+            { this.state.edit ? editView : <pre readOnly className="comment">{comment}</pre> }
 
             <div className="preferences-panel">
               <img

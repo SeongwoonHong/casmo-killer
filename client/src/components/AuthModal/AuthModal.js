@@ -1,90 +1,59 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 
+import * as storageUtils from 'sharedUtils/storageUtils';
 import ModalContainer from 'sharedComponents/ModalContainer';
 import LoadingCircle from 'sharedComponents/LoadingCircle';
-import * as storageUtils from 'sharedUtils/storageUtils';
 
-import SocialAuth from './SocialAuth';
-import LocalAuth from './LocalAuth';
-import Register from './Register';
+import SocialAuth from './SocialAuth/SocialAuth';
+import LocalAuth from './LocalAuth/LocalAuth';
 
 import './AuthModal.scss';
 
 class AuthModal extends Component {
 
-  // this will take userInfo object and
-  // redirect to register form
   onSocialRegister = (userInfo) => {
+    console.log(userInfo);
     this.props.setUserForRegister(userInfo);
+    this.props.history.push('/user/register');
   };
 
-  // this is when login is successful
-  onSuccess = async (userInfo) => {
-
-    this.props.startAuthProcess();
-
+  onLoginSuccess = async (userInfo) => {
     const user = await storageUtils.set('ckUser', userInfo);
-
     this.props.loginSuccess(user);
-
-    const { user: currentUser } = this.props;
-
-    if (currentUser.isLoggedIn) {
-      this.props.closeAuthModal();
-    }
-
   };
 
   render() {
-
     const {
-      auth,
-      closeAuthModal
+      auth, closeAuthModal, startAuthProcess
     } = this.props;
 
-    const processingOverlay = (isProcessing) => {
-
-      if (isProcessing) {
+    const processingOverlay = (isLoading) => {
+      if (isLoading) {
         return (
           <div className="process-overlay">
             <LoadingCircle color="#004D40" />
           </div>
         );
       }
-
       return null;
-
     };
 
-    if (auth.type !== null) {
-
+    if (auth.isOpen) {
       return (
         <ModalContainer
           onClose={ closeAuthModal }>
           <div className="auth-modal-body">
-            { processingOverlay(auth.isProcessing) }
-            {
-              !auth.isRegistering
-                ? ([
-                  <SocialAuth
-                    key={ 0 }
-                    onRegister={ this.onSocialRegister }
-                    onSuccess={ this.onSuccess } />,
-                  <LocalAuth
-                    key={ 1 }
-                    onSuccess={ this.onSuccess } />
-                ])
-                : <Register onSuccess={ this.onSuccess } />
-            }
+            { processingOverlay(auth.isLoading) }
+            <SocialAuth
+              startAuthProcess={ startAuthProcess }
+              onRegister={ this.onSocialRegister }
+              onSuccess={ this.onLoginSuccess } />
+            <LocalAuth onSuccess={ this.onLoginSuccess } />
           </div>
         </ModalContainer>
       );
-
     }
-
     return null;
-
   }
 
 }

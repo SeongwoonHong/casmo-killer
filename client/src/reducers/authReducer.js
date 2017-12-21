@@ -2,13 +2,12 @@ import * as types from '../actions/types';
 
 const initialState = {
   auth: {
-    isProcessing: false,
-    isRegistering: false,
-    type: null,
+    isOpen: false,
+    isLoading: false,
     strategy: null,
     email: null,
     password: null,
-    username: null,
+    displayName: null,
     avatar: null,
     social: {
       id: null,
@@ -23,27 +22,29 @@ export default function (state = initialState.auth, action) {
 
     case types.OPEN_AUTH_MODAL:
       return Object.assign({}, state, {
-        type: action.authType
+        isOpen: true
       });
 
-    case types.REDIRECT_TO_LOGIN:
+    case types.CLOSE_AUTH_MODAL:
+      return initialState.auth;
+
+    case types.START_AUTH_PROCESS:
       return Object.assign({}, state, {
-        type: 'login'
+        isLoading: true
       });
 
-    case types.REDIRECT_TO_REGISTER:
+    case types.STOP_AUTH_PROCESS:
       return Object.assign({}, state, {
-        type: 'register'
+        isLoading: false
       });
 
     case types.SET_USER_FOR_REGISTER:
       return Object.assign({}, state, {
-        isProcessing: false,
-        isRegistering: true,
+        isOpen: false,
+        isLoading: false,
         strategy: action.payload.strategy || state.strategy,
         email: action.payload.email || state.email,
-        password: action.payload.password || state.password,
-        username: action.payload.username || state.username,
+        displayName: action.payload.displayName.replace(/\s/g, '') || state.displayName,
         avatar: action.payload.avatar || state.avatar,
         social: action.payload.social
           ? {
@@ -52,19 +53,6 @@ export default function (state = initialState.auth, action) {
           }
           : state.social
       });
-
-    case types.START_AUTH_PROCESS:
-      return Object.assign({}, state, {
-        isProcessing: true
-      });
-
-    case types.STOP_AUTH_PROCESS:
-      return Object.assign({}, state, {
-        isProcessing: false
-      });
-
-    case types.CLOSE_AUTH_MODAL:
-      return initialState.auth;
 
     default:
       return state;

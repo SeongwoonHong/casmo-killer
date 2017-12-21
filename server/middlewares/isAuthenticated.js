@@ -1,13 +1,15 @@
-module.exports = (req, res, next) => {
+const isAuthenticated = (req, res, next) => {
 
   if (!req.user) {
+
     return res
       .status(401)
-      .send({
-        error: 'You must log in!'
-      });
+      .send('Unauthorized Access');
+
   }
 
   next();
 
 };
+
+module.exports = isAuthenticated;

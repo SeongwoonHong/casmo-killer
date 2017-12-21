@@ -14,5 +14,12 @@ export default {
   RichTextEditor: {
     components: require('../components/RichTextEditor/RichTextEditor'),
     props: {}
+  },
+  ReplyOnReply: {
+    components: require('../components/ReplyOnReply/ReplyOnReply'),
+    props: {
+      author: 'author',
+      content: 'content'
+    }
   }
 };

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 // import { SubmissionError } from 'redux-form';
 import Materialize from 'materialize-css';
-import ReplyNew from '../../ReplyNew/ReplyNew';
+import ReplyNew from '../../ReplyNew';
 import ReplyList from '../../ReplyList';
 import PostShow from '../../PostShow/PostShow';
 import PostInputForm from '../../PostInputForm';
@@ -35,12 +35,12 @@ class PostDetail extends Component {
     this.props.resetPostProps();
   }
   onLikesHandler = () => {
-    if ((this.props.user.username !== this.props.activePost.data.authorName) && this.props.user.isLoggedIn) {
+    if ((this.props.user.username !== this.props.activePost.data.author.username) && this.props.user.isLoggedIn) {
       return this.props.giveLikesRequest(this.props.activePost.data._id, 'post');
     }
   }
   onDislikesHandler = () => {
-    if ((this.props.user.username !== this.props.activePost.data.authorName) && this.props.user.isLoggedIn) {
+    if ((this.props.user.username !== this.props.activePost.data.author.username) && this.props.user.isLoggedIn) {
       return this.props.giveDislikesRequest(this.props.activePost.data._id, 'post');
     }
   }
@@ -78,8 +78,8 @@ class PostDetail extends Component {
     });
   }
 
-  handleReply = (comment, postId) => {
-    return this.props.createReplyRequest(comment, postId).then(() => {
+  handleReply = (comment, postId, parentReply) => {
+    return this.props.createReplyRequest(comment, postId, parentReply).then(() => {
       if (this.props.newComment.status === 'SUCCESS') {
         Materialize.toast('Success!', 2000);
       } else {

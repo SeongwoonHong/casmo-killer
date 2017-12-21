@@ -19,7 +19,6 @@ import breakPoint from './utils/breakPoint';
 class App extends Component {
 
   componentDidMount() {
-
     if (typeof window !== 'undefined') {
       window.addEventListener('resize', (e) => {
         if (breakPoint(e.target.innerWidth) !== this.props.layout.breakPoint) {

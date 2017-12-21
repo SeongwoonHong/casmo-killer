@@ -112,11 +112,14 @@ class Board extends Component {
                   </PlainBtn>
                 </div>
               </div>
-              <Link
-                className="btn-floating btn-large teal right"
-                to={`${this.state.baseUrl}/new`}>
-                <i className="large material-icons">mode_edit</i>
-              </Link>
+              {
+                this.props.user.isLoggedIn &&
+                <Link
+                  className="btn-floating btn-large teal right"
+                  to={`${this.state.baseUrl}/new`}>
+                  <i className="large material-icons">mode_edit</i>
+                </Link>
+              }
             </div>
           </div>
         </div>

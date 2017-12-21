@@ -1,0 +1,15 @@
+.submit-message {
+    background-color: #ffe6e6;
+    border: 1px solid #D84315;
+    color: #D84315;
+    margin: 0 auto 5px;
+    padding: 5px;
+    > p {
+        margin: 0;
+    }
+    &.success {
+        background-color: #E0F0D9;
+        border-color: #3E753F;
+        color: #3E753F;
+    }
+}

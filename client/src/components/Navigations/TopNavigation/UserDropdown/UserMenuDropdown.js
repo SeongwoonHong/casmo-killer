@@ -24,7 +24,7 @@ const UserMenuDropdown = (props) => {
           </Link>
         </li>
         <li>
-          <Link to="/user/account">
+          <Link to="/user/settings">
             <i className="material-icons">settings</i>
             <span>My Account</span>
           </Link>

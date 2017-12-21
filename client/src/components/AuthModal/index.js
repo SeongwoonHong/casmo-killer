@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import * as actions from 'actions';
 
 import AuthModal from './AuthModal';
@@ -12,11 +13,14 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    loginSuccess: payload => dispatch(actions.loginSuccess(payload)),
     closeAuthModal: () => dispatch(actions.closeAuthModal()),
     startAuthProcess: () => dispatch(actions.startAuthProcess()),
+    loginSuccess: (payload) => {
+      dispatch(actions.loginSuccess(payload));
+      dispatch(actions.closeAuthModal());
+    },
     setUserForRegister: payload => dispatch(actions.setUserForRegister(payload))
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AuthModal);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AuthModal));

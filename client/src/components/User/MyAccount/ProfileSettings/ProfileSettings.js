@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import PlainBtn from 'sharedComponents/PlainBtn';
 import LoadingCircle from 'sharedComponents/LoadingCircle';
 
 import inputValidator from 'sharedUtils/inputValidator';

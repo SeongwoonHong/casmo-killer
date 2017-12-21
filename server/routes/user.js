@@ -1,31 +1,30 @@
 const express = require('express');
-const router = express.Router();
-const Joi = require('joi');
 const multer = require('multer');
+const Joi = require('joi');
+
+const router = express.Router();
 const upload = multer();
 
 const isAuthenticated = require('../middlewares/isAuthenticated');
 const imgCloudUtils = require('../utils/imgCloudUtils');
-const socialAuthUtils = require('../utils/socialAuthUtils');
+const socialAuth = require('../utils/socialAuth');
 const jwtUtils = require('../utils/jwtUtils');
 const mailUtils = require('../utils/mailer');
 
 const User = require('../db/models/user');
 
+// logout and get rid of the cookie
 router.post('/logout', (req, res) => {
-  res
-    .cookie('ckToken', null, {
-      maxAge: 0,
-      httpOnly: true
-    })
-    .send();
+
+  res.cookie('ckToken', null, {
+    maxAge: 0,
+    httpOnly: true
+  });
+
 });
 
-router.get('/validate', async (req, res) => {
-
-  if (!req.user) {
-    return res.status(401).send();
-  }
+// check the user's login status when the client first loads.
+router.get('/validate', isAuthenticated, async (req, res) => {
 
   try {
 
@@ -42,30 +41,39 @@ router.get('/validate', async (req, res) => {
     }
 
     return res.send({
-      _id: user._id,
-      email: user.email,
-      username: user.username,
-      avatar: user.avatar
+      user: {
+        strategy: user.strategy,
+        _id: user._id,
+        email: user.email,
+        displayName: user.displayName,
+        avatar: user.avatar
+      }
     });
 
   } catch (error) {
 
     return res
       .status(500)
-      .send('Internal server error.');
+      .send({
+        message: 'Internal server error.'
+      });
 
   }
 
 });
 
+// this is used to verify the user's password again when the user
+// attempts to either change current password or delete the account.
 router.post('/validate/password', isAuthenticated, async (req, res) => {
 
   if (!req.body.password) {
+
     return res
-      .status(401)
+      .status(400)
       .send({
-        message: 'Password is invalid.'
+        message: 'Please provide password to continue.'
       });
+
   }
 
   try {
@@ -76,7 +84,7 @@ router.post('/validate/password', isAuthenticated, async (req, res) => {
       return res
         .status(403)
         .send({
-          message: 'Authenticaion Failed.'
+          message: 'No user information is found in the database.'
         });
     }
 
@@ -106,11 +114,24 @@ router.post('/validate/password', isAuthenticated, async (req, res) => {
 
 });
 
+// checks whether or not a given email address is already taken
 router.get('/validate/email/:email', async (req, res) => {
 
+  const { email } = req.params;
+
+  if (!email) {
+
+    return res
+      .status(400)
+      .send({
+        message: 'Please provide email to continue.'
+      });
+
+  }
+
   try {
 
-    const user = await User.findUserByEmail(req.params.email);
+    const user = await User.findUserByEmail(email);
 
     res.send({ isDuplicate: !!user });
 
@@ -127,11 +148,24 @@ router.get('/validate/email/:email', async (req, res) => {
 
 });
 
-router.get('/validate/username/:username', async (req, res) => {
+// checks whether or not a given display name is already taken
+router.get('/validate/displayName/:displayName', async (req, res) => {
+
+  const { displayName } = req.params;
+
+  if (!displayName) {
+
+    return res
+      .status(400)
+      .send({
+        message: 'Please provide display name to continue.'
+      });
+
+  }
 
   try {
 
-    const user = await User.findUserByUsername(req.params.username);
+    const user = await User.findUserByDisplayName(displayName);
 
     res.send({ isDuplicate: !!user });
 
@@ -148,7 +182,26 @@ router.get('/validate/username/:username', async (req, res) => {
 
 });
 
+// validate social authentication information
+// this will either log the existing user in
+// or redirect the new social user to register page
 router.post('/validate/social', async (req, res) => {
+
+  const validations = Joi.validate(req.body, Joi.object({
+    provider: Joi.string().required(),
+    accessToken: Joi.string().required()
+  }));
+
+  if (validations.error) {
+
+    return res
+      .status(400)
+      .send({
+        error: validations.error,
+        message: 'Incorrect user information provided.'
+      });
+
+  }
 
   let profile = null;
 
@@ -156,7 +209,8 @@ router.post('/validate/social', async (req, res) => {
 
     const { provider, accessToken } = req.body;
 
-    profile = await socialAuthUtils[provider](accessToken);
+    // fetch user's profile using provider's API
+    profile = await socialAuth[provider](accessToken);
 
   } catch (error) {
 
@@ -179,11 +233,12 @@ router.post('/validate/social', async (req, res) => {
 
   }
 
+  // check first if there is a user with the same profile
   let dupUser = null;
 
   try {
 
-    dupUser = await User.findUserByEmail(profile.email);
+    dupUser = await User.findUserBySocialProfile(profile);
 
   } catch (error) {
 
@@ -196,44 +251,69 @@ router.post('/validate/social', async (req, res) => {
 
   }
 
+  // if there is no user with the same social profile
   if (!dupUser) {
 
     // redirect to registration form
     return res.send({
       shouldRegister: true,
-      profile
+      profile: {
+        strategy: profile.strategy,
+        email: profile.email,
+        displayName: profile.displayName,
+        avatar: profile.avatar
+      }
     });
 
   }
 
-  if (
-    dupUser.strategy === profile.strategy &&
-    dupUser.social.id === profile.social.id
-  ) {
+  // check if the same email is already registered
+  try {
 
-    // if it's an existing user, just log in
-    const accessToken = await dupUser.generateToken();
+    const emailDup = await User.findUserByEmail(profile.email);
+
+    // let the user know about the email being already taken
+    if (emailDup) {
+
+      return res
+        .status(403)
+        .send({
+          message: 'Your email is already registered.'
+        });
+
+    }
+
+  } catch (error) {
 
     return res
-      .cookie('ckToken', accessToken, {
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 7
-      }).send({
-        _id: dupUser._id,
-        username: dupUser.username,
-        avatar: dupUser.avatar
+      .status(500)
+      .send({
+        error,
+        message: 'Internal server error.'
       });
 
   }
 
+  // if it's an existing user, just log in
+  const accessToken = await dupUser.generateToken();
+
   return res
-    .status(403)
-    .send({
-      message: 'Your email is already registered.'
+    .cookie('ckToken', accessToken, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 7
+    }).send({
+      user: {
+        strategy: dupUser.strategy,
+        _id: dupUser._id,
+        email: dupUser.email,
+        displayName: dupUser.displayName,
+        avatar: dupUser.avatar
+      }
     });
 
 });
 
+// log in process for local (email & password) users
 router.post('/signin/local', async (req, res) => {
 
   const validations = Joi.validate(req.body, Joi.object({
@@ -247,7 +327,7 @@ router.post('/signin/local', async (req, res) => {
       .status(400)
       .send({
         error: validations.error,
-        message: 'Incorrect username or password.'
+        message: 'Incorrect email or password.'
       });
 
   }
@@ -262,15 +342,17 @@ router.post('/signin/local', async (req, res) => {
 
       const {
         _id,
-        username,
+        displayName,
         avatar,
         strategy
       } = user;
 
+      // if the email is registered with a social network authentication
       if (strategy !== 'local') {
 
         const provider = strategy[0].toUpperCase() + strategy.substr(1, strategy.length - 1);
 
+        // let the user know which provider the email is registered with
         return res
           .status(403)
           .send({
@@ -278,6 +360,7 @@ router.post('/signin/local', async (req, res) => {
           });
       }
 
+      // verify the password
       const verified = await user.verifyPassword(password);
 
       if (!verified) {
@@ -288,6 +371,7 @@ router.post('/signin/local', async (req, res) => {
           });
       }
 
+      // generate access token and set it to cookie
       const accessToken = await user.generateToken();
 
       return res
@@ -295,10 +379,13 @@ router.post('/signin/local', async (req, res) => {
           httpOnly: true,
           maxAge: 1000 * 60 * 60 * 24 * 7
         }).send({
-          _id,
-          email,
-          username,
-          avatar
+          user: {
+            _id,
+            email,
+            displayName,
+            avatar,
+            strategy
+          }
         });
 
     }
@@ -323,11 +410,12 @@ router.post('/signin/local', async (req, res) => {
 
 });
 
+// registering a new local user
 router.post('/signup/local', upload.any(), async (req, res) => {
 
   const validations = Joi.validate(req.body, Joi.object({
     email: Joi.string().email().required(),
-    username: Joi.string().required(),
+    displayName: Joi.string().required(),
     avatar: Joi.string().allow(''),
     password: Joi.string().required()
   }));
@@ -346,17 +434,18 @@ router.post('/signup/local', upload.any(), async (req, res) => {
   const {
     email,
     password,
-    username,
+    displayName,
     avatar
   } = req.body;
 
-  let avatarUrl;
+  // first upload the avatar image to cloudinary and get the url
+  let avatarUrl = null;
 
   if (avatar) {
 
     try {
 
-      avatarUrl = await imgCloudUtils.upload(avatar, username);
+      avatarUrl = await imgCloudUtils.upload(avatar, displayName);
 
     } catch (error) {
 
@@ -373,11 +462,12 @@ router.post('/signup/local', upload.any(), async (req, res) => {
 
   try {
 
+    // save the new user to the database
     const user = await User.registerLocalUser({
       email,
       password,
-      username,
-      avatar: avatarUrl || null
+      displayName,
+      avatar: avatarUrl
     });
 
     const accessToken = await user.generateToken();
@@ -387,9 +477,10 @@ router.post('/signup/local', upload.any(), async (req, res) => {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 7
       }).send({
+        strategy: user.strategy,
         _id: user._id,
         email: user.email,
-        username: user.username,
+        displayName: user.displayName,
         avatar: user.avatar
       });
 
@@ -406,11 +497,12 @@ router.post('/signup/local', upload.any(), async (req, res) => {
 
 });
 
+// registering a new social user
 router.post('/signup/social', upload.any(), async (req, res) => {
 
   const validations = Joi.validate(req.body, Joi.object({
     email: Joi.string().email().required(),
-    username: Joi.string().required(),
+    displayName: Joi.string().required(),
     avatar: Joi.string().allow(''),
     strategy: Joi.string().valid(['facebook', 'google', 'kakao']),
     socialId: Joi.string().required(),
@@ -431,7 +523,7 @@ router.post('/signup/social', upload.any(), async (req, res) => {
   const {
     strategy,
     email,
-    username,
+    displayName,
     avatar,
     socialId,
     socialToken
@@ -443,7 +535,7 @@ router.post('/signup/social', upload.any(), async (req, res) => {
 
     try {
 
-      avatarUrl = await imgCloudUtils.upload(avatar, username);
+      avatarUrl = await imgCloudUtils.upload(avatar, displayName);
 
     } catch (error) {
 
@@ -463,7 +555,7 @@ router.post('/signup/social', upload.any(), async (req, res) => {
     const user = await User.registerSocialUser({
       strategy,
       email,
-      username,
+      displayName,
       avatar: avatarUrl || null,
       socialId,
       socialToken
@@ -478,7 +570,7 @@ router.post('/signup/social', upload.any(), async (req, res) => {
       }).send({
         _id: user._id,
         email: user.email,
-        username: user.username,
+        displayName: user.displayName,
         avatar: user.avatar
       });
 
@@ -589,7 +681,7 @@ router.put('/update/all', isAuthenticated, async (req, res) => {
 
   const validations = Joi.validate(req.body, Joi.object({
     email: Joi.string().email().required(),
-    username: Joi.string().required(),
+    displayName: Joi.string().required(),
     avatar: Joi.string().allow('')
   }));
 
@@ -633,7 +725,7 @@ router.put('/update/all', isAuthenticated, async (req, res) => {
       }).send({
         _id: modifiedUser._id,
         email: modifiedUser.email,
-        username: modifiedUser.username,
+        displayName: modifiedUser.displayName,
         avatar: modifiedUser.avatar
       });
 

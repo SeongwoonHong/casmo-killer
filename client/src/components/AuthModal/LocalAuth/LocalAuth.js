@@ -4,6 +4,7 @@ import axios from 'axios';
 import SpanAnimatedText from 'sharedComponents/SpanAnimatedText';
 import PlainBtn from 'sharedComponents/PlainBtn';
 import LoadingCircle from 'sharedComponents/LoadingCircle';
+import FormMessage from 'sharedComponents/FormMessage';
 
 import inputValidator from 'sharedUtils/inputValidator';
 
@@ -15,18 +16,14 @@ class Login extends Component {
 
     super(props);
 
-    this.initialState = {
+    this.state = {
+      type: 'login',
       email: '',
       password: '',
-      message: [],
+      message: '',
       isLoading: false,
-      operation: {
-        isSuccess: false,
-        message: ''
-      }
+      successMsg: '',
     };
-
-    this.state = this.initialState;
 
   }
 
@@ -40,11 +37,9 @@ class Login extends Component {
 
     this.setState({ isLoading: true });
 
-    // auth.type determines whether this form is being
-    // used for login or registration
-    if (this.props.auth.type === 'login') {
+    if (this.state.type === 'login') {
       this.onLogin();
-    } else if (this.props.auth.type === 'register') {
+    } else {
       this.onRegister();
     }
 
@@ -52,36 +47,33 @@ class Login extends Component {
 
   async onLogin() {
 
-    const { onSuccess } = this.props;
     const { email, password } = this.state;
 
     if (inputValidator.isEmpty(email) || inputValidator.isEmpty(password)) {
 
       this.setState({
         isLoading: false,
-        message: ['Please enter your email and password.']
+        message: 'Please enter your email and password.'
       });
 
     } else {
 
-      this.setState({ message: [] });
-
-      const payload = { email, password };
+      this.setState({ message: '' });
 
       try {
 
-        const { data } = await axios.post('/api/user/signin/local', payload);
+        const { data } = await axios.post('/api/user/signin/local', {
+          email, password
+        });
 
-        // login success
-        onSuccess(data);
+        this.props.onSuccess(data.user);
 
       } catch (error) {
 
-        // login failure with messages
         console.error(error.response.data.error);
         this.setState({
           isLoading: false,
-          message: [error.response.data.message]
+          message: error.response.data.message
         });
 
       }
@@ -91,111 +83,84 @@ class Login extends Component {
 
   async onRegister() {
 
-    const { onRegister } = this.props;
-    const { email, password } = this.state;
+    const { email } = this.state;
 
-    const messages = [];
+    let message = '';
 
     if (inputValidator.isEmpty(email)) {
-      messages.push('Please enter your email.');
+      message = 'Please enter your email.';
     } else if (!inputValidator.isEmail(email)) {
-      messages.push('The provided email address is not valid.');
+      message = 'The provided email address is not valid.';
     } else {
       try {
         // simply check if the email's been taken
         const { data } = await axios.get(`/api/user/validate/email/${email}`);
         if (data.isDuplicate) {
-          messages.push('The email address is already registered.');
+          message = 'The email address is already registered.';
         }
       } catch (error) {
         console.error(error.response.error);
-        messages.push(error.response.data.message);
+        ({ message } = error.response.data);
       }
     }
 
-    if (messages.length > 0) {
-      this.setState({
-        isLoading: false,
-        message: messages
-      });
+    if (message.length > 0) {
+      this.setState({ isLoading: false, message });
     } else {
-      this.onLocalRegister(email);
+      this.onRegisterRequest(email);
     }
 
-    /*if (inputValidator.isEmpty(password)) {
-      messages.push('Please enter your password.');
-    } else if (password.length < 6) {
-      messages.push('Password must be more than 6 characters.');
-    } else if (password.length > 20) {
-      messages.push('Password must be less than 20 characters.');
-    // holding off on password validation
-    // until we decide on password rules
-    } else if (!inputValidator.isPassword(password)) {
-      messages.push('The provided password is not valid.');
-    }*/
   }
 
-  onLocalRegister = (email) => {
-    axios
-      .post('/api/user/signup/request', { email })
-      .then((res) => {
-        this.setState({
-          isLoading: false,
-          message: [],
-          operation: {
-            isSuccess: true,
-            message: res.data.message
-          }
-        });
+  async onRegisterRequest(email) {
+
+    try {
+
+      const { data } = await axios.post('/api/user/signup/request', { email });
+
+      this.setState({
+        isLoading: false,
+        message: '',
+        successMsg: data.message
       });
+
+    } catch (error) {
+
+      // TODO: hook up an error message regarding sending out verification email
+      console.error(error);
+      this.setState({
+        isLoading: false,
+        message: error.response.data.message,
+        successMsg: ''
+      });
+
+    }
+
   };
 
   typeToggle = () => {
-
-    this.setState(this.initialState);
-
-    if (this.props.auth.type === 'login') {
-      this.props.redirectToRegister();
-    } else {
-      this.props.redirectToLogin();
-    }
-
+    this.setState({
+      type: this.state.type === 'login'
+        ? 'register'
+        : 'login'
+    });
   };
 
   render() {
 
-    const { auth } = this.props;
-
-    const isLogin = auth.type === 'login';
+    const isLogin = this.state.type === 'login';
     const formText = isLogin ? 'Log In' : 'Sign Up';
 
     return (
       <div className="local-auth">
-        <SpanAnimatedText
-          text={ `${formText} With Email` }
-          animateAtDidMount
-        />
+        <SpanAnimatedText text={ `${formText} With Email` } animateAtDidMount />
         <form onSubmit={ this.onSubmitHandler } noValidate>
+          <FormMessage message={ this.state.message } />
+          <FormMessage message={ this.state.successMsg } success="true" />
           {
-            this.state.message.map((msg) => {
-              return (
-                <div
-                  key={ msg.length }
-                  className="submit-message">
-                  <p>{ msg }</p>
-                </div>
-              );
-            })
-          }
-          {
-            this.state.operation.isSuccess
+            !this.state.successMsg
               ? (
-                <div className="submit-message success">
-                  <p>{ this.state.operation.message }</p>
-                </div>
-              )
-              : (
-                <div key={ 0 } className="input-field">
+                <div className="input-field">
                   <i className="material-icons prefix">email</i>
                   <input
                     type="email"
@@ -207,11 +172,12 @@ class Login extends Component {
                     value={ this.state.email } />
                 </div>
               )
+              : null
           }
           {
             isLogin
               ? (
-                <div key={ 1 } className="input-field">
+                <div className="input-field">
                   <i className="material-icons prefix">lock</i>
                   <input
                     type="password"
@@ -226,7 +192,7 @@ class Login extends Component {
               : null
           }
           {
-            this.state.operation.isSuccess
+            this.state.successMsg
               ? (
                 <button
                   className="btn"
@@ -257,7 +223,6 @@ class Login extends Component {
           </PlainBtn>
         </div>
       </div>
-
     );
 
   }

@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
 const bcrypt = require('bcryptjs');
+
+const { Schema } = mongoose;
+
 const jwtUtils = require('../../utils/jwtUtils');
 
 const UserSchema = new Schema({
@@ -14,7 +16,7 @@ const UserSchema = new Schema({
     type: String,
     select: false
   },
-  username: String,
+  displayName: String,
   avatar: String,
   social: {
     id: String,
@@ -42,53 +44,54 @@ UserSchema.statics.findUserByEmail = function (email) {
 
 };
 
-UserSchema.statics.findUserByUsername = function (username) {
+UserSchema.statics.findUserByDisplayName = function (displayName) {
 
-  return this.findOne({ username });
+  return this.findOne({ displayName });
 
 };
 
-UserSchema.statics.registerSocialUser = function (newSocialUser) {
+UserSchema.statics.findUserBySocialProfile = function ({ provider, social }) {
 
-  const {
-    strategy,
-    email,
-    username,
-    avatar,
-    socialId,
-    socialToken
-  } = newSocialUser;
-
-  const newUser = new this({
-    strategy,
-    email,
-    username,
-    avatar: avatar || null,
-    social: {
-      id: socialId,
-      accessTokeN: socialToken
-    }
+  return this.findOne({
+    strategy: provider,
+    'social.id': social.id
   });
-
-  return newUser.save();
 
 };
 
 UserSchema.statics.registerLocalUser = function (newLocalUser) {
 
   const {
-    email,
-    password,
-    username,
-    avatar
+    email, password, displayName, avatar
   } = newLocalUser;
 
   const newUser = new this({
     strategy: 'local',
     email,
     password,
-    username,
+    displayName,
     avatar
+  });
+
+  return newUser.save();
+
+};
+
+UserSchema.statics.registerSocialUser = function (newSocialUser) {
+
+  const {
+    strategy, email, displayName, avatar, socialId, socialToken
+  } = newSocialUser;
+
+  const newUser = new this({
+    strategy,
+    email,
+    displayName,
+    avatar: avatar || null,
+    social: {
+      id: socialId,
+      accessTokeN: socialToken
+    }
   });
 
   return newUser.save();
@@ -134,13 +137,22 @@ UserSchema.methods.verifyPassword = function (password) {
 
 UserSchema.methods.generateToken = function () {
 
-  const { _id, email, username, avatar } = this;
-
-  return jwtUtils.sign({
+  const {
+    strategy,
     _id,
     email,
-    username,
+    displayName,
     avatar
+  } = this;
+
+  return jwtUtils.sign({
+    user: {
+      strategy,
+      _id,
+      email,
+      displayName,
+      avatar
+    }
   }, 'user');
 
 };

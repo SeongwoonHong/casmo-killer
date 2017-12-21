@@ -1,8 +1,8 @@
-/* eslint-disable react/jsx-boolean-value */
 import React, { Component } from 'react';
 import axios from 'axios';
 
 import SpanAnimatedText from 'sharedComponents/SpanAnimatedText';
+import FormMessage from 'sharedComponents/FormMessage';
 
 import FacebookAuth from './Facebook';
 import GoogleAuth from './Google';
@@ -13,22 +13,14 @@ import './SocialAuth.scss';
 class Social extends Component {
 
   constructor(props) {
-
     super(props);
-
-    this.state = { message: [] };
-
-    this.onSuccess = this.onSuccess.bind(this);
-
+    this.state = { message: '' };
   }
 
-  async onSuccess(payload) {
+  onSuccess = async (payload) => {
 
     const {
-      startAuthProcess,
-      stopAuthProcess,
-      onRegister,
-      onSuccess
+      startAuthProcess, onRegister, onSuccess
     } = this.props;
 
     startAuthProcess();
@@ -38,22 +30,24 @@ class Social extends Component {
       const { data } = await axios.post('/api/user/validate/social', payload);
 
       if (data.shouldRegister) {
-        onRegister(data.profile);
-        return;
+        onRegister(Object.assign(data.profile, {
+          social: payload
+        }));
+      } else {
+        onSuccess(data.user);
       }
 
-      onSuccess(data);
 
     } catch (error) {
 
-      stopAuthProcess();
-
       console.error(error.response.data.error);
-      this.setState({ message: [error.response.data.message] });
+      this.setState({
+        message: error.response.data.message
+      });
 
     }
 
-  }
+  };
 
   render() {
 
@@ -63,23 +57,15 @@ class Social extends Component {
       REACT_APP_kakaoClientId: kakaoId
     } = process.env;
 
+    const { message } = this.state;
+
     return (
       <div key={ 1 } className="social-auth">
         <SpanAnimatedText
           text="Connect with"
           animateAtDidMount
         />
-        {
-          this.state.message.map((msg) => {
-            return (
-              <div
-                key={ msg.length }
-                className="submit-message">
-                <p>{ msg }</p>
-              </div>
-            );
-          })
-        }
+        <FormMessage message={ message } />
         <div className="facebook">
           <FacebookAuth
             clientId={ facebookId }

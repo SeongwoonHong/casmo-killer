@@ -1,28 +1,5 @@
 const jwtUtils = require('../utils/jwtUtils');
-
-const extractCookie = (cookies = '') => {
-
-  const obj = {};
-
-  for (let cookie of cookies.split(/; */)) {
-
-    const eqSign = cookie.indexOf('=');
-
-    if (eqSign > 0) {
-
-      const key = cookie.substr(0, eqSign).trim();
-      const val = cookie.substr(eqSign + 1, cookie.length).trim().replace(/^"/g, '');
-
-      if (obj[key] === undefined) {
-        obj[key] = decodeURIComponent(val);
-      }
-    }
-
-  }
-
-  return obj;
-
-};
+const extractCookie = require('../utils/extractCookie');
 
 const jwtMiddleware = async (req, res, next) => {
 
@@ -40,15 +17,16 @@ const jwtMiddleware = async (req, res, next) => {
     if ((Date.now() / 1000) - user.iat > 60 * 60 * 24 * 3) {
 
       const freshToken = await jwtUtils.sign({
-        _id: user._id,
-        email: user.email,
-        username: user.username,
-        avatar: user.avatar
+        user: {
+          strategy: user.strategy,
+          _id: user._id,
+          email: user.email,
+          username: user.username,
+          avatar: user.avatar
+        }
       }, 'user');
 
-      console.log(freshToken);
-
-      return res.cookie('ckToken', freshToken, {
+      res.cookie('ckToken', freshToken, {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 7
       });

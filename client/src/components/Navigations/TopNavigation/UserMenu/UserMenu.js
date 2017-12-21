@@ -1,3 +1,4 @@
+/* eslint react/no-find-dom-node: 0 */
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';

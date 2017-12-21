@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 
-const { REACT_APP_jwtSecretKey: jwtSecret } = process.env;
+const {
+  REACT_APP_jwtSecretKey: jwtSecret
+} = process.env;
 
 const jwtUtils = {
 

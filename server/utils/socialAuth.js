@@ -9,10 +9,10 @@ const socialAuthUtils = {
         return {
           strategy: 'facebook',
           email: response.data.email,
-          username: response.data.name,
+          displayName: response.data.name,
           avatar: response.data.picture.data.url,
           social: {
-            id: response.data.id,
+            id: response.data.id.toString(),
             accessToken,
           }
         };
@@ -30,10 +30,10 @@ const socialAuthUtils = {
         return {
           strategy: 'google',
           email: response.data.emails[0].value,
-          username: response.data.displayName,
+          displayName: response.data.displayName,
           avatar: response.data.image.url,
           social: {
-            id: response.data.id,
+            id: response.data.id.toString(),
             accessToken
           }
         };
@@ -51,10 +51,10 @@ const socialAuthUtils = {
         return {
           strategy: 'kakao',
           email: response.data.kaccount_email,
-          username: response.data.properties.nickname,
+          displayName: response.data.properties.nickname,
           avatar: response.data.properties.profile_image,
           social: {
-            id: response.data.id,
+            id: response.data.id.toString(),
             accessToken
           }
         };

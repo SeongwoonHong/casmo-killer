@@ -8,14 +8,14 @@ class ReplyList extends Component {
 
   render() {
     const { comments } = this.props;
-    console.log(comments);
     const mapToComponents = (data) => {
       return data.map((comment, index) => {
         return (
           !comment.deleted &&
           <Reply
-            commentAuthor={comment.author}
+            commentAuthor={comment.author.username}
             postAuthor={this.props.activePost.author}
+            avatar={comment.avatar}
             comment={comment.memo}
             date={comment.date}
             key={comment.date}
@@ -25,6 +25,10 @@ class ReplyList extends Component {
             disLikes={comment.disLikes}
             index={index}
             form={`form-${index}`}
+            commentId={comment._id}
+            parentAuthor={comment.parentAuthor}
+            parentCommentId={comment.parentCommentId}
+            parentContent={comment.parentContent}
             openUserInfoModal={this.props.openUserInfoModal}
             />
         );

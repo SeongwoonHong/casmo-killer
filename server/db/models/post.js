@@ -17,7 +17,11 @@ const Post = new Schema({
     likes: [String],
     disLikes: [String],
     deleted: { type: Boolean, default: false },
-    isEdited: { type: Boolean, default: false }
+    avatar: String,
+    isEdited: { type: Boolean, default: false },
+    parentAuthor: String,
+    parentCommentId: String,
+    parentContent: String
   }],
   categories: [String],
   commentsCount: { type: Number, default: 0 },

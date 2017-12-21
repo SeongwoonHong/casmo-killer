@@ -35,7 +35,10 @@ router.post('/update/:postId/:commentId', isAuthenticated, (req, res) => {
     }
     post.save((error, result) => {
       if (error) throw error;
-      return res.json(result.comments);
+      post
+        .populate('comments.author', (errComment, commentResult) => {
+          return res.json(commentResult.comments);
+        });
     });
   });
 });
@@ -62,8 +65,11 @@ router.post('/likes/:postId/:commentId', isAuthenticated, (req, res) => {
     for (let i = 0; i < post.comments.length; i += 1) {
       if (post.comments[i]._id == commentId) {
         const index = post.comments[i].likes.indexOf(req.user.username);
+        const didDisLike = post.comments[i].disLikes.indexOf(req.user.username) !== -1;
+        if (didDisLike) {
+          post.comments[i].disLikes.splice(post.comments[i].disLikes.indexOf(req.user.username), 1);
+        }
         const didLike = (index !== -1);
-        console.log(didLike);
         if (!didLike) {
           // IF IT DOES NOT EXIST
           post.comments[i].likes.push(req.user.username);
@@ -75,7 +81,12 @@ router.post('/likes/:postId/:commentId', isAuthenticated, (req, res) => {
     }
     post.save((error, result) => {
       if (error) throw error;
-      return res.json(result);
+      post
+        .populate('author')
+        .populate('comments.author', (errComment, commentResult) => {
+          if (errComment) throw errComment;
+          return res.json(commentResult);
+        });
     });
   });
 });
@@ -102,6 +113,10 @@ router.post('/disLikes/:postId/:commentId', isAuthenticated, (req, res) => {
     for (let i = 0; i < post.comments.length; i += 1) {
       if (post.comments[i]._id == commentId) {
         const index = post.comments[i].disLikes.indexOf(req.user.username);
+        const didLike = post.comments[i].likes.indexOf(req.user.username) !== -1;
+        if (didLike) {
+          post.comments[i].likes.splice(post.comments[i].likes.indexOf(req.user.username), 1);
+        }
         const didDisLike = (index !== -1);
         if (!didDisLike) {
           // IF IT DOES NOT EXIST
@@ -114,7 +129,12 @@ router.post('/disLikes/:postId/:commentId', isAuthenticated, (req, res) => {
     }
     post.save((error, result) => {
       if (error) throw error;
-      return res.json(result);
+      post
+        .populate('author')
+        .populate('comments.author', (errComment, commentResult) => {
+          if (errComment) throw errComment;
+          return res.json(commentResult);
+        });
     });
   });
 });

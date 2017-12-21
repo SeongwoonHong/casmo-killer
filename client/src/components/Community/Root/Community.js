@@ -26,7 +26,7 @@ class Community extends Component {
         return (
           <div className="col s12 m6 l4" key={board.boardId}>
             <div className="card teal darken-3">
-              <div className="card-content white-text">
+              <div className="card-content white-text board-card">
                 <span className="card-title">{board.boardId}</span>
                 <p>{board.description}</p>
               </div>

@@ -24,11 +24,14 @@ const mapDispatchToProps = (dispatch) => {
     },
     updateCommentRequest: (postId, commentId, contents) => {
       return dispatch(actions.updateCommentRequest(postId, commentId, contents));
+    },
+    replyComment: (data) => {
+      return dispatch(actions.replyComment(data));
     }
   };
 };
 
 export default ConnectTransitionWrapper()(
-  reduxForm({  })(
+  reduxForm({ })(
     connect(mapStateToProps, mapDispatchToProps, undefined, { withRef: true }
     )(Reply)));

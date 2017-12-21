@@ -14,7 +14,6 @@ router.use('/comment', comment);
 
 /* POST DETAIL */
 router.get('/detail/:id', (req, res) => {
-  console.log('detail here');
   Post.findById({
     _id: req.params.id
   })
@@ -96,9 +95,6 @@ router.get('/search/:searchWord/:boardId/:page', (req, res) => {
     };
   }
   Post.count(searchOption, (err, totalCount) => {
-    console.log(totalCount);
-    console.log(searchOption);
-    console.log(req.params.searchWord);
     if (err) throw err;
     pageNum = Math.ceil(totalCount / PER_PAGE);
     Post
@@ -141,6 +137,10 @@ router.post('/likes/:postId', isAuthenticated, (req, res) => {
   Post.findById(req.params.postId, (err, post) => {
     if (err) throw err;
     if (!post) return res.status(404).json({ message: 'NO SUCH POST' });
+    const didDisLike = post.disLikes.indexOf(req.user.username) !== -1;
+    if (didDisLike) {
+      post.disLikes.splice(post.disLikes.indexOf(req.user.username), 1);
+    }
     const index = post.likes.indexOf(req.user.username);
     const didLike = (index !== -1);
     if (!didLike) {
@@ -150,7 +150,13 @@ router.post('/likes/:postId', isAuthenticated, (req, res) => {
     }
     post.save((error, result) => {
       if (error) throw error;
-      return res.json(result);
+      post
+        .populate('comments.author')
+        .populate('author', (err2, finalResult) => {
+          if (err2) throw err2;
+          return res.json(finalResult);
+        });
+      // return res.json(result);
     });
   });
 });
@@ -168,8 +174,11 @@ router.post('/disLikes/:postId', isAuthenticated, (req, res) => {
   Post.findById(req.params.postId, (err, post) => {
     if (err) throw err;
     if (!post) return res.status(404).json({ message: 'NO SUCH POST' });
-
-    const index = post.disLikes.indexOf(req.user.username); // 테스팅 목적
+    const didLike = post.likes.indexOf(req.user.username) !== -1;
+    if (didLike) {
+      post.likes.splice(post.disLikes.indexOf(req.user.username), 1);
+    }
+    const index = post.disLikes.indexOf(req.user.username);
     const didDislike = (index !== -1);
     if (!didDislike) {
       post.disLikes.push(req.user.username);
@@ -178,7 +187,12 @@ router.post('/disLikes/:postId', isAuthenticated, (req, res) => {
     }
     post.save((error, result) => {
       if (error) throw error;
-      return res.json(result);
+      post
+        .populate('comments.author')
+        .populate('author', (err2, finalResult) => {
+          if (err2) throw err2;
+          return res.json(finalResult);
+        });
     });
   });
 });
@@ -237,6 +251,7 @@ router.get('/:boardId/:page/:sortType', (req, res) => {
 router.post('/reply', (req, res) => {
   const { body } = req;
   const { comment } = body;
+  const { parentAuthor, parentCommentId, parentContent } = body.parentReply;
   // simulate error if title, categories and content are all "test"
   // This is demo field-validation error upon submission.
   if (comment === 'test') {
@@ -247,7 +262,6 @@ router.post('/reply', (req, res) => {
       }
     });
   }
-
   if (!comment) {
     return res.status(400).json({
       message: 'Error: content is required!'
@@ -256,10 +270,21 @@ router.post('/reply', (req, res) => {
 
   Post.findOne({ _id: req.body.postId }, (err, rawContent) => {
     if (err) throw err;
-    rawContent.comments.push({ author: req.user._id, memo: comment });
+    rawContent.comments.push({
+      author: req.user._id,
+      memo: comment,
+      avatar: req.user.avatar,
+      parentAuthor,
+      parentCommentId,
+      parentContent
+    });
     rawContent.save((error, replyResult) => {
       if (error) throw error;
-      res.json(replyResult);
+      rawContent
+        .populate('author')
+        .populate('comments.author', (errComment, commentResult) => {
+          return res.json(commentResult);
+        });
     });
   });
 });
@@ -345,11 +370,16 @@ router.put('/:id', async (req, res) => {
   });
 
   Post.findOneAndUpdate({ _id: req.params.id },
-    req.body, { runValidators: true, new: true }, (err, result) => {
+    req.body, { runValidators: true, new: true }, (err, post) => {
       if (err) {
         throw err;
       }
-      res.json(result);
+      post
+        .populate('author')
+        .populate('comments.author', (error, result) => {
+          if (error) throw error;
+          res.json(result);
+        });
     });
 });
 

@@ -11,7 +11,9 @@ body {
     height: 100vh;
     min-width: 320px;
 }
-
+textarea {
+  height: 2rem;
+}
 .app-wrapper {
     display: flex;
     height: calc(100% - 50px);

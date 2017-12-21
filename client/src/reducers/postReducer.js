@@ -56,11 +56,16 @@ const initialState = {
   updateComment: {
     status: 'INIT',
     error: null
+  },
+  replyComment: {
+    status: 'INIT',
+    parentAuthor: null,
+    parentContent: null,
+    error: null
   }
 };
 
 export default function post(state = initialState, action) {
-  console.log(action);
   switch (action.type) {
 
     // FETCH POST
@@ -417,6 +422,23 @@ export default function post(state = initialState, action) {
         updateComment: {
           status: 'FAILURE',
           error: action.payload
+        }
+      };
+    case types.REPLY_COMMENT_WAITING:
+      return {
+        ...state,
+        replyComment: {
+          status: 'WAITING',
+          parentAuthor: action.payload.data.commentAuthor,
+          parentCommentId: action.payload.data.commentId,
+          parentContent: action.payload.data.comment
+        }
+      };
+    case types.REPLY_COMMENT_RESET:
+      return {
+        ...state,
+        replyComment: {
+          status: 'INIT'
         }
       };
     default:

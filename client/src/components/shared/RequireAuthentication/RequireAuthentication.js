@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-export default function (ComposedComponent, route) {
+export default function (ComposedComponent, route = '/') {
   class RequireAuthentication extends Component {
 
     componentWillMount = () => {

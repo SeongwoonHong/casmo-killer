@@ -9,6 +9,7 @@ import animate from 'gsap-promise';
 import { Field } from 'redux-form';
 import Materialize from 'materialize-css';
 import renderTextArea from '../PostInputForm/renderTextArea';
+import ReplyOnReply from '../ReplyOnReply/ReplyOnReply';
 import './Reply.scss';
 
 const formatter = buildFormatter(krStrings);
@@ -55,13 +56,13 @@ export default class Reply extends Component {
     this.animateOut().then(done);
   }
   likesHandler = (postId, type, commentId) => {
-    if (this.props.user.isLoggedIn && (this.props.commentAuthorName !== this.props.user.username)) {
+    if (this.props.user.isLoggedIn && (this.props.commentAuthor !== this.props.user.username)) {
       this.clickAnimation(this.like);
       this.props.giveLikesRequest(postId, type, commentId);
     }
   }
   disLikesHandler = (postId, type, commentId) => {
-    if (this.props.user.isLoggedIn && (this.props.commentAuthorName !== this.props.user.username)) {
+    if (this.props.user.isLoggedIn && (this.props.commentAuthor !== this.props.user.username)) {
       this.clickAnimation(this.disLike);
       this.props.giveDisLikesRequest(postId, type, commentId);
     }
@@ -92,9 +93,20 @@ export default class Reply extends Component {
       this.setState({ edit: false });
     });
   }
+  replyComment = () => {
+    const {
+      comment, commentId, commentAuthor, postId
+    } = this.props;
+    const offset = document.querySelector('.community').offsetHeight;
+    TweenMax.to(document.querySelector('.app-wrapper .container'), 1, { scrollTo: { y: offset, autoKill: true }, ease: Bounce.easeOut });
+    this.state.edit && this.toggleEdit();
+    this.props.replyComment({
+      comment, commentId, commentAuthor, postId
+    });
+  }
   render() {
     const {
-      postId, commentAuthor, comment, date, commentId, postAuthor, likes, disLikes, handleSubmit, isEdited
+      postId, commentAuthor, comment, date, commentId, likes, disLikes, handleSubmit, isEdited, parentAuthor, parentCommentId, parentContent, avatar
     } = this.props;
     const editView = (
       <Field
@@ -105,8 +117,8 @@ export default class Reply extends Component {
     );
     const buttons = (
       <span>
-        <span
-          className="btn-delete btn"
+        <i
+          className="material-icons cancel"
           onClick={() => {
             if (this.state.edit) this.toggleEdit();
             else this.onDeleteHandler();
@@ -114,24 +126,26 @@ export default class Reply extends Component {
           role="presentation"
           onKeyDown={() => {}}
         >
-          { this.state.edit ? 'Cancel' : 'Delete' }
-        </span>
+          { this.state.edit ? 'cancel' : 'delete' }
+        </i>
         {
           this.state.edit ?
-            <button
-              type="submit"
-              className="btn btn-edit"
+            <i
+              className="material-icons save-edit"
+              onClick={this.props.handleSubmit(this.validateAndPost)}
+              onKeyDown={() => {}}
+              role="presentation"
             >
-              Save
-            </button> :
-            <span
-              className="btn-edit btn"
+              save
+            </i> :
+            <i
+              className="material-icons save-edit"
               onClick={this.toggleEdit}
               onKeyDown={() => {}}
               role="presentation"
             >
-              Edit
-            </span>
+              edit
+            </i>
         }
       </span>
     );
@@ -139,22 +153,29 @@ export default class Reply extends Component {
       <div className="card reply" ref={el => this.component = el}>
         <div className="card-content" key={postId}>
           <div className="header">
-            <img src={postAuthor.avatar} alt="" className="circle avartar_circle" />
+            <img src={avatar} alt="" className="circle avartar_circle" />
             <div className="header-info">
               <div className="writer">
                 <PlainBtn
                   onClick={
-                    () => { this.props.openUserInfoModal(postAuthor); }
+                    () => { this.props.openUserInfoModal(commentAuthor); }
                   }
                 >
-                  <a href="#">{postAuthor.username}</a>
+                  <a href="#">{commentAuthor}</a>
                 </PlainBtn>
               </div>
               <div className="created">Created : <TimeAgo date={date} formatter={formatter} />{ isEdited && <span> (edited)</span>}</div>
             </div>
           </div>
-          <form onSubmit={handleSubmit(this.validateAndPost)} ref={el => this.form = el}>
-            { this.state.edit ? editView : <div className="comment">{comment}</div> }
+          {
+            parentAuthor
+            && <ReplyOnReply
+              author={parentAuthor}
+              content={parentContent}
+            />
+          }
+          <form name="replyForm" onSubmit={handleSubmit(this.validateAndPost)} ref={el => this.form = el}>
+            { this.state.edit ? editView : <pre readOnly className="comment">{comment}</pre> }
 
             <div className="preferences-panel">
               <img
@@ -175,9 +196,22 @@ export default class Reply extends Component {
                 onKeyDown={() => {}}
               />
               <span className="dislikes">{disLikes.length}</span>
-              {
-                this.props.user.username === commentAuthor.username ? buttons : undefined
-              }
+              <span className="buttons">
+                {
+                  this.props.user.isLoggedIn &&
+                  <i
+                    className="material-icons reply"
+                    role="presentation"
+                    onKeyDown={() => {}}
+                    onClick={this.replyComment}
+                  >
+                    reply
+                  </i>
+                }
+                {
+                  this.props.user.username === commentAuthor ? buttons : undefined
+                }
+              </span>
             </div>
           </form>
         </div>
@@ -196,7 +230,7 @@ Reply.defaultProps = {
 
 Reply.propTypes = {
   postId: PropTypes.string,
-  commentAuthor: PropTypes.object,
+  commentAuthor: PropTypes.string,
   postAuthor: PropTypes.object,
   comment: PropTypes.string,
   date: PropTypes.string,

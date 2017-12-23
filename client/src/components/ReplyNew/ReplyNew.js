@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from '../Button/Button';
 import ReplyOnReply from '../ReplyOnReply/ReplyOnReply';
+import './ReplyNew.scss';
 
 class ReplyNew extends Component {
   constructor(props) {
@@ -31,8 +32,10 @@ class ReplyNew extends Component {
   render() {
     return (
       <div className="card reply-new">
+        {
+          !this.props.isLoggedIn && <div className="required-login-overlay">You need to login to leave a comment</div>
+        }
         <div className="card-content">
-          {/* <label htmlFor="reply">{this.props.title}</label> */}
           {
             this.props.replyComment.status === 'WAITING' &&
             <ReplyOnReply

@@ -23,7 +23,7 @@ const Post = new Schema({
     parentCommentId: String,
     parentContent: String
   }],
-  categories: [String],
+  tags: String,
   commentsCount: { type: Number, default: 0 },
   count: { type: Number, default: 0 }, // View
   date: { type: Date, default: Date.now },

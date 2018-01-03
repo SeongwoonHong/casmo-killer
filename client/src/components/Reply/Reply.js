@@ -106,7 +106,7 @@ export default class Reply extends Component {
   }
   render() {
     const {
-      postId, commentAuthor, comment, date, commentId, likes, disLikes, handleSubmit, isEdited, parentAuthor, parentCommentId, parentContent, avatar
+      postId, commentAuthor, comment, date, commentId, likes, disLikes, handleSubmit, isEdited, parentAuthor, parentContent, avatar
     } = this.props;
     const editView = (
       <Field

@@ -1,13 +1,13 @@
 .top-main-nav {
     align-items: center;
     display: flex;
-    height: 50px;
+    height: 44px;
     justify-content: space-between;
     .btn {
         background-color: transparent;
         border-radius: 0;
         box-shadow: none;
-        height: 50px;
+        height: 44px;
         padding: 0 13px;
         position: relative;
         transition: all .3s;
@@ -15,7 +15,7 @@
         > .material-icons {
             font-size: 24px;
             height: 100%;
-            line-height: 50px;
+            line-height: 44px;
         }
     }
     .notification {
@@ -37,7 +37,7 @@
         text-align: center;
         > a {
             display: block;
-            line-height: 50px;
+            line-height: 44px;
         }
     }
     @media screen and (min-width: 768px) {

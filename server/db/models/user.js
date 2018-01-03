@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 
 const { Schema } = mongoose;
 
-const jwtUtils = require('../../utils/jwtUtils');
+const jwtUtils = require('../../utils/jwt');
 
 const UserSchema = new Schema({
   createdAt: {
@@ -18,14 +18,7 @@ const UserSchema = new Schema({
   },
   displayName: String,
   avatar: String,
-  social: {
-    id: String,
-    accessToken: String
-  },
-  verified: {
-    type: Boolean,
-    default: false
-  },
+  socialId: String,
   privilege: {
     type: String,
     default: 'newbie'
@@ -50,83 +43,20 @@ UserSchema.statics.findUserByDisplayName = function (displayName) {
 
 };
 
-UserSchema.statics.findUserBySocialProfile = function ({ provider, social }) {
+UserSchema.statics.findUserBySocialProfile = function (strategy, socialId) {
 
-  return this.findOne({
-    strategy: provider,
-    'social.id': social.id
-  });
+  return this.findOne({ strategy, socialId });
 
 };
 
-UserSchema.statics.registerLocalUser = function (newLocalUser) {
+UserSchema.statics.registerNewUser = function (newUserInfo) {
 
-  const {
-    email, password, displayName, avatar
-  } = newLocalUser;
-
-  const newUser = new this({
-    strategy: 'local',
-    email,
-    password,
-    displayName,
-    avatar
-  });
-
+  const newUser = new this(newUserInfo);
   return newUser.save();
-
 };
 
-UserSchema.statics.registerSocialUser = function (newSocialUser) {
-
-  const {
-    strategy, email, displayName, avatar, socialId, socialToken
-  } = newSocialUser;
-
-  const newUser = new this({
-    strategy,
-    email,
-    displayName,
-    avatar: avatar || null,
-    social: {
-      id: socialId,
-      accessTokeN: socialToken
-    }
-  });
-
-  return newUser.save();
-
-};
-
-UserSchema.statics.findLocalUser = function (email, password) {
-
-  const User = this;
-
-  return User
-    .findOne({
-      strategy: 'local',
-      email
-    })
-    .then((user) => {
-
-      if (!user) {
-        return Promise.reject();
-      }
-
-      return new Promise((resolve, reject) => {
-
-        bcrypt.compare(password, user.password, (err, res) => {
-          if (res) {
-            resolve(user);
-          } else {
-            reject();
-          }
-        });
-
-      });
-
-    });
-
+UserSchema.methods.updateEmail = function (email) {
+  return this.update({ email });
 };
 
 UserSchema.methods.verifyPassword = function (password) {

@@ -29,9 +29,9 @@ require('./server/db/index');
 
 // webpack middlewares for development
 if (isDev) {
-  const devServer = require('./client/config/scripts/dev')(port);
-  app.use(webpackMiddleware(devServer.compiler, devServer.serverConfig));
-  app.use(webpackHotMiddleware(devServer.compiler));
+  const { compiler, serverConfig } = require('./client/config/scripts/dev')(port);
+  app.use(webpackMiddleware(compiler, serverConfig));
+  app.use(webpackHotMiddleware(compiler));
 }
 
 // default middlewares

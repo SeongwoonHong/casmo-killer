@@ -96,17 +96,17 @@ class UserMenu extends Component {
                       ? (
                         <img
                           src={ currentUser.avatar }
-                          alt={ currentUser.username } />
+                          alt={ currentUser.displayName } />
                       )
                       : (
                         <span>
-                          { currentUser.username[0] }
+                          { currentUser.displayName[0] }
                         </span>
                       )
                   }
                 </div>
                 <div className="user-username">
-                  <span>{ currentUser.username }</span>
+                  <span>{ currentUser.displayName }</span>
                   <span>{ currentUser.level || 'newbie' }</span>
                 </div>
               </div>

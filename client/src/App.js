@@ -5,18 +5,24 @@ import { Route, Switch } from 'react-router-dom';
 import classnames from 'classnames';
 import axios from 'axios';
 import * as actions from 'actions';
+
+import * as storage from 'sharedUtils/storage';
+
+import breakPoint from 'sharedUtils/breakPoint';
+
 import './App.scss';
 
+import { MainMenuRoutes } from './routers';
 import TopNavigation from './components/Navigations/TopNavigation';
 import MainMenu from './components/Navigations/MainMenu';
-import AuthModal from './components/AuthModal';
 import UserInfoModal from './components/UserInfoModal';
 
-import { MainMenuRoutes } from './routers';
-
-import breakPoint from './utils/breakPoint';
-
 class App extends Component {
+
+  constructor(props) {
+    super(props);
+    this.verifyLoginStatus = this.verifyLoginStatus.bind(this);
+  }
 
   componentDidMount() {
     if (typeof window !== 'undefined') {
@@ -26,54 +32,60 @@ class App extends Component {
         }
       }, false);
     }
-
     this.verifyLoginStatus();
-
   }
 
   componentWillUnmount() {
-
     if (typeof window !== 'undefined') {
       window.removeEventListener('resize', (e) => {
         this.props.updateBreakPoint(e.target.innerWidth);
       });
     }
-
   }
 
-  verifyLoginStatus() {
-    axios
-      .get('/api/user/validate')
-      .then((res) => {
-        this.props.loginSuccess(res.data);
-      });
+  async verifyLoginStatus() {
+
+    const user = await storage.get('ckUser');
+
+    if (user) {
+      this.props.loginSuccess(user);
+    }
+
+    try {
+      const { data } = await axios.get('/api/user/verify/status');
+      if (data.user) {
+        this.props.loginSuccess(data.user);
+      }
+    } catch (error) {
+      storage.remove('ckUser');
+    }
+
   }
 
   render() {
 
     const { layout } = this.props;
 
-    const RootComponents = MainMenuRoutes.map(route => (
-      <Route
-        key={ route.path }
-        exact={ route.exact }
-        path={ route.path }
-        component={ route.main }
-      />
-    ));
-
     return (
-      <div className="app">
+      <div className="root-container">
         <TopNavigation />
         <div className={ classnames('app-wrapper', {
           widened: layout.isMainMenuVisible
         }) }>
           <Route path="/" component={ MainMenu } />
-          <div className="container">
+          <div className="component-container">
             <Switch>
-              { RootComponents }
+              {
+                MainMenuRoutes.map(route => (
+                  <Route
+                    key={ route.path }
+                    exact={ route.exact }
+                    path={ route.path }
+                    component={ route.main }
+                  />
+                ))
+              }
             </Switch>
-            <AuthModal />
             <UserInfoModal />
           </div>
         </div>
@@ -92,13 +104,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    loginSuccess: payload => dispatch(actions.loginSuccess(payload)),
-    updateBreakPoint: (size) => {
-      dispatch(actions.updateBreakPoint(size));
-    },
-    toggleMenu: () => {
-      dispatch(actions.toggleMenu());
-    }
+    toggleMenu: () => dispatch(actions.toggleMenu()),
+    updateBreakPoint: size => dispatch(actions.updateBreakPoint(size)),
+    loginSuccess: payload => dispatch(actions.loginSuccess(payload))
   };
 };
 

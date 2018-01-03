@@ -7,7 +7,7 @@ import './UserMenuDropdown.scss';
 
 const UserMenuDropdown = (props) => {
 
-  if (props.user.isLoggedIn) {
+  if (props.isLoggedIn) {
     return (
       <ul className="dropdown-content logged-in">
         <li className="notification">
@@ -43,17 +43,17 @@ const UserMenuDropdown = (props) => {
   return (
     <ul className="dropdown-content">
       <li>
-        <PlainBtn onClick={ () => props.openAuthModal() }>
+        <Link to="/user/auth/login">
           <i className="material-icons">person</i>
           <span>Log In</span>
-        </PlainBtn>
+        </Link>
       </li>
       <li className="divider" />
       <li>
-        <PlainBtn onClick={ () => props.openAuthModal('register') }>
+        <Link to="/user/auth/signup">
           <i className="material-icons">person_add</i>
           <span>Sign Up</span>
-        </PlainBtn>
+        </Link>
       </li>
     </ul>
   );

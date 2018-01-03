@@ -12,7 +12,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    updatePassword: password => dispatch(console.log(password))
+    loginSuccess: userInfo => dispatch(actions.loginSuccess(userInfo))
   };
 }
 

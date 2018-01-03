@@ -1,14 +1,17 @@
+* {
+    box-sizing: border-box;
+}
 html {
-    background-color: #f9fffd;
+    background-color: #EEEEEE;
     height: 100vh;
     overflow-y: hidden;
 }
-
 body {
     height: 100%;
+    margin: 0;
+    padding: 0;
 }
-
-.app {
+.root-container {
     height: 100vh;
     min-width: 320px;
 }
@@ -18,16 +21,16 @@ textarea {
 .app-wrapper {
     display: flex;
     height: calc(100% - 50px);
-    > .container {
-        display: block;
-        margin-left: 0;
-        max-width: 996px;
-        overflow-x: hidden;
-        overflow-y: auto;
-        padding: 10px;
-        width: 100%;
-        @media screen and (max-width: 450px) {
-            width: 100% !important;
-        }
+}
+.component-container {
+    display: block;
+    margin-left: 0;
+    max-width: 996px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 10px;
+    width: 100%;
+    @media screen and (max-width: 450px) {
+        width: 100% !important;
     }
 }

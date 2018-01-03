@@ -272,6 +272,12 @@ export function createReplyFailure(error) {
   };
 }
 
+export function replyCommentReset() {
+  return {
+    type: types.REPLY_COMMENT_RESET
+  };
+}
+
 export function createReplyRequest(comment, postId, parentReply = {}) {
   const data = {
     comment,
@@ -448,12 +454,6 @@ export function replyComment(data) {
   return {
     type: types.REPLY_COMMENT_WAITING,
     payload: { data }
-  };
-}
-
-export function replyCommentReset() {
-  return {
-    type: types.REPLY_COMMENT_RESET
   };
 }
 

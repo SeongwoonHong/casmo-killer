@@ -12,8 +12,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    toggleUserDropdown: isOpen => dispatch(actions.toggleUserDropdown(isOpen)),
-    openAuthModal: authType => dispatch(actions.openAuthModal(authType))
+    toggleUserDropdown: isOpen => dispatch(actions.toggleUserDropdown(isOpen))
   };
 };
 

@@ -1,4 +1,4 @@
-const jwtUtils = require('../utils/jwtUtils');
+const jwtUtils = require('../utils/jwt');
 const extractCookie = require('../utils/extractCookie');
 
 const jwtMiddleware = async (req, res, next) => {
@@ -12,7 +12,7 @@ const jwtMiddleware = async (req, res, next) => {
 
   try {
 
-    const user = await jwtUtils.verify(token);
+    const { user } = await jwtUtils.verify(token);
 
     if ((Date.now() / 1000) - user.iat > 60 * 60 * 24 * 3) {
 

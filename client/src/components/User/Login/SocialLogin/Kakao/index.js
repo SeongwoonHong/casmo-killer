@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { loadSdk } from 'sharedUtils/SocialAuth';
-import PlainBtn from 'sharedComponents/PlainBtn';
+import { loadSdk } from 'sharedUtils/socialAuth';
 import LoadingCircle from 'sharedComponents/LoadingCircle';
 
 class KakaoAuth extends Component {
@@ -67,15 +66,16 @@ class KakaoAuth extends Component {
     const { children } = this.props;
 
     return (
-      <PlainBtn
+      <button
+        type="button"
         disabled={ !this.state.isSdkLoaded }
         onClick={ this.click }>
         {
           this.state.isSdkLoaded
             ? children
-            : <LoadingCircle />
+            : <LoadingCircle color="#515151" />
         }
-      </PlainBtn>
+      </button>
     );
 
   }

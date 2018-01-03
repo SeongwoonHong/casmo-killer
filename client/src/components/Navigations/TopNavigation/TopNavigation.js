@@ -31,10 +31,8 @@ class TopNavigation extends Component {
           this.props.layout.isUserDropdownOpen
             ? (
               <UserDropdown
-                user={ this.props.user }
-                openAuthModal={ this.props.openAuthModal }
-                logout={ this.props.logout }
-              />
+                isLoggedIn={ this.props.user.isLoggedIn }
+                logout={ this.props.logout } />
             )
             : null
         }

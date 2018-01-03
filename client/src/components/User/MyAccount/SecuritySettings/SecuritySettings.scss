@@ -1,17 +1,7 @@
 .for-security {
-    > .settings-fields {
-        > .plain-btn {
-            float: right;
-            font-size: 12px;
-            margin: 15px 0 0;
-            padding: 10px 15px;
-            &:focus,
-            &:hover {
-                background-color: palette(Teal, 900);
-            }
-            > .preloader-wrapper {
-                @include rectanglify(14px);
-            }
+    > .user-form-fields {
+        > .user-form-button {
+            margin: 15px 0 0 auto;
         }
     }
     > .button-group {

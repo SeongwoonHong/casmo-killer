@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import LoadingCircle from 'sharedComponents/LoadingCircle';
 
-import inputValidator from 'sharedUtils/inputValidator';
+import LoadingOverlay from 'sharedComponents/LoadingOverlay';
+import FormMessage from 'sharedComponents/FormMessage';
+
+import {
+  trim,
+  validateImg,
+  validateEmail,
+  validateDisplayName
+} from 'sharedUtils/inputValidators';
 
 import './ProfileSettings.scss';
 
@@ -14,58 +21,29 @@ class ProfileSettings extends Component {
 
     this.state = {
       email: {
-        value: '',
+        value: props.user.email,
         message: ''
       },
-      username: {
-        value: '',
+      displayName: {
+        value: props.user.displayName,
         message: ''
       },
       avatar: {
-        value: '',
-        message: '',
-        isLoading: false
+        value: props.user.avatar,
+        message: ''
       },
       isLoading: false,
-      operationStatus: {
-        isSuccess: false,
-        message: ''
-      }
+      successMsg: '',
+      emailSuccessMsg: ''
     };
 
   }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      email: {
-        ...this.state.email,
-        value: nextProps.user.email
-      },
-      username: {
-        ...this.state.username,
-        value: nextProps.user.username
-      },
-      avatar: {
-        ...this.state.avatar,
-        value: nextProps.user.avatar
-      }
-    });
-  }
-
-  onErrorHandler = (target, message) => {
-    this.setState({
-      [target]: {
-        ...this.state[target],
-        message
-      }
-    });
-  };
 
   onChangeHandler = (e) => {
     this.setState({
       [e.target.name]: {
         ...this.state[e.target.name],
-        value: e.target.value
+        value: trim(e.target.value)
       }
     });
   };
@@ -84,20 +62,28 @@ class ProfileSettings extends Component {
 
     reader.onloadend = () => {
       if (image.size > 5000000) {
-        this.onErrorHandler('avatar', 'File is too big.');
         this.setState({
           avatar: {
             ...this.state.avatar,
-            isLoading: false
-          }
+            message: 'File is too big.'
+          },
+          isLoading: false
+        });
+      } else if (!validateImg(reader.result)) {
+        this.setState({
+          avatar: {
+            ...this.state.avatar,
+            message: 'File format is not supported.'
+          },
+          isLoading: false
         });
       } else {
         this.setState({
           avatar: {
-            isLoading: false,
             value: reader.result,
             message: ''
-          }
+          },
+          isLoading: false
         });
       }
     };
@@ -113,83 +99,68 @@ class ProfileSettings extends Component {
     this.setState({ isLoading: true });
 
     const {
-      email,
-      username,
-      avatar
+      email, displayName, avatar
     } = this.state;
 
-    let emailMessage = '';
-    let usernameMessage = '';
+    const errorMsg = {
+      forEmail: '',
+      forDisplayName: ''
+    };
 
-    // TODO: definitely need to refactor input validations
+    const userData = new FormData();
 
-    if (email.value !== this.props.user.email) {
-      if (inputValidator.isEmpty(email.value)) {
-        emailMessage = 'Please enter your email.';
-      } else if (!inputValidator.isEmail(email.value)) {
-        emailMessage = 'The provided email address is not valid.';
-      } else {
-        try {
-          const { data } = await axios.get(`/api/user/validate/email/${email.value}`);
-          if (data.isDuplicate) {
-            emailMessage = 'The email address is already registered.';
-          }
-        } catch (error) {
-          console.error(error.response.error);
-          emailMessage = error.response.data.message;
-        }
+    errorMsg.forEmail = await validateEmail(email.value);
+    errorMsg.forDisplayName = await validateDisplayName(displayName.value);
+
+    this.setState({
+      email: {
+        ...this.state.email,
+        message: errorMsg.forEmail
+      },
+      displayName: {
+        ...this.state.displayName,
+        message: errorMsg.forDisplayName
+      },
+      successMsg: ''
+    });
+
+    if (
+      !errorMsg.forEmail.length &&
+      !errorMsg.forDisplayName.length &&
+      !avatar.message.length
+    ) {
+
+      userData.append('email', email.value);
+      userData.append('displayName', displayName.value);
+
+      if (avatar.value) {
+        userData.append('avatar', avatar.value);
       }
-    }
 
-    if (username.value !== this.props.user.username) {
-      if (inputValidator.isEmpty(username.value)) {
-        usernameMessage = 'Please enter yxour username.';
-      } else if (username.value.length < 4) {
-        usernameMessage = 'Username must be more than 4 characters.';
-      } else if (username.value.length > 20) {
-        usernameMessage = 'Username must be less than 20 characters.';
-      } else if (inputValidator.hasWhiteSpace(username.value)) {
-        usernameMessage = 'Username cannot have any space between words.';
-      } else if (!inputValidator.isUsername(username.value)) {
-        usernameMessage = 'Username cannot have special characters.';
-      } else {
-        try {
-          const { data } = await axios.get(`/api/user/validate/username/${username.value}`);
-          if (data.isDuplicate) {
-            usernameMessage = 'The username is already registered.';
-          }
-        } catch (error) {
-          console.error(error.response.data.error);
-          usernameMessage = error.response.data.message;
-        }
-      }
-    }
-
-    if (!emailMessage.length && !usernameMessage.length && !avatar.message.length) {
       try {
-        const { data } = await axios.put('/api/user/update/all', {
-          email: email.value,
-          username: username.value,
-          avatar: avatar.value
+        const { data } = await axios.put('/api/user/update/profile', userData);
+        this.setState({
+          successMsg: data.successMsg,
+          emailSuccessMsg: data.emailSuccessMsg
         });
-        this.props.onSuccess(data);
+        this.props.onSuccess(data.user);
       } catch (error) {
         console.error(error);
       }
-      this.setState({ isLoading: false });
     } else {
       this.setState({
         email: {
           ...this.state.email,
-          message: emailMessage
+          message: errorMsg.forEmail
         },
-        username: {
-          ...this.state.username,
-          message: usernameMessage
-        },
-        isLoading: false
+        displayName: {
+          ...this.state.displayName,
+          message: errorMsg.forDisplayName
+        }
       });
     }
+
+    this.setState({ isLoading: false });
 
   };
 
@@ -198,114 +169,95 @@ class ProfileSettings extends Component {
     const { user } = this.props;
 
     const {
-      email,
-      username,
-      avatar,
-      isLoading
+      email, displayName, avatar, isLoading, successMsg, emailSuccessMsg
     } = this.state;
 
-    const hasBeenEdited = email.value !== user.email
-      || username.value !== user.username
-      || avatar.value !== user.avatar;
+    const hasBeenEdited = email.value === user.email
+      && displayName.value === user.displayName
+      && avatar.value === user.avatar;
 
-    const errorMessages = (msg) => {
-      if (msg.length) {
-        return (
-          <div className="submit-messages">
-            <p>{ msg }</p>
-          </div>
-        );
-      }
-      return null;
-    };
-
-    const avatarPreview = (currentUser) => {
-      if (currentUser.avatar) {
+    const avatarPreview = (avatarState) => {
+      if (avatarState.value) {
         return (
           <img
             className="circle avatar-img"
             alt="user-avatar"
-            src={ this.state.avatar.value }
+            src={ avatarState.value }
           />
         );
       }
-      return (
-        <div className="avatar-placeholder">
-          <span>No Image</span>
-        </div>
-      );
+      return <span>No Image</span>;
     };
 
     return (
-      <div className="card">
-        <form
-          noValidate
-          onSubmit={ this.onSubmitHandler }
-          className="for-profile">
-          <div className="settings-header">
-            <h4>Profile Settings</h4>
-            <p>Update your email, username, and profile picture.</p>
-          </div>
-          { errorMessages(email.message) }
-          <div className="settings-fields">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={ email.value }
-              onChange={ this.onChangeHandler }
-              disabled={ isLoading } />
-            <p>This email is linked to your account.</p>
-          </div>
-          <div className="divider" />
-          { errorMessages(username.message) }
-          <div className="settings-fields">
-            <label htmlFor="username">Display Name</label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={ username.value }
-              onChange={ this.onChangeHandler }
-              disabled={ isLoading } />
-            <p>This is the display name for your account.</p>
-          </div>
-          <div className="divider" />
-          { errorMessages(avatar.message) }
-          <div className="settings-fields last-field">
-            <label>Profile Picture</label>
-            <div className="uploader">
-              {
-                avatar.isLoading
-                  ? <LoadingCircle color="teal" />
-                  : avatarPreview(this.props.user)
-              }
-              <input
-                type="file"
-                accept="image/*"
-                id="profilePicture"
-                onChange={ this.onImageUpload } />
-              <label htmlFor="profilePicture">
-                <span>Upload</span>
-                <span>Max 5mb, JPG, or PNG</span>
-              </label>
+      <form
+        noValidate
+        onSubmit={ this.onSubmitHandler }
+        className="user-form-box for-profile-settings">
+        <LoadingOverlay
+          isVisible={ isLoading }
+          overlayColor="rgba(256,256,256,.75)"
+          circleColor="#1F4B40" />
+        <div className="user-form-header">
+          <h3>Profile Settings</h3>
+          <p>Update your email, display name, and profile picture.</p>
+          <FormMessage message={ successMsg } type="success" />
+        </div>
+        <FormMessage message={ emailSuccessMsg } type="warning" />
+        <FormMessage message={ email.message } />
+        <div className="user-form-fields">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={ email.value || '' }
+            disabled={ user.strategy !== 'local' }
+            onChange={ this.onChangeHandler } />
+          <p>This email is linked to your account.</p>
+        </div>
+        <FormMessage message={ displayName.message } />
+        <div className="user-form-fields">
+          <label htmlFor="displayName">Display Name</label>
+          <input
+            type="text"
+            id="displayName"
+            name="displayName"
+            value={ displayName.value || '' }
+            onChange={ this.onChangeHandler } />
+          <p>This is the display name for your account.</p>
+        </div>
+        <FormMessage message={ avatar.message } />
+        <div className="user-form-fields last-field">
+          <label>Profile Picture</label>
+          <div className="avatar-preview">
+            <div className="avatar-wrapper">
+              { avatarPreview(this.state.avatar) }
             </div>
+            <input
+              type="file"
+              accept="image/*"
+              id="profilePicture"
+              onChange={ this.onImageUpload } />
+            <label htmlFor="profilePicture">
+              <span className="user-form-button">
+                Upload New Picture
+              </span>
+              <span>Max 5mb, JPG, or PNG</span>
+            </label>
           </div>
-          <div className="divider" />
-          <button
-            type="submit"
-            disabled={ isLoading || !hasBeenEdited }>
-            {
-              isLoading
-                ? <LoadingCircle color="#fff" />
-                : 'Save Changes'
-            }
-          </button>
-        </form>
-      </div>
+        </div>
+        <button
+          type="submit"
+          className="user-form-button"
+          disabled={ hasBeenEdited }>
+          Save Changes
+        </button>
+      </form>
     );
+
   }
+
 }
 
 export default ProfileSettings;

@@ -11,10 +11,8 @@ const socialAuthUtils = {
           email: response.data.email,
           displayName: response.data.name,
           avatar: response.data.picture.data.url,
-          social: {
-            id: response.data.id.toString(),
-            accessToken,
-          }
+          socialId: response.data.id.toString(),
+          socialToken: accessToken
         };
       });
   },
@@ -32,10 +30,8 @@ const socialAuthUtils = {
           email: response.data.emails[0].value,
           displayName: response.data.displayName,
           avatar: response.data.image.url,
-          social: {
-            id: response.data.id.toString(),
-            accessToken
-          }
+          socialId: response.data.id.toString(),
+          socialToken: accessToken
         };
       });
   },
@@ -53,10 +49,8 @@ const socialAuthUtils = {
           email: response.data.kaccount_email,
           displayName: response.data.properties.nickname,
           avatar: response.data.properties.profile_image,
-          social: {
-            id: response.data.id.toString(),
-            accessToken
-          }
+          socialId: response.data.id.toString(),
+          socialToken: accessToken
         };
       });
   }

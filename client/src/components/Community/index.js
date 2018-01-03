@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import RequireAuthentication from 'sharedComponents/RequireAuthentication/RequireAuthentication';
+import RequireAuthentication from 'sharedComponents/RequireAuthentication';
 import CommunityHome from './Root';
 import Board from './Board';
 import PostNew from './PostNew';

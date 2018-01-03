@@ -1,17 +1,28 @@
 import React from 'react';
-import classnames from 'classnames';
+import PropTypes from 'prop-types';
 
-import './formMessage.scss';
+import './FormMessage.scss';
 
-const FormMessage = ({ message, success = false }) => {
-  if (message.length > 0) {
+const FormMessage = ({ message, type, children }) => {
+  if (message && message.length > 0) {
     return (
-      <div className={ classnames('submit-message', { success })}>
+      <div className={ `Form-message ${type}`}>
         <p>{ message }</p>
+        { children }
       </div>
     );
   }
   return null;
+};
+
+FormMessage.propTypes = {
+  message: PropTypes.string,
+  type: PropTypes.string
+};
+
+FormMessage.defaultProps = {
+  message: '',
+  type: 'error'
 };
 
 export default FormMessage;

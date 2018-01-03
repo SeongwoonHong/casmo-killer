@@ -121,7 +121,7 @@ function mapStateToProps(state) {
 }
 function mapDispatchToProps(dispatch) {
   return {
-    //
+    just: () => dispatch()
   };
 }
 export default reduxForm({

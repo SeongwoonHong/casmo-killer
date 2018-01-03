@@ -1,10 +1,17 @@
 import axios from 'axios';
+
+import * as storage from 'sharedUtils/storage';
 import * as types from './types';
 
+import { resetAuthState } from './auth';
+
 export const loginSuccess = (payload) => {
-  return {
-    type: types.LOGIN_SUCCESS,
-    payload
+  return (dispatch) => {
+    dispatch({
+      type: types.LOGIN_SUCCESS,
+      payload
+    });
+    dispatch(resetAuthState());
   };
 };
 
@@ -13,6 +20,7 @@ export const logout = () => {
     axios
       .post('/api/user/logout')
       .then(() => {
+        storage.remove('ckUser');
         dispatch({
           type: types.LOGOUT
         });

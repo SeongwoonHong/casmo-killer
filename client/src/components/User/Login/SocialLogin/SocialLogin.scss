@@ -1,0 +1,48 @@
+.user-login-social {
+    > .social-btn-wrapper {
+        padding: 15px;
+        > .Form-message {
+            margin: 0 0 15px 0;
+        }
+        > div {
+            > button {
+                @include flex-box(space-between);
+                color: #fff;
+                padding: 5px;
+                width: 100%;
+                > img {
+                    @include rectanglify(30px);
+                }
+                > span {
+                    font-weight: 700;
+                    width: 100%;
+                }
+                &:disabled {
+                    > .preloader-wrapper {
+                        @include rectanglify(30px);
+                        margin: 0 auto;
+                        > .spinner-layer {
+                            border-color: palette(Grey, 800);
+                        }
+                    }
+                }
+                &:hover,
+                &:focus {
+                    background-color: initial;
+                }
+            }
+            &.facebook {
+                background-color: $facebook-bg;
+            }
+            &.google {
+                background-color: $google-bg;
+            }
+            &.kakao {
+                background-color: $kakao-bg;
+                > button {
+                    color: $kakao-txt;
+                }
+            }
+        }
+    }
+}

@@ -1,8 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const LoadingCircle = (props) => {
   return (
-    <div className="preloader-wrapper active">
+    <div className={ `preloader-wrapper active ${props.size}`}>
       <div className="spinner-layer" style={ { borderColor: props.color } }>
         <div className="circle-clipper left">
           <div className="circle" />
@@ -16,6 +17,16 @@ const LoadingCircle = (props) => {
       </div>
     </div>
   );
+};
+
+LoadingCircle.propTypes = {
+  size: PropTypes.string,
+  color: PropTypes.string
+};
+
+LoadingCircle.defaultProps = {
+  size: '',
+  color: '#26a69a'
 };
 
 export default LoadingCircle;

@@ -28,9 +28,34 @@ const mailOptions = (token, email) => {
   };
 };
 
-module.exports.sendVerification = (token, email) => {
+const mailOptionss = (token, email) => {
+  const url = `http://localhost:4000/user/settings/${token}`;
+  return {
+    from: account,
+    to: email,
+    subject: 'This is from CK board ✔',
+    text: url,
+    html: `
+      <p>This shit will expire in 24 hours.</p>
+      <a href="${url}">Go Verify The Fuck Yourself !!!</a>
+    `
+  };
+};
+
+module.exports.verifyNewEmail = (token, email) => {
   return new Promise((resolve, reject) => {
     transporter.sendMail(mailOptions(token, email), (error, info) => {
+      if (error) {
+        reject(error);
+      }
+      resolve(info);
+    });
+  });
+};
+
+module.exports.verifyEmailUpdate = (token, email) => {
+  return new Promise((resolve, reject) => {
+    transporter.sendMail(mailOptionss(token, email), (error, info) => {
       if (error) {
         reject(error);
       }

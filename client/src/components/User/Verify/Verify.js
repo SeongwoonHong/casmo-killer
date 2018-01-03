@@ -1,51 +1,60 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 
 import axios from 'axios';
 
 import * as actions from 'actions';
-import LoadingCircle from 'sharedComponents/LoadingCircle';
+import LoadingOverlay from 'sharedComponents/LoadingOverlay';
+import ErrorPage from 'sharedComponents/ErrorPage';
 
 import './Verify.scss';
 
 class UserVerify extends Component {
 
-  componentDidMount() {
-    console.dir(this.props);
-    const { token } = this.props.match.params;
-    axios
-      .get(`/api/user/verify/email/${token}`)
-      .then((res) => {
-        setTimeout(() => {
-          this.props.history.push('/');
-          this.props.setUserForRegister({ email: res.data });
-          this.props.openAuthModal('register');
-        }, 2000);
-      });
+  constructor(props) {
+    super(props);
+    this.state = {
+      message: ''
+    };
   }
 
+  async componentDidMount() {
+    const { token } = this.props.match.params;
+    this.verifyToken(token);
+  }
+
+  verifyToken = async (token) => {
+    try {
+      const { data } = await axios.get(`/api/auth/verify/token/${token}`);
+      this.props.setUserForRegister({ strategy: 'local', email: data.email });
+      this.props.history.push('/user/register');
+    } catch (error) {
+      this.setState({ message: error.response.data.message });
+    }
+  };
+
   render() {
+    if (this.state.message) {
+      return (
+        <ErrorPage
+          title={ this.state.message }
+          message="Please submit your email in the register form." />
+      );
+    }
     return (
-      <div className="verify-loader">
-        <LoadingCircle color="#fff" />
-      </div>
+      <LoadingOverlay
+        isVisible="true"
+        overlayColor="rgba(0,0,0,.75)"
+        circleColor="#fff" />
     );
   }
 
 }
 
-const mapStateToProps = (state) => {
-  return {
-    user: state.user
-  };
-};
-
 const mapDispatchToProps = (dispatch) => {
   return {
-    openAuthModal: authType => dispatch(actions.openAuthModal(authType)),
     setUserForRegister: payload => dispatch(actions.setUserForRegister(payload))
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UserVerify));
+export default connect(null, mapDispatchToProps)(UserVerify);

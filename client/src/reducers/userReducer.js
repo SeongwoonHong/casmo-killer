@@ -3,9 +3,10 @@ import * as types from '../actions/types';
 const initialState = {
   user: {
     isLoggedIn: false,
+    strategy: null,
     _id: null,
     email: null,
-    username: null,
+    displayName: null,
     avatar: null
   },
   userModalInfo: {
@@ -22,14 +23,16 @@ export default function (state = initialState.user, action) {
     case types.LOGIN_SUCCESS:
       return Object.assign({}, state, {
         isLoggedIn: true,
+        strategy: action.payload.strategy,
         _id: action.payload._id,
         email: action.payload.email,
-        username: action.payload.username,
+        displayName: action.payload.displayName,
         avatar: action.payload.avatar || null
       });
 
     case types.LOGOUT:
       return initialState.user;
+
     case types.OPEN_USERINFO_MODAL:
       return Object.assign({}, state, {
         userModalInfo: {

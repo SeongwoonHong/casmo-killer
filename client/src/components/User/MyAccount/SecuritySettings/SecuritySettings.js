@@ -198,12 +198,15 @@ class SecuritySettings extends Component {
         <div className="button-group">
           <button
             type="button"
+            className="user-form-button"
             onClick={ () => {
               this.setState({ isEditing: true });
             }}>
             Change Password
           </button>
-          <button type="button">
+          <button
+            type="button"
+            className="user-form-button">
             Delete Account
           </button>
         </div>

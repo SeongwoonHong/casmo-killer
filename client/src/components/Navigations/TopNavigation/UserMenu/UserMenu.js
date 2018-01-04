@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
-import classnames from 'classnames';
+
 import './UserMenu.scss';
 
 class UserMenu extends Component {
@@ -45,7 +45,6 @@ class UserMenu extends Component {
   clickToToggle(event) {
 
     if (event.type === 'mousedown' && event.button !== 0) {
-      console.log('fuck you');
       return;
     }
 
@@ -58,14 +57,14 @@ class UserMenu extends Component {
 
   render() {
 
-    const { user } = this.props;
+    const { user, layout } = this.props;
 
     const Notifications = (isLoggedIn) => {
       if (isLoggedIn) {
         return (
           <Link
             to="/user/notifications"
-            className="btn notification">
+            className="top-nav-btn notification">
             <i className="material-icons">
               notifications_none
             </i>
@@ -80,9 +79,7 @@ class UserMenu extends Component {
       <div
         role="button"
         tabIndex={ 0 }
-        className={ classnames('user-profile', {
-          loggedIn: user.isLoggedIn
-        }) }
+        className="user-profile"
         onMouseDown={ this.clickToToggle }
         onTouchEnd={ this.clickToToggle }
         onKeyDown={ () => {} }>
@@ -113,20 +110,22 @@ class UserMenu extends Component {
             )
             : null
         }
-        <a className="btn dropdown-toggle">
-          <i className="material-icons dd-toggler">
+        <button
+          type="button"
+          className="top-nav-btn">
+          <i className="material-icons">
             {
-              this.props.layout.isUserDropdownOpen
+              layout.isUserDropdownOpen
                 ? 'arrow_drop_up'
                 : 'arrow_drop_down'
             }
           </i>
-        </a>
+        </button>
       </div>
     );
 
     return (
-      <div className="user-menu">
+      <div className="User-menu">
         { Notifications(user.isLoggedIn) }
         { UserProfile(user) }
       </div>

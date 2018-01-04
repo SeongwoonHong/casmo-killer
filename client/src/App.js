@@ -4,18 +4,17 @@ import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import classnames from 'classnames';
 import axios from 'axios';
+
 import * as actions from 'actions';
-
 import * as storage from 'sharedUtils/storage';
-
 import breakPoint from 'sharedUtils/breakPoint';
-
-import './App.scss';
 
 import { MainMenuRoutes } from './routers';
 import TopNavigation from './components/Navigations/TopNavigation';
 import MainMenu from './components/Navigations/MainMenu';
 import UserInfoModal from './components/UserInfoModal';
+
+import './App.scss';
 
 class App extends Component {
 
@@ -47,16 +46,19 @@ class App extends Component {
 
     const user = await storage.get('ckUser');
 
+    // initially set the user from the local storage
     if (user) {
       this.props.loginSuccess(user);
     }
 
+    // update the user state from the fresh information from the server
     try {
       const { data } = await axios.get('/api/user/verify/status');
       if (data.user) {
         this.props.loginSuccess(data.user);
       }
     } catch (error) {
+      // if token has expired, remove all user information
       storage.remove('ckUser');
     }
 

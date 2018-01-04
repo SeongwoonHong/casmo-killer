@@ -1,72 +1,65 @@
-.user-menu {
+.User-menu {
     > .notification {
         display: none;
     }
     > .user-profile {
         cursor: pointer;
-        &:active,
-        &:focus {
-            background-color: palette(Teal, 800);
-            outline: none;
-        }
         > .user-info {
             display: none;
-        }
-        > .dropdown-toggle {
-            padding: 0;
-            > .dd-toggler {
-                width: 44px;
-            }
         }
     }
     @media screen and (min-width: 768px) {
         @include flex-box(space-between);
         > .notification {
             display: block;
-            margin-right: 10px;
+            position: relative;
+            text-align: center;
             > .notification-badge {
-                right: 0;
+                left: 2px;
                 top: 4px;
             }
         }
     }
     @media screen and (min-width: 992px) {
         > .user-profile {
-            display: block;
-            &.loggedIn {
-                @include flex-box(space-between);
-            }
+            @include flex-box(space-between);
             > .user-info {
                 @include flex-box(flex-start);
-                height: 44px;
+                height: $top-nav-size;
                 width: 210px;
                 > .user-avatar {
-                    background-color: transparent;
                     margin: 0 10px;
-                    overflow: hidden;
-                    > img {
+                    > * {
                         @include rectanglify(34px);
                         border-radius: 50%;
                         display: block;
                     }
+                    > span {
+                        background-color: palette(Teal, 100);
+                        font-size: 28px;
+                        font-weight: 300;
+                        line-height: 32px;
+                        text-align: center;
+                    }
                 }
                 > .user-username {
-                    color: palette(Teal, 50);
+                    color: #fff;
                     > span {
                         display: block;
                         line-height: normal;
                         &:first-child {
-                            font-size: 14px;
+                            font-size: 12px;
                         }
                         &:last-child {
-                            color: palette(Teal, 300);
-                            font-size: 12px;
+                            color: palette(Teal, 200);
+                            font-size: 11px;
+                            text-transform: capitalize;
                         }
                     }
                 }
             }
-            > .dropdown-toggle {
-                float: right;
+            &:hover {
+                background-color: palette(Teal, 700);
             }
         }
     }

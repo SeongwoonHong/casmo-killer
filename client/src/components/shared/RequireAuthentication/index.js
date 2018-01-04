@@ -1,37 +1,32 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import * as actions from 'actions';
 
 export default function (ComposedComponent, route = '/') {
   class RequireAuthentication extends Component {
 
-    componentWillMount() {
-      this.props.registerRedirectUrl(this.props.location.pathname);
-      if (!this.props.user.isLoggedIn) {
+    componentWillMount = () => {
+      if (!this.props.user.username) {
+        Materialize.toast($('<span style="color: red">Log in is required</span>'), 3000, 'rounded');
         this.props.history.push(route);
       }
     }
-
+    componentWillUpdate = (nextProps) => {
+      if (!nextProps.user.username) {
+        Materialize.toast($('<span style="color: red">Log in is required</span>'), 3000, 'rounded');
+        this.props.history.push(route);
+      }
+    }
     render() {
       return (
-        <ComposedComponent { ...this.props } />
+        <ComposedComponent {...this.props} />
       );
     }
   }
-
-  const mapStateToProps = (state) => {
+  function mapStateToProps(state) {
     return {
-      auth: state.auth,
       user: state.user
     };
-  };
-
-  const mapDispatchToProps = (dispatch) => {
-    return {
-      registerRedirectUrl: url => dispatch(actions.registerRedirectUrl(url))
-    };
-  };
-
-  return connect(mapStateToProps, mapDispatchToProps)(withRouter(RequireAuthentication));
+  }
+  return connect(mapStateToProps)(withRouter(RequireAuthentication));
 }

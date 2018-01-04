@@ -1,15 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import PlainBtn from 'sharedComponents/PlainBtn';
-
 import './UserMenuDropdown.scss';
 
-const UserMenuDropdown = (props) => {
+const UserMenuDropdown = ({ isLoggedIn, logout }) => {
 
-  if (props.isLoggedIn) {
+  if (isLoggedIn) {
     return (
-      <ul className="dropdown-content logged-in">
+      <ul className="User-menu-dropdown dropdown-content logged-in">
         <li className="notification">
           <Link to="/user/notifications">
             <i className="material-icons">notifications</i>
@@ -31,17 +29,21 @@ const UserMenuDropdown = (props) => {
         </li>
         <li className="divider" />
         <li>
-          <PlainBtn onClick={ props.logout }>
+          <a
+            role="button"
+            tabIndex={ 0 }
+            onKeyDown={ () => {} }
+            onClick={ logout }>
             <i className="material-icons">power_settings_new</i>
             <span>Log out</span>
-          </PlainBtn>
+          </a>
         </li>
       </ul>
     );
   }
 
   return (
-    <ul className="dropdown-content">
+    <ul className="User-menu-dropdown dropdown-content">
       <li>
         <Link to="/user/auth/login">
           <i className="material-icons">person</i>

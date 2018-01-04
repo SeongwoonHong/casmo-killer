@@ -7,13 +7,12 @@ export const registerRedirectUrl = (url) => {
   };
 };
 
-export const setUserForRegister = (userInfo) => {
+export const setUserForRegistration = (userInfo) => {
   return {
     type: types.SET_USER_FOR_REGISTER,
     payload: userInfo
   };
 };
-
 
 export const resetAuthState = () => {
   return {

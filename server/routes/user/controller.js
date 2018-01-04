@@ -65,7 +65,7 @@ module.exports.verifyNewEmail = async (req, res) => {
   } catch (error) {
     if (error.name === 'TokenExpiredError') {
       // when the token has expired
-      return res.status(401).send({
+      return res.status(410).send({
         message: 'This verification link has expired.'
       });
     }
@@ -287,7 +287,7 @@ module.exports.updateEmail = async (req, res) => {
   } catch (error) {
     if (error.name === 'TokenExpiredError') {
       // when the token has expired
-      return res.status(401).send({
+      return res.status(410).send({
         message: 'This verification link has expired.'
       });
     }
@@ -304,30 +304,36 @@ module.exports.updateEmail = async (req, res) => {
       });
     }
 
-    user.email = email;
+    if (user.email !== email) {
 
-    const modifiedUser = await user.save();
-    const accessToken = await modifiedUser.generateToken();
+      user.email = email;
 
-    return res
-      .cookie('ckToken', accessToken, {
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 7
-      })
-      .send({
-        user: {
-          strategy: modifiedUser.strategy,
-          _id: modifiedUser._id,
-          email: modifiedUser.email,
-          displayName: modifiedUser.displayName,
-          avatar: modifiedUser.avatar
-        }
-      });
+      const modifiedUser = await user.save();
+      const accessToken = await modifiedUser.generateToken();
 
+      return res
+        .cookie('ckToken', accessToken, {
+          httpOnly: true,
+          maxAge: 1000 * 60 * 60 * 24 * 7
+        })
+        .send({
+          user: {
+            strategy: modifiedUser.strategy,
+            _id: modifiedUser._id,
+            email: modifiedUser.email,
+            displayName: modifiedUser.displayName,
+            avatar: modifiedUser.avatar
+          }
+        });
+
+    }
+
+    return res.status(410).send({
+      message: 'The email address has already been updated.'
+    });
 
   } catch (error) {
     return errorHandler.server(res, error);
   }
-
 
 };

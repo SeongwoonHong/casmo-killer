@@ -199,7 +199,7 @@ class LocalLogin extends Component {
                 : 'Log In With Email'
             }
           </Link>
-          <Link to="/">
+          <Link to="/user/recover">
             Forgot Your Password?
           </Link>
         </div>

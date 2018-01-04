@@ -9,13 +9,14 @@ import SocialLogin from './SocialLogin/SocialLogin';
 
 class Login extends Component {
 
-  // need to redirect here even on first load
-  // because user's logged-in state is loaded asynchronously
   componentWillReceiveProps(nextProps) {
+
     const { auth, user, history } = nextProps;
+
     if (user.isLoggedIn) {
       history.push(auth.redirectUrl);
     }
+
   }
 
   onSocialRegister = (userInfo) => {
@@ -38,13 +39,30 @@ class Login extends Component {
   };
 
   render() {
+
+    const isLogin = this.props.match.params.type === 'login';
+
     return (
-      <div className="user-login">
+      <div className="Login">
+        <h2 className="user-page-title">
+          {
+            isLogin
+              ? 'Login to your account'
+              : 'Sign up for free'
+          }
+          <i className="material-icons">
+            {
+              isLogin
+                ? 'lock'
+                : 'mode_edit'
+            }
+          </i>
+        </h2>
         <SocialLogin
           onRegister={ this.onSocialRegister }
           onSuccess={ this.onLoginSuccess } />
         <LocalLogin
-          isLogin={ this.props.match.params.type === 'login' }
+          isLogin={ isLogin }
           redirectUrl={ this.props.auth.redirectUrl }
           onSuccess={ this.onLoginSuccess } />
       </div>

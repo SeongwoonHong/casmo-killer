@@ -13,6 +13,7 @@ import { MainMenuRoutes } from './routers';
 import TopNavigation from './components/Navigations/TopNavigation';
 import MainMenu from './components/Navigations/MainMenu';
 import UserInfoModal from './components/UserInfoModal';
+import NotFound from './components/NotFound';
 
 import './App.scss';
 
@@ -87,6 +88,7 @@ class App extends Component {
                   />
                 ))
               }
+              <Route component={ NotFound } />
             </Switch>
             <UserInfoModal />
           </div>

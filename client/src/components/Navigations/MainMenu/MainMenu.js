@@ -52,6 +52,7 @@ class MainMenu extends Component {
 
     return ([
       <div
+        key={ 0 }
         role="button"
         tabIndex={ 0 }
         className={ classnames('Main-menu-overlay', {
@@ -61,7 +62,9 @@ class MainMenu extends Component {
         onKeyDown={ () => {} }
       />,
 
-      <nav className={ classnames('Main-menu', {
+      <nav
+        key={ 1 }
+        className={ classnames('Main-menu', {
         toggled: layout.isMainMenuVisible,
         folded: !layout.isSubMenuVisible
       }) }>
@@ -79,7 +82,9 @@ class MainMenu extends Component {
 
           <div className="main-menu-header">
             <h1>
-              <Link to="/">
+              <Link
+                to="/"
+                onClick={ this.props.toggleMenu }>
                 CK BOARD
               </Link>
             </h1>

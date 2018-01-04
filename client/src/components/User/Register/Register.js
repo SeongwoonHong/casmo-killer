@@ -88,7 +88,6 @@ class Register extends Component {
       this.setState({ isLoading: false });
     }
 
-
   };
 
   onImageUpload = (e) => {
@@ -205,82 +204,84 @@ class Register extends Component {
     };
 
     return (
-      <form
-        noValidate
-        onSubmit={ this.onSubmitHandler }
-        className="user-form-box registration-form">
-        <LoadingOverlay
-          isVisible={ isLoading }
-          overlayColor="rgba(256,256,256,.75)"
-          circleColor="#1F4B40" />
-        <div className="user-form-header">
-          <h3>User Registration</h3>
-          <p>Please fill in the following fields to complete your registration.</p>
-        </div>
-        <FormMessage message={ errorMsg } />
-        <div className="user-form-fields">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            value={ email || '' }
-            disabled="true" />
-          <p>This email is linked to your account.</p>
-        </div>
-        <FormMessage message={ displayName.message } />
-        <div className="user-form-fields">
-          <label htmlFor="displayName">Display Name</label>
-          <input
-            type="text"
-            id="displayName"
-            name="displayName"
-            value={ displayName.value }
-            onChange={ this.onChangeHandler } />
-          <p>Display name must be between 4 and 20 characters with no space.</p>
-        </div>
-        <FormMessage message={ password.message } />
-        {
-          auth.strategy === 'local'
-            ? (
-              <div className="user-form-fields">
-                <label htmlFor="password">Password</label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={ password.value }
-                  onChange={ this.onChangeHandler } />
-                <p>Password must be between 6 and 20 letters.</p>
-              </div>
-            )
-            : null
-        }
-        <FormMessage message={ avatar.message } />
-        <div className="user-form-fields">
-          <label>Profile Picture</label>
-          <div className="avatar-preview">
-            <div className="avatar-wrapper">
-              { avatarPreview(avatar) }
-            </div>
-            <input
-              type="file"
-              accept="image/*"
-              id="profilePicture"
-              onChange={ this.onImageUpload } />
-            <label htmlFor="profilePicture">
-              <span className="user-form-button">
-                Upload New Picture
-              </span>
-              <span>Max 5mb, JPG, or PNG</span>
-            </label>
+      <div className="Register">
+        <form
+          noValidate
+          onSubmit={ this.onSubmitHandler }
+          className="user-form-box registration-form">
+          <LoadingOverlay
+            isVisible={ isLoading }
+            overlayColor="rgba(256,256,256,.75)"
+            circleColor="#1F4B40" />
+          <div className="user-form-header">
+            <h3>User Registration</h3>
+            <p>Please fill in the following fields to complete your registration.</p>
           </div>
-        </div>
-        <button
-          className="user-form-button"
-          type="submit">
-          Submit
-        </button>
-      </form>
+          <FormMessage message={ errorMsg } />
+          <div className="user-form-fields">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              value={ email || '' }
+              disabled="true" />
+            <p>This email is linked to your account.</p>
+          </div>
+          <FormMessage message={ displayName.message } />
+          <div className="user-form-fields">
+            <label htmlFor="displayName">Display Name</label>
+            <input
+              type="text"
+              id="displayName"
+              name="displayName"
+              value={ displayName.value }
+              onChange={ this.onChangeHandler } />
+            <p>Display name must be between 4 and 20 characters with no space.</p>
+          </div>
+          <FormMessage message={ password.message } />
+          {
+            auth.strategy === 'local'
+              ? (
+                <div className="user-form-fields">
+                  <label htmlFor="password">Password</label>
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    value={ password.value }
+                    onChange={ this.onChangeHandler } />
+                  <p>Password must be between 6 and 20 letters.</p>
+                </div>
+              )
+              : null
+          }
+          <FormMessage message={ avatar.message } />
+          <div className="user-form-fields">
+            <label>Profile Picture</label>
+            <div className="avatar-preview">
+              <div className="avatar-wrapper">
+                { avatarPreview(avatar) }
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                id="profilePicture"
+                onChange={ this.onImageUpload } />
+              <label htmlFor="profilePicture">
+                <span className="user-form-button">
+                  Upload New Picture
+                </span>
+                <span>Max 5mb, JPG, or PNG</span>
+              </label>
+            </div>
+          </div>
+          <button
+            className="user-form-button"
+            type="submit">
+            Submit
+          </button>
+        </form>
+      </div>
     );
 
   }

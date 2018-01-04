@@ -9,7 +9,8 @@ const initialState = {
     avatar: null,
     socialId: null,
     socialToken: null,
-    redirectUrl: '/'
+    redirectUrl: '/',
+    verificationToken: null
   }
 };
 

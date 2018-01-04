@@ -1,18 +1,18 @@
-.dropdown-content {
-    background-color: palette(Teal, 50);
+.User-menu-dropdown {
     display: block;
     opacity: 1;
     right: 0;
-    top: 44px;
+    top: $top-nav-size;
     > li {
-        > a,
-        > button {
+        min-height: 0;
+        line-height: normal;
+        > a {
             @include flex-box(flex-start);
             color: palette(Teal, 900);
-            font-size: 14px;
-            width: 100%;
+            font-size: 12px;
+            padding: 10px 12px;
             > .material-icons {
-                font-size: 20px;
+                font-size: 18px;
                 margin-right: 10px;
             }
             > .notification-badge {
@@ -21,7 +21,7 @@
             }
         }
         &:hover {
-            background-color: palette(Teal, 100);
+            background-color: palette(Teal, 50);
         }
     }
     @media screen and (min-width: 768px) {
@@ -30,14 +30,8 @@
         }
     }
     @media screen and (min-width: 992px) {
-        > li {
-            > a,
-            > button {
-                @include flex-box(flex-start);
-            }
-        }
         &.logged-in {
-            width: 260px;
+            width: 254px;
         }
     }
 }

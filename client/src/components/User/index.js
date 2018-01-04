@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
+import * as actions from 'actions';
 
-import RequireAuthentication from 'sharedComponents/RequireAuthentication';
+import PrivateRoute from 'sharedComponents/PrivateRoute';
 
 import './User.scss';
 
@@ -13,13 +15,20 @@ import UserVerify from './Verify/Verify';
 class User extends Component {
 
   render() {
+
+    const { user, registerRedirectUrl } = this.props;
+
     return (
       <div className="User">
         <Switch>
           <Route path="/user/auth/:type" component={ Login } />
           <Route path="/user/verify/:token" component={ UserVerify } />
           <Route path="/user/register" component={ Register } />
-          <Route path="/user/settings/:token?" component={ RequireAuthentication(MyAccount, '/user/auth/login') } />
+          <PrivateRoute
+            path="/user/settings/:token?"
+            isLoggedIn={ user.isLoggedIn }
+            component={ MyAccount }
+            onEnter={ url => registerRedirectUrl(url) } />
         </Switch>
       </div>
     );
@@ -27,4 +36,17 @@ class User extends Component {
 
 }
 
-export default User;
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.user
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    registerRedirectUrl: url => dispatch(actions.registerRedirectUrl(url))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(User);

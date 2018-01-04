@@ -3,6 +3,7 @@ import axios from 'axios/index';
 
 import * as storage from 'sharedUtils/storage';
 import LoadingOverlay from 'sharedComponents/LoadingOverlay';
+import FormMessage from 'sharedComponents/FormMessage';
 
 import ProfileSettings from './ProfileSettings/ProfileSettings';
 import SecuritySettings from './SecuritySettings/SecuritySettings';
@@ -12,63 +13,85 @@ import './MyAccount.scss';
 class MyAccount extends Component {
 
   constructor(props) {
+
     super(props);
+
     this.state = {
-      isLoading: false
+      isLoading: false,
+      isSuccess: false,
+      message: ''
     };
+
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+
     const { token } = this.props.match.params;
+
     if (token) {
       this.verifyToken(token);
+      this.props.history.replace('/user/settings');
     }
+
   }
 
-  onProfileChange = async (payload) => {
-    const user = await storage.set('ckUser', payload);
+  onProfileChange = async (userInfo) => {
+    const user = await storage.set('ckUser', userInfo);
     this.props.loginSuccess(user);
   };
 
-  // TODO: verify the token and update the email address
   verifyToken = async (token) => {
 
     this.setState({ isLoading: true });
 
-    try {
-
-      const { data } = await axios.put('/api/user/update/email', { token });
-
-      // TODO: need to setup a better UI to display operation result (success or failed)
-      if (data) {
-        console.log(data.user);
+    if (this.props.user.isLoggedIn) {
+      try {
+        const { data } = await axios.put('/api/user/update/email', { token });
+        this.props.loginSuccess(data.user);
+        this.setState({
+          isLoading: false,
+          isSuccess: true,
+          message: 'Your email address has been successfully updated.'
+        });
+      } catch (error) {
+        console.error(error);
+        this.setState({
+          isLoading: false,
+          isSuccess: false,
+          message: error.response.data.message
+        });
       }
-
-    } catch (error) {
-      console.error(error);
     }
 
   };
 
   render() {
-    // TODO: need to disable email editing when the user is using social authentication
+
+    const { user } = this.props;
+    const { isLoading, isSuccess, message } = this.state;
+
     return (
       <div className="account-settings">
         <LoadingOverlay
-          isVisible={ this.state.isLoading }
+          isVisible={ isLoading }
           overlayColor="rgba(0,0,0,.75)"
           circleColor="#fff" />
+        <FormMessage
+          message={ message }
+          type={ isSuccess ? 'success' : 'error' } />
         <ProfileSettings
-          user={ this.props.user }
+          user={ user }
           onSuccess={ this.onProfileChange } />
         {
-          this.props.user.strategy === 'local'
+          user.strategy === 'local'
             ? <SecuritySettings />
             : null
         }
       </div>
     );
+
   }
+
 }
 
 export default MyAccount;

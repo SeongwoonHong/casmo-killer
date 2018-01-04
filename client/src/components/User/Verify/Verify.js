@@ -26,7 +26,7 @@ class UserVerify extends Component {
   verifyToken = async (token) => {
     try {
       const { data } = await axios.get(`/api/auth/verify/token/${token}`);
-      this.props.setUserForRegister({ strategy: 'local', email: data.email });
+      this.props.setUserForRegistration({ strategy: 'local', email: data.email });
       this.props.history.push('/user/register');
     } catch (error) {
       this.setState({ message: error.response.data.message });
@@ -53,7 +53,7 @@ class UserVerify extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setUserForRegister: payload => dispatch(actions.setUserForRegister(payload))
+    setUserForRegistration: payload => dispatch(actions.setUserForRegistration(payload))
   };
 };
 

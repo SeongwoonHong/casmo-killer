@@ -1,4 +1,4 @@
-.search-form {
+.Search-form {
     display: flex;
     > input[type=text]:not(.browser-default) {
         border: none;
@@ -15,35 +15,35 @@
         display: none;
     }
     &.mb {
-        align-items: center;
-        height: 50px;
-        position: absolute;
-        top: 0;
-        right: 10px;
-        width: 210px;
-        transform: translateX(220px);
-        transition: all .3s;
+        background-color: #fff;
+        border-bottom: 1px solid #dad8de;
+        flex-direction: row-reverse;
+        height: 35px;
+        justify-content: space-between;
         > input[type=text]:not(.browser-default) {
-            background-color: #e0f2f1;
-            color: #004d40;
-            height: 30px;
+            color: palette(Teal, 900);
+            height: auto;
+            padding-left: 15px;
+            width: auto;
+            &::placeholder {
+                color: #dad8de;
+            }
         }
-        &.active {
-            transform: translateX(0);
-        }
-        > .material-icons {
-            display: none;
-        }
-    }
-    @media screen and (min-width: 360px) {
-        &.mb {
-            width: 250px;
-            transform: translateX(260px);
+        > .top-nav-btn {
+            @include rectanglify(35px);
+            border-left: 1px solid #dad8de;
+            > .material-icons {
+                color: #dad8de;
+                line-height: 35px;
+            }
         }
     }
     @media screen and (min-width: 992px) {
+        &.mb {
+            display: none;
+        }
         &.dt {
-            background-color: #00695c;
+            background-color: #fff;
             display: flex;
             height: 30px;
             margin-left: 10px;
@@ -51,17 +51,17 @@
             padding: 0 10px;
             width: 300px;
             > .material-icons {
-                color: #80CBC4;
+                color: palette(Teal, 900);
                 font-size: 18px;
                 line-height: 30px;
-                margin-right: 10px;
+                margin-right: 5px;
             }
             > input[type=text]:not(.browser-default) {
-                color: #e0f2f1;
+                color: palette(Teal, 900);
                 font-size: 14px;
                 height: auto;
                 &::placeholder {
-                    color: #80CBC4;
+                    color: palette(Teal, 900);
                 }
                 &:focus:not([readonly]) {
                     border: none;

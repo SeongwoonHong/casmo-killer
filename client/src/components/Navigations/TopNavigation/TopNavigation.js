@@ -1,38 +1,46 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
-import PlainBtn from 'sharedComponents/PlainBtn';
-
 import './TopNavigation.scss';
 
 import SearchForm from '../SearchForm/SearchForm';
-import UserMenu from './UserMenu';
+import UserMenu from './UserMenu/UserMenu';
 import UserDropdown from './UserDropdown/UserMenuDropdown';
 
 class TopNavigation extends Component {
 
   render() {
 
+    const {
+      layout, user, toggleMenu, toggleUserDropdown, logout
+    } = this.props;
+
     return (
-      <header className="teal darken-4 z-depth-2 top-main-nav">
-        <PlainBtn onClick={ this.props.toggleMenu }>
+      <header className="Top-navigation">
+        <button
+          type="button"
+          className="top-nav-btn"
+          onClick={ toggleMenu }>
           <i className="material-icons">
             dehaze
           </i>
-        </PlainBtn>
+        </button>
         <h1>
-          <Link to="/" className="teal-text text-lighten-5">
+          <Link to="/">
             CK BOARD
           </Link>
         </h1>
         <SearchForm styleClass="dt" />
-        <UserMenu />
+        <UserMenu
+          user={ user }
+          layout={ layout }
+          toggleUserDropdown={ toggleUserDropdown } />
         {
-          this.props.layout.isUserDropdownOpen
+          layout.isUserDropdownOpen
             ? (
               <UserDropdown
-                isLoggedIn={ this.props.user.isLoggedIn }
-                logout={ this.props.logout } />
+                isLoggedIn={ user.isLoggedIn }
+                logout={ logout } />
             )
             : null
         }

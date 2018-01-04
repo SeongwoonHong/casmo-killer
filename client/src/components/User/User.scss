@@ -98,5 +98,8 @@
         color: palette(Teal, 50);
         display: block;
         text-align: center;
+        &:disabled {
+            background-color: palette(Teal, 200);
+        }
     }
 }

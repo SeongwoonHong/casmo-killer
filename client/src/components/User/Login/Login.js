@@ -20,7 +20,7 @@ class Login extends Component {
 
   onSocialRegister = (userInfo) => {
 
-    this.props.setUserForRegister(userInfo);
+    this.props.setUserForRegistration(userInfo);
 
     const { auth, history } = this.props;
 

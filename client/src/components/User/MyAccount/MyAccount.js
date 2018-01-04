@@ -71,11 +71,17 @@ class MyAccount extends Component {
     const { isLoading, isSuccess, message } = this.state;
 
     return (
-      <div className="account-settings">
+      <div className="My-account">
         <LoadingOverlay
           isVisible={ isLoading }
           overlayColor="rgba(0,0,0,.75)"
           circleColor="#fff" />
+        <h2 className="user-page-title">
+          My Account
+          <i className="material-icons">
+            perm_contact_calendar
+          </i>
+        </h2>
         <FormMessage
           message={ message }
           type={ isSuccess ? 'success' : 'error' } />

@@ -2,15 +2,15 @@
     margin: 0 auto;
     max-width: 320px;
     text-align: center;
-    > h2 {
+    > .error-title {
         color: palette(Teal, 900);
+        font-size: 75px;
         margin: 0;
-        padding: 75px;
+        padding: 50px;
     }
     > .error-message {
         @include flex-box(center);
         border-bottom: 1px solid #ccc;
-        font-weight: 300;
         > h3 {
             font-size: 18px;
         }
@@ -25,16 +25,13 @@
             margin-bottom: 25px;
         }
     }
-    > a {
+    > .error-link {
         background-color: palette(Teal, 800);
         border: none;
-        color: #fff;
+        color: palette(Teal, 50);
         display: inline-block;
         font-weight: 300;
         margin: 0 auto;
         padding: 5px 10px;
-        &:last-child {
-            border-left: 1px solid palette(Teal, 50);
-        }
     }
 }

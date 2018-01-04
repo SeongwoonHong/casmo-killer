@@ -7,7 +7,7 @@ import './ErrorPage.scss';
 const ErrorPage = (props) => {
   return (
     <div className="Error-page">
-      <h2>(._.)?</h2>
+      <h2 className="error-title">(._.)?</h2>
       <div className="error-message">
         <i className="material-icons">format_quote</i>
         <h3>{ props.title }</h3>
@@ -16,7 +16,11 @@ const ErrorPage = (props) => {
       <p>
         { props.message }
       </p>
-      <Link to="/">Return to Homepage</Link>
+      <Link
+        to="/"
+        className="error-link">
+        Return to Homepage
+      </Link>
     </div>
   );
 };

@@ -8,9 +8,11 @@ import PrivateRoute from 'sharedComponents/PrivateRoute';
 import './User.scss';
 
 import Login from './LogIn';
+import Verify from './Verify/Verify';
 import Register from './Register';
+import Recover from './Recover';
 import MyAccount from './MyAccount';
-import UserVerify from './Verify/Verify';
+import NotFound from '../NotFound';
 
 class User extends Component {
 
@@ -22,13 +24,15 @@ class User extends Component {
       <div className="User">
         <Switch>
           <Route path="/user/auth/:type" component={ Login } />
-          <Route path="/user/verify/:token" component={ UserVerify } />
+          <Route path="/user/verify/:token" component={ Verify } />
           <Route path="/user/register" component={ Register } />
+          <Route path="/user/recover/:token?" component={ Recover } />
           <PrivateRoute
             path="/user/settings/:token?"
             isLoggedIn={ user.isLoggedIn }
             component={ MyAccount }
             onEnter={ url => registerRedirectUrl(url) } />
+          <Route component={ NotFound } />
         </Switch>
       </div>
     );

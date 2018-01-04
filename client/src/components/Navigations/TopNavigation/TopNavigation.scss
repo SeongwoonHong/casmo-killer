@@ -4,7 +4,6 @@
     border: none;
     color: #fff;
     padding: 0;
-    vertical-align: baseline;
     &:focus {
         background-color: transparent;
     }
@@ -46,7 +45,7 @@ h1 {
             display: none;
         }
         > h1 {
-            width: 210px;
+            width: 180px;
         }
     }
 }

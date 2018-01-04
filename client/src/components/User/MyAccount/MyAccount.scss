@@ -1,4 +1,4 @@
-.account-settings {
+.My-account {
     button {
         background-color: palette(Teal, 900);
         border: none;
@@ -9,5 +9,8 @@
     }
     > .Form-message {
         margin: 0 0 10px;
+    }
+    > .for-profile-settings {
+        margin-bottom: 10px;
     }
 }

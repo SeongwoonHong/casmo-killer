@@ -70,7 +70,7 @@ class Register extends Component {
     });
 
     if (this.props.auth.strategy === 'local') {
-      errorMsg.forPassword = validatePassword(password.value);
+      errorMsg.forPassword = await validatePassword(password.value);
       this.setState({
         password: {
           ...this.state.password,
@@ -223,7 +223,7 @@ class Register extends Component {
             <input
               type="email"
               id="email"
-              value={ email || '' }
+              value={ auth.email || '' }
               disabled="true" />
             <p>This email is linked to your account.</p>
           </div>

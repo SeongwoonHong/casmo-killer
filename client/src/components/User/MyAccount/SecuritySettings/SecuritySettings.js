@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 import LoadingOverlay from 'sharedComponents/LoadingOverlay';
 import FormMessage from 'sharedComponents/FormMessage';
@@ -197,18 +198,15 @@ class SecuritySettings extends Component {
         }
         <div className="button-group">
           <button
-            type="button"
             className="user-form-button"
             onClick={ () => {
               this.setState({ isEditing: true });
             }}>
             Change Password
           </button>
-          <button
-            type="button"
-            className="user-form-button">
+          <Link to="/user/delete" className="user-form-button">
             Delete Account
-          </button>
+          </Link>
         </div>
       </form>
     );

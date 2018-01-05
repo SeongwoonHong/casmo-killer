@@ -354,3 +354,44 @@ module.exports.updateEmail = async (req, res) => {
   }
 
 };
+
+module.exports.deleteAccount = async (req, res) => {
+  console.log(req.body);
+
+  const validations = Joi.validate(req.body, Joi.object({
+    password: Joi.string().min(6).max(20).required()
+  }));
+
+  if (validations.error) {
+    return errorHandler.validation(res, validations.error);
+  }
+
+  try {
+
+    const user = await User.findUserById(req.user._id);
+
+    if (!user) {
+      return res.status(403).send({
+        message: 'Authentication Failed.'
+      });
+    }
+
+    const verified = await user.verifyPassword(req.body.password);
+
+    if (!verified) {
+      return res.status(403).send({
+        message: 'Password is incorrect.'
+      });
+    }
+
+    const deletedUser = await user.remove();
+
+    if (deletedUser.email === user.email) {
+      return res.status(204).send();
+    }
+
+  } catch (error) {
+    return errorHandler.server(res, error);
+  }
+
+};

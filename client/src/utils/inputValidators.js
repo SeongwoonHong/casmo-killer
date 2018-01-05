@@ -67,7 +67,7 @@ export const validateDisplayName = async (displayName) => {
 
 };
 
-export const validatePassword = async (password, confirmPassword = null) => {
+export const validatePassword = async (password, confirmPassword = null, isReset = false) => {
 
   if (inputValidator.isEmpty(password)) {
     return 'Please enter password.';
@@ -75,10 +75,10 @@ export const validatePassword = async (password, confirmPassword = null) => {
     return 'Password must be more than 6 characters.';
   } else if (password.length > 20) {
     return 'Password must be less than 20 characters.';
-  } else if (confirmPassword) {
+  } else if (confirmPassword !== null) {
     if (password !== confirmPassword) {
       return 'Password does not match the confirm password.';
-    } else if (password === confirmPassword) {
+    } else if (password === confirmPassword && !isReset) {
       try {
         const { status } = await axios.post('/api/user/verify/password', { password });
         if (status === 204) {

@@ -19,6 +19,10 @@ const UserSchema = new Schema({
   displayName: String,
   avatar: String,
   socialId: String,
+  tokenInfo: {
+    forField: String,
+    tokenValue: String
+  },
   privilege: {
     type: String,
     default: 'newbie'
@@ -55,6 +59,10 @@ UserSchema.statics.registerNewUser = function (newUserInfo) {
   return newUser.save();
 };
 
+UserSchema.methods.updateTokenInfo = function (tokenInfo) {
+  return this.update({ tokenInfo });
+};
+
 UserSchema.methods.updateEmail = function (email) {
   return this.update({ email });
 };
@@ -68,20 +76,12 @@ UserSchema.methods.verifyPassword = function (password) {
 UserSchema.methods.generateToken = function () {
 
   const {
-    strategy,
-    _id,
-    email,
-    displayName,
-    avatar
+    strategy, _id, email, displayName, avatar
   } = this;
 
   return jwtUtils.sign({
     user: {
-      strategy,
-      _id,
-      email,
-      displayName,
-      avatar
+      strategy, _id, email, displayName, avatar
     }
   }, 'user');
 

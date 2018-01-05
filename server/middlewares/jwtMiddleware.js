@@ -14,26 +14,31 @@ const jwtMiddleware = async (req, res, next) => {
 
     const { user } = await jwtUtils.verify(token);
 
-    if ((Date.now() / 1000) - user.iat > 60 * 60 * 24 * 3) {
+    if (!user) {
+      req.user = null;
+    } else {
 
-      const freshToken = await jwtUtils.sign({
-        user: {
-          strategy: user.strategy,
-          _id: user._id,
-          email: user.email,
-          username: user.username,
-          avatar: user.avatar
-        }
-      }, 'user');
+      if ((Date.now() / 1000) - user.iat > 60 * 60 * 24 * 3) {
 
-      res.cookie('ckToken', freshToken, {
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 7
-      });
+        const freshToken = await jwtUtils.sign({
+          user: {
+            strategy: user.strategy,
+            _id: user._id,
+            email: user.email,
+            username: user.username,
+            avatar: user.avatar
+          }
+        }, 'user');
 
+        res.cookie('ckToken', freshToken, {
+          httpOnly: true,
+          maxAge: 1000 * 60 * 60 * 24 * 7
+        });
+
+      }
+
+      req.user = user;
     }
-
-    req.user = user;
 
   } catch (error) {
 

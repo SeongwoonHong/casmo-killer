@@ -292,6 +292,8 @@ module.exports.localRegister = async (req, res) => {
       avatar: avatarUrl
     }));
 
+    console.log(user);
+
     const accessToken = await user.generateToken();
 
     return res

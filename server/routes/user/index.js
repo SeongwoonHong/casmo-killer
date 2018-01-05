@@ -45,4 +45,9 @@ router.put('/update/password', controller.updatePassword);
  */
 router.put('/update/email', controller.updateEmail);
 
+/**
+ * permanently delete user's account
+ */
+router.delete('/delete/account', controller.deleteAccount);
+
 module.exports = router;

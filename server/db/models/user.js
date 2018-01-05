@@ -16,6 +16,14 @@ const UserSchema = new Schema({
     type: String,
     select: false
   },
+  // TODO: possibly check to make sure new password isn't one of the previous passwords
+  /*
+  prevPasswords: [
+    {
+      type: String
+    }
+  ],
+  */
   displayName: String,
   avatar: String,
   socialId: String,

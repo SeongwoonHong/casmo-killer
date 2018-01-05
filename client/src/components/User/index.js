@@ -13,6 +13,7 @@ import Register from './Register';
 import Recover from './Recover';
 import Reset from './Reset';
 import MyAccount from './MyAccount';
+import Delete from './Delete';
 import NotFound from '../NotFound';
 
 class User extends Component {
@@ -33,6 +34,11 @@ class User extends Component {
             path="/user/settings/:token?"
             isLoggedIn={ user.isLoggedIn }
             component={ MyAccount }
+            onEnter={ url => registerRedirectUrl(url) } />
+          <PrivateRoute
+            path="/user/delete"
+            isLoggedIn={ user.isLoggedIn }
+            component={ Delete }
             onEnter={ url => registerRedirectUrl(url) } />
           <Route component={ NotFound } />
         </Switch>

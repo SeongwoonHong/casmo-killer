@@ -7,10 +7,14 @@
     > .button-group {
         @include flex-box(space-around);
         padding: 15px;
-        > button {
+        > .user-form-button {
             float: none;
             margin: 0;
             width: 47%;
+        }
+        > a.user-form-button {
+            font-size: 12px;
+            padding: 5px 0;
         }
     }
 }

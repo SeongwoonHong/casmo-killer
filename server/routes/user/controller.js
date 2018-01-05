@@ -175,7 +175,13 @@ module.exports.updateProfile = async (req, res) => {
 
     try {
       const { envelope } = await mailer.verifyEmailUpdate(token, email);
-      emailSuccessMsg = `Verification email has been sent to ${envelope.to}. Please click the link in the email to confirm and start using your new email address.`;
+      if (envelope) {
+        emailSuccessMsg = `Verification email has been sent to ${envelope.to}. Please click the link in the email to confirm and start using your new email address.`;
+        await user.updateTokenInfo({
+          forField: 'email',
+          tokenValue: token
+        });
+      }
     } catch (error) {
       return errorHandler.server(res, error);
     }
@@ -274,7 +280,6 @@ module.exports.updateEmail = async (req, res) => {
   }));
 
   if (validations.error) {
-    console.log(req.body);
     return errorHandler.validation(res, validations.error);
   }
 
@@ -304,9 +309,21 @@ module.exports.updateEmail = async (req, res) => {
       });
     }
 
+    if (
+      user.tokenInfo &&
+      user.tokenInfo.forField !== 'email' &&
+      user.tokenInfo.tokenValue !== req.body.token
+    ) {
+      return res.status(403).send({
+        message: 'The link has expired.'
+      });
+    }
+
     if (user.email !== email) {
 
       user.email = email;
+      user.tokenInfo.forField = undefined;
+      user.tokenInfo.tokenValue = undefined;
 
       const modifiedUser = await user.save();
       const accessToken = await modifiedUser.generateToken();

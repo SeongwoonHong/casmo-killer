@@ -8,9 +8,10 @@ import PrivateRoute from 'sharedComponents/PrivateRoute';
 import './User.scss';
 
 import Login from './LogIn';
-import Verify from './Verify/Verify';
+import Verify from './Verify';
 import Register from './Register';
 import Recover from './Recover';
+import Reset from './Reset';
 import MyAccount from './MyAccount';
 import NotFound from '../NotFound';
 
@@ -26,7 +27,8 @@ class User extends Component {
           <Route path="/user/auth/:type" component={ Login } />
           <Route path="/user/verify/:token" component={ Verify } />
           <Route path="/user/register" component={ Register } />
-          <Route path="/user/recover/:token?" component={ Recover } />
+          <Route path="/user/recover" component={ Recover } />
+          <Route path="/user/reset/:token?" component={ Reset } />
           <PrivateRoute
             path="/user/settings/:token?"
             isLoggedIn={ user.isLoggedIn }

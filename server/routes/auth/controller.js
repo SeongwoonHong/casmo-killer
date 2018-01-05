@@ -42,45 +42,97 @@ module.exports.requestVerification = async (req, res) => {
 module.exports.verifyToken = async (req, res) => {
 
   const validations = Joi.validate(req.params, Joi.object({
-    token: Joi.string().required()
+    token: Joi.string().required(),
+    type: Joi.string().valid(['register', 'reset'])
   }));
 
   if (validations.error) {
     return errorHandler.validation(res, validations.error);
   }
 
-  let email = null;
+  if (req.params.type === 'register') {
 
-  try {
-    ({ email } = await jwt.verify(req.params.token));
-  } catch (error) {
-    if (error.name === 'TokenExpiredError') {
-      // when the token has expired
-      return res.status(401).send({
-        message: 'This verification link has expired.'
-      });
-    }
-    return errorHandler.server(res, error);
-  }
+    let email = null;
 
-  // still need to check if the email address is already taken
-  // because the user might click the verification link after
-  // the account is created for that email address.
-  try {
-
-    const dupUser = await User.findUserByEmail(email);
-
-    if (dupUser) {
-      return res.status(403).send({
-        message: 'An account has already been created with your email address.'
-      });
+    try {
+      ({ email } = await jwt.verify(req.params.token));
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        // when the token has expired
+        return res.status(401).send({
+          message: 'This verification link has expired.'
+        });
+      }
+      return errorHandler.server(res, error);
     }
 
-  } catch (error) {
-    return errorHandler.server(res, error);
-  }
+    // still need to check if the email address is already taken
+    // because the user might click the verification link after
+    // the account is created for that email address.
+    try {
 
-  return res.send({ email });
+      const dupUser = await User.findUserByEmail(email);
+
+      if (dupUser) {
+        return res.status(403).send({
+          message: 'An account has already been created with your email address.'
+        });
+      }
+
+    } catch (error) {
+      return errorHandler.server(res, error);
+    }
+
+    return res.send({ email });
+
+  } else if (req.params.type === 'reset') {
+
+    let email = null;
+
+    try {
+      ({ email } = await jwt.verify(req.params.token));
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        // when the token has expired
+        return res.status(401).send({
+          message: 'This verification link has expired.'
+        });
+      }
+      return errorHandler.server(res, error);
+    }
+
+    try {
+
+      const user = await User.findUserByEmail(email);
+
+      if (!user) {
+        return res.status(403).send({
+          message: 'No account found for this email address.'
+        });
+      }
+
+      if (user.strategy !== 'local') {
+        return res.status(403).send({
+          message: 'This email is registered with one of social network providers (Facebook, Google, and Kakao). Please visit one of the social network providers to change the password.'
+        });
+      }
+
+      if (
+        user.tokenInfo.forField !== 'password' &&
+        user.tokenInfo.tokenValue !== req.params.token
+      ) {
+        return res.status(403).send({
+          message: 'This verification link has expired.'
+        });
+      }
+
+    } catch (error) {
+      return errorHandler.server(res, error);
+    }
+
+    return res.send({ email });
+
+  }
 
 };
 
@@ -141,7 +193,7 @@ module.exports.localLogin = async (req, res) => {
 
   const validations = Joi.validate(req.body, Joi.object({
     email: Joi.string().required(),
-    password: Joi.string().required()
+    password: Joi.string().min(6).max(20).required()
   }));
 
   if (validations.error) {
@@ -444,6 +496,108 @@ module.exports.socialRegister = async (req, res) => {
           avatar: user.avatar
         }
       });
+
+  } catch (error) {
+    return errorHandler.server(res, error);
+  }
+
+};
+
+module.exports.requestPwdReset = async (req, res) => {
+
+  const validations = Joi.validate(req.body, Joi.object({
+    email: Joi.string().email().required()
+  }));
+
+  if (validations.error) {
+    return errorHandler.validation(res, validations.error);
+  }
+
+  const { email } = req.body;
+
+  let token = null;
+
+  try {
+    token = await jwt.sign({ email }, 'email', '24hrs');
+  } catch (error) {
+    return errorHandler.server(res, error);
+  }
+
+  try {
+
+    const user = await User.findUserByEmail(email);
+
+    if (!user) {
+      return res.status(403).send({
+        message: 'No account found for this email address.'
+      });
+    }
+
+    if (user.strategy !== 'local') {
+      return res.status(403).send({
+        message: 'This email is registered with one of social network providers (Facebook, Google, and Kakao). Please visit one of the social network providers to change the password.'
+      });
+    }
+
+    const { envelope } = await mailer.requestPwdReset(token, email);
+
+    await user.updateTokenInfo({
+      forField: 'password',
+      tokenValue: token
+    });
+
+    return res.send({
+      message: `Verification email has been sent to ${envelope.to}`
+    });
+
+  } catch (error) {
+    return errorHandler.server(res, error);
+  }
+
+};
+
+module.exports.resetPassword = async (req, res) => {
+
+  const validations = Joi.validate(req.body, Joi.object({
+    email: Joi.string().email().required(),
+    newPassword: Joi.string().min(6).max(20).required()
+  }));
+
+  if (validations.error) {
+    return errorHandler.validation(res, validations.error);
+  }
+
+  const { email, newPassword } = req.body;
+
+  try {
+
+    const user = await User.findUserByEmail(email);
+
+    if (!user) {
+      return res.status(403).send({
+        message: 'No account found for this email address.'
+      });
+    }
+
+    const isPwdSame = await user.verifyPassword(newPassword);
+
+    if (isPwdSame) {
+      return res.status(403).send({
+        message: 'New password must be different from current password.'
+      });
+    }
+
+    user.password = newPassword;
+    user.tokenInfo.forField = undefined;
+    user.tokenInfo.tokenValue = undefined;
+
+    const modifiedUser = await user.save();
+
+    if (modifiedUser) {
+      return res.send({
+        message: 'Your password has been successfully updated.'
+      });
+    }
 
   } catch (error) {
     return errorHandler.server(res, error);

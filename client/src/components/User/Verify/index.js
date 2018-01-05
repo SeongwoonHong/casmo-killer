@@ -25,7 +25,7 @@ class UserVerify extends Component {
 
   verifyToken = async (token) => {
     try {
-      const { data } = await axios.get(`/api/auth/verify/token/${token}`);
+      const { data } = await axios.get(`/api/auth/verify/token/${token}/register`);
       this.props.setUserForRegistration({ strategy: 'local', email: data.email });
       this.props.history.push('/user/register');
     } catch (error) {

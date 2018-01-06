@@ -9,11 +9,9 @@
         }
     }
     @media screen and (min-width: 768px) {
-        @include flex-box(space-between);
+        @include flex-box();
         > .notification {
             display: block;
-            position: relative;
-            text-align: center;
             > .notification-badge {
                 left: 2px;
                 top: 4px;
@@ -22,22 +20,21 @@
     }
     @media screen and (min-width: 992px) {
         > .user-profile {
-            @include flex-box(space-between);
+            @include flex-box();
             > .user-info {
-                @include flex-box(flex-start);
+                @include flex-box();
                 height: $top-nav-size;
-                width: 210px;
+                width: $user-dropdown-width - $top-nav-size;
                 > .user-avatar {
                     margin: 0 10px;
                     > * {
-                        @include rectanglify(34px);
+                        @include rectanglify($top-nav-size - 10px);
                         border-radius: 50%;
                         display: block;
                     }
                     > span {
                         background-color: palette(Teal, 100);
                         font-size: 28px;
-                        font-weight: 300;
                         line-height: 32px;
                         text-align: center;
                     }

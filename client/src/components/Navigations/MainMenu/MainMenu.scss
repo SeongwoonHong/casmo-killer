@@ -2,89 +2,75 @@
     @include abs-elem(0, 0, 0, 0, absolute);
     background-color: rgba(0, 0, 0, .7);
     display: none;
-    opacity: 0;
-    transition: all .3s;
     z-index: 88;
     &.active {
         display: block;
-        opacity: 1;
     }
-    @media screen and (min-width: 992px) {
-        display: none !important;
+    @media screen and (min-width: 1200px) {
+        &.active {
+            display: none;
+        }
     }
 }
 .Main-menu {
+    @include abs-elem(0, auto, auto, auto, fixed);
     background-color: transparent;
-    box-shadow: none;
     height: 100%;
-    position: fixed;
-    top: 0;
     transform: translateX(-100%);
     transition: all .3s;
-    width: 276px;
+    width: $main-menu-width;
     z-index: 88;
-    > .top-nav-btn {
-        background-color: palette(Teal, 900);
-        border-bottom: 1px solid #002821;
-        left: 0;
-        position: fixed;
-        transition: all .3s;
-        z-index: 99;
-    }
-    &.toggled {
+    &.active {
         transform: translateX(0);
-        > .top-nav-btn {
-            left: 276px;
-        }
     }
-    .main-menu-wrapper {
+    > .main-menu-wrapper {
         height: 100%;
-        width: 276px;
-        > .top-nav-btn {
-            display: none;
-        }
-        .main-menu-header {
-            background-color: palette(Teal, 800);
-            border-bottom: 1px solid #002821;
-            height: $top-nav-size;
+        > .main-menu-header {
+            @include flex-box();
         }
         > .main-menu-body {
-            background-color: #fff;
+            background-color: #F5F5F5;
             height: 100%;
             ul {
                 > li {
+                    float: none;
                     > a {
                         @include flex-box();
-                        color: #444444;
-                        font-size: 12px;
+                        color: #111111;
+                        font-size: 14px;
                         height: $top-nav-size;
-                        padding: 0;
+                        &:hover {
+                            background-color: #EBEBEB;
+                        }
+                        &.active {
+                            font-weight: 700;
+                        }
                     }
                 }
             }
             > .main-menu {
                 > li {
-                    float: none;
                     > a {
-                        border-left: 5px solid transparent;
-                        &:hover,
+                        border-top: 1px solid transparent;
+                        padding: 0 24px;
                         &.active {
-                            background-color: rgba(0, 0, 0, 0.1);
-                            border-color: palette(Teal, 900);
-                            color: palette(Teal, 900);
-                            font-weight: 700;
-                        }
-                        &.active {
-                            border-top: 1px solid #dad8de;
+                            background-color: #fff;
+                            border-color: $main-menu-border-color;
                             & + .sub-menu {
+                                background-color: #fff;
+                                border-bottom: 1px solid $main-menu-border-color;
                                 display: block;
+                            }
+                            > .material-icons {
+                                color: palette(Teal, 700);
                             }
                         }
                         > .material-icons {
-                            @include rectanglify($top-nav-size);
-                            font-size: 16px;
+                            color: #888888;
+                            font-size: 20px;
+                            height: $top-nav-size;
                             line-height: $top-nav-size;
-                            text-align: center;
+                            margin-right: 27px;
                         }
                         > span {
                             line-height: $top-nav-size;
@@ -92,23 +78,21 @@
                     }
                     &:first-child {
                         > a {
-                            border-top: none;
+                            &.active {
+                                border-bottom: 1px solid $main-menu-border-color;
+                                border-top: none;
+                            }
                         }
                     }
                     > .sub-menu {
                         display: none;
                         > li {
-                            width: 100%;
                             > a {
-                                padding: 0 0 0 49px;
-                                &:hover,
+                                font-size: 12px;
+                                padding: 0 0 0 71px;
                                 &.active {
                                     color: palette(Teal, 900);
-                                    text-decoration: underline;
                                 }
-                            }
-                            &:last-child {
-                                border-bottom: 1px solid #dad8de;
                             }
                         }
                     }
@@ -117,85 +101,15 @@
         }
         > .main-menu-footer {
             @include abs-elem(auto, 0, 0, 0);
-            border-top: 1px solid #dad8de;
+            border-top: 1px solid $main-menu-border-color;
             color: #000;
             text-align: center;
         }
-        @media screen and (min-width: 992px) {
-            width: 180px;
-            > .top-nav-btn {
-                background-color: #fff;
-                border-bottom: 1px solid #dad8de;
-                color: palette(Teal, 900);
-                display: block;
-                height: 30px;
-                width: 100%;
-                > .material-icons {
-                    line-height: 30px;
-                    margin: 0 0 0 auto;
-                    width: 49px;
-                }
-            }
-            > .main-menu-header,
-            > .main-menu-footer {
-                display: none;
-            }
-        }
-    }
-    @media screen and (min-width: 992px) {
-        box-shadow:
-            0 2px 2px 0 rgba(0, 0, 0, 0.14),
-            0 1px 5px 0 rgba(0, 0, 0, 0.12),
-            0 3px 1px -2px rgba(0, 0, 0, 0.2);
-        position: relative;
-        transform: translateX(0);
-        width: 180px;
-        > .top-nav-btn {
-            display: none;
-        }
-        &.folded {
-            width: 49px;
-            .main-menu-wrapper {
-                width: 49px;
-                .main-menu {
-                    > li {
-                        position: relative;
-                        &:hover {
-                            > .sub-menu {
-                                display: block !important;
-                            }
-                        }
-                        > a {
-                            &.active {
-                                & + .sub-menu {
-                                    display: none;
-                                }
-                            }
-                            > span {
-                                display: none;
-                            }
-                        }
-                        > .sub-menu {
-                            background-color: #fff;
-                            border: 1px solid #dad8de;
-                            left: 49px;
-                            position: absolute;
-                            top: 0;
-                            width: 125px;
-                            > li {
-                                > a {
-                                    padding: 0 0 0 15px;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
     @media screen and (min-width: 1200px) {
+        top: $top-nav-size;
         > .main-menu-wrapper {
-            > .top-nav-btn {
+            > .main-menu-header {
                 display: none;
             }
         }

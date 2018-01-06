@@ -15,8 +15,19 @@ class TopNavigation extends Component {
       layout, user, toggleMenu, toggleUserDropdown, logout
     } = this.props;
 
+    const showDropdown = (isOpen) => {
+      if (isOpen) {
+        return (
+          <UserDropdown
+            isLoggedIn={ user.isLoggedIn }
+            logout={ logout } />
+        );
+      }
+      return null;
+    };
+
     return (
-      <header className="Top-navigation">
+      <header className="Top-navigation navigation-headers">
         <button
           type="button"
           className="top-nav-btn"
@@ -35,15 +46,7 @@ class TopNavigation extends Component {
           user={ user }
           layout={ layout }
           toggleUserDropdown={ toggleUserDropdown } />
-        {
-          layout.isUserDropdownOpen
-            ? (
-              <UserDropdown
-                isLoggedIn={ user.isLoggedIn }
-                logout={ logout } />
-            )
-            : null
-        }
+        { showDropdown(layout.isUserDropdownOpen) }
       </header>
     );
 

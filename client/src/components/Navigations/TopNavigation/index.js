@@ -13,8 +13,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     toggleMenu: () => dispatch(actions.toggleMenu()),
-    toggleSearchForm: () => dispatch(actions.toggleSearchForm()),
-    toggleUserDropdown: isOpen => dispatch(actions.toggleUserDropdown(isOpen)),
+    toggleUserDropdown: payload => dispatch(actions.toggleUserDropdown(payload)),
     logout: () => dispatch(actions.logout())
   };
 };

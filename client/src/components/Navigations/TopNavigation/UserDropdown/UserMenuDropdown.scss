@@ -5,23 +5,24 @@
     top: $top-nav-size;
     > li {
         min-height: 0;
-        line-height: normal;
+        line-height: $top-nav-size;
         > a {
             @include flex-box(flex-start);
-            color: palette(Teal, 900);
+            color: $teal-1000;
             font-size: 12px;
-            padding: 10px 12px;
+            line-height: $top-nav-size - 2px;
+            padding: 0 15px;
             > .material-icons {
                 font-size: 18px;
-                margin-right: 10px;
+                margin-right: 5px;
             }
             > .notification-badge {
                 left: 4px;
                 top: 4px;
             }
-        }
-        &:hover {
-            background-color: palette(Teal, 50);
+            &:hover {
+                background-color: #EBEBEB;
+            }
         }
     }
     @media screen and (min-width: 768px) {
@@ -31,7 +32,7 @@
     }
     @media screen and (min-width: 992px) {
         &.logged-in {
-            width: 254px;
+            width: $user-dropdown-width;
         }
     }
 }

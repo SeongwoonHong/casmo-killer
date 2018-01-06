@@ -38,8 +38,10 @@ class App extends Component {
   componentWillUnmount() {
     if (typeof window !== 'undefined') {
       window.removeEventListener('resize', (e) => {
-        this.props.updateBreakPoint(e.target.innerWidth);
-      });
+        if (breakPoint(e.target.innerWidth) !== this.props.layout.breakPoint) {
+          this.props.updateBreakPoint(breakPoint(e.target.innerWidth));
+        }
+      }, false);
     }
   }
 
@@ -72,11 +74,11 @@ class App extends Component {
     return (
       <div className="root-container">
         <TopNavigation />
-        <div className={ classnames('app-wrapper', {
-          widened: layout.isMainMenuVisible
-        }) }>
+        <div className="app-wrapper">
           <Route path="/" component={ MainMenu } />
-          <div className="component-container">
+          <div className={ classnames('component-container', {
+            widened: layout.isMainMenuVisible
+          }) }>
             <Switch>
               {
                 MainMenuRoutes.map(route => (

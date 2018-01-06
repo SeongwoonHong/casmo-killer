@@ -1,44 +1,34 @@
 import * as types from './types';
 
-export const toggleMenu = () => {
+export const toggleMenu = (payload = null) => {
   return {
-    type: types.TOGGLE_MAIN_MENU
-  };
-};
-
-export const toggleSubMenu = (payload = null) => {
-  return {
-    type: types.TOGGLE_SUB_MENU,
+    type: types.TOGGLE_MAIN_MENU,
     payload
   };
 };
 
-export const toggleSearchForm = () => {
-  return {
-    type: types.TOGGLE_SEARCH_FORM
-  };
-};
+export const updateBreakPoint = (payload) => {
+  return (dispatch, getState) => {
 
-export const toggleUserDropdown = (isOpen = null) => {
-  return {
-    type: types.TOGGLE_USER_DROPDOWN,
-    isOpen
-  };
-};
+    const { layout } = getState();
 
-export const updateBreakPoint = (breakPoint) => {
-  return (dispatch) => {
-
-    if (breakPoint === 'lg') {
-      dispatch(toggleSubMenu(false));
-    } else if (breakPoint === 'xl') {
-      dispatch(toggleSubMenu(true));
+    if (layout.breakPoint !== 'xl' && payload === 'xl') {
+      dispatch(toggleMenu(true));
+    } else if (layout.breakPoint === 'xl' && payload !== 'xl') {
+      dispatch(toggleMenu(false));
     }
 
     dispatch({
       type: types.UPDATE_BREAK_POINT,
-      breakPoint
+      payload
     });
 
+  };
+};
+
+export const toggleUserDropdown = (payload = null) => {
+  return {
+    type: types.TOGGLE_USER_DROPDOWN,
+    payload
   };
 };

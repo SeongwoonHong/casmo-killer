@@ -10,9 +10,19 @@ import { MainMenuRoutes } from '../../../routers';
 
 class MainMenu extends Component {
 
+  componentDidUpdate(prevProps) {
+
+    const { location, layout, toggleMenu } = this.props;
+
+    if (location !== prevProps.location && layout.breakPoint !== 'xl') {
+      toggleMenu(false);
+    }
+
+  }
+
   render() {
 
-    const { layout } = this.props;
+    const { layout, toggleMenu } = this.props;
 
     const MenuLinks = (routes) => {
       return routes.map((route) => {
@@ -20,8 +30,7 @@ class MainMenu extends Component {
           return (
             <li key={ route.name }>
               <NavLink
-                to={ route.path }
-                onClick={ this.props.toggleMenu }>
+                to={ route.path }>
                 <i className="material-icons">
                   { route.icon }
                 </i>
@@ -34,8 +43,7 @@ class MainMenu extends Component {
                       <li key={ child.name }>
                         <NavLink
                           exact
-                          to={ route.path + child.path }
-                          onClick={ this.props.toggleMenu }>
+                          to={ route.path + child.path }>
                           { child.name }
                         </NavLink>
                       </li>
@@ -58,53 +66,43 @@ class MainMenu extends Component {
         className={ classnames('Main-menu-overlay', {
           active: layout.isMainMenuVisible
         })}
-        onClick={ this.props.toggleMenu }
+        onClick={ () => toggleMenu() }
         onKeyDown={ () => {} }
       />,
 
       <nav
         key={ 1 }
         className={ classnames('Main-menu', {
-        toggled: layout.isMainMenuVisible,
-        folded: !layout.isSubMenuVisible
-      }) }>
-
-        <button
-          type="button"
-          className="top-nav-btn"
-          onClick={ this.props.toggleMenu }>
-          <i className="material-icons">
-            close
-          </i>
-        </button>
+          active: layout.isMainMenuVisible
+        }) }>
 
         <div className="main-menu-wrapper">
 
-          <div className="main-menu-header">
+          <div className="main-menu-header navigation-headers">
+            <button
+              type="button"
+              className="top-nav-btn"
+              onClick={ toggleMenu }>
+              <i className="material-icons">
+                close
+              </i>
+            </button>
             <h1>
-              <Link
-                to="/"
-                onClick={ this.props.toggleMenu }>
+              <Link to="/">
                 CK BOARD
               </Link>
             </h1>
           </div>
 
-          <button
-            className="top-nav-btn"
-            onClick={ this.props.toggleSubMenu }>
-            <i className="material-icons">
-              {
-                layout.isSubMenuVisible
-                  ? 'chevron_left'
-                  : 'chevron_right'
-              }
-            </i>
-          </button>
-
           <div className="main-menu-body">
             <SearchForm styleClass="mb" />
             <ul className="main-menu">
+              <li>
+                <NavLink exact to="/">
+                  <i className="material-icons">home</i>
+                  <span>Home</span>
+                </NavLink>
+              </li>
               { MenuLinks(MainMenuRoutes) }
             </ul>
           </div>

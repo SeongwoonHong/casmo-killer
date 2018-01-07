@@ -30,18 +30,23 @@ class SocialLogin extends Component {
     this.setState({ isLoading: true });
 
     try {
+
       const { data } = await axios.post('/api/auth/login/social', payload);
+
       if (data.shouldRegister) {
         onRegister(data.profile);
       } else {
         onSuccess(data.user);
       }
+
     } catch (error) {
+
       console.error(error.response.data.error);
       this.setState({
         message: error.response.data.message,
         isLoading: false,
       });
+
     }
 
   };
@@ -57,7 +62,7 @@ class SocialLogin extends Component {
     const { isLoading, message } = this.state;
 
     return (
-      <div key={ 1 } className="user-form-box user-login-social">
+      <div key={ 1 } className="Social-login user-form-box">
         <LoadingOverlay
           isVisible={ isLoading }
           overlayColor="rgba(256,256,256,.75)"

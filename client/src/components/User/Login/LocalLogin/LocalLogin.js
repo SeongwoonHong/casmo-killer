@@ -124,7 +124,7 @@ class LocalLogin extends Component {
     const formText = isLogin ? 'Log In' : 'Sign Up';
 
     return (
-      <div className="user-form-box user-login-local">
+      <div className="Local-login user-form-box">
         <LoadingOverlay
           isVisible={ this.state.isLoading }
           overlayColor="rgba(256,256,256,.75)"

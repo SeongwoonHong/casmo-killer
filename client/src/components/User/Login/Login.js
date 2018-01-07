@@ -4,8 +4,8 @@ import * as storage from 'sharedUtils/storage';
 
 import './Login.scss';
 
-import LocalLogin from './LocalLogin/LocalLogin';
 import SocialLogin from './SocialLogin/SocialLogin';
+import LocalLogin from './LocalLogin/LocalLogin';
 
 class Login extends Component {
 
@@ -34,6 +34,7 @@ class Login extends Component {
   onLoginSuccess = async (userInfo) => {
 
     const user = await storage.set('ckUser', userInfo);
+
     this.props.loginSuccess(user);
 
   };

@@ -7,7 +7,7 @@ export const toggleMenu = (payload = null) => {
   };
 };
 
-export const updateBreakPoint = (payload) => {
+export const updateBreakpoint = (payload) => {
   return (dispatch, getState) => {
 
     const { layout } = getState();

@@ -76,10 +76,7 @@ class Recover extends Component {
         <h2 className="user-page-title">
           Forgot your password
         </h2>
-        <form
-          noValidate
-          onSubmit={ this.onSubmitHandler }
-          className="user-form-box">
+        <div className="user-form-box">
           <LoadingOverlay
             isVisible={ isLoading }
             overlayColor="rgba(256,256,256,.75)"
@@ -87,27 +84,31 @@ class Recover extends Component {
           <div className="user-form-header">
             <h3>Please enter your email.</h3>
           </div>
-          <FormMessage
-            message={ message }
-            type={ isSuccess ? 'success' : 'error' } />
-          <div className="user-form-fields">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Email Address"
-              onChange={ this.onChangeHandler }
-              value={ email } />
-            <p>Verification email will be sent to this email.</p>
-          </div>
-          <button
-            type="submit"
-            className="user-form-button"
-            disabled={ isLoading }>
-            Submit
-          </button>
-        </form>
+          <form
+            noValidate
+            className="user-form"
+            onSubmit={ this.onSubmitHandler }>
+            <FormMessage
+              message={ message }
+              type={ isSuccess ? 'success' : 'error' } />
+            <div className="user-form-fields">
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Email Address"
+                onChange={ this.onChangeHandler }
+                value={ email } />
+              <p>Verification email will be sent to this email.</p>
+            </div>
+            <button
+              type="submit"
+              className="user-form-button">
+              Submit
+            </button>
+          </form>
+        </div>
       </div>
     );
 

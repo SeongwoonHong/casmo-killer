@@ -79,7 +79,7 @@ class MyAccount extends Component {
         <h2 className="user-page-title">
           My Account
           <i className="material-icons">
-            perm_contact_calendar
+            person
           </i>
         </h2>
         <FormMessage

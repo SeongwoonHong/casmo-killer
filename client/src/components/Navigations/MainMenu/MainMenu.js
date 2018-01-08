@@ -24,6 +24,9 @@ class MainMenu extends Component {
 
     const { layout, toggleMenu } = this.props;
 
+    // TODO: hide the main menu when it's login or signup page?
+    // console.log(location.pathname.indexOf('/user/auth') > -1);
+
     const MenuLinks = (routes) => {
       return routes.map((route) => {
         if (route.name && route.icon) {

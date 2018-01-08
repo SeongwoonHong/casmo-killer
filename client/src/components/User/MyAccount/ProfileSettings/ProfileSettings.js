@@ -190,10 +190,7 @@ class ProfileSettings extends Component {
     };
 
     return (
-      <form
-        noValidate
-        onSubmit={ this.onSubmitHandler }
-        className="user-form-box for-profile-settings">
+      <div className="Profile-settings user-form-box">
         <LoadingOverlay
           isVisible={ isLoading }
           overlayColor="rgba(256,256,256,.75)"
@@ -203,57 +200,62 @@ class ProfileSettings extends Component {
           <p>Update your email, display name, and profile picture.</p>
           <FormMessage message={ successMsg } type="success" />
         </div>
-        <FormMessage message={ emailSuccessMsg } type="warning" />
-        <FormMessage message={ email.message } />
-        <div className="user-form-fields">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={ email.value || '' }
-            disabled={ user.strategy !== 'local' }
-            onChange={ this.onChangeHandler } />
-          <p>This email is linked to your account.</p>
-        </div>
-        <FormMessage message={ displayName.message } />
-        <div className="user-form-fields">
-          <label htmlFor="displayName">Display Name</label>
-          <input
-            type="text"
-            id="displayName"
-            name="displayName"
-            value={ displayName.value || '' }
-            onChange={ this.onChangeHandler } />
-          <p>This is the display name for your account.</p>
-        </div>
-        <FormMessage message={ avatar.message } />
-        <div className="user-form-fields last-field">
-          <label>Profile Picture</label>
-          <div className="avatar-preview">
-            <div className="avatar-wrapper">
-              { avatarPreview(this.state.avatar) }
-            </div>
+        <form
+          noValidate
+          onSubmit={ this.onSubmitHandler }
+          className="user-form">
+          <FormMessage message={ emailSuccessMsg } type="warning" />
+          <FormMessage message={ email.message } />
+          <div className="user-form-fields">
+            <label htmlFor="email">Email</label>
             <input
-              type="file"
-              accept="image/*"
-              id="profilePicture"
-              onChange={ this.onImageUpload } />
-            <label htmlFor="profilePicture">
-              <span className="user-form-button">
-                Upload New Picture
-              </span>
-              <span>Max 5mb, JPG, or PNG</span>
-            </label>
+              type="email"
+              id="email"
+              name="email"
+              value={ email.value || '' }
+              disabled={ user.strategy !== 'local' }
+              onChange={ this.onChangeHandler } />
+            <p>This email is linked to your account.</p>
           </div>
-        </div>
-        <button
-          type="submit"
-          className="user-form-button"
-          disabled={ hasBeenEdited }>
-          Save Changes
-        </button>
-      </form>
+          <FormMessage message={ displayName.message } />
+          <div className="user-form-fields">
+            <label htmlFor="displayName">Display Name</label>
+            <input
+              type="text"
+              id="displayName"
+              name="displayName"
+              value={ displayName.value || '' }
+              onChange={ this.onChangeHandler } />
+            <p>This is the display name for your account.</p>
+          </div>
+          <FormMessage message={ avatar.message } />
+          <div className="user-form-fields last-field">
+            <label>Profile Picture</label>
+            <div className="avatar-preview">
+              <div className="avatar-wrapper">
+                { avatarPreview(avatar) }
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                id="profilePicture"
+                onChange={ this.onImageUpload } />
+              <label htmlFor="profilePicture">
+                <span className="user-form-button">
+                  Upload New Picture
+                </span>
+                <span>Max 5mb, JPG, or PNG</span>
+              </label>
+            </div>
+          </div>
+          <button
+            type="submit"
+            className="user-form-button"
+            disabled={ hasBeenEdited }>
+            Save Changes
+          </button>
+        </form>
+      </div>
     );
 
   }

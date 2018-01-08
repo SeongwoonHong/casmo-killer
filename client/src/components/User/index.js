@@ -26,9 +26,9 @@ class User extends Component {
       <div className="User">
         <Switch>
           <Route path="/user/auth/:type" component={ Login } />
-          <Route path="/user/verify/:token" component={ Verify } />
           <Route path="/user/register" component={ Register } />
           <Route path="/user/recover" component={ Recover } />
+          <Route path="/user/verify/:type/:token" component={ Verify } />
           <Route path="/user/reset/:token?" component={ Reset } />
           <PrivateRoute
             path="/user/settings/:token?"

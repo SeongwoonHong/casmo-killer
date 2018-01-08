@@ -1,12 +1,9 @@
 .Social-login {
     > .social-btn-wrapper {
-        padding: 15px;
-        > .Form-message {
-            margin: 0 0 15px 0;
-        }
+        padding: $user-box-padding;
         > div {
             > button {
-                @include flex-box(space-between);
+                @include flex-box();
                 color: #fff;
                 padding: 5px;
                 width: 100%;
@@ -22,13 +19,9 @@
                         @include rectanglify(30px);
                         margin: 0 auto;
                         > .spinner-layer {
-                            border-color: palette(Grey, 800);
+                            border-color: palette(Grey, 900);
                         }
                     }
-                }
-                &:hover,
-                &:focus {
-                    background-color: initial;
                 }
             }
             &.facebook {
@@ -42,6 +35,14 @@
                 > button {
                     color: $kakao-txt;
                 }
+            }
+        }
+    }
+    @media screen and (min-width: 992px) {
+        > .social-btn-wrapper {
+            @include flex-box(space-between);
+            > div {
+                width: 33%;
             }
         }
     }

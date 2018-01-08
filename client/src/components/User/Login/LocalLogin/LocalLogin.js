@@ -33,7 +33,10 @@ class LocalLogin extends Component {
 
     e.preventDefault();
 
-    this.setState({ isLoading: true });
+    this.setState({
+      isLoading: true,
+      message: '',
+    });
 
     if (this.props.isLogin) {
       this.onLogin();
@@ -55,8 +58,6 @@ class LocalLogin extends Component {
       });
 
     } else {
-
-      this.setState({ message: '' });
 
       try {
 
@@ -88,7 +89,10 @@ class LocalLogin extends Component {
 
     if (message.length > 0) {
 
-      this.setState({ isLoading: false, message });
+      this.setState({
+        isLoading: false,
+        message
+      });
 
     } else {
 
@@ -120,22 +124,30 @@ class LocalLogin extends Component {
 
   render() {
 
+    const {
+      isLoading, email, password, message, successMsg
+    } = this.state;
+
     const { isLogin, redirectUrl } = this.props;
+
     const formText = isLogin ? 'Log In' : 'Sign Up';
 
     return (
       <div className="Local-login user-form-box">
         <LoadingOverlay
-          isVisible={ this.state.isLoading }
+          isVisible={ isLoading }
           overlayColor="rgba(256,256,256,.75)"
           circleColor="#1F4B40" />
         <div className="user-form-header">
           <h3>{ `${formText} With Email` }</h3>
         </div>
-        <form noValidate onSubmit={ this.onSubmitHandler }>
-          <FormMessage message={ this.state.message } />
+        <form
+          noValidate
+          className="user-form"
+          onSubmit={ this.onSubmitHandler }>
+          <FormMessage message={ message } />
           {
-            !this.state.successMsg
+            !successMsg
               ? (
                 <div className="user-form-fields">
                   <label htmlFor="email">Email</label>
@@ -144,15 +156,14 @@ class LocalLogin extends Component {
                     id="email"
                     name="email"
                     placeholder="Email Address"
-                    disabled={ this.state.isLoading }
                     onChange={ this.onChangeHandler }
-                    value={ this.state.email } />
+                    value={ email } />
                   <p>This email is linked to your account.</p>
                 </div>
               )
               : (
                 <FormMessage
-                  message={ this.state.successMsg }
+                  message={ successMsg }
                   type="success" />
               )
           }
@@ -166,26 +177,26 @@ class LocalLogin extends Component {
                     id="password"
                     name="password"
                     placeholder="Password"
-                    disabled={ this.state.isLoading }
                     onChange={ this.onChangeHandler }
-                    value={ this.state.password } />
+                    value={ password } />
                   <p>Password must be between 4 and 20 characters.</p>
                 </div>
               )
               : null
           }
           {
-            this.state.successMsg
+            successMsg
               ? (
-                <Link to={ redirectUrl } className="user-form-button">
+                <Link
+                  to={ redirectUrl }
+                  className="user-form-button">
                   Go Back
                 </Link>
               )
               : (
                 <button
                   type="submit"
-                  className="user-form-button"
-                  disabled={ this.state.isLoading }>
+                  className="user-form-button">
                   { formText }
                 </button>
               )

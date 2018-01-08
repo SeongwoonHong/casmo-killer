@@ -205,82 +205,90 @@ class Register extends Component {
 
     return (
       <div className="Register">
-        <form
-          noValidate
-          onSubmit={ this.onSubmitHandler }
-          className="user-form-box registration-form">
+        <h2 className="user-page-title">
+          User Registration
+          <i className="material-icons">
+            person_add
+          </i>
+        </h2>
+        <div className="user-form-box">
           <LoadingOverlay
             isVisible={ isLoading }
             overlayColor="rgba(256,256,256,.75)"
             circleColor="#1F4B40" />
           <div className="user-form-header">
-            <h3>User Registration</h3>
+            <h3>User Information</h3>
             <p>Please fill in the following fields to complete your registration.</p>
           </div>
-          <FormMessage message={ errorMsg } />
-          <div className="user-form-fields">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              value={ auth.email || '' }
-              disabled="true" />
-            <p>This email is linked to your account.</p>
-          </div>
-          <FormMessage message={ displayName.message } />
-          <div className="user-form-fields">
-            <label htmlFor="displayName">Display Name</label>
-            <input
-              type="text"
-              id="displayName"
-              name="displayName"
-              value={ displayName.value }
-              onChange={ this.onChangeHandler } />
-            <p>Display name must be between 4 and 20 characters with no space.</p>
-          </div>
-          <FormMessage message={ password.message } />
-          {
-            auth.strategy === 'local'
-              ? (
-                <div className="user-form-fields">
-                  <label htmlFor="password">Password</label>
-                  <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    value={ password.value }
-                    onChange={ this.onChangeHandler } />
-                  <p>Password must be between 6 and 20 letters.</p>
-                </div>
-              )
-              : null
-          }
-          <FormMessage message={ avatar.message } />
-          <div className="user-form-fields">
-            <label>Profile Picture</label>
-            <div className="avatar-preview">
-              <div className="avatar-wrapper">
-                { avatarPreview(avatar) }
-              </div>
+          <form
+            noValidate
+            className="user-form"
+            onSubmit={ this.onSubmitHandler }>
+            <FormMessage message={ errorMsg } />
+            <div className="user-form-fields">
+              <label htmlFor="email">Email</label>
               <input
-                type="file"
-                accept="image/*"
-                id="profilePicture"
-                onChange={ this.onImageUpload } />
-              <label htmlFor="profilePicture">
-                <span className="user-form-button">
-                  Upload New Picture
-                </span>
-                <span>Max 5mb, JPG, or PNG</span>
-              </label>
+                type="email"
+                id="email"
+                value={ auth.email || '' }
+                disabled="true" />
+              <p>This email is linked to your account.</p>
             </div>
-          </div>
-          <button
-            className="user-form-button"
-            type="submit">
-            Submit
-          </button>
-        </form>
+            <FormMessage message={ displayName.message } />
+            <div className="user-form-fields">
+              <label htmlFor="displayName">Display Name</label>
+              <input
+                type="text"
+                id="displayName"
+                name="displayName"
+                value={ displayName.value }
+                onChange={ this.onChangeHandler } />
+              <p>Display name must be between 4 and 20 characters with no space.</p>
+            </div>
+            <FormMessage message={ password.message } />
+            {
+              auth.strategy === 'local'
+                ? (
+                  <div className="user-form-fields">
+                    <label htmlFor="password">Password</label>
+                    <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      value={ password.value }
+                      onChange={ this.onChangeHandler } />
+                    <p>Password must be between 6 and 20 letters.</p>
+                  </div>
+                )
+                : null
+            }
+            <FormMessage message={ avatar.message } />
+            <div className="user-form-fields">
+              <label>Profile Picture</label>
+              <div className="avatar-preview">
+                <div className="avatar-wrapper">
+                  { avatarPreview(avatar) }
+                </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="profilePicture"
+                  onChange={ this.onImageUpload } />
+                <label htmlFor="profilePicture">
+                  <span className="user-form-button">
+                    Upload New Picture
+                  </span>
+                  <span>Max 5mb, JPG, or PNG</span>
+                </label>
+              </div>
+            </div>
+            <button
+              type="submit"
+              className="user-form-button">
+              Submit
+            </button>
+          </form>
+        </div>
       </div>
     );
 

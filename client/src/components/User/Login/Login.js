@@ -60,6 +60,7 @@ class Login extends Component {
           </i>
         </h2>
         <SocialLogin
+          isLogin={ isLogin }
           onRegister={ this.onSocialRegister }
           onSuccess={ this.onLoginSuccess } />
         <LocalLogin

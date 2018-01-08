@@ -33,9 +33,9 @@ class Delete extends Component {
 
     if (!this.state.agreed) {
       return this.setState({ agreed: true });
-    } else {
-      this.setState({ isLoading: true });
     }
+
+    this.setState({ isLoading: true });
 
     if (this.state.password.length === 0) {
       return this.setState({
@@ -80,11 +80,11 @@ class Delete extends Component {
       <div className="Delete">
         <h2 className="user-page-title">
           Account Delete
+          <i className="material-icons">
+            delete_forever
+          </i>
         </h2>
-        <form
-          noValidate
-          onSubmit={ this.onSubmitHandler }
-          className="user-form-box">
+        <div className="user-form-box">
           <LoadingOverlay
             isVisible={ isLoading }
             overlayColor="rgba(256,256,256,.75)"
@@ -101,43 +101,48 @@ class Delete extends Component {
                 : null
             }
           </div>
-          <FormMessage
-            message={ message }
-            type={ isSuccess ? 'success' : 'error' } />
-          {
-            agreed
-              ? (
-                <div className="user-form-fields">
-                  <label htmlFor="password">Password</label>
-                  <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Password"
-                    onChange={ this.onChangeHandler }
-                    value={ password } />
-                </div>
-              )
-              : null
-          }
-          {
-            isSuccess && message.length > 0
-              ? (
-                <Link
-                  to="/"
-                  className="user-form-button">
-                  Ck-Board Home
-                </Link>
-              )
-              : (
-                <button
-                  type="submit"
-                  className="user-form-button">
-                  { agreed ? 'Delete My Account' : 'Agree' }
-                </button>
-              )
-          }
-        </form>
+          <form
+            noValidate
+            className="user-form"
+            onSubmit={ this.onSubmitHandler }>
+            <FormMessage
+              message={ message }
+              type={ isSuccess ? 'success' : 'error' } />
+            {
+              agreed
+                ? (
+                  <div className="user-form-fields">
+                    <label htmlFor="password">Password</label>
+                    <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      placeholder="Password"
+                      onChange={ this.onChangeHandler }
+                      value={ password } />
+                  </div>
+                )
+                : null
+            }
+            {
+              isSuccess && message.length > 0
+                ? (
+                  <Link
+                    to="/"
+                    className="user-form-button">
+                    Ck-Board Home
+                  </Link>
+                )
+                : (
+                  <button
+                    type="submit"
+                    className="user-form-button">
+                    { agreed ? 'Delete My Account' : 'Agree' }
+                  </button>
+                )
+            }
+          </form>
+        </div>
       </div>
     );
 

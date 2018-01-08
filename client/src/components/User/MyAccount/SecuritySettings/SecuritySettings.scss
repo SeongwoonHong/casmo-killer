@@ -1,20 +1,24 @@
-.for-security {
-    > .user-form-fields {
-        > .user-form-button {
-            margin: 15px 0 0 auto;
+.Security-settings {
+    > .user-form {
+        > .user-form-fields {
+            > .user-form-button {
+                &:last-child {
+                    margin: $user-box-padding 0 0 auto;
+                }
+            }
         }
-    }
-    > .button-group {
-        @include flex-box(space-around);
-        padding: 15px;
-        > .user-form-button {
-            float: none;
-            margin: 0;
-            width: 47%;
-        }
-        > a.user-form-button {
-            font-size: 12px;
-            padding: 5px 0;
+        > .button-group {
+            @include flex-box(space-between);
+            padding: $user-box-padding;
+            > .user-form-button {
+                width: 100%;
+                &:first-child {
+                    margin-right: $user-box-padding / 2;
+                }
+                &:last-child {
+                    margin-left: $user-box-padding / 2;
+                }
+            }
         }
     }
 }

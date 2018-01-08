@@ -117,10 +117,7 @@ class Reset extends Component {
         <h2 className="user-page-title">
           Reset your password
         </h2>
-        <form
-          noValidate
-          onSubmit={ this.onSubmitHandler }
-          className="user-form-box">
+        <div className="user-form-box">
           <LoadingOverlay
             isVisible={ isLoading }
             overlayColor="rgba(256,256,256,.75)"
@@ -128,40 +125,43 @@ class Reset extends Component {
           <div className="user-form-header">
             <h3>Please enter your email.</h3>
           </div>
-          <FormMessage
-            message={ message }
-            type={ isSuccess ? 'success' : 'error' } />
-          <div className="user-form-fields">
-            <label htmlFor="newPassword">Enter new password</label>
-            <input
-              type="password"
-              id="newPassword"
-              name="newPassword"
-              disabled={ email.length === 0 }
-              value={ newPassword }
-              onChange={ this.onChangeHandler } />
-            <p>Please enter new password.</p>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              disabled={ email.length === 0 }
-              value={ confirmPassword }
-              onChange={ this.onChangeHandler } />
-            <p>Please confirm the new password.</p>
+          <form
+            noValidate
+            className="user-form"
+            onSubmit={ this.onSubmitHandler }>
+            <FormMessage
+              message={ message }
+              type={ isSuccess ? 'success' : 'error' } />
+            <div className="user-form-fields">
+              <label htmlFor="newPassword">Enter new password</label>
+              <input
+                type="password"
+                id="newPassword"
+                name="newPassword"
+                disabled={ email.length === 0 }
+                value={ newPassword }
+                onChange={ this.onChangeHandler } />
+              <p>Please enter new password.</p>
+            </div>
+            <div className="user-form-fields">
+              <label htmlFor="confirmPassword">Confirm your password</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                disabled={ email.length === 0 }
+                value={ confirmPassword }
+                onChange={ this.onChangeHandler } />
+              <p>Please confirm the new password.</p>
+            </div>
             <button
               type="submit"
-              onClick={ this.submitNewPassword }>
+              className="user-form-button"
+              disabled={ email.length === 0 }>
               Submit
             </button>
-          </div>
-          <button
-            type="submit"
-            className="user-form-button"
-            disabled={ email.length === 0 }>
-            Submit
-          </button>
-        </form>
+          </form>
+        </div>
       </div>
     );
 

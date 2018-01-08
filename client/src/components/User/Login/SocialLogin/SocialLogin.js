@@ -59,19 +59,26 @@ class SocialLogin extends Component {
       REACT_APP_kakaoClientId: kakaoId
     } = process.env;
 
+    const { isLogin } = this.props;
+
     const { isLoading, message } = this.state;
 
     return (
-      <div key={ 1 } className="Social-login user-form-box">
+      <div className="Social-login user-form-box">
         <LoadingOverlay
           isVisible={ isLoading }
           overlayColor="rgba(256,256,256,.75)"
           circleColor="#1F4B40" />
         <div className="user-form-header">
-          <h3>Connect with</h3>
+          <h3>Social Login</h3>
+          {
+            isLogin
+              ? null
+              : <p>User your favourite social network to sign up.</p>
+          }
         </div>
+        <FormMessage message={ message } />
         <div className="social-btn-wrapper">
-          <FormMessage message={ message } />
           <div className="facebook">
             <FacebookAuth
               clientId={ facebookId }

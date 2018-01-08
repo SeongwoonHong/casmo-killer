@@ -133,10 +133,7 @@ class SecuritySettings extends Component {
     } = this.state;
 
     return (
-      <form
-        noValidate
-        onSubmit={ this.onSubmitHandler }
-        className="user-form-box for-security">
+      <div className="Security-settings user-form-box">
         <LoadingOverlay
           isVisible={ isLoading }
           overlayColor="rgba(256,256,256,.75)"
@@ -146,69 +143,78 @@ class SecuritySettings extends Component {
           <p>Change your password, or delete your account</p>
           <FormMessage message={ message } type={ isSuccess ? 'success' : 'error' } />
         </div>
-        {
-          this.state.isEditing
-            ? (
-              <div className="user-form-fields">
-                <label htmlFor="password">Confirm your password</label>
-                <input
-                  type="password"
-                  id="password"
-                  name="currentPassword"
-                  value={ currentPassword }
-                  onChange={ this.onChangeHandler } />
-                <p>Please enter your current password to proceed.</p>
-                <button
-                  type="submit"
-                  className="user-form-button"
-                  onClick={ this.verifyCurrentPassword }>
-                  Submit
-                </button>
-              </div>
-            )
-            : null
-        }
-        {
-          this.state.isVerified
-            ? (
-              <div className="user-form-fields">
-                <label htmlFor="newPassword">Enter new password</label>
-                <input
-                  type="password"
-                  id="newPassword"
-                  name="newPassword"
-                  value={ newPassword }
-                  onChange={ this.onChangeHandler } />
-                <p>Please enter new password.</p>
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  value={ confirmPassword }
-                  onChange={ this.onChangeHandler } />
-                <p>Please confirm the new password.</p>
-                <button
-                  type="submit"
-                  onClick={ this.submitNewPassword }>
-                  Submit
-                </button>
-              </div>
-            )
-            : null
-        }
-        <div className="button-group">
-          <button
-            className="user-form-button"
-            onClick={ () => {
-              this.setState({ isEditing: true });
-            }}>
-            Change Password
-          </button>
-          <Link to="/user/delete" className="user-form-button">
-            Delete Account
-          </Link>
-        </div>
-      </form>
+        <form
+          noValidate
+          onSubmit={ this.onSubmitHandler }
+          className="user-form">
+          {
+            this.state.isEditing
+              ? (
+                <div className="user-form-fields">
+                  <label htmlFor="password">Confirm your password</label>
+                  <input
+                    type="password"
+                    id="password"
+                    name="currentPassword"
+                    value={ currentPassword }
+                    onChange={ this.onChangeHandler } />
+                  <p>Please enter your current password to proceed.</p>
+                  <button
+                    type="submit"
+                    className="user-form-button"
+                    onClick={ this.verifyCurrentPassword }>
+                    Submit
+                  </button>
+                </div>
+              )
+              : null
+          }
+          {
+            this.state.isVerified
+              ? ([
+                <div key={ 0 } className="user-form-fields">
+                  <label htmlFor="newPassword">Enter new password</label>
+                  <input
+                    type="password"
+                    id="newPassword"
+                    name="newPassword"
+                    value={ newPassword }
+                    onChange={ this.onChangeHandler } />
+                  <p>Please enter new password.</p>
+                </div>,
+                <div key={ 1 } className="user-form-fields">
+                  <label htmlFor="confirmPassword">Confirm your password</label>
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    value={ confirmPassword }
+                    onChange={ this.onChangeHandler } />
+                  <p>Please confirm the new password.</p>
+                  <button
+                    type="submit"
+                    className="user-form-button"
+                    onClick={ this.submitNewPassword }>
+                    Submit
+                  </button>
+                </div>
+              ])
+              : null
+          }
+          <div className="button-group">
+            <button
+              className="user-form-button"
+              onClick={ () => {
+                this.setState({ isEditing: true });
+              }}>
+              Change Password
+            </button>
+            <Link to="/user/delete" className="user-form-button">
+              Delete Account
+            </Link>
+          </div>
+        </form>
+      </div>
     );
 
   }

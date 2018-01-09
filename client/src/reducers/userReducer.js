@@ -5,7 +5,8 @@ const initialState = {
     isLoggedIn: false,
     _id: null,
     username: null,
-    avatar: null
+    avatar: null,
+    bookmarked: [],
   },
   userModalInfo: {
     _id: null,
@@ -23,7 +24,8 @@ export default function (state = initialState.user, action) {
         isLoggedIn: true,
         _id: action.payload._id,
         username: action.payload.username,
-        avatar: action.payload.avatar || null
+        avatar: action.payload.avatar || null,
+        bookmarked: action.payload.bookmarked
       });
 
     case types.LOGOUT:

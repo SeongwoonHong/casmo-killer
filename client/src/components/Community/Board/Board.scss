@@ -17,3 +17,23 @@
   color: #888;
   font-size: 80%;
 }
+
+.board_breadcrumbs {
+  display: inline-block;
+}
+
+.bookmark {
+  font-size: 450%;
+  color: teal;
+}
+
+@media only screen and (max-width: 400px) {
+  .breadcrumb:before {
+    margin: 0;
+  }
+
+  .bookmark {
+    font-size: 300%;
+    color: teal;
+  }
+}

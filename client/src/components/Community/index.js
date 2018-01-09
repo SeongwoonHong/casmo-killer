@@ -15,6 +15,8 @@ class CommunityWrapper extends Component {
       <div className="community">
         <Switch>
           <Route path="/community/communityAll" component={ CommunityHome } />
+          <Route path="/community/favourites" render={props => <CommunityHome type="bookmark" {...props} />} />
+          <Route path="/community/myCommunity" render={props => <CommunityHome type="my" {...props} />} />
           <Route path="/community/newboard" component={BoardNew} />
           <Route path="/community/:boardId/new" component={RequireAuthentication(PostNew, '/community/general')} />
           <Route path="/community/:boardId/:postId" component={PostDetail} />

@@ -35,6 +35,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     openUserInfoModal: (userInfo) => {
       dispatch(actions.openUserInfoModal(userInfo));
+    },
+    bookmarkRequest: (boardId, user) => {
+      dispatch(actions.bookmarkRequest(boardId, user));
     }
   };
 };

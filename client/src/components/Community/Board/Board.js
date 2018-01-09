@@ -19,12 +19,16 @@ class Board extends Component {
 
     const page = props.location.state === undefined ? 0 : props.location.state.page;
     const selected = props.location.state === undefined ? 0 : props.location.state.selected;
+    const boardOId = props.location.state === undefined ? '' : props.location.state.boardOId;
+    const bookmarked = props.user.isLoggedIn ? props.user.bookmarked.includes(boardOId) : false;
 
     this.state = {
       page,
       boardId: props.match.params.boardId,
+      boardOId,
       baseUrl,
       basePostUrl,
+      bookmarked,
       sortInfo: {
         selected,
         listKor: ['최신순', '댓글순', '조회순'],
@@ -42,10 +46,10 @@ class Board extends Component {
       sortInfo.listEng[sortInfo.selected]);
   }
 
-  shouldComponentUpdate(nextProps) {
-    const update = JSON.stringify(this.props) !== JSON.stringify(nextProps);
-    return update;
-  }
+  // shouldComponentUpdate(nextProps) {
+  //   const update = JSON.stringify(this.props) !== JSON.stringify(nextProps);
+  //   return update;
+  // }
 
   handlePageClick = (data) => {
     const { selected } = data;
@@ -73,6 +77,11 @@ class Board extends Component {
     this.props.searchPostsRequest(searchWord, boardId, page, sortInfo.listEng[sortInfo.selected]);
   }
 
+  bookmarkClick = () => {
+    this.setState({ bookmarked: !this.state.bookmarked });
+    this.props.bookmarkRequest(this.state.boardOId, this.props.user);
+  }
+
   render() {
     const { data, status, error } = this.props.postsList;
     const { pageCount } = this.props.pagination;
@@ -92,11 +101,21 @@ class Board extends Component {
         </div>
       );
     }
+
     return (
       <div className="board">
         <div className="row">
-          <div className="board_breadcrumbs">
-            <BreadCrumbs url={this.state.baseUrl} />
+          <div className="col s12">
+            <div className="board_breadcrumbs col s10 m11 l11">
+              <BreadCrumbs url={this.state.baseUrl} />
+            </div>
+            <div className="col s2 m1 l1">
+              {
+                this.props.user.isLoggedIn ?
+                <i className="material-icons bookmark" onClick={this.bookmarkClick}> {this.state.bookmarked ? 'bookmark' : 'bookmark_border'}</i>
+                : ''
+              }
+            </div>
           </div>
           <div className="board_header">
             <div className="board_newPost col s12">

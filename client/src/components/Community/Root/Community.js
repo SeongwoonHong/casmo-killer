@@ -11,12 +11,22 @@ class Community extends Component {
     super(props);
     const pathName = this.props.location.pathname;
     const baseUrl = pathName.substring(0, pathName.lastIndexOf('/'));
+
     this.state = {
       baseUrl
     };
   }
   componentDidMount() {
-    this.props.fetchBoardsRequest();
+    this.props.fetchBoardsRequest(this.props.user._id, this.props.type);
+  }
+
+  shouldComponentUpdate(nextProps) {
+    const update = JSON.stringify(this.props) !== JSON.stringify(nextProps);
+    return update;
+  }
+
+  componentWillUnmount() {
+    this.props.resetBoardList();
   }
 
   render() {
@@ -33,7 +43,7 @@ class Community extends Component {
               <div className="card-action">
                 <Link to={{
                   pathname: `${this.state.baseUrl}/${board.boardId}`,
-                  state: { page: 0, selected: 0 }
+                  state: { page: 0, selected: 0, boardOId: board._id }
                   }}>들어가기
                 </Link>
               </div>
@@ -60,13 +70,16 @@ class Community extends Component {
     return (
       <div className="community">
         <BreadCrumbs url={this.state.baseUrl} />
-        <Button
-          className="btn waves-effect teal waves-light newBoard"
-          name="action"
-          to={`${this.state.baseUrl}/newBoard`}
-          text="New Board"
-          style={{ display: 'inline-block', width: '40%' }}
-        />
+        {
+          this.props.user.isLoggedIn &&
+          <Button
+            className="btn waves-effect teal waves-light newBoard"
+            name="action"
+            to={`${this.state.baseUrl}/newBoard`}
+            text="New Board"
+            style={{ display: 'inline-block', width: '40%' }}
+          />
+        }
         <div className="row">
           {mapToComponents(data)}
         </div>

@@ -27,6 +27,8 @@
     border: initial;
     overflow: hidden;
     resize: none;
+    white-space: pre-wrap;
+    word-wrap: break-word;
     &:focus {
       outline: none !important;
     }

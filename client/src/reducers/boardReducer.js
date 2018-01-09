@@ -16,7 +16,6 @@ const initialState = {
 
 export default function board(state = initialState, action) {
   switch (action.type) {
-
     // FETCH BOARDS
     case types.FETCH_BOARDS:
       return update(state, {
@@ -58,6 +57,14 @@ export default function board(state = initialState, action) {
         newBoard: {
           status: { $set: 'FAILURE' },
           error: { $set: action.payload.response.data }
+        }
+      });
+    case types.RESET_BOARD_LIST:
+      return update(state, {
+        boardList: {
+          status: { $set: 'INIT' },
+          data: { $set: [] },
+          error: { $set: null }
         }
       });
     default:

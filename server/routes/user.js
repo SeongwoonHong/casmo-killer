@@ -29,7 +29,8 @@ router.get('/validate', async (req, res) => {
     return res.send({
       _id: user._id,
       username: user.username,
-      avatar: user.avatar
+      avatar: user.avatar,
+      bookmarked: user.bookmarked
     });
 
   } catch (error) {
@@ -130,14 +131,14 @@ router.post('/validate/social/:provider', async (req, res) => {
 
     // if it's an existing user, just log in
     const accessToken = await dupUser.generateToken();
-
     return res.cookie('ckToken', accessToken, {
       httpOnly: true,
       maxAge: 604800
     }).send({
       _id: dupUser._id,
       username: dupUser.username,
-      avatar: dupUser.avatar
+      avatar: dupUser.avatar,
+      bookmarked: dupUser.bookmarked
     });
 
   }
@@ -173,7 +174,8 @@ router.post('/signin/local', async (req, res) => {
         _id,
         username,
         avatar,
-        strategy
+        strategy,
+        bookmarked
       } = user;
 
       if (strategy !== 'local') {
@@ -201,7 +203,8 @@ router.post('/signin/local', async (req, res) => {
       }).send({
         _id,
         username,
-        avatar
+        avatar,
+        bookmarked
       });
 
     }
@@ -278,7 +281,8 @@ router.post('/signup/local', upload.any(), async (req, res) => {
     }).send({
       _id: user._id,
       username: user.username,
-      avatar: user.avatar
+      avatar: user.avatar,
+      bookmarked: user.bookmarked
     });
 
   } catch (error) {
@@ -324,7 +328,8 @@ router.post('/signup/social', upload.any(), async (req, res) => {
     }).send({
       _id: user._id,
       username: user.username,
-      avatar: user.avatar
+      avatar: user.avatar,
+      bookmarked: user.bookmarked
     });
 
   } catch (error) {

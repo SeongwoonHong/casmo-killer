@@ -23,7 +23,10 @@ const UserSchema = new Schema({
   privilege: {
     type: String,
     default: 'newbie'
-  }
+  },
+  bookmarked: [{
+    type: mongoose.Schema.Types.ObjectId, ref: 'board'
+  }],
 });
 
 UserSchema.statics.registerSocialUser = function (profile) {
@@ -50,13 +53,13 @@ UserSchema.statics.registerLocalUser = function ({ email, password, username, av
 
 UserSchema.statics.findUserByEmail = function (email) {
 
-  return this.findOne({ email });
+  return this.findOne({ email }).select('+password');
 
 };
 
 UserSchema.statics.findUserByUsername = function (username) {
 
-  return this.findOne({ username });
+  return this.findOne({ username }).select('+password');
 
 };
 

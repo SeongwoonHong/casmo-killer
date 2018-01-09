@@ -31,7 +31,7 @@ export default class Post extends Component {
           <div className="post_detail_item_author">
             <div className="collection-item avatar">
               <div className="avartar_info">
-                <img src="/testIcon.png" alt="" className="circle avartar_circle" />
+                <img src={authorName.avatar} alt="" className="circle avartar_circle" />
                 <span className="authorName">
                   <div className="user-btn">
                     <PlainBtn

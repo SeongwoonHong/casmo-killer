@@ -21,5 +21,9 @@ export default {
       author: 'author',
       content: 'content'
     }
+  },
+  Tags: {
+    components: require('../components/Tags/Tags'),
+    props: {}
   }
 };

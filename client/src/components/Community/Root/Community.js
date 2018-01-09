@@ -25,6 +25,15 @@ class Community extends Component {
     return update;
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps === undefined) {
+      return false;
+    }
+    if (this.props.match.path !== prevProps.match.path) {
+      this.props.fetchBoardsRequest(this.props.user._id, this.props.type);
+    }
+  }
+
   componentWillUnmount() {
     this.props.resetBoardList();
   }

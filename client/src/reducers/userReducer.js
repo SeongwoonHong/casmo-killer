@@ -46,6 +46,10 @@ export default function (state = initialState.user, action) {
           avatar: null
         }
       });
+    case types.BOOKMARK_SUCCESS:
+      return Object.assign({}, state, {
+        bookmarked: action.payload.bookmarked
+      });
 
     default:
       return state;

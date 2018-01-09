@@ -91,15 +91,15 @@ router.post('/bookmark', (req, res) => {
 
     if (!bookmarked) {
       result.bookmarked.push(boardId.toString());
-      console.log('book');
     }
 
-    result.save((errResult) => {
+    result.save((errResult, bookmarkResult) => {
       if (errResult) {
         return res.status(500).json({
           message: 'Could not save bookmark'
         });
       }
+      res.json(bookmarkResult);
     });
   });
 });

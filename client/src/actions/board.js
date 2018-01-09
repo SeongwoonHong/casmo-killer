@@ -85,9 +85,10 @@ export function bookmark() {
     type: types.BOOKMARK
   };
 }
-export function bookmarkSuccess() {
+export function bookmarkSuccess(bookmarkResult) {
   return {
-    type: types.BOOKMARK_SUCCESS
+    type: types.BOOKMARK_SUCCESS,
+    payload: bookmarkResult
   };
 }
 

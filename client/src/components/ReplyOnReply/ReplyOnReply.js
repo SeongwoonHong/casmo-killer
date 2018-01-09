@@ -21,7 +21,7 @@ class ReplyOnReply extends Component {
           </i>
         }
         <div className="reply-author">
-          { author }
+          { author } <span>wrote:</span>
         </div>
         <pre readOnly className="reply-content">{content}</pre>
       </div>

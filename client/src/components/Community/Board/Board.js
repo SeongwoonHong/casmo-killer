@@ -14,9 +14,6 @@ class Board extends Component {
   constructor(props) {
     super(props);
     const baseUrl = props.location.pathname;
-    const indexOfPost = this.props.location.pathname.lastIndexOf('/');
-    const basePostUrl = baseUrl.substring(0, indexOfPost);
-
     const page = props.location.state === undefined ? 0 : props.location.state.page;
     const selected = props.location.state === undefined ? 0 : props.location.state.selected;
     const boardOId = props.location.state === undefined ? '' : props.location.state.boardOId;
@@ -27,7 +24,6 @@ class Board extends Component {
       boardId: props.match.params.boardId,
       boardOId,
       baseUrl,
-      basePostUrl,
       bookmarked,
       sortInfo: {
         selected,
@@ -45,11 +41,6 @@ class Board extends Component {
       this.state.page,
       sortInfo.listEng[sortInfo.selected]);
   }
-
-  // shouldComponentUpdate(nextProps) {
-  //   const update = JSON.stringify(this.props) !== JSON.stringify(nextProps);
-  //   return update;
-  // }
 
   handlePageClick = (data) => {
     const { selected } = data;
@@ -112,7 +103,12 @@ class Board extends Component {
             <div className="col s2 m1 l1">
               {
                 this.props.user.isLoggedIn ?
-                <i className="material-icons bookmark" onClick={this.bookmarkClick}> {this.state.bookmarked ? 'bookmark' : 'bookmark_border'}</i>
+                  <i
+                    className="material-icons bookmark"
+                    role="presentation"
+                    onClick={this.bookmarkClick}
+                    onKeyDown={ () => {} }> {this.state.bookmarked ? 'bookmark' : 'bookmark_border'}
+                  </i>
                 : ''
               }
             </div>
@@ -159,7 +155,7 @@ class Board extends Component {
         <div className="board_postList">
           <PostList
             postsList={data}
-            baseUrl={this.state.basePostUrl}
+            baseUrl={this.state.baseUrl}
             page={this.state.page}
             selected={this.state.sortInfo.selected}
             openUserInfoModal={this.props.openUserInfoModal}

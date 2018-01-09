@@ -17,7 +17,7 @@ class PostList extends Component {
             title={post.title}
             count={post.count}
             key={post._id}
-            baseUrl={`${baseUrl}/${post.boardId}`}
+            baseUrl={baseUrl}
             date={post.date}
             page={this.props.page}
             selected={this.props.selected}

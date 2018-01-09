@@ -169,14 +169,12 @@ class PostDetail extends Component {
           comments={data.comments}
           openUserInfoModal={this.props.openUserInfoModal}
         />
-        {
-          this.props.user.isLoggedIn
-          && <ReplyNew
-            onReply={this.handleReply}
-            title="댓글"
-            postId={data._id}
+        <ReplyNew
+          onReply={this.handleReply}
+          title="댓글"
+          postId={data._id}
+          isLoggedIn={user.isLoggedIn}
           />
-        }
       </div>
     );
   }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ModalContainer from 'sharedComponents/ModalContainer';
 import { withRouter } from 'react-router-dom';
+import classnames from 'classnames';
 import PostList from '../PostList/PostList';
 import './UserInfoModal.scss';
 
@@ -15,12 +16,20 @@ class UserInfoModal extends Component {
 
     this.state = {
       page,
-      baseUrl
+      baseUrl,
+      currentCategory: 'activity'
     };
   }
   componentDidMount() {
     this.props.searchPostsRequest('gook', this.state.page);
   }
+
+  changeCategory = (value) => {
+    this.setState({
+      currentCategory: value
+    });
+  }
+
   render() {
     const {
       userInfo, closeUserInfoModal
@@ -31,6 +40,25 @@ class UserInfoModal extends Component {
     if (userInfo === undefined || userInfo._id === null) {
       return null;
     }
+
+    const activeView = (
+      <div className="userinfo-modal-body-activity">
+        <div className="board_postList">
+          <PostList
+            postsList={data}
+            baseUrl={this.state.baseUrl}
+            page={this.state.page}
+            selected={0}
+          />
+        </div>
+      </div>
+    );
+
+    const infoView = (
+      <div className="userinfo-modal-body-info">
+        info
+      </div>
+    );
     return (
       <ModalContainer
         ref={ el => this.component = el }
@@ -42,28 +70,31 @@ class UserInfoModal extends Component {
             </div>
             <div className="userinfo-modal-info">
               <div className="userinfo-modal-info-username">
-                <h2>{userInfo.username}</h2>
+                <h4>{userInfo.username}</h4>
               </div>
               <div className="userinfo-modal-info-detail">
                 <div className="info-detail">
-                  <i className="material-icons">star</i>등급<br />
-                  <img src="/crown.png" alt="user level" />
+                  <div className="info-detail-score"><img src="/crown.png" alt="user level" /></div>
                 </div>
-                <div className="info-detail"><i className="material-icons">directions_run</i>점수<br />350</div>
+                <div className="info-detail"><span className="activity_score"><i className="material-icons">directions_run</i>활동</span> 350
+                </div>
               </div>
             </div>
           </div>
-          <div className="userinfo-modal-body">
-            <div className="userinfo-modal-body-active">
-              <div className="board_postList">
-                <PostList
-                  postsList={data}
-                  baseUrl={this.state.baseUrl}
-                  page={this.state.page}
-                  selected={0}
-                />
-              </div>
+          <div className="userinfo-modal-category">
+            <div className={classnames('category-btn category-infoBtn', { active: this.state.currentCategory === 'info' })}>
+              <a href="#" onClick={() => this.changeCategory('info')}>
+                <i className="small material-icons">info_outline</i>INFO
+              </a>
             </div>
+            <div className={classnames('category-btn category-activityBtn', { active: this.state.currentCategory === 'activity' })}>
+              <a href="#" onClick={() => this.changeCategory('activity')}>
+                <i className="small material-icons">timeline</i>ACTIVITY
+              </a>
+            </div>
+          </div>
+          <div className="userinfo-modal-body">
+            { this.state.currentCategory === 'activity' ? activeView : infoView }
           </div>
         </div>
       </ModalContainer>

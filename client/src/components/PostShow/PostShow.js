@@ -11,11 +11,6 @@ import Iframe from '../Iframe/Iframe';
 import './PostShow.scss';
 
 const formatter = buildFormatter(krStrings);
-const tags = [ // 지금은 하드코딩으로..
-  { name: 'toronto', link: '#' },
-  { name: 'casmo', link: '#' },
-  { name: 'killer', link: '#' }
-];
 class PostShow extends Component {
   constructor(props) {
     super(props);
@@ -39,7 +34,7 @@ class PostShow extends Component {
                     () => { this.props.openUserInfoModal(activePost.author); }
                   }
                 >
-                  <a href="#">{activePost.author.username}</a>
+                  <a href="#">{activePost.author.displayName}</a>
                 </PlainBtn>
               </div>
             </div>
@@ -49,8 +44,8 @@ class PostShow extends Component {
         <div className="title" ref={el => this.component[1] = el}>
           <div className="info">
             #{ activePost.postNum }
-            { tags.map((tag) => {
-              return <Link to={`${tag.link}`} key={tag.name} className="tags">{tag.name}</Link>;
+            { activePost.tags.length > 0 && activePost.tags.trim().split(' ').map((tag) => {
+              return <Link to="#" key={tag} className="tags">{tag}</Link>;
             })}
           </div>
           <span className="card-title">{activePost.title}</span>

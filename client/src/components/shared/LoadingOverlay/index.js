@@ -10,15 +10,9 @@ const LoadingOverlay = (props) => {
       <div
         className="Loading-overlay"
         style={ { backgroundColor: props.overlayColor } }>
-        {
-          props.isComplete
-            ? props.children
-            : (
-              <LoadingCircle
-                size={ props.circleSize }
-                color={ props.circleColor } />
-            )
-        }
+        <LoadingCircle
+          size={ props.circleSize }
+          color={ props.circleColor } />
       </div>
     );
   }
@@ -27,7 +21,6 @@ const LoadingOverlay = (props) => {
 
 LoadingOverlay.propTypes = {
   isVisible: PropTypes.bool,
-  isComplete: PropTypes.bool,
   overlayColor: PropTypes.string,
   circleSize: PropTypes.string,
   circleColor: PropTypes.string,
@@ -35,7 +28,6 @@ LoadingOverlay.propTypes = {
 
 LoadingOverlay.defaultProps = {
   isVisible: true,
-  isComplete: false,
   overlayColor: 'rgba(0,0,0,.75)',
   circleSize: '',
   circleColor: '#fff'

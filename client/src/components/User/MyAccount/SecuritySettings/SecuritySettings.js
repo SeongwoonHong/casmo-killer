@@ -68,14 +68,18 @@ class SecuritySettings extends Component {
         });
 
         if (status === 204) {
+
           this.setState(Object.assign({}, initialState, {
             isVerified: true
           }));
+
         } else {
+
           this.setState({
             isSuccess: false,
             message: 'Failed to communicate with the server.'
           });
+
         }
 
       } catch (error) {
@@ -159,9 +163,9 @@ class SecuritySettings extends Component {
     return (
       <UserPageContainer
         className="Security-settings"
+        isLoading={ isLoading }
         formTitle="Security Settings"
         formMsg="Change your password, or delete your account"
-        isLoading={ isLoading }
         onSubmit={ this.onSubmitHandler }
         button={ (
           <div className="button-group">
@@ -187,9 +191,9 @@ class SecuritySettings extends Component {
 
         <UserInputField
           isVisible={ this.state.isEditing }
-          title="Current Password"
           type="password"
           name="currentPassword"
+          title="Current Password"
           onChange={ this.onChangeHandler }
           value={ currentPassword }
           message="Please enter your current password to proceed.">
@@ -202,20 +206,20 @@ class SecuritySettings extends Component {
 
         <UserInputField
           isVisible={ this.state.isVerified }
-          title="New Password"
           type="password"
           name="newPassword"
+          title="New Password"
           onChange={ this.onChangeHandler }
           value={ newPassword }
-          message="Enter new password." />
+          message="Enter new password" />
         <UserInputField
           isVisible={ this.state.isVerified }
-          title="Confirm Password"
           type="password"
           name="confirmPassword"
+          title="Confirm Password"
           onChange={ this.onChangeHandler }
           value={ confirmPassword }
-          message="Confirm your password.">
+          message="Confirm your password">
           <button
             type="submit"
             className="user-form-button">

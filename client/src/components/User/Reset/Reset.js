@@ -40,7 +40,7 @@ class Reset extends Component {
 
       setErrorState({
         errorTitle: 'The registration link is invalid.',
-        errorMsg: 'Please submit your email again to complete to reset the password.'
+        errorMsg: 'Please submit your email again to reset the password.'
       });
 
       history.push('/error');
@@ -55,18 +55,17 @@ class Reset extends Component {
 
   onSubmitHandler = async () => {
 
+    const { newPassword, confirmPassword } = this.state;
+
     this.setState({
       isLoading: true,
       message: ''
     });
 
-    const { newPassword, confirmPassword } = this.state;
-
     const message = await validatePassword(newPassword, confirmPassword, true);
 
     if (message.length > 0) {
       return this.setState({
-        isLoading: false,
         isSuccess: false,
         message
       });
@@ -80,49 +79,52 @@ class Reset extends Component {
       });
 
       if (data && data.message) {
-        // TODO: probably should redirect to login page
         this.setState({
-          isLoading: false,
           isSuccess: true,
           message: data.message
         });
+      } else {
+        // TODO: better error handling
       }
 
     } catch (error) {
+
       console.error(error);
       this.setState({
-        isLoading: false,
         isSuccess: false,
         message: error.response.data.message
       });
     }
 
+    this.setState({ isLoading: false });
+
   };
 
   verifyToken = async (token) => {
 
-    const {
-      history, setErrorState
-    } = this.props;
+    const { history, setErrorState } = this.props;
 
     try {
 
       const { data } = await axios.get(`/api/auth/verify/token/reset/${token}`);
 
       if (data && data.email) {
+
         this.setState({
           isLoading: false,
           email: data.email
         });
-      }
 
-      this.props.history.replace('/user/reset');
+        this.props.history.replace('/user/reset');
+
+      } else {
+        // TODO: error handling?
+      }
 
     } catch (error) {
 
       console.error(error);
 
-      // TODO: better title and message from the server
       setErrorState({
         errorTitle: 'The registration link is invalid.',
         errorMsg: error.response.data.message
@@ -143,10 +145,10 @@ class Reset extends Component {
     return (
       <UserPageContainer
         className="Reset"
-        title="Reset your password"
-        icon="lock_open"
-        formTitle="Please enter new password."
+        title="Reset Your Password"
+        icon="refresh"
         isLoading={ isLoading }
+        formTitle="Please enter new password."
         onSubmit={ this.onSubmitHandler }
         button={
           !isSuccess
@@ -172,18 +174,20 @@ class Reset extends Component {
           isVisible={ !isSuccess }
           type="password"
           name="newPassword"
-          message="Enter new password"
+          title="New Password"
           onChange={ this.onChangeHandler }
           value={ newPassword }
-          disabled={ email.length === 0 } />
+          disabled={ email.length === 0 }
+          message="Enter new password" />
         <UserInputField
           isVisible={ !isSuccess }
           type="password"
           name="confirmPassword"
-          message="Confirm your password"
+          title="Confirm Password"
           onChange={ this.onChangeHandler }
           value={ confirmPassword }
-          disabled={ email.length === 0 } />
+          disabled={ email.length === 0 }
+          message="Confirm the new password" />
       </UserPageContainer>
     );
 

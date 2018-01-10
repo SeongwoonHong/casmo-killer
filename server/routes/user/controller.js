@@ -76,9 +76,7 @@ module.exports.verifyPassword = async (req, res) => {
     const verified = await user.verifyPassword(req.body.password);
 
     if (!verified) {
-      return res.status(403).send({
-        message: 'Password is incorrect.'
-      });
+      return errorUtils.wrongPwd(res);
     }
 
     return res.status(204).send();
@@ -191,8 +189,7 @@ module.exports.updateProfile = async (req, res) => {
     user.displayName = displayName;
   }
 
-  // if avatar's been edited, upload the new image
-  // TODO: edit the existing photo in cloudinary, don't upload a new one
+  // TODO: edit the existing photo in cloudinary, don't upload a new one, instead modify the existing one for the user
   if (avatar && avatar !== user.avatar) {
     try {
       user.avatar = await imgCloud.upload(avatar, displayName);
@@ -221,7 +218,7 @@ module.exports.updateProfile = async (req, res) => {
           displayName: modifiedUser.displayName,
           avatar: modifiedUser.avatar
         },
-        successMsg: 'Your profile has been successfully updated.',
+        message: 'Your profile has been successfully updated.',
         emailSuccessMsg
       });
 
@@ -275,7 +272,7 @@ module.exports.updateEmail = async (req, res) => {
 
       const { forField, tokenValue } = user.tokenInfo;
 
-      if (forField !== 'email' || tokenValue === token) {
+      if (forField !== 'email' || tokenValue !== token) {
 
         return res.status(403).send({
           message: 'The link has expired.'
@@ -335,19 +332,28 @@ module.exports.deleteAccount = async (req, res) => {
   try {
 
     const user = await User.findUserById(req.user._id);
+
+    if (!user) {
+      return errorUtils.noUser(res);
+    }
+
     const verified = await user.verifyPassword(req.body.password);
 
     if (!verified) {
-      return res.status(403).send({
-        message: 'Password is incorrect.'
-      });
+      return errorUtils.wrongPwd(res);
     }
 
     const deletedUser = await user.remove();
 
-    if (deletedUser.email === user.email) {
-      return res.status(204).send();
+    if (deletedUser.email !== user.email) {
+      return res.send({
+        message: `Failed to delete the account associated with ${user.email}.`
+      });
     }
+
+    return res.send({
+      message: `The account associated with ${user.email} has been successfully deleted.`
+    });
 
   } catch (error) {
     return errorUtils.server(res, error);

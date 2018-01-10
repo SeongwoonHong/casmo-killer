@@ -3,21 +3,19 @@ import PropTypes from 'prop-types';
 
 import { trim } from 'sharedUtils/inputValidators';
 
-const messages = (type) => {
+const inputType = (name) => {
 
-  switch (type) {
-
-    case 'email':
-      return 'This email is linked to your account';
+  switch (name) {
 
     case 'password':
-      return 'Password must be between 6 and 20 characters.';
+      return 'password';
 
-    case 'displayName':
-      return 'Display name must be between 4 and 20 characters with no space.';
+    case 'email':
+      return 'email';
 
     default:
-      return '';
+      return 'text';
+
   }
 
 };
@@ -41,14 +39,34 @@ const placeholder = (type) => {
 
 };
 
-// TODO: refactor so that it has proper { props.title }
+const messages = (type) => {
+
+  switch (type) {
+
+    case 'email':
+      return 'This email is linked to your account.';
+
+    case 'password':
+      return 'Password must be between 6 and 20 characters.';
+
+    case 'displayName':
+      return 'Display name must be between 4 and 20 characters with no space.';
+
+    default:
+      return '';
+  }
+
+};
+
 const UserInputField = (props) => {
   if (props.isVisible) {
     return (
       <div className="user-form-fields">
-        <label htmlFor={ props.name }>{ props.title || props.name }</label>
+        <label htmlFor={ props.name }>
+          { props.title || placeholder(props.name) }
+        </label>
         <input
-          type={ props.type }
+          type={ props.type || inputType(props.name) }
           id={ props.name }
           name={ props.name }
           placeholder={ props.placeholder || placeholder(props.name) }
@@ -81,7 +99,8 @@ UserInputField.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
-  message: PropTypes.string
+  message: PropTypes.string,
+  children: PropTypes.any,
 };
 
 UserInputField.defaultProps = {
@@ -90,7 +109,8 @@ UserInputField.defaultProps = {
   type: 'text',
   placeholder: '',
   disabled: false,
-  message: ''
+  message: '',
+  children: null
 };
 
 export default UserInputField;

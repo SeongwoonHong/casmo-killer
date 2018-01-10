@@ -11,7 +11,7 @@ const initialState = {
   },
   userModalInfo: {
     _id: null,
-    username: null,
+    displayName: null,
     avatar: null
   }
 };
@@ -37,7 +37,7 @@ export default function (state = initialState.user, action) {
       return Object.assign({}, state, {
         userModalInfo: {
           _id: action.userInfo._id,
-          username: action.userInfo.username,
+          displayName: action.userInfo.displayName,
           avatar: action.userInfo.avatar
         }
       });
@@ -45,7 +45,7 @@ export default function (state = initialState.user, action) {
       return Object.assign({}, state, {
         userModalInfo: {
           _id: null,
-          username: null,
+          displayName: null,
           avatar: null
         }
       });

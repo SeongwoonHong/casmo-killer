@@ -36,7 +36,6 @@ class Recover extends Component {
 
     if (this.state.email.length === 0) {
       this.setState({
-        isLoading: false,
         isSuccess: false,
         message: 'Please enter your email address'
       });
@@ -48,17 +47,22 @@ class Recover extends Component {
           email: this.state.email
         });
 
-        this.setState({
-          isLoading: false,
-          isSuccess: data && data.message,
-          message: (data && data.message) || 'Failed to communicate with the server.'
-        });
+        if (data && data.message) {
+          this.setState({
+            isSuccess: true,
+            message: data.message
+          });
+        } else {
+          this.setState({
+            isSuccess: false,
+            message: 'Failed to communicate with the server.'
+          });
+        }
 
       } catch (error) {
 
         console.error(error);
         this.setState({
-          isLoading: false,
           isSuccess: false,
           message: error.response.data.message
         });
@@ -66,6 +70,8 @@ class Recover extends Component {
       }
 
     }
+
+    this.setState({ isLoading: false });
 
   };
 
@@ -78,10 +84,11 @@ class Recover extends Component {
     return (
       <UserPageContainer
         className="Recover"
-        title="Forgot your password"
-        icon="lock"
-        formTitle="Please enter your email"
+        title="Reset Your Password"
+        icon="refresh"
         isLoading={ isLoading }
+        formTitle="Please enter your email"
+        formMsg="Enter your email address below, and we will send you a link where you can reset your password."
         onSubmit={ this.onSubmitHandler }
         button={
           <button
@@ -98,11 +105,10 @@ class Recover extends Component {
           message={ message }
           type={ isSuccess ? 'success' : 'error' } />
         <UserInputField
-          type="email"
           name="email"
           onChange={ this.onChangeHandler }
           value={ email }
-          message="Verification email will be sent to this email." />
+          message="The instruction email will be sent to this email." />
       </UserPageContainer>
     );
 

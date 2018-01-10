@@ -13,7 +13,7 @@ class ReplyList extends Component {
         return (
           !comment.deleted &&
           <Reply
-            commentAuthor={comment.author.username}
+            commentAuthor={comment.author.displayName}
             postAuthor={this.props.activePost.author}
             avatar={comment.avatar}
             comment={comment.memo}

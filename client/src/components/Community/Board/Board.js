@@ -108,7 +108,7 @@ class Board extends Component {
                       () => { this.props.openUserInfoModal(this.props.boardAuthor.author); }
                     }
                   >
-                    <a href="#">{this.props.boardAuthor.author ? this.props.boardAuthor.author.username : null}</a>
+                    <a href="#">{this.props.boardAuthor.author ? this.props.boardAuthor.author.displayName : null}</a>
                   </PlainBtn>
                 </div>
               </div>

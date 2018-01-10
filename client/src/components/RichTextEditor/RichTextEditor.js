@@ -18,12 +18,17 @@ class RichTextEditor extends Component {
     // console.log(this.props.value);
   }
   onChange = (value) => {
-    console.log(value);
+    // console.log(value);
     this.setState({ value });
     // const htmlPre = '<!DOCTYPE html><html><body><div data-contents="true">';
     // const htmlPost = '</div></body></html>';
     // this.props.onChange(value.toString('html'));
-    this.props.onChange(this.editor.refs.editor.refs.editor.innerHTML);
+    if (this.props.onChange) {
+      this.props.onChange(
+        this.editor.refs.editor.refs.editor.innerHTML
+      );
+    }
+    // this.props.onChange(this.editor.refs.editor.refs.editor.innerHTML);
     // console.log(this.editor.refs.editor.refs.editor.innerHTML);
   };
   render() {

@@ -6,13 +6,13 @@ export default function (ComposedComponent, route = '/') {
   class RequireAuthentication extends Component {
 
     componentWillMount = () => {
-      if (!this.props.user.username) {
+      if (!this.props.user.isLoggedIn) {
         Materialize.toast($('<span style="color: red">Log in is required</span>'), 3000, 'rounded');
         this.props.history.push(route);
       }
     }
     componentWillUpdate = (nextProps) => {
-      if (!nextProps.user.username) {
+      if (!nextProps.user.isLoggedIn) {
         Materialize.toast($('<span style="color: red">Log in is required</span>'), 3000, 'rounded');
         this.props.history.push(route);
       }

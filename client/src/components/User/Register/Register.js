@@ -22,7 +22,7 @@ class Register extends Component {
     super(props);
 
     this.state = {
-      isLoading: true,
+      isLoading: false,
       displayName: {
         value: props.auth.displayName || '',
         message: ''
@@ -42,13 +42,13 @@ class Register extends Component {
 
   componentDidMount() {
 
-    const { history, match, setErrorState } = this.props;
+    const { history, auth, match, setErrorState } = this.props;
 
     if (match.params.token) {
 
       this.verifyToken(match.params.token);
 
-    } else {
+    } else if (!auth.email) {
 
       setErrorState({
         errorTitle: 'The registration link is invalid.',
@@ -207,8 +207,7 @@ class Register extends Component {
       } else {
 
         this.setState({
-          errorMsg: 'Failed to communicate with the server.',
-          isLoading: false
+          errorMsg: 'Failed to communicate with the server.'
         });
 
       }
@@ -217,11 +216,12 @@ class Register extends Component {
 
       console.error(error.response.data.error);
       this.setState({
-        errorMsg: error.response.data.message,
-        isLoading: false
+        errorMsg: error.response.data.message
       });
 
     }
+
+    this.setState({ isLoading: false });
 
   };
 
@@ -244,8 +244,6 @@ class Register extends Component {
 
         history.replace('/user/register');
 
-        this.setState({ isLoading: false });
-
       } else {
         // TODO: error handling?
       }
@@ -254,7 +252,6 @@ class Register extends Component {
 
       console.error(error);
 
-      // TODO: better title and message from the server
       setErrorState({
         errorTitle: 'The registration link is invalid.',
         errorMsg: error.response.data.message
@@ -292,15 +289,14 @@ class Register extends Component {
         className="Register"
         title="User Registration"
         icon="person_add"
+        isLoading={ isLoading }
         formTitle="User Information"
         formMsg="Please fill in the following fields to complete your registration."
-        isLoading={ isLoading }
         onSubmit={ this.onSubmitHandler }>
 
         <FormMessage message={ errorMsg } />
 
         <UserInputField
-          type="email"
           name="email"
           onChange={ this.onChangeHandler }
           value={ auth.email || '' }
@@ -309,13 +305,13 @@ class Register extends Component {
         <FormMessage message={ displayName.message } />
         <UserInputField
           name="displayName"
+          title="Display Name"
           onChange={ this.onChangeHandler }
           value={ displayName.value } />
 
         <FormMessage message={ password.message } />
         <UserInputField
           isVisible={ auth.strategy === 'local' }
-          type="password"
           name="password"
           onChange={ this.onChangeHandler }
           value={ password.value } />

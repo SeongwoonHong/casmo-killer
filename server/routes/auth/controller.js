@@ -49,7 +49,7 @@ module.exports.requestVerification = async (req, res) => {
 module.exports.requestPwdReset = async (req, res) => {
 
   const validations = Joi.validate(req.body, Joi.object({
-    email: Joi.string().email().required()
+    email: Joi.string().required()
   }));
 
   if (validations.error) {
@@ -78,14 +78,16 @@ module.exports.requestPwdReset = async (req, res) => {
 
     if (envelope && envelope.to) {
 
-      await user.updateTokenInfo({
+      const tokenUpdated = await user.updateTokenInfo({
         forField: 'password',
         tokenValue: token
       });
 
-      return res.send({
-        message: `Verification email has been sent to ${envelope.to}. Please click the link in the email to reset your password.`
-      });
+      if (tokenUpdated.ok === 1) {
+        return res.send({
+          message: `The email has been sent to ${envelope.to}. Please click the link in the email to reset your password.`
+        });
+      }
 
     }
 
@@ -152,6 +154,7 @@ module.exports.verifyToken = async (req, res) => {
       user.tokenInfo.forField !== 'password' &&
       user.tokenInfo.tokenValue !== req.params.token
     ) {
+      // TODO: may need a different error message than this one
       return errorUtils.expiredToken(res);
     }
 
@@ -253,9 +256,7 @@ module.exports.localLogin = async (req, res) => {
     const verified = await user.verifyPassword(password);
 
     if (!verified) {
-      return res.status(403).send({
-        message: 'Incorrect email or password.'
-      });
+      return errorUtils.wrongPwd(res);
     }
 
     const accessToken = await user.generateToken();

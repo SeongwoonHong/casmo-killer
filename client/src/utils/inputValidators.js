@@ -81,6 +81,7 @@ export const validatePassword = async (password, confirmPassword = null, isReset
       return 'Password does not match the confirm password.';
     } else if (password === confirmPassword && !isReset) {
       try {
+        // this is used only when a logged in user wants to update the password
         const { status } = await axios.post('/api/user/verify/password', { password });
         if (status === 204) {
           return 'New password must be different from current password.';

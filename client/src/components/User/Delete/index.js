@@ -32,7 +32,8 @@ class Delete extends Component {
   onSubmitHandler = async () => {
 
     if (!this.state.agreed) {
-      return this.setState({ agreed: true });
+      this.setState({ agreed: true });
+      return;
     }
 
     this.setState({ isLoading: true });
@@ -40,7 +41,6 @@ class Delete extends Component {
     if (this.state.password.length === 0) {
 
       this.setState({
-        isLoading: false,
         isSuccess: false,
         message: 'Please enter your password to continue.'
       });
@@ -48,36 +48,46 @@ class Delete extends Component {
     } else {
 
       try {
-        const { status } = await axios.delete('/api/user/delete/account', {
+
+        const { data } = await axios.delete('/api/user/delete/account', {
           data: {
             password: this.state.password
           }
         });
-        if (status === 204) {
+
+        if (data && data.message) {
           this.setState({
-            isLoading: false,
-            agreed: false,
             isSuccess: true,
-            message: 'Your account has been fucking deleted for fucking ever.'
+            agreed: false,
+            message: data.message
+          });
+        } else {
+          this.setState({
+            isSuccess: false,
+            message: 'Failed to communicate with the server.'
           });
         }
+
       } catch (error) {
+
         console.error(error);
         this.setState({
-          isLoading: false,
           isSuccess: false,
           message: error.response.data.message
         });
+
       }
 
     }
+
+    this.setState({ isLoading: false });
 
   };
 
   render() {
 
     const {
-      isLoading, agreed, password, isSuccess, message
+      isLoading, isSuccess, agreed, password, message
     } = this.state;
 
     const button = (isComplete, agree) => {
@@ -104,17 +114,17 @@ class Delete extends Component {
         className="Delete"
         title="Account Delete"
         icon="delete_forever"
+        isLoading={ isLoading }
         formTitle={
-          agreed
-            ? 'Please Confirm Your Password'
-            : 'Confirm Account Deletion'
+          !agreed
+            ? 'Confirm Account Deletion'
+            : 'Please Confirm Your Password'
         }
         formMsg={
-          agreed
-            ? null
-            : 'This will permanently delete your account. This process is irreversible.'
+          !agreed
+            ? 'This will permanently delete your account. This process is irreversible.'
+            : null
         }
-        isLoading={ isLoading }
         onSubmit={ this.onSubmitHandler }
         button={ button(isSuccess && message.length > 0, agreed) }>
         <FormMessage
@@ -122,7 +132,6 @@ class Delete extends Component {
           type={ isSuccess ? 'success' : 'error' } />
         <UserInputField
           isVisible={ agreed }
-          type="password"
           name="password"
           onChange={ this.onChangeHandler }
           value={ password } />

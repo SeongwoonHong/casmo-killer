@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import LoadingOverlay from 'sharedComponents/LoadingOverlay';
 
@@ -20,7 +21,6 @@ const UserPageContainer = (props) => {
       <div className="user-form-box">
         <LoadingOverlay
           isVisible={ props.isLoading }
-          isComplete={ props.isComplete }
           overlayColor="rgba(256,256,256,.75)"
           circleColor="#1F4B40" />
         <div className="user-form-header">
@@ -55,6 +55,26 @@ const UserPageContainer = (props) => {
       </div>
     </div>
   );
+};
+
+UserPageContainer.propTypes = {
+  className: PropTypes.string.isRequired,
+  title: PropTypes.string,
+  icon: PropTypes.string,
+  isLoading: PropTypes.bool,
+  formTitle: PropTypes.string.isRequired,
+  formMsg: PropTypes.string,
+  onSubmit: PropTypes.func.isRequired,
+  children: PropTypes.any.isRequired,
+  disabled: PropTypes.bool
+};
+
+UserPageContainer.defaultProps = {
+  title: '',
+  icon: '',
+  isLoading: false,
+  formMsg: '',
+  disabled: false
 };
 
 export default UserPageContainer;

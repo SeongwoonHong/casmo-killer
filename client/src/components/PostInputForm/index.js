@@ -7,55 +7,57 @@ import TimeAgo from 'react-timeago';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import renderField from './renderField';
 import renderRichTextEditor from './renderRichTextEditor';
+import Tags from '../Tags/Tags';
 import validate from './validatePost';
 import Button from '../Button/Button';
 import './PostInputForm.scss';
 
 const formatter = buildFormatter(krStrings);
 
-const tags = [ // 지금은 하드코딩으로..
-  { name: 'toronto', link: '#' },
-  { name: 'casmo', link: '#' },
-  { name: 'killer', link: '#' }
-];
 class PostInputForm extends Component {
   componentWillMount() {
     if (this.props.formType === 'edit') {
       this.props.initialize({
         title: this.props.title,
-        contents: this.props.contents
+        contents: this.props.contents,
+        tags: this.props.data.tags
       });
     }
   }
 
   render() {
     const { handleSubmit, submitting } = this.props;
-    let authorName;
+    let author;
     let date;
     let postNum;
     let authorId;
     let avatar;
+    let tags;
     if (this.props.formType === 'edit') {
       ({
-        authorName, date, postNum, authorId, avatar
+        author, date, postNum, authorId, avatar, tags
       } = this.props.data);
     }
+    tags = tags || '';
+    author = author || {};
     const fieldClass = this.props.formType === 'edit' ? 'active' : '';
     const infoForEdit = (
       [
         <div className="header" key="header">
           <Link to={`/userPage/${authorId}`}><img src={avatar} alt="" className="circle avartar_circle" /></Link>
           <div className="header-info">
-            <div className="writer">{authorName}</div>
+            <div className="writer">{author.displayName}</div>
             <div className="created">Created : <TimeAgo date={date} formatter={formatter} /></div>
           </div>
         </div>,
         <div className="title" key="title">
           <div className="info">
             #{ postNum }
-            { tags.map((tag) => {
-              return <Link to={`${tag.link}`} key={tag.name} className="tags">{tag.name}</Link>;
-            })}
+            {
+              tags.length > 0 && tags.trim().split(' ').map((tag) => {
+                return <Link to="#" key={tag} className="tags">{tag}</Link>;
+              })
+          }
           </div>
         </div>
       ]
@@ -70,6 +72,13 @@ class PostInputForm extends Component {
               type="text"
               component={renderField}
               label="Title*"
+              fieldClass={fieldClass}
+            />
+            <Field
+              name="tags"
+              type="text"
+              component={Tags}
+              label=""
               fieldClass={fieldClass}
             />
             <Field

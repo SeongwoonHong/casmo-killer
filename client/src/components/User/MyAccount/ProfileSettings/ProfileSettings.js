@@ -23,6 +23,7 @@ class ProfileSettings extends Component {
 
     this.state = {
       isLoading: false,
+      isSuccess: false,
       email: {
         value: props.user.email,
         message: ''
@@ -35,7 +36,7 @@ class ProfileSettings extends Component {
         value: props.user.avatar,
         message: ''
       },
-      successMsg: '',
+      message: '',
       emailSuccessMsg: ''
     };
 
@@ -113,7 +114,7 @@ class ProfileSettings extends Component {
 
     this.setState({
       isLoading: true,
-      successMsg: '',
+      message: '',
       emailSuccessMsg: ''
     });
 
@@ -139,8 +140,7 @@ class ProfileSettings extends Component {
       displayName: {
         ...this.state.displayName,
         message: errorMsg.forDisplayName
-      },
-      successMsg: ''
+      }
     });
 
     if (
@@ -163,7 +163,8 @@ class ProfileSettings extends Component {
         if (data && data.user) {
 
           this.setState({
-            successMsg: data.successMsg,
+            isSuccess: true,
+            message: data.message,
             emailSuccessMsg: data.emailSuccessMsg
           });
 
@@ -176,6 +177,10 @@ class ProfileSettings extends Component {
 
       } catch (error) {
         console.error(error);
+        this.setState({
+          isSuccess: false,
+          message: error.response.data.message
+        });
       }
 
     }
@@ -189,7 +194,13 @@ class ProfileSettings extends Component {
     const { user } = this.props;
 
     const {
-      isLoading, email, displayName, avatar, successMsg, emailSuccessMsg
+      isLoading,
+      isSuccess,
+      email,
+      displayName,
+      avatar,
+      message,
+      emailSuccessMsg
     } = this.state;
 
     const hasBeenEdited = email.value === user.email
@@ -212,18 +223,19 @@ class ProfileSettings extends Component {
     return (
       <UserPageContainer
         className="Profile-settings"
+        isLoading={ isLoading }
         formTitle="Profile Settings"
         formMsg="Update your email, display name, and profile picture."
-        isLoading={ isLoading }
         onSubmit={ this.onSubmitHandler }
         disabled={ hasBeenEdited }>
 
-        <FormMessage message={ successMsg } type="success" />
+        <FormMessage
+          message={ message }
+          type={ isSuccess ? 'success' : 'error '} />
         <FormMessage message={ emailSuccessMsg } type="warning" />
 
         <FormMessage message={ email.message } />
         <UserInputField
-          type="email"
           name="email"
           onChange={ this.onChangeHandler }
           value={ email.value || '' }
@@ -232,6 +244,7 @@ class ProfileSettings extends Component {
         <FormMessage message={ displayName.message } />
         <UserInputField
           name="displayName"
+          title="Display Name"
           onChange={ this.onChangeHandler }
           value={ displayName.value || '' } />
 

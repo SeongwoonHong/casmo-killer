@@ -40,3 +40,9 @@ module.exports.expiredToken = (res) => {
     message: 'This verification link has expired.'
   });
 };
+
+module.exports.wrongPwd = (res) => {
+  res.status(401).send({
+    message: 'Password is incorrect.'
+  });
+};

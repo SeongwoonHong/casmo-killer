@@ -207,7 +207,11 @@ class LocalLogin extends Component {
         key={ 1 }
         className="other-options">
         <Link to={ `/user/auth/${isLogin ? 'signup' : 'login'}` }>
-          { `${formText} ${isLogin ? 'For Free' : 'With Email'}`}
+          {
+            isLogin
+              ? 'Sign Up For Free'
+              : 'Log In With Email'
+          }
         </Link>
         <Link to="/user/recover">
           Forgot Your Password?

@@ -1,9 +1,12 @@
 const chalk = require('chalk');
 
 module.exports.server = (res, error, message = 'Internal Server Error.') => {
+
   console.log(chalk.bgRed(message));
   console.log(chalk.bgRed(error));
+
   res.status(500).send({ error, message });
+
 };
 
 module.exports.validation = (res, error) => {
@@ -18,4 +21,10 @@ module.exports.validation = (res, error) => {
 
   res.status(400).send({ error, message });
 
+};
+
+module.exports.noUser = (res) => {
+  return res.status(403).send({
+    message: 'No user is registered with this email address.'
+  });
 };

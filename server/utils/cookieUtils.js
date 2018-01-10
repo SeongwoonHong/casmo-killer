@@ -1,4 +1,4 @@
-const extractCookie = (cookies = '') => {
+module.exports.extractCookie = (cookies = '') => {
 
   const obj = {};
 
@@ -21,5 +21,3 @@ const extractCookie = (cookies = '') => {
   return obj;
 
 };
-
-module.exports = extractCookie;

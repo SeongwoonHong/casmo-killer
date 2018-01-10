@@ -5,7 +5,8 @@ const initialState = {
   layout: {
     breakPoint: breakPoint(window.innerWidth),
     isMainMenuVisible: false,
-    isUserDropdownOpen: false
+    isUserDropdownOpen: false,
+    isAppLoading: true,
   }
 };
 
@@ -30,6 +31,13 @@ export default function (state = initialState.layout, action) {
         isUserDropdownOpen: action.payload !== null
           ? action.payload
           : !state.isUserDropdownOpen
+      });
+
+    case types.TOGGLE_APP_LOADING:
+      return Object.assign({}, state, {
+        isAppLoading: action.payload !== null
+          ? action.payload
+          : !state.isAppLoading
       });
 
     default:

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import * as actions from 'actions';
 
-import './NotFound.scss';
+import './ErrorPage.scss';
 
 class ErrorPage extends Component {
 

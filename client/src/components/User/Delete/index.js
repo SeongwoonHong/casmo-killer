@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-import LoadingOverlay from 'sharedComponents/LoadingOverlay';
 import FormMessage from 'sharedComponents/FormMessage';
+
+import UserPageContainer from '../shared/UserPageContainer';
+import UserInputField from '../shared/UserInputField';
 
 import './Delete.scss';
 
@@ -15,21 +17,19 @@ class Delete extends Component {
 
     this.state = {
       isLoading: false,
+      isSuccess: false,
       agreed: false,
       password: '',
-      isSuccess: false,
       message: ''
     };
 
   }
 
   onChangeHandler = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({ [e.name]: e.value });
   };
 
-  onSubmitHandler = async (e) => {
-
-    e.preventDefault();
+  onSubmitHandler = async () => {
 
     if (!this.state.agreed) {
       return this.setState({ agreed: true });
@@ -38,34 +38,38 @@ class Delete extends Component {
     this.setState({ isLoading: true });
 
     if (this.state.password.length === 0) {
-      return this.setState({
+
+      this.setState({
         isLoading: false,
         isSuccess: false,
         message: 'Please enter your password to continue.'
       });
-    }
 
-    try {
-      const { status } = await axios.delete('/api/user/delete/account', {
-        data: {
-          password: this.state.password
+    } else {
+
+      try {
+        const { status } = await axios.delete('/api/user/delete/account', {
+          data: {
+            password: this.state.password
+          }
+        });
+        if (status === 204) {
+          this.setState({
+            isLoading: false,
+            agreed: false,
+            isSuccess: true,
+            message: 'Your account has been fucking deleted for fucking ever.'
+          });
         }
-      });
-      if (status === 204) {
+      } catch (error) {
+        console.error(error);
         this.setState({
           isLoading: false,
-          agreed: false,
-          isSuccess: true,
-          message: 'Your account has been fucking deleted for fucking ever.'
+          isSuccess: false,
+          message: error.response.data.message
         });
       }
-    } catch (error) {
-      console.error(error);
-      this.setState({
-        isLoading: false,
-        isSuccess: false,
-        message: error.response.data.message
-      });
+
     }
 
   };
@@ -76,74 +80,53 @@ class Delete extends Component {
       isLoading, agreed, password, isSuccess, message
     } = this.state;
 
+    const button = (isComplete, agree) => {
+      if (isComplete) {
+        return (
+          <Link
+            to="/"
+            className="user-form-button">
+            Ck-Board Home
+          </Link>
+        );
+      }
+      return (
+        <button
+          type="submit"
+          className="user-form-button">
+          { agree ? 'Delete My Account' : 'Agree' }
+        </button>
+      );
+    };
+
     return (
-      <div className="Delete">
-        <h2 className="user-page-title">
-          Account Delete
-          <i className="material-icons">
-            delete_forever
-          </i>
-        </h2>
-        <div className="user-form-box">
-          <LoadingOverlay
-            isVisible={ isLoading }
-            overlayColor="rgba(256,256,256,.75)"
-            circleColor="#1F4B40" />
-          <div className="user-form-header">
-            {
-              !agreed
-                ? <h3>Confirm Account Deletion</h3>
-                : <h3>Please Confirm Your Password</h3>
-            }
-            {
-              !agreed
-                ? <p>This will permanently delete your account. This process is irreversible.</p>
-                : null
-            }
-          </div>
-          <form
-            noValidate
-            className="user-form"
-            onSubmit={ this.onSubmitHandler }>
-            <FormMessage
-              message={ message }
-              type={ isSuccess ? 'success' : 'error' } />
-            {
-              agreed
-                ? (
-                  <div className="user-form-fields">
-                    <label htmlFor="password">Password</label>
-                    <input
-                      type="password"
-                      id="password"
-                      name="password"
-                      placeholder="Password"
-                      onChange={ this.onChangeHandler }
-                      value={ password } />
-                  </div>
-                )
-                : null
-            }
-            {
-              isSuccess && message.length > 0
-                ? (
-                  <Link
-                    to="/"
-                    className="user-form-button">
-                    Ck-Board Home
-                  </Link>
-                )
-                : (
-                  <button
-                    type="submit"
-                    className="user-form-button">
-                    { agreed ? 'Delete My Account' : 'Agree' }
-                  </button>
-                )
-            }
-          </form>
-        </div>
-      </div>
+      <UserPageContainer
+        className="Delete"
+        title="Account Delete"
+        icon="delete_forever"
+        formTitle={
+          agreed
+            ? 'Please Confirm Your Password'
+            : 'Confirm Account Deletion'
+        }
+        formMsg={
+          agreed
+            ? null
+            : 'This will permanently delete your account. This process is irreversible.'
+        }
+        isLoading={ isLoading }
+        onSubmit={ this.onSubmitHandler }
+        button={ button(isSuccess && message.length > 0, agreed) }>
+        <FormMessage
+          message={ message }
+          type={ isSuccess ? 'success' : 'error' } />
+        <UserInputField
+          isVisible={ agreed }
+          type="password"
+          name="password"
+          onChange={ this.onChangeHandler }
+          value={ password } />
+      </UserPageContainer>
     );
 
   }

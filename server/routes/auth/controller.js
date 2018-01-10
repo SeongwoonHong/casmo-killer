@@ -2,8 +2,12 @@ const Joi = require('joi');
 
 const User = require('../../db/models/user');
 
-const errorHandler = require('../../utils/errorHandler');
-const jwt = require('../../utils/jwt');
+const {
+  REACT_APP_cookieKeyName: cookieKeyName
+} = process.env;
+
+const errorUtils = require('../../utils/errorUtils');
+const jwt = require('../../utils/jwtUtils');
 const mailer = require('../../utils/mailer');
 const imgCloud = require('../../utils/imgCloud');
 const socialAuth = require('../../utils/socialAuth');
@@ -15,7 +19,7 @@ module.exports.requestVerification = async (req, res) => {
   }));
 
   if (validations.error) {
-    return errorHandler.validation(res, validations.error);
+    return errorUtils.validation(res, validations.error);
   }
 
   const { email } = req.body;
@@ -25,16 +29,68 @@ module.exports.requestVerification = async (req, res) => {
   try {
     token = await jwt.sign({ email }, 'email', '24hrs');
   } catch (error) {
-    return errorHandler.server(res, error);
+    return errorUtils.server(res, error);
   }
 
   try {
+
     const { envelope } = await mailer.verifyNewEmail(token, email);
+
     return res.send({
-      message: `Verification email has been sent to ${envelope.to}`
+      message: `Verification email has been sent to ${envelope.to}. Please click the link in the email to complete your registration.`
     });
+
   } catch (error) {
-    return errorHandler.server(res, error);
+    return errorUtils.server(res, error);
+  }
+
+};
+
+module.exports.requestPwdReset = async (req, res) => {
+
+  const validations = Joi.validate(req.body, Joi.object({
+    email: Joi.string().email().required()
+  }));
+
+  if (validations.error) {
+    return errorUtils.validation(res, validations.error);
+  }
+
+  const { email } = req.body;
+
+  try {
+
+    const user = await User.findUserByEmail(email);
+
+    if (!user) {
+      return errorUtils.noUser(res);
+    }
+
+    if (user.strategy !== 'local') {
+      return res.status(403).send({
+        message: 'This email is registered with one of social network providers (Facebook, Google, and Kakao). Please visit one of the social network providers to change the password.'
+      });
+    }
+
+    const token = await jwt.sign({ email }, 'email', '24hrs');
+
+    const { envelope } = await mailer.requestPwdReset(token, email);
+
+    if (envelope && envelope.to) {
+
+      await user.updateTokenInfo({
+        forField: 'password',
+        tokenValue: token
+      });
+
+      return res.send({
+        message: `Verification email has been sent to ${envelope.to}. Please click the link in the email to reset your password.`
+      });
+
+    }
+
+  } catch (error) {
+    return errorUtils.server(res, error);
   }
 
 };
@@ -47,92 +103,61 @@ module.exports.verifyToken = async (req, res) => {
   }));
 
   if (validations.error) {
-    return errorHandler.validation(res, validations.error);
+    return errorUtils.validation(res, validations.error);
   }
 
-  if (req.params.type === 'register') {
+  // decode the token to get the user's email
+  let email = null;
 
-    let email = null;
+  try {
 
-    try {
-      ({ email } = await jwt.verify(req.params.token));
-    } catch (error) {
-      if (error.name === 'TokenExpiredError') {
-        // when the token has expired
-        return res.status(401).send({
-          message: 'This verification link has expired.'
-        });
-      }
-      return errorHandler.server(res, error);
+    ({ email } = await jwt.verify(req.params.token));
+
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      // when the token has expired
+      return errorUtils.expiredToken(res);
+    }
+    return errorUtils.server(res, error);
+  }
+
+  let user = null;
+
+  try {
+    user = await User.findUserByEmail(email);
+  } catch (error) {
+    return errorUtils.server(res, error);
+  }
+
+  // if verifying the token for new user registration
+  if (req.params.type === 'register' && user) {
+    return errorUtils.takenEmail(res);
+  }
+
+  // if verifying to change an existing user's email address
+  if (req.params.type === 'reset') {
+
+    if (!user) {
+      return errorUtils.noUser(res);
     }
 
-    // still need to check if the email address is already taken
-    // because the user might click the verification link after
-    // the account is created for that email address.
-    try {
-
-      const dupUser = await User.findUserByEmail(email);
-
-      if (dupUser) {
-        return res.status(403).send({
-          message: 'An account has already been created with your email address.'
-        });
-      }
-
-    } catch (error) {
-      return errorHandler.server(res, error);
+    // TODO: this may be removed
+    if (user.strategy !== 'local') {
+      return res.status(403).send({
+        message: 'This email is registered with one of social network providers (Facebook, Google, and Kakao). Please visit one of the social network providers to change the password.'
+      });
     }
 
-    return res.send({ email });
-
-  } else if (req.params.type === 'reset') {
-
-    let email = null;
-
-    try {
-      ({ email } = await jwt.verify(req.params.token));
-    } catch (error) {
-      if (error.name === 'TokenExpiredError') {
-        // when the token has expired
-        return res.status(401).send({
-          message: 'This verification link has expired.'
-        });
-      }
-      return errorHandler.server(res, error);
+    if (
+      user.tokenInfo.forField !== 'password' &&
+      user.tokenInfo.tokenValue !== req.params.token
+    ) {
+      return errorUtils.expiredToken(res);
     }
-
-    try {
-
-      const user = await User.findUserByEmail(email);
-
-      if (!user) {
-        return res.status(403).send({
-          message: 'No account found for this email address.'
-        });
-      }
-
-      if (user.strategy !== 'local') {
-        return res.status(403).send({
-          message: 'This email is registered with one of social network providers (Facebook, Google, and Kakao). Please visit one of the social network providers to change the password.'
-        });
-      }
-
-      if (
-        user.tokenInfo.forField !== 'password' &&
-        user.tokenInfo.tokenValue !== req.params.token
-      ) {
-        return res.status(403).send({
-          message: 'This verification link has expired.'
-        });
-      }
-
-    } catch (error) {
-      return errorHandler.server(res, error);
-    }
-
-    return res.send({ email });
 
   }
+
+  return res.send({ email });
 
 };
 
@@ -150,14 +175,15 @@ module.exports.verifyEmail = async (req, res) => {
 
     const user = await User.findUserByEmail(email);
 
-    // this is when the loggedin user wants to update the email address
+    // this is when the user is logged and and wants to update the email address
     if (req.user && user && user._id.equals(req.user._id)) {
       return res.send({ isDuplicate: false });
     }
+
     return res.send({ isDuplicate: !!user });
 
   } catch (error) {
-    return errorHandler.server(res, error);
+    return errorUtils.server(res, error);
   }
 
 };
@@ -176,7 +202,7 @@ module.exports.verifyDisplayName = async (req, res) => {
 
     const user = await User.findUserByDisplayName(displayName);
 
-    // this is when the loggedin user wants to update the display name
+    // this is when the user is logged and and wants to update the displayName
     if (req.user && user && user._id.equals(req.user._id)) {
       return res.send({ isDuplicate: false });
     }
@@ -184,7 +210,7 @@ module.exports.verifyDisplayName = async (req, res) => {
     res.send({ isDuplicate: !!user });
 
   } catch (error) {
-    return errorHandler.server(res, error);
+    return errorUtils.server(res, error);
   }
 
 };
@@ -193,11 +219,11 @@ module.exports.localLogin = async (req, res) => {
 
   const validations = Joi.validate(req.body, Joi.object({
     email: Joi.string().required(),
-    password: Joi.string().min(6).max(20).required()
+    password: Joi.string().required()
   }));
 
   if (validations.error) {
-    return errorHandler.validation(res, validations.error);
+    return errorUtils.validation(res, validations.error);
   }
 
   const { email, password } = req.body;
@@ -207,19 +233,17 @@ module.exports.localLogin = async (req, res) => {
     const user = await User.findUserByEmail(email);
 
     if (!user) {
-      return res.status(403).send({
-        message: 'No account found for this email address.'
-      });
+      return errorUtils.noUser(res);
     }
 
     const {
-      _id, displayName, avatar, strategy
+      strategy, _id, displayName, avatar
     } = user;
 
-    // if the email is registered with a social account
+    // if the email is registered with a social authentication
+    // let the user know which provider it's registered with
     if (strategy !== 'local') {
       const provider = strategy[0].toUpperCase() + strategy.substr(1, strategy.length - 1);
-      // let the user know which provider the email is registered with
       return res.status(403).send({
         message: `Your email is already registered with ${provider}.`
       });
@@ -234,26 +258,25 @@ module.exports.localLogin = async (req, res) => {
       });
     }
 
-    // generate access token and set it to cookie
     const accessToken = await user.generateToken();
 
     return res
-      .cookie('ckToken', accessToken, {
+      .cookie(cookieKeyName, accessToken, {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 7
       })
       .send({
         user: {
+          strategy,
           _id,
           email,
           displayName,
           avatar,
-          strategy
         }
       });
 
   } catch (error) {
-    return errorHandler.server(res, error);
+    return errorUtils.server(res, error);
   }
 
 };
@@ -261,7 +284,7 @@ module.exports.localLogin = async (req, res) => {
 module.exports.localRegister = async (req, res) => {
 
   const validations = Joi.validate(req.body, Joi.object({
-    strategy: Joi.string().required(),
+    strategy: Joi.string().valid('local'),
     email: Joi.string().email().required(),
     displayName: Joi.string().regex(/^\S*$/).regex(/^[a-zA-Z0-9ㄱ-ㅎ가-힣]{4,20}/).required(),
     avatar: Joi.string().allow(''),
@@ -269,7 +292,7 @@ module.exports.localRegister = async (req, res) => {
   }));
 
   if (validations.error) {
-    return errorHandler.validation(res, validations.error);
+    return errorUtils.validation(res, validations.error);
   }
 
   const { displayName, avatar } = req.body;
@@ -278,11 +301,13 @@ module.exports.localRegister = async (req, res) => {
   let avatarUrl = null;
 
   if (avatar) {
+
     try {
       avatarUrl = await imgCloud.upload(avatar, displayName);
     } catch (error) {
-      return errorHandler.server(res, error, 'Failed to upload the profile photo.');
+      return errorUtils.server(res, error, 'Failed to upload the profile photo.');
     }
+
   }
 
   try {
@@ -292,12 +317,10 @@ module.exports.localRegister = async (req, res) => {
       avatar: avatarUrl
     }));
 
-    console.log(user);
-
     const accessToken = await user.generateToken();
 
     return res
-      .cookie('ckToken', accessToken, {
+      .cookie(cookieKeyName, accessToken, {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 7
       })
@@ -312,7 +335,7 @@ module.exports.localRegister = async (req, res) => {
       });
 
   } catch (error) {
-    return errorHandler.server(res, error);
+    return errorUtils.server(res, error);
   }
 
 };
@@ -325,7 +348,7 @@ module.exports.socialLogin = async (req, res) => {
   }));
 
   if (validations.error) {
-    return errorHandler.validation(res, validations.error);
+    return errorUtils.validation(res, validations.error);
   }
 
   // retrieves the user's profile using the provider's api
@@ -335,27 +358,25 @@ module.exports.socialLogin = async (req, res) => {
     const { provider, accessToken } = req.body;
     socialProfile = await socialAuth[provider](accessToken);
   } catch (error) {
-    return errorHandler.server(res, error, 'Failed to retrieve your social profile.');
+    return errorUtils.server(res, error, 'Failed to retrieve your social profile.');
   }
 
-  // check if the email registered with the social network exists in database
+  // check if the email registered with the social network already exists in database
   try {
 
     const emailDup = await User.findUserByEmail(socialProfile.email);
 
     // if an account already exists with the same email address,
-    // but with different social network provider, let the user know
+    // but with different social network profile, let the user know
     // about the unavailability of the email address.
     if (emailDup) {
       if (
         emailDup.strategy !== socialProfile.strategy &&
         emailDup.socialId !== socialProfile.socialId
       ) {
-        return res.status(403).send({
-          message: 'Your email is already registered.'
-        });
+        return errorUtils.takenEmail(res);
 
-        // if exactly matching account is found, log the user in
+        // if the social network profile as well as the email matches, log the user in
       } else if (
         emailDup.strategy === socialProfile.strategy &&
         emailDup.socialId === socialProfile.socialId
@@ -364,7 +385,7 @@ module.exports.socialLogin = async (req, res) => {
         const accessToken = await emailDup.generateToken();
 
         return res
-          .cookie('ckToken', accessToken, {
+          .cookie(cookieKeyName, accessToken, {
             httpOnly: true,
             maxAge: 1000 * 60 * 60 * 24 * 7
           })
@@ -381,7 +402,7 @@ module.exports.socialLogin = async (req, res) => {
     }
 
   } catch (error) {
-    return errorHandler.server(res, error);
+    return errorUtils.server(res, error);
   }
 
   // if email search has failed, try searching with socialProfile
@@ -389,8 +410,8 @@ module.exports.socialLogin = async (req, res) => {
 
     let socialUser = await User.findUserBySocialProfile(socialProfile.strategy, socialProfile.socialId);
 
-    // if there is no user with the same social profile,
-    // redirect to registration form instead of logging in
+    // if there is no user with the same social profile and email address,
+    // redirect the user to the registration form instead of logging in
     if (!socialUser) {
       return res.send({
         shouldRegister: true,
@@ -405,17 +426,19 @@ module.exports.socialLogin = async (req, res) => {
       });
     }
 
-    // user might've updated the email in the social provider's end,
-    // if that's the case, we need to update the email address
-    // TODO: this is experimental, and may need better error handling
+    /**
+     * TODO: it is possible that the social user changes the email address through their social network service, and we may have to reflect the change in the email address in our database.
+     */
     if (socialUser.email !== socialProfile.email) {
+      // TODO: this needs better error handling
       socialUser = await socialUser.updateEmail(socialProfile.email);
     }
 
+    // log the user in
     const accessToken = await socialUser.generateToken();
 
     return res
-      .cookie('ckToken', accessToken, {
+      .cookie(cookieKeyName, accessToken, {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 7
       })
@@ -430,7 +453,7 @@ module.exports.socialLogin = async (req, res) => {
       });
 
   } catch (error) {
-    return errorHandler.server(res, error);
+    return errorUtils.server(res, error);
   }
 
 };
@@ -447,19 +470,26 @@ module.exports.socialRegister = async (req, res) => {
   }));
 
   if (validations.error) {
-    return errorHandler.validation(res, validations.error);
+    return errorUtils.validation(res, validations.error);
   }
 
+  // make another call to the social apis to make sure that their social information hasn't been compromised in the client and still matches what the api returns
   try {
-    const { strategy, socialId, socialToken } = req.body;
+
+    const {
+      strategy, email, socialId, socialToken
+    } = req.body;
+
     const profile = await socialAuth[strategy](socialToken);
-    if (profile.socialId !== socialId) {
-      console.log('something is fucked up.');
-    } else if (profile.socialId === socialId) {
-      console.log('we are all good here.');
+
+    if (profile.socialId !== socialId || profile.email !== email) {
+      return res.status(400).send({
+        message: 'Incorrect social profile information provided. Please try again or contact your social network provider.'
+      });
     }
+
   } catch (error) {
-    return errorHandler.server(res, error, 'Failed to retrieve your social profile.');
+    return errorUtils.server(res, error, 'Failed to retrieve your social profile.');
   }
 
   const { displayName, avatar } = req.body;
@@ -468,11 +498,13 @@ module.exports.socialRegister = async (req, res) => {
   let avatarUrl = null;
 
   if (avatar) {
+
     try {
       avatarUrl = await imgCloud.upload(avatar, displayName);
     } catch (error) {
-      return errorHandler.server(res, error, 'Failed to upload the profile photo.');
+      return errorUtils.server(res, error, 'Failed to upload the profile photo.');
     }
+
   }
 
   try {
@@ -485,7 +517,7 @@ module.exports.socialRegister = async (req, res) => {
     const accessToken = await user.generateToken();
 
     return res
-      .cookie('ckToken', accessToken, {
+      .cookie(cookieKeyName, accessToken, {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 7
       })
@@ -500,60 +532,7 @@ module.exports.socialRegister = async (req, res) => {
       });
 
   } catch (error) {
-    return errorHandler.server(res, error);
-  }
-
-};
-
-module.exports.requestPwdReset = async (req, res) => {
-
-  const validations = Joi.validate(req.body, Joi.object({
-    email: Joi.string().email().required()
-  }));
-
-  if (validations.error) {
-    return errorHandler.validation(res, validations.error);
-  }
-
-  const { email } = req.body;
-
-  let token = null;
-
-  try {
-    token = await jwt.sign({ email }, 'email', '24hrs');
-  } catch (error) {
-    return errorHandler.server(res, error);
-  }
-
-  try {
-
-    const user = await User.findUserByEmail(email);
-
-    if (!user) {
-      return res.status(403).send({
-        message: 'No account found for this email address.'
-      });
-    }
-
-    if (user.strategy !== 'local') {
-      return res.status(403).send({
-        message: 'This email is registered with one of social network providers (Facebook, Google, and Kakao). Please visit one of the social network providers to change the password.'
-      });
-    }
-
-    const { envelope } = await mailer.requestPwdReset(token, email);
-
-    await user.updateTokenInfo({
-      forField: 'password',
-      tokenValue: token
-    });
-
-    return res.send({
-      message: `Verification email has been sent to ${envelope.to}`
-    });
-
-  } catch (error) {
-    return errorHandler.server(res, error);
+    return errorUtils.server(res, error);
   }
 
 };
@@ -566,7 +545,7 @@ module.exports.resetPassword = async (req, res) => {
   }));
 
   if (validations.error) {
-    return errorHandler.validation(res, validations.error);
+    return errorUtils.validation(res, validations.error);
   }
 
   const { email, newPassword } = req.body;
@@ -576,9 +555,7 @@ module.exports.resetPassword = async (req, res) => {
     const user = await User.findUserByEmail(email);
 
     if (!user) {
-      return res.status(403).send({
-        message: 'No account found for this email address.'
-      });
+      return errorUtils.noUser(res);
     }
 
     const isPwdSame = await user.verifyPassword(newPassword);
@@ -602,7 +579,7 @@ module.exports.resetPassword = async (req, res) => {
     }
 
   } catch (error) {
-    return errorHandler.server(res, error);
+    return errorUtils.server(res, error);
   }
 
 };

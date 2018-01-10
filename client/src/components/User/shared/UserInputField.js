@@ -41,11 +41,12 @@ const placeholder = (type) => {
 
 };
 
-const InputField = (props) => {
+// TODO: refactor so that it has proper { props.title }
+const UserInputField = (props) => {
   if (props.isVisible) {
     return (
       <div className="user-form-fields">
-        <label htmlFor={ props.name }>{ props.name }</label>
+        <label htmlFor={ props.name }>{ props.title || props.name }</label>
         <input
           type={ props.type }
           id={ props.name }
@@ -60,14 +61,20 @@ const InputField = (props) => {
           value={ props.value }
           disabled={ props.disabled } />
         <p>{ props.message || messages(props.name) }</p>
+        {
+          props.children
+            ? props.children
+            : null
+        }
       </div>
     );
   }
   return null;
 };
 
-InputField.propTypes = {
+UserInputField.propTypes = {
   isVisible: PropTypes.bool,
+  title: PropTypes.string,
   name: PropTypes.string.isRequired,
   type: PropTypes.string,
   placeholder: PropTypes.string,
@@ -77,12 +84,13 @@ InputField.propTypes = {
   message: PropTypes.string
 };
 
-InputField.defaultProps = {
+UserInputField.defaultProps = {
   isVisible: true,
+  title: '',
   type: 'text',
   placeholder: '',
   disabled: false,
   message: ''
 };
 
-export default InputField;
+export default UserInputField;

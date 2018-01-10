@@ -45,23 +45,43 @@ class MyAccount extends Component {
     this.setState({ isLoading: true });
 
     if (this.props.user.isLoggedIn) {
+
       try {
+
         const { data } = await axios.put('/api/user/update/email', { token });
-        this.props.loginSuccess(data.user);
-        this.setState({
-          isLoading: false,
-          isSuccess: true,
-          message: 'Your email address has been successfully updated.'
-        });
+
+        if (data && data.user && data.message) {
+
+          this.setState({
+            isSuccess: true,
+            message: data.message
+          });
+
+          const user = await storage.set('ckUser', data.user);
+          this.props.loginSuccess(user);
+
+        } else {
+
+          this.setState({
+            isSuccess: false,
+            message: 'Failed to communicate with the server.'
+          });
+
+        }
+
       } catch (error) {
+
         console.error(error);
         this.setState({
-          isLoading: false,
           isSuccess: false,
           message: error.response.data.message
         });
+
       }
+
     }
+
+    this.setState({ isLoading: false });
 
   };
 

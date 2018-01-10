@@ -8,16 +8,20 @@ const upload = require('multer')({
 const controller = require('./controller');
 
 /**
- * sends out a verification email to a given email address,
- * which will contain a link to the registration page.
+ * sends out a verification email to a given email address for registration
  */
 router.post('/request/verification', controller.requestVerification);
 
 /**
- * decodes a token and returns the decoded email
+ * sends out a verification email for users who forgot their password
+ */
+router.post('/request/passwordReset', controller.requestPwdReset);
+
+/**
+ * decodes a token and returns the decoded email to the client
  * to be used either for new user registration or password reset
  */
-router.get('/verify/token/:token/:type', controller.verifyToken);
+router.get('/verify/token/:type/:token', controller.verifyToken);
 
 /**
  * check for a duplicate email address
@@ -30,8 +34,7 @@ router.get('/verify/email/:email', controller.verifyEmail);
 router.get('/verify/displayName/:displayName', controller.verifyDisplayName);
 
 /**
- * log the user in using local strategy
- * using email and password
+ * log the user in using email and password
  */
 router.post('/login/local', controller.localLogin);
 
@@ -50,11 +53,6 @@ router.post('/login/social', controller.socialLogin);
  * registers a new social user
  */
 router.post('/register/social', upload.any(), controller.socialRegister);
-
-/**
- * sends out a verification email for users who forgot their password
- */
-router.post('/request/passwordReset', controller.requestPwdReset);
 
 /**
  * sends out a verification email for users who forgot their password

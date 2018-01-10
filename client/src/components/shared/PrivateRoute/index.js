@@ -9,10 +9,10 @@ const PrivateRoute = ({
     <Route
       path={ path }
       render={ (props) => {
-        onEnter(props.location.pathname);
         if (isLoggedIn) {
           return <Component {...props} />;
         }
+        onEnter(props.location.pathname);
         return <Redirect to="/user/auth/login" />;
       }}
     />

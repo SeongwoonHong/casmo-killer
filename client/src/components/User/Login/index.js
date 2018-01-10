@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'actions';
 
 import Login from './Login';
@@ -13,9 +12,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    loginSuccess: payload => dispatch(actions.loginSuccess(payload)),
+    loginSuccess: (payload, shouldReset) => dispatch(actions.loginSuccess(payload, shouldReset)),
     setUserForRegistration: userInfo => dispatch(actions.setUserForRegistration(userInfo))
   };
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

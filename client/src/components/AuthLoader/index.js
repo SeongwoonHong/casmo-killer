@@ -13,44 +13,45 @@ class AuthLoader extends Component {
 
   verifyLoginStatus = async () => {
 
-    const user = await storage.get('ckUser');
+    const { loginSuccess, logout, completeLoading } = this.props;
+
+    const user = storage.get('ckUser');
 
     if (user) {
-      this.props.loginSuccess(user);
+      loginSuccess(user);
     }
 
     try {
 
       const { data } = await axios.get('/api/user/verify/status');
 
-      if (data.user) {
-        const newUser = await storage.set('ckUser', data.user);
-        this.props.loginSuccess(newUser);
+      if (data && data.user) {
+        loginSuccess(data.user);
+      } else {
+        logout(false);
       }
 
     } catch (error) {
-      storage.remove('ckUser');
+      logout(false);
     }
+
+    completeLoading(false);
 
   };
 
   render() {
     return null;
-
   }
 
 }
 
-const mapStateToProps = (state) => {
-  return {
+export default connect(
+  state => ({
     user: state.user
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    loginSuccess: payload => dispatch(actions.loginSuccess(payload))
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(AuthLoader);
+  }),
+  dispatch => ({
+    loginSuccess: payload => dispatch(actions.loginSuccess(payload)),
+    logout: isLoggedIn => dispatch(actions.logout(isLoggedIn)),
+    completeLoading: payload => dispatch(actions.toggleAppLoading(payload))
+  })
+)(AuthLoader);

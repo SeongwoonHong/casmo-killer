@@ -18,13 +18,6 @@ router.post('/logout', controller.logout);
 router.get('/verify/status', controller.verifyLoginStatus);
 
 /**
- * verify user's updated email and update user's email
- * used when the user clicks on the verification link in the email
- * different than /verify/email in auth route controller
- */
-router.get('/verify/email/:token', controller.verifyNewEmail);
-
-/**
  * verify user's email once more before letting the user change the password
  * (only applicable to users using local strategy)
  */

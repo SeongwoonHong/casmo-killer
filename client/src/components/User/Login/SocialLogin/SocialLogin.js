@@ -27,24 +27,38 @@ class SocialLogin extends Component {
 
     const { onRegister, onSuccess } = this.props;
 
-    this.setState({ isLoading: true });
+    this.setState({
+      isLoading: true,
+      message: ''
+    });
 
     try {
 
       const { data } = await axios.post('/api/auth/login/social', payload);
 
-      if (data.shouldRegister) {
-        onRegister(data.profile);
+      if (data) {
+
+        if (data.shouldRegister) {
+          onRegister(data.profile);
+        } else if (data.user) {
+          onSuccess(data.user);
+        }
+
       } else {
-        onSuccess(data.user);
+
+        this.setState({
+          isLoading: false,
+          message: 'Failed to communicate with the server.'
+        });
+
       }
 
     } catch (error) {
 
       console.error(error.response.data.error);
       this.setState({
-        message: error.response.data.message,
         isLoading: false,
+        message: error.response.data.message
       });
 
     }

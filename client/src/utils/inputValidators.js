@@ -69,6 +69,7 @@ export const validateDisplayName = async (displayName) => {
 
 export const validatePassword = async (password, confirmPassword = null, isReset = false) => {
 
+  // TODO: password may need more robust validation
   if (inputValidator.isEmpty(password)) {
     return 'Please enter password.';
   } else if (password.length < 6) {
@@ -90,12 +91,6 @@ export const validatePassword = async (password, confirmPassword = null, isReset
     }
 
   }
-  /*
-  TODO: password may need more robust validation
-  } else if (!inputValidator.isPassword(password.value)) {
-    passwordMsg = 'The provided password is not valid.';
-  }
-  */
 
   return '';
 

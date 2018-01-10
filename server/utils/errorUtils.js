@@ -24,7 +24,19 @@ module.exports.validation = (res, error) => {
 };
 
 module.exports.noUser = (res) => {
-  return res.status(403).send({
-    message: 'No user is registered with this email address.'
+  res.status(403).send({
+    message: 'No account exists with this email address.'
+  });
+};
+
+module.exports.takenEmail = (res) => {
+  res.status(403).send({
+    message: 'This email address is already registered.'
+  });
+};
+
+module.exports.expiredToken = (res) => {
+  res.status(400).send({
+    message: 'This verification link has expired.'
   });
 };

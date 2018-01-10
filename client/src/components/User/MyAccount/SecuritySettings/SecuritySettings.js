@@ -2,51 +2,62 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-import LoadingOverlay from 'sharedComponents/LoadingOverlay';
+import { validatePassword } from 'sharedUtils/inputValidators';
+
 import FormMessage from 'sharedComponents/FormMessage';
 
-import { trim, validatePassword } from 'sharedUtils/inputValidators';
+import UserPageContainer from '../../shared/UserPageContainer';
+import UserInputField from '../../shared/UserInputField';
 
 import './SecuritySettings.scss';
+
+const initialState = {
+  isLoading: false,
+  isEditing: false,
+  isVerified: false,
+  isSuccess: false,
+  currentPassword: '',
+  newPassword: '',
+  confirmPassword: '',
+  message: ''
+};
 
 class SecuritySettings extends Component {
 
   constructor(props) {
-
     super(props);
-
-    this.state = {
-      isLoading: false,
-      isEditing: false,
-      isVerified: false,
-      currentPassword: '',
-      newPassword: '',
-      confirmPassword: '',
-      message: '',
-      isSuccess: false
-    };
-
+    this.state = initialState;
   }
 
   onChangeHandler = (e) => {
-    this.setState({ [e.target.name]: trim(e.target.value) });
+    this.setState({ [e.name]: e.value });
   };
 
-  onSubmitHandler = (e) => {
-    e.preventDefault();
+  onSubmitHandler = () => {
+
+    this.setState({
+      isLoading: true,
+      message: ''
+    });
+
+    if (!this.state.isVerified) {
+      this.verifyCurrentPassword();
+    } else {
+      this.submitNewPassword();
+    }
+
   };
 
   verifyCurrentPassword = async () => {
 
     const { currentPassword } = this.state;
 
-    this.setState({ isLoading: true });
+    if (currentPassword.length === 0) {
 
-    const passwordMsg = await validatePassword(currentPassword);
-
-    if (passwordMsg.length > 0) {
-
-      this.setState({ message: passwordMsg });
+      this.setState({
+        isSuccess: false,
+        message: 'Please enter your password.'
+      });
 
     } else {
 
@@ -57,11 +68,13 @@ class SecuritySettings extends Component {
         });
 
         if (status === 204) {
+          this.setState(Object.assign({}, initialState, {
+            isVerified: true
+          }));
+        } else {
           this.setState({
-            isEditing: false,
-            isVerified: true,
-            currentPassword: '',
-            message: ''
+            isSuccess: false,
+            message: 'Failed to communicate with the server.'
           });
         }
 
@@ -69,6 +82,7 @@ class SecuritySettings extends Component {
 
         console.error(error);
         this.setState({
+          isSuccess: false,
           message: error.response.data.message
         });
 
@@ -82,139 +96,134 @@ class SecuritySettings extends Component {
 
   submitNewPassword = async () => {
 
-    this.setState({ isLoading: true });
-
     const { newPassword, confirmPassword } = this.state;
-
-    this.setState({ message: '' });
 
     const validationMsg = await validatePassword(newPassword, confirmPassword);
 
     if (validationMsg.length > 0) {
-      return this.setState({
-        isLoading: false,
+
+      this.setState({
+        isSuccess: false,
         message: validationMsg
       });
-    }
 
-    try {
+    } else {
 
-      const { status } = await axios.put('/api/user/update/password', { newPassword });
+      try {
 
-      if (status === 204) {
+        const { status } = await axios.put('/api/user/update/password', { newPassword });
+
+        if (status === 204) {
+          this.setState({
+            isSuccess: true,
+            currentPassword: '',
+            newPassword: '',
+            confirmPassword: '',
+            message: 'Your password has been successfully updated.'
+          });
+        } else {
+          this.setState({
+            isSuccess: false,
+            message: 'Failed to communicate with the server.'
+          });
+        }
+
+      } catch (error) {
+
+        console.error(error.response.data.error);
         this.setState({
-          isEditing: false,
-          isLoading: false,
-          isVerified: false,
-          currentPassword: '',
-          newPassword: '',
-          confirmPassword: '',
-          message: 'Your password has been successfully updated.',
-          isSuccess: true
+          isSuccess: false,
+          message: error.response.data.message
         });
+
       }
 
-    } catch (error) {
-
-      console.error(error.response.data.error);
-      this.setState({
-        isLoading: false,
-        message: error.response.data.message
-      });
-
     }
+
+    this.setState({ isLoading: false });
 
   };
 
   render() {
 
     const {
-      currentPassword, newPassword, confirmPassword, message, isLoading, isSuccess
+      isLoading,
+      isEditing,
+      isSuccess,
+      currentPassword,
+      newPassword,
+      confirmPassword,
+      message,
     } = this.state;
 
     return (
-      <div className="Security-settings user-form-box">
-        <LoadingOverlay
-          isVisible={ isLoading }
-          overlayColor="rgba(256,256,256,.75)"
-          circleColor="#1F4B40" />
-        <div className="user-form-header">
-          <h3>Security Settings</h3>
-          <p>Change your password, or delete your account</p>
-          <FormMessage message={ message } type={ isSuccess ? 'success' : 'error' } />
-        </div>
-        <form
-          noValidate
-          onSubmit={ this.onSubmitHandler }
-          className="user-form">
-          {
-            this.state.isEditing
-              ? (
-                <div className="user-form-fields">
-                  <label htmlFor="password">Confirm your password</label>
-                  <input
-                    type="password"
-                    id="password"
-                    name="currentPassword"
-                    value={ currentPassword }
-                    onChange={ this.onChangeHandler } />
-                  <p>Please enter your current password to proceed.</p>
-                  <button
-                    type="submit"
-                    className="user-form-button"
-                    onClick={ this.verifyCurrentPassword }>
-                    Submit
-                  </button>
-                </div>
-              )
-              : null
-          }
-          {
-            this.state.isVerified
-              ? ([
-                <div key={ 0 } className="user-form-fields">
-                  <label htmlFor="newPassword">Enter new password</label>
-                  <input
-                    type="password"
-                    id="newPassword"
-                    name="newPassword"
-                    value={ newPassword }
-                    onChange={ this.onChangeHandler } />
-                  <p>Please enter new password.</p>
-                </div>,
-                <div key={ 1 } className="user-form-fields">
-                  <label htmlFor="confirmPassword">Confirm your password</label>
-                  <input
-                    type="password"
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    value={ confirmPassword }
-                    onChange={ this.onChangeHandler } />
-                  <p>Please confirm the new password.</p>
-                  <button
-                    type="submit"
-                    className="user-form-button"
-                    onClick={ this.submitNewPassword }>
-                    Submit
-                  </button>
-                </div>
-              ])
-              : null
-          }
+      <UserPageContainer
+        className="Security-settings"
+        formTitle="Security Settings"
+        formMsg="Change your password, or delete your account"
+        isLoading={ isLoading }
+        onSubmit={ this.onSubmitHandler }
+        button={ (
           <div className="button-group">
             <button
+              type="button"
               className="user-form-button"
               onClick={ () => {
-                this.setState({ isEditing: true });
+                this.setState({ isEditing: !isEditing });
               }}>
-              Change Password
+              { isEditing ? 'Cancel' : 'Change Password' }
             </button>
-            <Link to="/user/delete" className="user-form-button">
+            <Link
+              to="/user/delete"
+              className="user-form-button">
               Delete Account
             </Link>
           </div>
-        </form>
-      </div>
+        ) }>
+
+        <FormMessage
+          message={ message }
+          type={ isSuccess ? 'success' : 'error' } />
+
+        <UserInputField
+          isVisible={ this.state.isEditing }
+          title="Current Password"
+          type="password"
+          name="currentPassword"
+          onChange={ this.onChangeHandler }
+          value={ currentPassword }
+          message="Please enter your current password to proceed.">
+          <button
+            type="submit"
+            className="user-form-button">
+            Submit
+          </button>
+        </UserInputField>
+
+        <UserInputField
+          isVisible={ this.state.isVerified }
+          title="New Password"
+          type="password"
+          name="newPassword"
+          onChange={ this.onChangeHandler }
+          value={ newPassword }
+          message="Enter new password." />
+        <UserInputField
+          isVisible={ this.state.isVerified }
+          title="Confirm Password"
+          type="password"
+          name="confirmPassword"
+          onChange={ this.onChangeHandler }
+          value={ confirmPassword }
+          message="Confirm your password.">
+          <button
+            type="submit"
+            className="user-form-button">
+            Submit
+          </button>
+        </UserInputField>
+
+      </UserPageContainer>
     );
 
   }

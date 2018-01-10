@@ -12,7 +12,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    loginSuccess: userInfo => dispatch(actions.loginSuccess(userInfo))
+    setUserForRegistration: payload => dispatch(actions.setUserForRegistration(payload)),
+    loginSuccess: (payload, shouldReset) => dispatch(actions.loginSuccess(payload, shouldReset)),
+    setErrorState: error => dispatch(actions.setErrorState(error))
   };
 }
 

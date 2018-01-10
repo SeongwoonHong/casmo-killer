@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-import LoadingOverlay from 'sharedComponents/LoadingOverlay';
 import FormMessage from 'sharedComponents/FormMessage';
+
+import UserPageContainer from '../shared/UserPageContainer';
+import UserInputField from '../shared/UserInputField';
 
 import './Recover.scss';
 
@@ -14,53 +16,55 @@ class Recover extends Component {
 
     this.state = {
       isLoading: false,
-      email: '',
       isSuccess: false,
+      email: '',
       message: ''
     };
 
   }
 
   onChangeHandler = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({ [e.name]: e.value });
   };
 
-  onSubmitHandler = async (e) => {
+  onSubmitHandler = async () => {
 
-    e.preventDefault();
-
-    this.setState({ isLoading: true });
+    this.setState({
+      isLoading: true,
+      message: ''
+    });
 
     if (this.state.email.length === 0) {
-      return this.setState({
+      this.setState({
         isLoading: false,
         isSuccess: false,
         message: 'Please enter your email address'
       });
-    }
+    } else {
 
-    try {
+      try {
 
-      // TODO: need to differentiate from users registered with social authentications
-      const { data } = await axios.post('/api/auth/request/passwordReset', {
-        email: this.state.email
-      });
+        const { data } = await axios.post('/api/auth/request/passwordReset', {
+          email: this.state.email
+        });
 
-      if (data && data.message) {
         this.setState({
           isLoading: false,
-          isSuccess: true,
-          message: data.message
+          isSuccess: data && data.message,
+          message: (data && data.message) || 'Failed to communicate with the server.'
         });
+
+      } catch (error) {
+
+        console.error(error);
+        this.setState({
+          isLoading: false,
+          isSuccess: false,
+          message: error.response.data.message
+        });
+
       }
 
-    } catch (error) {
-      console.error(error);
-      this.setState({
-        isLoading: false,
-        isSuccess: false,
-        message: error.response.data.message
-      });
     }
 
   };
@@ -72,44 +76,34 @@ class Recover extends Component {
     } = this.state;
 
     return (
-      <div className="Recover">
-        <h2 className="user-page-title">
-          Forgot your password
-        </h2>
-        <div className="user-form-box">
-          <LoadingOverlay
-            isVisible={ isLoading }
-            overlayColor="rgba(256,256,256,.75)"
-            circleColor="#1F4B40" />
-          <div className="user-form-header">
-            <h3>Please enter your email.</h3>
-          </div>
-          <form
-            noValidate
-            className="user-form"
-            onSubmit={ this.onSubmitHandler }>
-            <FormMessage
-              message={ message }
-              type={ isSuccess ? 'success' : 'error' } />
-            <div className="user-form-fields">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="Email Address"
-                onChange={ this.onChangeHandler }
-                value={ email } />
-              <p>Verification email will be sent to this email.</p>
-            </div>
-            <button
-              type="submit"
-              className="user-form-button">
-              Submit
-            </button>
-          </form>
-        </div>
-      </div>
+      <UserPageContainer
+        className="Recover"
+        title="Forgot your password"
+        icon="lock"
+        formTitle="Please enter your email"
+        isLoading={ isLoading }
+        onSubmit={ this.onSubmitHandler }
+        button={
+          <button
+            type="submit"
+            className="user-form-button">
+            {
+              message.length > 0 && isSuccess
+                ? 'Resend'
+                : 'Submit'
+            }
+          </button>
+        }>
+        <FormMessage
+          message={ message }
+          type={ isSuccess ? 'success' : 'error' } />
+        <UserInputField
+          type="email"
+          name="email"
+          onChange={ this.onChangeHandler }
+          value={ email }
+          message="Verification email will be sent to this email." />
+      </UserPageContainer>
     );
 
   }

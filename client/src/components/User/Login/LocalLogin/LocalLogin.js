@@ -2,43 +2,51 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-import { validateEmail, trim } from 'sharedUtils/inputValidators';
+import { validateEmail } from 'sharedUtils/inputValidators';
 
-import LoadingOverlay from 'sharedComponents/LoadingOverlay';
 import FormMessage from 'sharedComponents/FormMessage';
 
+import UserPageContainer from '../../shared/UserPageContainer';
+import UserInputField from '../../shared/UserInputField';
+
 import './LocalLogin.scss';
+
+const initialState = {
+  isLoading: false,
+  email: '',
+  password: '',
+  message: '',
+  successMsg: '',
+};
 
 class LocalLogin extends Component {
 
   constructor(props) {
-
     super(props);
+    this.state = initialState;
+  }
 
-    this.state = {
-      email: '',
-      password: '',
-      message: '',
-      isLoading: false,
-      successMsg: '',
-    };
-
+  componentWillReceiveProps(nextProps) {
+    if (this.props.isLogin !== nextProps.isLogin) {
+      this.setState(initialState);
+    }
   }
 
   onChangeHandler = (e) => {
-    this.setState({ [e.target.name]: trim(e.target.value) });
+    this.setState({ [e.name]: e.value });
   };
 
-  onSubmitHandler = (e) => {
+  onSubmitHandler = () => {
 
-    e.preventDefault();
+    const { isLogin } = this.props;
 
     this.setState({
       isLoading: true,
       message: '',
+      successMsg: ''
     });
 
-    if (this.props.isLogin) {
+    if (isLogin) {
       this.onLogin();
     } else {
       this.onRegister();
@@ -48,6 +56,7 @@ class LocalLogin extends Component {
 
   async onLogin() {
 
+    const { onSuccess } = this.props;
     const { email, password } = this.state;
 
     if (email.length === 0 || password.length === 0) {
@@ -65,7 +74,18 @@ class LocalLogin extends Component {
           email, password
         });
 
-        this.props.onSuccess(data.user);
+        if (data && data.user) {
+
+          onSuccess(data.user);
+
+        } else {
+
+          this.setState({
+            isLoading: false,
+            message: 'Failed to communicate with the server.'
+          });
+
+        }
 
       } catch (error) {
 
@@ -98,22 +118,32 @@ class LocalLogin extends Component {
 
       try {
 
-        const { data } = await axios.post('/api/auth/request/verification', { email });
-
-        this.setState({
-          isLoading: false,
-          message: '',
-          successMsg: data.message
+        const { data } = await axios.post('/api/auth/request/verification', {
+          email
         });
+
+        if (data && data.message) {
+
+          this.setState({
+            isLoading: false,
+            successMsg: data.message
+          });
+
+        } else {
+
+          this.setState({
+            isLoading: false,
+            message: 'Failed to communicate with the server.'
+          });
+
+        }
 
       } catch (error) {
 
-        // TODO: hook up an error message regarding sending out verification email
         console.error(error);
         this.setState({
           isLoading: false,
-          message: error.response.data.message,
-          successMsg: ''
+          message: error.response.data.message
         });
 
       }
@@ -132,90 +162,58 @@ class LocalLogin extends Component {
 
     const formText = isLogin ? 'Log In' : 'Sign Up';
 
-    return (
-      <div className="Local-login user-form-box">
-        <LoadingOverlay
-          isVisible={ isLoading }
-          overlayColor="rgba(256,256,256,.75)"
-          circleColor="#1F4B40" />
-        <div className="user-form-header">
-          <h3>{ `${formText} With Email` }</h3>
-        </div>
-        <form
-          noValidate
-          className="user-form"
-          onSubmit={ this.onSubmitHandler }>
-          <FormMessage message={ message } />
-          {
-            !successMsg
-              ? (
-                <div className="user-form-fields">
-                  <label htmlFor="email">Email</label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder="Email Address"
-                    onChange={ this.onChangeHandler }
-                    value={ email } />
-                  <p>This email is linked to your account.</p>
-                </div>
-              )
-              : (
-                <FormMessage
-                  message={ successMsg }
-                  type="success" />
-              )
-          }
-          {
-            isLogin
-              ? (
-                <div className="user-form-fields">
-                  <label htmlFor="password">Password</label>
-                  <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Password"
-                    onChange={ this.onChangeHandler }
-                    value={ password } />
-                  <p>Password must be between 4 and 20 characters.</p>
-                </div>
-              )
-              : null
-          }
-          {
-            successMsg
-              ? (
-                <Link
-                  to={ redirectUrl }
-                  className="user-form-button">
-                  Go Back
-                </Link>
-              )
-              : (
-                <button
-                  type="submit"
-                  className="user-form-button">
-                  { formText }
-                </button>
-              )
-          }
-        </form>
-        <div className="other-options">
-          <Link to={ `/user/auth/${isLogin ? 'signup' : 'login'}` }>
-            {
-              isLogin
-                ? 'Sign Up For Free'
-                : 'Log In With Email'
-            }
-          </Link>
-          <Link to="/user/recover">
-            Forgot Your Password?
-          </Link>
-        </div>
+    return ([
+      <UserPageContainer
+        key={ 0 }
+        className="Local-login"
+        formTitle={ `${formText} with Email`}
+        isLoading={ isLoading }
+        onSubmit={ this.onSubmitHandler }
+        button={
+          successMsg.length > 0
+            ? (
+              <Link
+                to={ redirectUrl }
+                className="user-form-button">
+                Go Back
+              </Link>
+            )
+            : (
+              <button
+                type="submit"
+                className="user-form-button">
+                { formText }
+              </button>
+            )
+        }>
+        <FormMessage message={ message } />
+        <UserInputField
+          isVisible={ !successMsg.length > 0 }
+          type="email"
+          name="email"
+          onChange={ this.onChangeHandler }
+          value={ email } />
+        <FormMessage
+          message={ successMsg }
+          type="success" />
+        <UserInputField
+          isVisible={ isLogin }
+          type="password"
+          name="password"
+          onChange={ this.onChangeHandler }
+          value={ password } />
+      </UserPageContainer>,
+      <div
+        key={ 1 }
+        className="other-options">
+        <Link to={ `/user/auth/${isLogin ? 'signup' : 'login'}` }>
+          { `${formText} ${isLogin ? 'For Free' : 'With Email'}`}
+        </Link>
+        <Link to="/user/recover">
+          Forgot Your Password?
+        </Link>
       </div>
-    );
+    ]);
 
   }
 

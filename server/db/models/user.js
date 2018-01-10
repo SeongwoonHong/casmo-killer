@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 
 const { Schema } = mongoose;
 
-const jwtUtils = require('../../utils/jwt');
+const jwtUtils = require('../../utils/jwtUtils');
 
 const UserSchema = new Schema({
   createdAt: {

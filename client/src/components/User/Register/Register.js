@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-import LoadingOverlay from 'sharedComponents/LoadingOverlay';
-import FormMessage from 'sharedComponents/FormMessage';
-
+import * as storage from 'sharedUtils/storage';
 import {
-  trim,
   validateImg,
   validateDisplayName,
   validatePassword
 } from 'sharedUtils/inputValidators';
+
+import FormMessage from 'sharedComponents/FormMessage';
+
+import UserPageContainer from '../shared/UserPageContainer';
+import UserInputField from '../shared/UserInputField';
 
 import './Register.scss';
 
@@ -20,6 +22,7 @@ class Register extends Component {
     super(props);
 
     this.state = {
+      isLoading: true,
       displayName: {
         value: props.auth.displayName || '',
         message: ''
@@ -32,26 +35,58 @@ class Register extends Component {
         value: props.auth.avatar || '',
         message: ''
       },
-      errorMsg: '',
-      isLoading: false
+      errorMsg: ''
     };
 
   }
 
+  componentDidMount() {
+
+    const { history, match, setErrorState } = this.props;
+
+    if (match.params.token) {
+
+      this.verifyToken(match.params.token);
+
+    } else {
+
+      setErrorState({
+        errorTitle: 'The registration link is invalid.',
+        errorMsg: 'Please submit your email again to complete the registration.'
+      });
+
+      history.push('/error');
+
+    }
+
+  }
+
+  // TODO: ask if the user wants to leave for sure because the token will be lost
+  componentWillUnmount() {}
+
   onChangeHandler = (e) => {
     this.setState({
-      [e.target.name]: {
-        ...this.state[e.target.name],
-        value: trim(e.target.value)
+      [e.name]: {
+        ...this.state[e.name],
+        value: e.value
       }
     });
   };
 
-  onSubmitHandler = async (e) => {
+  onSubmitHandler = async () => {
 
-    this.setState({ isLoading: true });
+    const resetState = {};
 
-    e.preventDefault();
+    Object.keys(this.state).forEach((key) => {
+      resetState[key] = this.state[key];
+      if (Object.prototype.hasOwnProperty.call(this.state[key], 'message')) {
+        resetState[key].message = '';
+      }
+    });
+
+    this.setState(Object.assign({}, resetState, {
+      isLoading: true
+    }));
 
     const { displayName, password } = this.state;
 
@@ -65,7 +100,7 @@ class Register extends Component {
     this.setState({
       displayName: {
         ...this.state.displayName,
-        message: errorMsg.forDisplayName || ''
+        message: errorMsg.forDisplayName
       }
     });
 
@@ -90,6 +125,7 @@ class Register extends Component {
 
   };
 
+  // TODO: outsource the avatar upload & preview to its own component
   onImageUpload = (e) => {
 
     this.setState({ isLoading: true });
@@ -97,32 +133,26 @@ class Register extends Component {
     const reader = new FileReader();
     const image = e.target.files[0];
 
+    let message = '';
+
     reader.onloadend = () => {
+
       if (image.size > 5000000) {
-        this.setState({
-          avatar: {
-            ...this.state.avatar,
-            message: 'File is too big.'
-          },
-          isLoading: false
-        });
+        message = 'File is too big.';
       } else if (!validateImg(reader.result)) {
-        this.setState({
-          avatar: {
-            ...this.state.avatar,
-            message: 'File format is not supported.'
-          },
-          isLoading: false
-        });
-      } else {
-        this.setState({
-          avatar: {
-            value: reader.result,
-            message: ''
-          },
-          isLoading: false
-        });
+        message = 'File format is not supported.';
       }
+
+      this.setState({
+        avatar: {
+          value: message.length > 0
+            ? this.state.avatar.value
+            : reader.result,
+          message
+        },
+        isLoading: false
+      });
+
     };
 
     reader.readAsDataURL(image);
@@ -132,20 +162,22 @@ class Register extends Component {
   submitRegister = async () => {
 
     const {
-      strategy, email, socialId, socialToken
+      strategy, email, socialId, socialToken, redirectUrl
     } = this.props.auth;
+
     const {
       displayName, avatar, password
     } = this.state;
 
     const isLocal = strategy === 'local';
+
     const userData = new FormData();
 
     userData.append('strategy', strategy);
     userData.append('email', email);
     userData.append('displayName', displayName.value);
 
-    if (avatar.value) {
+    if (avatar.value.length > 0) {
       userData.append('avatar', avatar.value);
     }
 
@@ -161,13 +193,24 @@ class Register extends Component {
       const apiUrl = `/api/auth/register/${isLocal ? 'local' : 'social'}`;
       const { data } = await axios.post(apiUrl, userData);
 
-      this.props.loginSuccess(data.user);
+      if (data && data.user) {
 
-      const { isLoggedIn } = this.props.user;
-      const { redirectUrl } = this.props.auth;
+        const user = await storage.set('ckUser', data.user);
+        this.props.loginSuccess(user, true);
 
-      if (isLoggedIn) {
-        this.props.history.push(redirectUrl);
+        const { isLoggedIn } = this.props.user;
+
+        if (isLoggedIn) {
+          this.props.history.push(redirectUrl);
+        }
+
+      } else {
+
+        this.setState({
+          errorMsg: 'Failed to communicate with the server.',
+          isLoading: false
+        });
+
       }
 
     } catch (error) {
@@ -177,6 +220,47 @@ class Register extends Component {
         errorMsg: error.response.data.message,
         isLoading: false
       });
+
+    }
+
+  };
+
+  verifyToken = async (token) => {
+
+    const {
+      history, setUserForRegistration, setErrorState
+    } = this.props;
+
+    try {
+
+      const { data } = await axios.get(`/api/auth/verify/token/register/${token}`);
+
+      if (data && data.email) {
+
+        setUserForRegistration({
+          strategy: 'local',
+          email: data.email
+        });
+
+        history.replace('/user/register');
+
+        this.setState({ isLoading: false });
+
+      } else {
+        // TODO: error handling?
+      }
+
+    } catch (error) {
+
+      console.error(error);
+
+      // TODO: better title and message from the server
+      setErrorState({
+        errorTitle: 'The registration link is invalid.',
+        errorMsg: error.response.data.message
+      });
+
+      history.push('/error');
 
     }
 
@@ -204,92 +288,60 @@ class Register extends Component {
     };
 
     return (
-      <div className="Register">
-        <h2 className="user-page-title">
-          User Registration
-          <i className="material-icons">
-            person_add
-          </i>
-        </h2>
-        <div className="user-form-box">
-          <LoadingOverlay
-            isVisible={ isLoading }
-            overlayColor="rgba(256,256,256,.75)"
-            circleColor="#1F4B40" />
-          <div className="user-form-header">
-            <h3>User Information</h3>
-            <p>Please fill in the following fields to complete your registration.</p>
+      <UserPageContainer
+        className="Register"
+        title="User Registration"
+        icon="person_add"
+        formTitle="User Information"
+        formMsg="Please fill in the following fields to complete your registration."
+        isLoading={ isLoading }
+        onSubmit={ this.onSubmitHandler }>
+
+        <FormMessage message={ errorMsg } />
+
+        <UserInputField
+          type="email"
+          name="email"
+          onChange={ this.onChangeHandler }
+          value={ auth.email || '' }
+          disabled={ !!auth.email } />
+
+        <FormMessage message={ displayName.message } />
+        <UserInputField
+          name="displayName"
+          onChange={ this.onChangeHandler }
+          value={ displayName.value } />
+
+        <FormMessage message={ password.message } />
+        <UserInputField
+          isVisible={ auth.strategy === 'local' }
+          type="password"
+          name="password"
+          onChange={ this.onChangeHandler }
+          value={ password.value } />
+
+        <FormMessage message={ avatar.message } />
+        <div className="user-form-fields">
+          <label>Profile Picture</label>
+          <div className="avatar-preview">
+            <div className="avatar-wrapper">
+              { avatarPreview(avatar) }
+            </div>
+            <input
+              type="file"
+              accept="image/*"
+              id="profilePicture"
+              onChange={ this.onImageUpload } />
+            <label htmlFor="profilePicture">
+              <span className="user-form-button">
+                Upload New Picture
+              </span>
+              <span>Max 5mb, JPG, or PNG</span>
+            </label>
           </div>
-          <form
-            noValidate
-            className="user-form"
-            onSubmit={ this.onSubmitHandler }>
-            <FormMessage message={ errorMsg } />
-            <div className="user-form-fields">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                value={ auth.email || '' }
-                disabled="true" />
-              <p>This email is linked to your account.</p>
-            </div>
-            <FormMessage message={ displayName.message } />
-            <div className="user-form-fields">
-              <label htmlFor="displayName">Display Name</label>
-              <input
-                type="text"
-                id="displayName"
-                name="displayName"
-                value={ displayName.value }
-                onChange={ this.onChangeHandler } />
-              <p>Display name must be between 4 and 20 characters with no space.</p>
-            </div>
-            <FormMessage message={ password.message } />
-            {
-              auth.strategy === 'local'
-                ? (
-                  <div className="user-form-fields">
-                    <label htmlFor="password">Password</label>
-                    <input
-                      type="password"
-                      id="password"
-                      name="password"
-                      value={ password.value }
-                      onChange={ this.onChangeHandler } />
-                    <p>Password must be between 6 and 20 letters.</p>
-                  </div>
-                )
-                : null
-            }
-            <FormMessage message={ avatar.message } />
-            <div className="user-form-fields">
-              <label>Profile Picture</label>
-              <div className="avatar-preview">
-                <div className="avatar-wrapper">
-                  { avatarPreview(avatar) }
-                </div>
-                <input
-                  type="file"
-                  accept="image/*"
-                  id="profilePicture"
-                  onChange={ this.onImageUpload } />
-                <label htmlFor="profilePicture">
-                  <span className="user-form-button">
-                    Upload New Picture
-                  </span>
-                  <span>Max 5mb, JPG, or PNG</span>
-                </label>
-              </div>
-            </div>
-            <button
-              type="submit"
-              className="user-form-button">
-              Submit
-            </button>
-          </form>
         </div>
-      </div>
+
+      </UserPageContainer>
     );
 
   }

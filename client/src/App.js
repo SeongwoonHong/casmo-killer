@@ -5,13 +5,15 @@ import { Route, Switch } from 'react-router-dom';
 import classnames from 'classnames';
 
 import * as actions from 'actions';
+
 import breakPoint from 'sharedUtils/breakPoint';
+import LoadingOverlay from 'sharedComponents/LoadingOverlay';
 
 import { MainMenuRoutes } from './routers';
 
 import TopNavigation from './components/Navigations/TopNavigation';
 import MainMenu from './components/Navigations/MainMenu';
-import NotFound from './components/NotFound';
+import ErrorPage from './components/ErrorPage';
 import UserInfoModal from './components/UserInfoModal';
 import AuthLoader from './components/AuthLoader';
 
@@ -38,6 +40,7 @@ class App extends Component {
 
     return (
       <div className="root-container">
+        <LoadingOverlay isVisible={ layout.isAppLoading } />
         <TopNavigation />
         <div className="app-wrapper">
           <Route path="/" component={ MainMenu } />
@@ -55,7 +58,8 @@ class App extends Component {
                   />
                 ))
               }
-              <Route component={ NotFound } />
+              <Route path="/error" component={ ErrorPage } />
+              <Route component={ ErrorPage } />
             </Switch>
             <UserInfoModal />
           </div>

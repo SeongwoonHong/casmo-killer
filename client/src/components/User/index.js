@@ -5,16 +5,15 @@ import * as actions from 'actions';
 
 import PrivateRoute from 'sharedComponents/PrivateRoute';
 
-import './User.scss';
-
 import Login from './LogIn';
-import Verify from './Verify';
 import Register from './Register';
 import Recover from './Recover';
 import Reset from './Reset';
 import MyAccount from './MyAccount';
 import Delete from './Delete';
-import NotFound from '../NotFound';
+import ErrorPage from '../ErrorPage';
+
+import './User.scss';
 
 class User extends Component {
 
@@ -26,9 +25,8 @@ class User extends Component {
       <div className="User">
         <Switch>
           <Route path="/user/auth/:type" component={ Login } />
-          <Route path="/user/register" component={ Register } />
+          <Route path="/user/register/:token?" component={ Register } />
           <Route path="/user/recover" component={ Recover } />
-          <Route path="/user/verify/:type/:token" component={ Verify } />
           <Route path="/user/reset/:token?" component={ Reset } />
           <PrivateRoute
             path="/user/settings/:token?"
@@ -40,7 +38,7 @@ class User extends Component {
             isLoggedIn={ user.isLoggedIn }
             component={ Delete }
             onEnter={ url => registerRedirectUrl(url) } />
-          <Route component={ NotFound } />
+          <Route component={ ErrorPage } />
         </Switch>
       </div>
     );
@@ -48,17 +46,11 @@ class User extends Component {
 
 }
 
-
-const mapStateToProps = (state) => {
-  return {
+export default connect(
+  state => ({
     user: state.user
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
+  }),
+  dispatch => ({
     registerRedirectUrl: url => dispatch(actions.registerRedirectUrl(url))
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(User);
+  })
+)(User);

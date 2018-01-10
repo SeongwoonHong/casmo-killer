@@ -53,6 +53,7 @@
             color: #6e6779;
             font-size: 14px;
             font-weight: 500;
+            text-transform: capitalize;
         }
         > input {
             background-color: #fff;
@@ -124,11 +125,12 @@
         font-size: 12px;
         padding: 5px 7px;
         text-align: center;
+        &:disabled {
+            background-color: palette(Teal, 100);
+            cursor: not-allowed;
+        }
     }
     @media screen and (min-width: 992px) {
         padding: 0 20px;
-    }
-    @media screen and (min-width: 1200px) {
-        padding-right: 0;
     }
 }

@@ -32,3 +32,10 @@ export const toggleUserDropdown = (payload = null) => {
     payload
   };
 };
+
+export const toggleAppLoading = (payload = null) => {
+  return {
+    type: types.TOGGLE_APP_LOADING,
+    payload
+  };
+};

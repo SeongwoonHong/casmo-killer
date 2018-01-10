@@ -1,23 +1,25 @@
+// TODO: might need a better way of error checking
 export const set = (key, value) => {
+
   return new Promise((resolve, reject) => {
+
     try {
+
       localStorage.setItem(key, JSON.stringify(value));
       resolve(JSON.parse(localStorage.getItem(key)));
+
     } catch (error) {
+
       reject(error);
+
     }
+
   });
+
 };
 
 export const remove = (key) => {
-  return new Promise((resolve, reject) => {
-    try {
-      localStorage.removeItem(key);
-      resolve();
-    } catch (error) {
-      reject(error);
-    }
-  });
+  localStorage.removeItem(key);
 };
 
 export const get = (key) => {

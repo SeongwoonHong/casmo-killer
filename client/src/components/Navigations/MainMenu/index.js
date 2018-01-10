@@ -11,7 +11,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    toggleMenu: payload => dispatch(actions.toggleMenu(payload))
+    toggleMenu: (payload = null) => dispatch(actions.toggleMenu(payload))
   };
 };
 

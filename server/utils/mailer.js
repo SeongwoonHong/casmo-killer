@@ -14,8 +14,10 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+// TODO: put correct messasges for emails
+
 const mailOptions = (token, email) => {
-  const url = `http://localhost:4000/user/verify/${token}`;
+  const url = `http://localhost:4000/user/register/${token}`;
   return {
     from: account,
     to: email,

@@ -3,74 +3,68 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import classnames from 'classnames';
-import axios from 'axios';
-import * as actions from 'actions';
-import './App.scss';
 
-import TopNavigation from './components/Navigations/TopNavigation';
-import MainMenu from './components/Navigations/MainMenu';
-import AuthModal from './components/AuthModal';
-import UserInfoModal from './components/UserInfoModal';
+import * as actions from 'actions';
+
+import breakPoint from 'sharedUtils/breakPoint';
+import LoadingOverlay from 'sharedComponents/LoadingOverlay';
 
 import { MainMenuRoutes } from './routers';
 
-import breakPoint from './utils/breakPoint';
+import TopNavigation from './components/Navigations/TopNavigation';
+import MainMenu from './components/Navigations/MainMenu';
+import ErrorPage from './components/ErrorPage';
+import UserInfoModal from './components/UserInfoModal';
+import AuthLoader from './components/AuthLoader';
+
+import './App.scss';
 
 class App extends Component {
 
   componentDidMount() {
+
+    const { layout, updateBreakpoint } = this.props;
+
     if (typeof window !== 'undefined') {
       window.addEventListener('resize', (e) => {
-        if (breakPoint(e.target.innerWidth) !== this.props.layout.breakPoint) {
-          this.props.updateBreakPoint(breakPoint(e.target.innerWidth));
+        if (breakPoint(e.target.innerWidth) !== layout.breakPoint) {
+          updateBreakpoint(breakPoint(e.target.innerWidth));
         }
       }, false);
     }
-
-    axios.get('/api/user/validate').then((res) => {
-      this.props.loginSuccess(res.data);
-    });
-
-  }
-
-  componentWillUnmount() {
-
-    if (typeof window !== 'undefined') {
-      window.removeEventListener('resize', (e) => {
-        this.props.updateBreakPoint(e.target.innerWidth);
-      });
-    }
-
   }
 
   render() {
 
     const { layout } = this.props;
 
-    const RootComponents = MainMenuRoutes.map(route => (
-      <Route
-        key={ route.path }
-        exact={ route.exact }
-        path={ route.path }
-        component={ route.main }
-      />
-    ));
-
     return (
-      <div className="app">
+      <div className="root-container">
+        <LoadingOverlay isVisible={ layout.isAppLoading } />
         <TopNavigation />
-        <div className={ classnames('app-wrapper', {
-          widened: layout.isMainMenuVisible
-        }) }>
+        <div className="app-wrapper">
           <Route path="/" component={ MainMenu } />
-          <div className="container">
+          <div className={ classnames('component-container', {
+            widened: layout.isMainMenuVisible
+          }) }>
             <Switch>
-              { RootComponents }
+              {
+                MainMenuRoutes.map(route => (
+                  <Route
+                    key={ route.path }
+                    exact={ route.exact }
+                    path={ route.path }
+                    component={ route.main }
+                  />
+                ))
+              }
+              <Route path="/error" component={ ErrorPage } />
+              <Route component={ ErrorPage } />
             </Switch>
-            <AuthModal />
             <UserInfoModal />
           </div>
         </div>
+        <AuthLoader />
       </div>
     );
 
@@ -86,13 +80,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    loginSuccess: payload => dispatch(actions.loginSuccess(payload)),
-    updateBreakPoint: (size) => {
-      dispatch(actions.updateBreakPoint(size));
-    },
-    toggleMenu: () => {
-      dispatch(actions.toggleMenu());
-    }
+    toggleMenu: () => dispatch(actions.toggleMenu()),
+    updateBreakpoint: size => dispatch(actions.updateBreakpoint(size))
   };
 };
 

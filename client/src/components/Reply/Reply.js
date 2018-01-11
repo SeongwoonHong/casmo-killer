@@ -56,13 +56,13 @@ export default class Reply extends Component {
     this.animateOut().then(done);
   }
   likesHandler = (postId, type, commentId) => {
-    if (this.props.user.isLoggedIn && (this.props.commentAuthor !== this.props.user.username)) {
+    if (this.props.user.isLoggedIn && (this.props.commentAuthor !== this.props.user.displayName)) {
       this.clickAnimation(this.like);
       this.props.giveLikesRequest(postId, type, commentId);
     }
   }
   disLikesHandler = (postId, type, commentId) => {
-    if (this.props.user.isLoggedIn && (this.props.commentAuthor !== this.props.user.username)) {
+    if (this.props.user.isLoggedIn && (this.props.commentAuthor !== this.props.user.displayName)) {
       this.clickAnimation(this.disLike);
       this.props.giveDisLikesRequest(postId, type, commentId);
     }
@@ -106,7 +106,7 @@ export default class Reply extends Component {
   }
   render() {
     const {
-      postId, commentAuthor, comment, date, commentId, likes, disLikes, handleSubmit, isEdited, parentAuthor, parentCommentId, parentContent, avatar
+      postId, commentAuthor, comment, date, commentId, likes, disLikes, handleSubmit, isEdited, parentAuthor, parentContent, avatar
     } = this.props;
     const editView = (
       <Field
@@ -209,7 +209,7 @@ export default class Reply extends Component {
                   </i>
                 }
                 {
-                  this.props.user.username === commentAuthor ? buttons : undefined
+                  this.props.user.displayName === commentAuthor ? buttons : undefined
                 }
               </span>
             </div>

@@ -137,14 +137,14 @@ router.post('/likes/:postId', isAuthenticated, (req, res) => {
   Post.findById(req.params.postId, (err, post) => {
     if (err) throw err;
     if (!post) return res.status(404).json({ message: 'NO SUCH POST' });
-    const didDisLike = post.disLikes.indexOf(req.user.username) !== -1;
+    const didDisLike = post.disLikes.indexOf(req.user.displayName) !== -1;
     if (didDisLike) {
-      post.disLikes.splice(post.disLikes.indexOf(req.user.username), 1);
+      post.disLikes.splice(post.disLikes.indexOf(req.user.displayName), 1);
     }
-    const index = post.likes.indexOf(req.user.username);
+    const index = post.likes.indexOf(req.user.displayName);
     const didLike = (index !== -1);
     if (!didLike) {
-      post.likes.push(req.user.username);
+      post.likes.push(req.user.displayName);
     } else {
       post.likes.splice(index, 1);
     }
@@ -174,14 +174,14 @@ router.post('/disLikes/:postId', isAuthenticated, (req, res) => {
   Post.findById(req.params.postId, (err, post) => {
     if (err) throw err;
     if (!post) return res.status(404).json({ message: 'NO SUCH POST' });
-    const didLike = post.likes.indexOf(req.user.username) !== -1;
+    const didLike = post.likes.indexOf(req.user.displayName) !== -1;
     if (didLike) {
-      post.likes.splice(post.disLikes.indexOf(req.user.username), 1);
+      post.likes.splice(post.disLikes.indexOf(req.user.displayName), 1);
     }
-    const index = post.disLikes.indexOf(req.user.username);
+    const index = post.disLikes.indexOf(req.user.displayName);
     const didDislike = (index !== -1);
     if (!didDislike) {
-      post.disLikes.push(req.user.username);
+      post.disLikes.push(req.user.displayName);
     } else {
       post.disLikes.splice(index, 1);
     }

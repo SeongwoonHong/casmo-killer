@@ -4,41 +4,49 @@ import { Link } from 'react-router-dom';
 import './TopNavigation.scss';
 
 import SearchForm from '../SearchForm/SearchForm';
-import UserMenu from './UserMenu';
+import UserMenu from './UserMenu/UserMenu';
 import UserDropdown from './UserDropdown/UserMenuDropdown';
 
 class TopNavigation extends Component {
 
   render() {
 
+    const {
+      layout, user, toggleMenu, toggleUserDropdown, logout
+    } = this.props;
+
+    const showDropdown = (isOpen) => {
+      if (isOpen) {
+        return (
+          <UserDropdown
+            isLoggedIn={ user.isLoggedIn }
+            logout={ logout } />
+        );
+      }
+      return null;
+    };
+
     return (
-      <header className="teal darken-4 z-depth-2 top-main-nav">
-        <a
-          role="button"
-          tabIndex={ 0 }
-          onClick={ this.props.toggleMenu }
-          onKeyDown={ () => {} }
-          className="btn teal darken-4 hide-in-dt">
-          <i className="material-icons teal-text-text-lighten-5">
+      <header className="Top-navigation navigation-headers">
+        <button
+          type="button"
+          className="top-nav-btn"
+          onClick={ toggleMenu }>
+          <i className="material-icons">
             dehaze
           </i>
-        </a>
+        </button>
         <h1>
-          <Link to="/" className="teal-text text-lighten-5">
+          <Link to="/">
             CK BOARD
           </Link>
         </h1>
         <SearchForm styleClass="dt" />
-        <UserMenu />
-        {
-          this.props.layout.isUserDropdownOpen
-            ? (
-              <UserDropdown
-                user={ this.props.user }
-                openAuthModal={ this.props.openAuthModal } />
-            )
-            : null
-        }
+        <UserMenu
+          user={ user }
+          layout={ layout }
+          toggleUserDropdown={ toggleUserDropdown } />
+        { showDropdown(layout.isUserDropdownOpen) }
       </header>
     );
 

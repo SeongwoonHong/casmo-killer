@@ -164,6 +164,12 @@ module.exports.updateProfile = async (req, res) => {
   // if email's been edited, send out the verification email
   if (email !== user.email) {
 
+    if (!((new Date() - user.emailLastUpdated) > 24 * 60 * 60 * 1000)) {
+      return res.status(403).send({
+        message: 'You have to wait at least 24 hours before you can change your email address.'
+      });
+    }
+
     try {
 
       const token = await jwt.sign({ email }, 'email', '24hrs');

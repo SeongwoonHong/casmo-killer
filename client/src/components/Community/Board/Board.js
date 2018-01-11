@@ -13,7 +13,6 @@ import './Board.scss';
 class Board extends Component {
   constructor(props) {
     super(props);
-    console.log(props.user);
     const baseUrl = props.location.pathname;
     const page = props.location.state === undefined ? 0 : props.location.state.page;
     const selected = props.location.state === undefined ? 0 : props.location.state.selected;

@@ -69,10 +69,12 @@ export const removeUser = () => {
   };
 };
 
-export const openUserInfoModal = (userInfo) => {
+export const openUserInfoModal = (userInfo, mode = 'user', shouldToggle = false) => {
   return {
     type: types.OPEN_USERINFO_MODAL,
-    userInfo
+    userInfo,
+    mode,
+    shouldToggle
   };
 };
 
@@ -81,3 +83,31 @@ export const closeUserInfoModal = () => {
     type: types.CLOSE_USERINFO_MODAL
   };
 };
+
+export function tagsSearch() {
+  return {
+    type: types.TAGS_SEARCH
+  };
+}
+export function tagsSearchSuccess(data) {
+  return {
+    type: types.TAGS_SEARCH_SUCCESS,
+    payload: data
+  };
+}
+export function tagsSearchFailure(error) {
+  return {
+    type: types.TAGS_SEARCH_FAILURE,
+    payload: error
+  };
+}
+export function tagsSearchRequest(tag) {
+  return (dispatch) => {
+    dispatch(tagsSearch());
+    return axios.post('/api/post/tags', { tag }).then((res) => {
+      return dispatch(tagsSearchSuccess(res.data));
+    }).catch((e) => {
+      return dispatch(tagsSearchFailure(e));
+    });
+  };
+}

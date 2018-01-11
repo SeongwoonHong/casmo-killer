@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import TimeAgo from 'react-timeago';
 import krStrings from 'react-timeago/lib/language-strings/ko';
@@ -9,22 +9,40 @@ import './Post.scss';
 
 const formatter = buildFormatter(krStrings);
 
-export default class Post extends Component {
+class Post extends Component {
   render() {
     const {
       id, postNum, title, authorName, count, comments, date, page, selected
     } = this.props;
-
+    const defaultAvatarSrc = '#';
+    authorName.avatar = authorName.avatar || defaultAvatarSrc;
+    const closeAndRedirect = (
+      <span
+        onClick={async () => {
+          await this.props.closeUserInfoModal();
+          this.props.history.push(`${this.props.baseUrl}/${id}`);
+        }}
+        role="presentation"
+        onKeyDown={() => {}}
+      >
+        {title}
+      </span>
+    );
     return (
-      <li className="post_row collection-item row" key={id}>
+      <li className="post_row collection-item row" key={id} ref={el => this.component = el}>
         <div className="post_list_title_wrapper col s8 m7 l7">
           <div className="post_num"><span className="number">#{postNum} </span></div>
           <h6 className="post_title">
-            <Link to={{
-              pathname: `${this.props.baseUrl}/${id}`,
-              state: { page, selected }
-            }}>{title}
-            </Link>
+            {
+              this.props.closeAndRedirect ?
+                closeAndRedirect
+                :
+                <Link to={{
+                  pathname: `${this.props.baseUrl}/${id}`,
+                  state: { page, selected }
+                }}>{title}
+                </Link>
+            }
           </h6>
         </div>
         <div className="post_list_side_wrapper col s4 m5 l5">
@@ -36,7 +54,7 @@ export default class Post extends Component {
                   <div className="user-btn">
                     <PlainBtn
                       onClick={
-                        () => { this.props.openUserInfoModal(authorName); }
+                        () => { this.props.openUserInfoModal(authorName, 'tag', true); }
                       }
                     >
                       <a href="#">{authorName.displayName}</a>
@@ -80,3 +98,5 @@ Post.propTypes = {
   page: PropTypes.number,
   selected: PropTypes.number
 };
+
+export default withRouter(Post);

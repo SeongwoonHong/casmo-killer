@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import Post from './Post/Post';
 
 class PostList extends Component {
-
   render() {
     const { postsList, baseUrl } = this.props;
     const mapToComponents = (data) => {
@@ -22,6 +21,8 @@ class PostList extends Component {
             page={this.props.page}
             selected={this.props.selected}
             openUserInfoModal={this.props.openUserInfoModal}
+            closeAndRedirect={this.props.closeAndRedirect}
+            closeUserInfoModal={this.props.closeUserInfoModal}
           />
         );
       });

@@ -10,6 +10,8 @@ import PreferencesPanel from '../PreferencesPanel';
 import Iframe from '../Iframe/Iframe';
 import './PostShow.scss';
 
+import axios from 'axios'; // 테스트 임시용. 나중에 액션크리에이터에서 호출할거임 지금은 귀찮아서 여기서 테스트중!
+
 const formatter = buildFormatter(krStrings);
 class PostShow extends Component {
   constructor(props) {
@@ -19,6 +21,11 @@ class PostShow extends Component {
   componentDidMount = () => {
     animate.set(this.component, { autoAlpha: 0, y: '-10px' });
     animate.staggerTo(this.component, 0.3, { autoAlpha: 1, y: '0px' }, 0.15);
+  }
+  tagsSearch = (tag) => {
+    this.props.tagsSearchRequest(tag).then((res) => {
+      this.props.openUserInfoModal(res.payload, 'tag');
+    });
   }
   render() {
     const { activePost } = this.props;
@@ -45,7 +52,17 @@ class PostShow extends Component {
           <div className="info">
             #{ activePost.postNum }
             { activePost.tags.length > 0 && activePost.tags.trim().split(' ').map((tag) => {
-              return <Link to="#" key={tag} className="tags">{tag}</Link>;
+              return (
+                <span
+                  key={tag}
+                  className="tags"
+                  role="presentation"
+                  onKeyDown={() => {}}
+                  onClick={() => this.tagsSearch(tag)}
+                >
+                  {tag}
+                </span>
+              );
             })}
           </div>
           <span className="card-title">{activePost.title}</span>

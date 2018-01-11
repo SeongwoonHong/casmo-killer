@@ -11,12 +11,10 @@ const UserSchema = new Schema({
     default: Date.now
   },
   strategy: String,
-  email: {
-    value: String,
-    lastUpdated: {
-      type: Date,
-      default: Date.now
-    }
+  email: String,
+  emailLastUpdated: {
+    type: Date,
+    default: Date.now
   },
   password: {
     type: String,
@@ -42,8 +40,7 @@ const UserSchema = new Schema({
     default: 'newbie'
   },
   bookmarked: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'board'
+    type: mongoose.Schema.Types.ObjectId, ref: 'board'
   }],
 });
 
@@ -131,6 +128,18 @@ UserSchema.pre('save', function (next) {
     next();
 
   }
+
+});
+
+UserSchema.pre('save', function (next) {
+
+  const user = this;
+
+  if (user.isModified('email')) {
+    user.emailLastUpdated = Date.now();
+  }
+
+  next();
 
 });
 

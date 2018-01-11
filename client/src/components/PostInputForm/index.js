@@ -53,11 +53,6 @@ class PostInputForm extends Component {
         <div className="title" key="title">
           <div className="info">
             #{ postNum }
-            {
-              tags.length > 0 && tags.trim().split(' ').map((tag) => {
-                return <Link to="#" key={tag} className="tags">{tag}</Link>;
-              })
-          }
           </div>
         </div>
       ]
@@ -79,6 +74,7 @@ class PostInputForm extends Component {
               type="text"
               component={Tags}
               label=""
+              tags={tags}
               fieldClass={fieldClass}
             />
             <Field

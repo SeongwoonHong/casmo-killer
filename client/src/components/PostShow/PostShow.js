@@ -34,7 +34,7 @@ class PostShow extends Component {
                     () => { this.props.openUserInfoModal(activePost.author); }
                   }
                 >
-                  <a href="#">{activePost.author.username}</a>
+                  <a href="#">{activePost.author.displayName}</a>
                 </PlainBtn>
               </div>
             </div>

@@ -3,13 +3,15 @@ import * as types from '../actions/types';
 const initialState = {
   user: {
     isLoggedIn: false,
+    strategy: null,
     _id: null,
-    username: null,
+    email: null,
+    displayName: null,
     avatar: null
   },
   userModalInfo: {
     _id: null,
-    username: null,
+    displayName: null,
     avatar: null
   }
 };
@@ -21,18 +23,21 @@ export default function (state = initialState.user, action) {
     case types.LOGIN_SUCCESS:
       return Object.assign({}, state, {
         isLoggedIn: true,
+        strategy: action.payload.strategy,
         _id: action.payload._id,
-        username: action.payload.username,
+        email: action.payload.email,
+        displayName: action.payload.displayName,
         avatar: action.payload.avatar || null
       });
 
     case types.LOGOUT:
       return initialState.user;
+
     case types.OPEN_USERINFO_MODAL:
       return Object.assign({}, state, {
         userModalInfo: {
           _id: action.userInfo._id,
-          username: action.userInfo.username,
+          displayName: action.userInfo.displayName,
           avatar: action.userInfo.avatar
         }
       });
@@ -40,7 +45,7 @@ export default function (state = initialState.user, action) {
       return Object.assign({}, state, {
         userModalInfo: {
           _id: null,
-          username: null,
+          displayName: null,
           avatar: null
         }
       });

@@ -1,13 +1,16 @@
 const jwt = require('jsonwebtoken');
-const { REACT_APP_jwtSecretKey: jwtSecret } = process.env;
+
+const {
+  REACT_APP_jwtSecretKey: jwtSecret
+} = process.env;
 
 const jwtUtils = {
 
-  sign: (payload, subject) => {
+  sign: (payload, subject, expiresIn = '7d') => {
     return new Promise((resolve, reject) => {
       jwt.sign(payload, jwtSecret, {
         issuer: 'ckboard.com',
-        expiresIn: 604800,
+        expiresIn,
         subject
       }, (error, token) => {
         if (error) {

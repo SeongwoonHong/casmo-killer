@@ -42,7 +42,7 @@ class UserInfoModal extends Component {
             </div>
             <div className="userinfo-modal-info">
               <div className="userinfo-modal-info-username">
-                <h2>{userInfo.username}</h2>
+                <h2>{userInfo.displayName}</h2>
               </div>
               <div className="userinfo-modal-info-detail">
                 <div className="info-detail">

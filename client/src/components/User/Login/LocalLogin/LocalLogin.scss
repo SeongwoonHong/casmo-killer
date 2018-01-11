@@ -1,0 +1,19 @@
+.Local-login {
+    > .user-form-box {
+        > .user-form {
+            > .user-form-button:last-child {
+                margin: $user-box-padding;
+                padding: 5px 0;
+                width: calc(100% - #{$user-box-padding * 2});
+            }
+        }
+    }
+    & + .other-options {
+        @include flex-box(space-between);
+        padding: 0 $user-box-padding;
+        > a {
+            color: $teal-1000;
+            font-size: 12px;
+        }
+    }
+}

@@ -26,7 +26,7 @@ class RichTextEditor extends Component {
     if (this.props.onChange) {
       this.props.onChange(
         this.editor.refs.editor.refs.editor.innerHTML
-      )
+      );
     }
     // this.props.onChange(this.editor.refs.editor.refs.editor.innerHTML);
     // console.log(this.editor.refs.editor.refs.editor.innerHTML);

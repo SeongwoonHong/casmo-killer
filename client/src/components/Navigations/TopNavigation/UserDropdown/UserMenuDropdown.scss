@@ -1,27 +1,28 @@
-.dropdown-content {
-    background-color: palette(Teal, 50);
+.User-menu-dropdown {
     display: block;
     opacity: 1;
     right: 0;
-    top: 50px;
+    top: $top-nav-size;
     > li {
-        > a,
-        > button {
-            @include flex-box(space-around);
-            color: palette(Teal, 900);
-            font-size: 14px;
-            width: 100%;
+        min-height: 0;
+        line-height: $top-nav-size;
+        > a {
+            @include flex-box(flex-start);
+            color: $teal-1000;
+            font-size: 12px;
+            line-height: $top-nav-size - 2px;
+            padding: 0 15px;
             > .material-icons {
-                font-size: 20px;
-                margin-right: 10px;
+                font-size: 18px;
+                margin-right: 5px;
             }
             > .notification-badge {
                 left: 4px;
                 top: 4px;
             }
-        }
-        &:hover {
-            background-color: palette(Teal, 100);
+            &:hover {
+                background-color: #EBEBEB;
+            }
         }
     }
     @media screen and (min-width: 768px) {
@@ -30,14 +31,8 @@
         }
     }
     @media screen and (min-width: 992px) {
-        > li {
-            > a,
-            > button {
-                @include flex-box(flex-start);
-            }
-        }
         &.logged-in {
-            width: 260px;
+            width: $user-dropdown-width;
         }
     }
 }

@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
 const bcrypt = require('bcryptjs');
-const token = require('../../utils/jwtUtils');
+
+const { Schema } = mongoose;
+
+const jwtUtils = require('../../utils/jwtUtils');
 
 const UserSchema = new Schema({
   createdAt: {
@@ -14,11 +16,20 @@ const UserSchema = new Schema({
     type: String,
     select: false
   },
-  username: String,
+  // TODO: possibly check to make sure new password isn't one of the previous passwords
+  /*
+  prevPasswords: [
+    {
+      type: String
+    }
+  ],
+  */
+  displayName: String,
   avatar: String,
-  social: {
-    id: String,
-    accessToken: String
+  socialId: String,
+  tokenInfo: {
+    forField: String,
+    tokenValue: String
   },
   privilege: {
     type: String,
@@ -26,69 +37,42 @@ const UserSchema = new Schema({
   }
 });
 
-UserSchema.statics.registerSocialUser = function (profile) {
+UserSchema.statics.findUserById = function (id) {
 
-  const newUser = new this(profile);
-
-  return newUser.save();
-
-};
-
-UserSchema.statics.registerLocalUser = function ({ email, password, username, avatar }) {
-
-  const newUser = new this({
-    strategy: 'local',
-    email,
-    password,
-    username,
-    avatar
-  });
-
-  return newUser.save();
+  return this.findById(id).select('+password');
 
 };
 
 UserSchema.statics.findUserByEmail = function (email) {
 
-  return this.findOne({ email });
+  return this.findOne({ email }).select('+password');
 
 };
 
-UserSchema.statics.findUserByUsername = function (username) {
+UserSchema.statics.findUserByDisplayName = function (displayName) {
 
-  return this.findOne({ username });
+  return this.findOne({ displayName });
 
 };
 
-UserSchema.statics.findLocalUser = function (email, password) {
+UserSchema.statics.findUserBySocialProfile = function (strategy, socialId) {
 
-  const User = this;
+  return this.findOne({ strategy, socialId });
 
-  return User
-    .findOne({
-      strategy: 'local',
-      email
-    })
-    .then((user) => {
+};
 
-      if (!user) {
-        return Promise.reject();
-      }
+UserSchema.statics.registerNewUser = function (newUserInfo) {
 
-      return new Promise((resolve, reject) => {
+  const newUser = new this(newUserInfo);
+  return newUser.save();
+};
 
-        bcrypt.compare(password, user.password, (err, res) => {
-          if (res) {
-            resolve(user);
-          } else {
-            reject();
-          }
-        });
+UserSchema.methods.updateTokenInfo = function (tokenInfo) {
+  return this.update({ tokenInfo });
+};
 
-      });
-
-    });
-
+UserSchema.methods.updateEmail = function (email) {
+  return this.update({ email });
 };
 
 UserSchema.methods.verifyPassword = function (password) {
@@ -99,12 +83,14 @@ UserSchema.methods.verifyPassword = function (password) {
 
 UserSchema.methods.generateToken = function () {
 
-  const { _id, username, avatar } = this;
+  const {
+    strategy, _id, email, displayName, avatar
+  } = this;
 
-  return token.sign({
-    _id,
-    username,
-    avatar
+  return jwtUtils.sign({
+    user: {
+      strategy, _id, email, displayName, avatar
+    }
   }, 'user');
 
 };

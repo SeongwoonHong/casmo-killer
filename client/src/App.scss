@@ -20,6 +20,7 @@ textarea {
 }
 .app-wrapper {
     height: calc(100% - #{$top-nav-size});
+    overflow-y: auto;
 }
 .component-container {
     margin: 0 auto;

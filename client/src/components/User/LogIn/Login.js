@@ -12,10 +12,16 @@ class Login extends Component {
 
   componentWillReceiveProps(nextProps) {
 
-    const { auth, user, history } = nextProps;
+    const {
+      auth, user, history, clearRedirectUrl
+    } = nextProps;
 
     if (user.isLoggedIn) {
-      history.replace(auth.redirectUrl);
+
+      const { redirectUrl } = auth;
+      clearRedirectUrl();
+      history.replace(redirectUrl);
+
     }
 
   }

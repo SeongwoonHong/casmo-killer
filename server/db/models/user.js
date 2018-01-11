@@ -11,7 +11,13 @@ const UserSchema = new Schema({
     default: Date.now
   },
   strategy: String,
-  email: String,
+  email: {
+    value: String,
+    lastUpdated: {
+      type: Date,
+      default: Date.now
+    }
+  },
   password: {
     type: String,
     select: false
@@ -36,7 +42,8 @@ const UserSchema = new Schema({
     default: 'newbie'
   },
   bookmarked: [{
-    type: mongoose.Schema.Types.ObjectId, ref: 'board'
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'board'
   }],
 });
 

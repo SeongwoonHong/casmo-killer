@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Prompt } from 'react-router-dom';
 
 import * as storage from 'sharedUtils/storage';
 import {
@@ -22,6 +23,7 @@ class Register extends Component {
     super(props);
 
     this.state = {
+      isMounted: false,
       isLoading: false,
       displayName: {
         value: props.auth.displayName || '',
@@ -42,7 +44,9 @@ class Register extends Component {
 
   componentDidMount() {
 
-    const { history, auth, match, setErrorState } = this.props;
+    const {
+      history, auth, match, setErrorState
+    } = this.props;
 
     if (match.params.token) {
 
@@ -60,9 +64,6 @@ class Register extends Component {
     }
 
   }
-
-  // TODO: ask if the user wants to leave for sure because the token will be lost
-  componentWillUnmount() {}
 
   onChangeHandler = (e) => {
     this.setState({
@@ -261,12 +262,19 @@ class Register extends Component {
 
     }
 
+    this.setState({ isMounted: true });
+
   };
 
   render() {
 
     const {
-      displayName, password, avatar, isLoading, errorMsg
+      isMounted,
+      isLoading,
+      displayName,
+      password,
+      avatar,
+      errorMsg
     } = this.state;
 
     const { auth } = this.props;
@@ -294,6 +302,10 @@ class Register extends Component {
         formMsg="Please fill in the following fields to complete your registration."
         onSubmit={ this.onSubmitHandler }>
 
+        <Prompt
+          when={ isMounted && !isLoading }
+          message="Are you fucking sure? Your information will be lost." />
+
         <FormMessage message={ errorMsg } />
 
         <UserInputField
@@ -305,7 +317,6 @@ class Register extends Component {
         <FormMessage message={ displayName.message } />
         <UserInputField
           name="displayName"
-          title="Display Name"
           onChange={ this.onChangeHandler }
           value={ displayName.value } />
 

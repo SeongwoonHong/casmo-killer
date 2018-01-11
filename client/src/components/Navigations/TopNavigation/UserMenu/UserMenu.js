@@ -84,7 +84,8 @@ class UserMenu extends Component {
         onTouchEnd={ this.clickToToggle }
         onKeyDown={ () => {} }>
         {
-          currentUser.isLoggedIn
+          currentUser.isLoggedIn &&
+          currentUser.displayName
             ? (
               <div className="user-info">
                 <div className="user-avatar">
@@ -126,7 +127,7 @@ class UserMenu extends Component {
 
     return (
       <div className="User-menu">
-        { Notifications(user.isLoggedIn) }
+        { Notifications(user.isLoggedIn && user.displayName) }
         { UserProfile(user) }
       </div>
     );

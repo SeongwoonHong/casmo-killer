@@ -132,7 +132,7 @@ module.exports.verifyToken = async (req, res) => {
   }
 
   // if verifying the token for new user registration
-  if (req.params.type === 'register' && user) {
+  if (req.params.type === 'register' && user !== null) {
     return errorUtils.takenEmail(res);
   }
 

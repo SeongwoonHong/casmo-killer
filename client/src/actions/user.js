@@ -63,6 +63,12 @@ export const logout = (isLoggedIn = true) => {
 
 };
 
+export const removeUser = () => {
+  return {
+    type: types.REMOVE_USER
+  };
+};
+
 export const openUserInfoModal = (userInfo) => {
   return {
     type: types.OPEN_USERINFO_MODAL,

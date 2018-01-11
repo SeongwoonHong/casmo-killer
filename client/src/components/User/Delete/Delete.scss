@@ -1,0 +1,9 @@
+.Delete {
+    form {
+        overflow: auto;
+        > a.user-form-button {
+            float: right;
+            margin: 15px;
+        }
+    }
+}

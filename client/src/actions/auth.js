@@ -1,45 +1,21 @@
 import * as types from './types';
 
-export const openAuthModal = (authType = 'login') => {
+export const registerRedirectUrl = (url) => {
   return {
-    type: types.OPEN_AUTH_MODAL,
-    authType
+    type: types.REGISTER_REDIRECT_URL,
+    payload: url
   };
 };
 
-export const closeAuthModal = () => {
-  return {
-    type: types.CLOSE_AUTH_MODAL
-  };
-};
-
-export const redirectToRegister = () => {
-  return {
-    type: types.REDIRECT_TO_REGISTER
-  };
-};
-
-export const redirectToLogin = () => {
-  return {
-    type: types.REDIRECT_TO_LOGIN
-  };
-};
-
-export const startAuthProcess = () => {
-  return {
-    type: types.START_AUTH_PROCESS
-  };
-};
-
-export const stopAuthProcess = () => {
-  return {
-    type: types.STOP_AUTH_PROCESS
-  };
-};
-
-export const setUserForRegister = (payload) => {
+export const setUserForRegistration = (userInfo) => {
   return {
     type: types.SET_USER_FOR_REGISTER,
-    payload
+    payload: userInfo
+  };
+};
+
+export const resetAuthState = () => {
+  return {
+    type: types.RESET_AUTH_STATE
   };
 };

@@ -46,7 +46,7 @@ class PostInputForm extends Component {
         <div className="header" key="header">
           <Link to={`/userPage/${authorId}`}><img src={avatar} alt="" className="circle avartar_circle" /></Link>
           <div className="header-info">
-            <div className="writer">{author.username}</div>
+            <div className="writer">{author.displayName}</div>
             <div className="created">Created : <TimeAgo date={date} formatter={formatter} /></div>
           </div>
         </div>,
@@ -130,7 +130,7 @@ function mapStateToProps(state) {
 }
 function mapDispatchToProps(dispatch) {
   return {
-    //
+    just: () => dispatch()
   };
 }
 export default reduxForm({

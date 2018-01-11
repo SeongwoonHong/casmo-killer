@@ -4,10 +4,22 @@ import './SearchForm.scss';
 
 const SearchForm = ({ styleClass }) => {
   return (
-    <form className={ `search-form ${styleClass}` }>
-      <i className="material-icons">
-        search
-      </i>
+    <form className={ `Search-form ${styleClass}` }>
+      {
+        styleClass === 'mb'
+          ? (
+            <button className="top-nav-btn">
+              <i className="material-icons">
+                search
+              </i>
+            </button>
+          )
+          : (
+            <i className="material-icons">
+              search
+            </i>
+          )
+      }
       <input type="text" placeholder="Search" />
     </form>
   );

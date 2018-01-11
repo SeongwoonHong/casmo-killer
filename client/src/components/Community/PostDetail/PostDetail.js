@@ -35,12 +35,12 @@ class PostDetail extends Component {
     this.props.resetPostProps();
   }
   onLikesHandler = () => {
-    if ((this.props.user.username !== this.props.activePost.data.author.username) && this.props.user.isLoggedIn) {
+    if ((this.props.user.displayName !== this.props.activePost.data.author.displayName) && this.props.user.isLoggedIn) {
       return this.props.giveLikesRequest(this.props.activePost.data._id, 'post');
     }
   }
   onDislikesHandler = () => {
-    if ((this.props.user.username !== this.props.activePost.data.author.username) && this.props.user.isLoggedIn) {
+    if ((this.props.user.displayName !== this.props.activePost.data.author.displayName) && this.props.user.isLoggedIn) {
       return this.props.giveDislikesRequest(this.props.activePost.data._id, 'post');
     }
   }
@@ -133,7 +133,7 @@ class PostDetail extends Component {
         </div>
         <div className="card-action">
           {
-            user.username === data.author.username &&
+            user.displayName === data.author.displayName &&
             [
               <Button
                 text="Edit"

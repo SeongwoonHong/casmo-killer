@@ -1,37 +1,43 @@
 const jwtUtils = require('../utils/jwtUtils');
-
-const extractCookie = (cookies = '') => {
-
-  const obj = {};
-
-  for (let cookie of cookies.split(/; */)) {
-
-    const eqSign = cookie.indexOf('=');
-
-    if (eqSign > 0) {
-
-      const key = cookie.substr(0, eqSign).trim();
-      const val = cookie.substr(eqSign + 1, cookie.length).trim().replace(/^"/g, '');
-
-      if (obj[key] === undefined) {
-        obj[key] = decodeURIComponent(val);
-      }
-    }
-
-  }
-
-  return obj;
-
-};
+const { extractCookie } = require('../utils/cookieUtils');
 
 const jwtMiddleware = async (req, res, next) => {
 
   const token = extractCookie(req.headers.cookie).ckToken;
 
-  if (token) {
+  if (!token) {
+    req.user = null;
+    return next();
+  }
 
-    const user = await jwtUtils.verify(extractCookie(req.headers.cookie).ckToken);
-    req.user = user;
+  try {
+
+    const { user, iat } = await jwtUtils.verify(token);
+
+    if (!user) {
+      req.user = null;
+    } else {
+
+      // if the token is more than three days old,
+      // refresh the token for another seven days
+      if ((Date.now() / 1000) - iat > 60 * 60 * 24 * 3) {
+
+        const freshToken = await jwtUtils.sign({ user }, 'user');
+
+        res.cookie('ckToken', freshToken, {
+          httpOnly: true,
+          maxAge: 1000 * 60 * 60 * 24 * 7
+        });
+
+      }
+
+      req.user = user;
+    }
+
+  } catch (error) {
+
+    console.log(error);
+    req.user = null;
 
   }
 

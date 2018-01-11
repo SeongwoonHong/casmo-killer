@@ -189,7 +189,6 @@ class LocalLogin extends Component {
         <FormMessage message={ message } />
         <UserInputField
           isVisible={ !successMsg.length > 0 }
-          type="email"
           name="email"
           onChange={ this.onChangeHandler }
           value={ email } />
@@ -198,7 +197,6 @@ class LocalLogin extends Component {
           type="success" />
         <UserInputField
           isVisible={ isLogin }
-          type="password"
           name="password"
           onChange={ this.onChangeHandler }
           value={ password } />

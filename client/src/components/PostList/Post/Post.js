@@ -39,7 +39,7 @@ export default class Post extends Component {
                         () => { this.props.openUserInfoModal(authorName); }
                       }
                     >
-                      <a href="#">{authorName.username}</a>
+                      <a href="#">{authorName.displayName}</a>
                     </PlainBtn>
                   </div>
                 </span>

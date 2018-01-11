@@ -1,70 +1,64 @@
-.search-form {
+.Search-form {
     display: flex;
     > input[type=text]:not(.browser-default) {
         border: none;
+        box-sizing: border-box;
+        font-size: 14px;
+        height: auto;
         margin: 0;
-        padding-left: 5px;
         &:focus:not([readonly]) {
+            border: none;
             box-shadow: none;
-        }
-        &::placeholder {
-            color: #004d40;
         }
     }
     &.dt {
         display: none;
     }
     &.mb {
-        align-items: center;
-        height: 50px;
-        position: absolute;
-        top: 0;
-        right: 10px;
-        width: 210px;
-        transform: translateX(220px);
-        transition: all .3s;
+        background-color: #fff;
+        border-bottom: 1px solid $main-menu-border-color;
+        flex-direction: row-reverse;
+        height: $top-nav-size - 10px;
+        justify-content: space-between;
         > input[type=text]:not(.browser-default) {
-            background-color: #e0f2f1;
-            color: #004d40;
-            height: 30px;
+            color: #111111;
+            padding-left: 10px;
+            width: $main-menu-width - ($top-nav-size - 10px);
+            &::placeholder {
+                color: $main-menu-border-color;
+            }
         }
-        &.active {
-            transform: translateX(0);
-        }
-        > .material-icons {
-            display: none;
-        }
-    }
-    @media screen and (min-width: 360px) {
-        &.mb {
-            width: 250px;
-            transform: translateX(260px);
+        > .top-nav-btn {
+            @include rectanglify($top-nav-size - 10px);
+            border-left: 1px solid $main-menu-border-color;
+            > .material-icons {
+                color: $main-menu-border-color;
+                line-height: $top-nav-size - 10px;
+            }
         }
     }
     @media screen and (min-width: 992px) {
+        &.mb {
+            display: none;
+        }
         &.dt {
-            background-color: #00695c;
+            background-color: #fff;
             display: flex;
-            height: 30px;
+            height: $top-nav-size - 14px;
             margin-left: 10px;
             margin-right: auto;
             padding: 0 10px;
             width: 300px;
             > .material-icons {
-                color: #80CBC4;
+                color: palette(Teal, 800);
                 font-size: 18px;
-                line-height: 30px;
+                line-height: $top-nav-size - 14px;
                 margin-right: 10px;
             }
             > input[type=text]:not(.browser-default) {
-                color: #e0f2f1;
-                font-size: 14px;
-                height: auto;
+                color: #111111;
                 &::placeholder {
-                    color: #80CBC4;
-                }
-                &:focus:not([readonly]) {
-                    border: none;
+                    color: palette(Teal, 800);
                 }
             }
         }

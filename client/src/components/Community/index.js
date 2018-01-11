@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import RequireAuthentication from 'sharedComponents/RequireAuthentication/RequireAuthentication';
+import RequireAuthentication from 'sharedComponents/RequireAuthentication';
 import CommunityHome from './Root';
 import Board from './Board';
 import PostNew from './PostNew';

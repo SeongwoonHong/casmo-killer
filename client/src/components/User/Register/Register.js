@@ -126,7 +126,6 @@ class Register extends Component {
 
   };
 
-  // TODO: outsource the avatar upload & preview to its own component
   onImageUpload = (e) => {
 
     this.setState({ isLoading: true });
@@ -246,7 +245,11 @@ class Register extends Component {
         history.replace('/user/register');
 
       } else {
-        // TODO: error handling?
+
+        this.setState({
+          errorMsg: 'Failed to communicate with the server.'
+        });
+
       }
 
     } catch (error) {

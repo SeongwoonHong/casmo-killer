@@ -153,6 +153,7 @@ class SecuritySettings extends Component {
     const {
       isLoading,
       isEditing,
+      isVerified,
       isSuccess,
       currentPassword,
       newPassword,
@@ -173,9 +174,13 @@ class SecuritySettings extends Component {
               type="button"
               className="user-form-button"
               onClick={ () => {
-                this.setState({ isEditing: !isEditing });
+                if (isVerified) {
+                  this.setState(initialState);
+                } else if (!isEditing) {
+                  this.setState({ isEditing: true });
+                }
               }}>
-              { isEditing ? 'Cancel' : 'Change Password' }
+              { isEditing || isVerified ? 'Cancel' : 'Change Password' }
             </button>
             <Link
               to="/user/delete"

@@ -173,7 +173,12 @@ class ProfileSettings extends Component {
           this.props.onSuccess(user);
 
         } else {
-          // TODO: display error
+
+          this.setState({
+            isSuccess: false,
+            message: 'Failed to communicate with the server.'
+          });
+
         }
 
       } catch (error) {

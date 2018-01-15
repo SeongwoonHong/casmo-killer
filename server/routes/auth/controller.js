@@ -143,13 +143,6 @@ module.exports.verifyToken = async (req, res) => {
       return errorUtils.noUser(res);
     }
 
-    // TODO: this may be removed
-    if (user.strategy !== 'local') {
-      return res.status(403).send({
-        message: 'This email is registered with one of social network providers (Facebook, Google, and Kakao). Please visit one of the social network providers to change the password.'
-      });
-    }
-
     if (
       user.tokenInfo.forField !== 'password' &&
       user.tokenInfo.tokenValue !== req.params.token
@@ -296,27 +289,21 @@ module.exports.localRegister = async (req, res) => {
     return errorUtils.validation(res, validations.error);
   }
 
-  const { displayName, avatar } = req.body;
-
-  // first upload the avatar image to cloudinary and get the url
-  let avatarUrl = null;
-
-  if (avatar) {
-
-    try {
-      avatarUrl = await imgCloud.upload(avatar, displayName);
-    } catch (error) {
-      return errorUtils.server(res, error, 'Failed to upload the profile photo.');
-    }
-
-  }
+  const { avatar } = req.body;
 
   try {
 
     // save the new user to the database
-    const user = await User.registerNewUser(Object.assign({}, req.body, {
-      avatar: avatarUrl
+    let user = await User.registerNewUser(Object.assign({}, req.body, {
+      avatar: null
     }));
+
+    if (user && avatar) {
+
+      user.avatar = await imgCloud.upload(avatar, user._id);
+      user = await user.save();
+
+    }
 
     const accessToken = await user.generateToken();
 
@@ -427,11 +414,7 @@ module.exports.socialLogin = async (req, res) => {
       });
     }
 
-    /**
-     * TODO: it is possible that the social user changes the email address through their social network service, and we may have to reflect the change in the email address in our database.
-     */
     if (socialUser.email !== socialProfile.email) {
-      // TODO: this needs better error handling
       socialUser = await socialUser.updateEmail(socialProfile.email);
     }
 
@@ -493,27 +476,22 @@ module.exports.socialRegister = async (req, res) => {
     return errorUtils.server(res, error, 'Failed to retrieve your social profile.');
   }
 
-  const { displayName, avatar } = req.body;
-
-  // first upload the avatar image to cloudinary and get the url
-  let avatarUrl = null;
-
-  if (avatar) {
-
-    try {
-      avatarUrl = await imgCloud.upload(avatar, displayName);
-    } catch (error) {
-      return errorUtils.server(res, error, 'Failed to upload the profile photo.');
-    }
-
-  }
+  const { avatar } = req.body;
 
   try {
+
     // save the new user to the database
-    const user = await User.registerNewUser(Object.assign({}, req.body, {
-      avatar: avatarUrl,
+    let user = await User.registerNewUser(Object.assign({}, req.body, {
+      avatar: null,
       socialToken: null
     }));
+
+    if (user && avatar) {
+
+      user.avatar = await imgCloud.upload(avatar, user._id);
+      user = await user.save();
+
+    }
 
     const accessToken = await user.generateToken();
 
@@ -564,6 +542,12 @@ module.exports.resetPassword = async (req, res) => {
     if (isPwdSame) {
       return res.status(403).send({
         message: 'New password must be different from current password.'
+      });
+    }
+
+    if (user.checkPrevPwd(req.body.newPassword)) {
+      return res.status(403).send({
+        message: 'New password must be different from previously used passwords.'
       });
     }
 

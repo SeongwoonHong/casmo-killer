@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Prompt } from 'react-router-dom';
 import axios from 'axios';
 
 import * as storage from 'sharedUtils/storage';
@@ -172,7 +173,12 @@ class ProfileSettings extends Component {
           this.props.onSuccess(user);
 
         } else {
-          // TODO: display error
+
+          this.setState({
+            isSuccess: false,
+            message: 'Failed to communicate with the server.'
+          });
+
         }
 
       } catch (error) {
@@ -228,6 +234,10 @@ class ProfileSettings extends Component {
         formMsg="Update your email, display name, and profile picture."
         onSubmit={ this.onSubmitHandler }
         disabled={ hasBeenEdited }>
+
+        <Prompt
+          when={ !hasBeenEdited }
+          message="Are you fucking sure? Your information will be lost." />
 
         <FormMessage
           message={ message }

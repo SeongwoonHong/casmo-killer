@@ -109,6 +109,12 @@ module.exports.updatePassword = async (req, res) => {
       return errorUtils.noUser(res);
     }
 
+    if (user.checkPrevPwd(req.body.newPassword)) {
+      return res.status(403).send({
+        message: 'New password must be different from previously used passwords.'
+      });
+    }
+
     user.password = req.body.newPassword;
 
   } catch (error) {
@@ -164,6 +170,12 @@ module.exports.updateProfile = async (req, res) => {
   // if email's been edited, send out the verification email
   if (email !== user.email) {
 
+    if (!((new Date() - user.emailLastUpdated) > 24 * 60 * 60 * 1000)) {
+      return res.status(403).send({
+        message: 'You have to wait at least 24 hours before you can change your email address.'
+      });
+    }
+
     try {
 
       const token = await jwt.sign({ email }, 'email', '24hrs');
@@ -190,10 +202,9 @@ module.exports.updateProfile = async (req, res) => {
     user.displayName = displayName;
   }
 
-  // TODO: edit the existing photo in cloudinary, don't upload a new one, instead modify the existing one for the user
   if (avatar && avatar !== user.avatar) {
     try {
-      user.avatar = await imgCloud.upload(avatar, displayName);
+      user.avatar = await imgCloud.upload(avatar, user._id);
     } catch (error) {
       return errorUtils.server(res, error, 'Failed to upload the profile photo.');
     }
@@ -203,7 +214,6 @@ module.exports.updateProfile = async (req, res) => {
   try {
 
     const modifiedUser = await user.save();
-    console.log(modifiedUser);
     const accessToken = await modifiedUser.generateToken();
 
     return res

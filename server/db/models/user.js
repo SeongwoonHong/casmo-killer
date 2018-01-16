@@ -12,18 +12,19 @@ const UserSchema = new Schema({
   },
   strategy: String,
   email: String,
+  emailLastUpdated: {
+    type: Date,
+    default: Date.now
+  },
   password: {
     type: String,
     select: false
   },
-  // TODO: possibly check to make sure new password isn't one of the previous passwords
-  /*
   prevPasswords: [
     {
       type: String
     }
   ],
-  */
   displayName: String,
   avatar: String,
   socialId: String,
@@ -68,6 +69,7 @@ UserSchema.statics.registerNewUser = function (newUserInfo) {
 
   const newUser = new this(newUserInfo);
   return newUser.save();
+
 };
 
 UserSchema.methods.updateTokenInfo = function (tokenInfo) {
@@ -81,6 +83,14 @@ UserSchema.methods.updateEmail = function (email) {
 UserSchema.methods.verifyPassword = function (password) {
 
   return bcrypt.compare(password, this.password);
+
+};
+
+UserSchema.methods.checkPrevPwd = function (password) {
+
+  return this.prevPasswords.find((pwd) => {
+    return bcrypt.compareSync(password, pwd);
+  }) !== undefined;
 
 };
 
@@ -113,6 +123,8 @@ UserSchema.pre('save', function (next) {
         if (err2) throw err2;
 
         user.password = hash;
+        user.prevPasswords.push(hash);
+
         next();
 
       });
@@ -124,6 +136,18 @@ UserSchema.pre('save', function (next) {
     next();
 
   }
+
+});
+
+UserSchema.pre('save', function (next) {
+
+  const user = this;
+
+  if (user.isModified('email')) {
+    user.emailLastUpdated = Date.now();
+  }
+
+  next();
 
 });
 

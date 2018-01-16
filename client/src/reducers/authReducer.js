@@ -23,6 +23,11 @@ export default function (state = initialState.auth, action) {
         redirectUrl: action.payload
       });
 
+    case types.CLEAR_REDIRECT_URL:
+      return Object.assign({}, state, {
+        redirectUrl: initialState.auth.redirectUrl
+      });
+
     case types.SET_USER_FOR_REGISTER:
       return Object.assign({}, state, {
         strategy: action.payload.strategy || state.strategy,

@@ -35,6 +35,11 @@ export default function (state = initialState.user, action) {
     case types.LOGOUT:
       return initialState.user;
 
+    case types.REMOVE_USER:
+      return Object.assign({}, initialState.user, {
+        isLoggedIn: true,
+      });
+
     case types.OPEN_USERINFO_MODAL:
       return Object.assign({}, state, {
         userModalInfo: {
@@ -43,6 +48,7 @@ export default function (state = initialState.user, action) {
           avatar: action.userInfo.avatar
         }
       });
+
     case types.CLOSE_USERINFO_MODAL:
       return Object.assign({}, state, {
         userModalInfo: {

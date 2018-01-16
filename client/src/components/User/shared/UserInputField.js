@@ -106,7 +106,7 @@ UserInputField.propTypes = {
 UserInputField.defaultProps = {
   isVisible: true,
   title: '',
-  type: 'text',
+  type: '',
   placeholder: '',
   disabled: false,
   message: '',

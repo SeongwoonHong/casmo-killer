@@ -84,7 +84,10 @@ class Reset extends Component {
           message: data.message
         });
       } else {
-        // TODO: better error handling
+        this.setState({
+          isSuccess: false,
+          message: 'Failed to communicate with the server.'
+        });
       }
 
     } catch (error) {
@@ -118,7 +121,14 @@ class Reset extends Component {
         this.props.history.replace('/user/reset');
 
       } else {
-        // TODO: error handling?
+
+        setErrorState({
+          errorTitle: 'This link is invalid.',
+          errorMsg: 'Failed to communicate with the server.'
+        });
+
+        history.push('/error');
+
       }
 
     } catch (error) {
@@ -126,7 +136,7 @@ class Reset extends Component {
       console.error(error);
 
       setErrorState({
-        errorTitle: 'The registration link is invalid.',
+        errorTitle: 'This link is invalid.',
         errorMsg: error.response.data.message
       });
 

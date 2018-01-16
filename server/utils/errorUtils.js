@@ -23,26 +23,18 @@ module.exports.validation = (res, error) => {
 
 };
 
-module.exports.noUser = (res) => {
-  res.status(403).send({
-    message: 'No account exists with this email address.'
-  });
+module.exports.noUser = (res, message = 'No account exists with this email address.') => {
+  res.status(403).send({ message });
 };
 
-module.exports.takenEmail = (res) => {
-  res.status(403).send({
-    message: 'This email address is already registered.'
-  });
+module.exports.takenEmail = (res, message = 'This email address is already registered.') => {
+  res.status(403).send({ message });
 };
 
-module.exports.expiredToken = (res) => {
-  res.status(400).send({
-    message: 'This verification link has expired.'
-  });
+module.exports.expiredToken = (res, message = 'This verification link has expired.') => {
+  res.status(400).send({ message });
 };
 
-module.exports.wrongPwd = (res) => {
-  res.status(401).send({
-    message: 'Password is incorrect.'
-  });
+module.exports.wrongPwd = (res, message = 'Password is incorrect.') => {
+  res.status(401).send({ message });
 };

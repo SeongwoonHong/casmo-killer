@@ -7,6 +7,12 @@ export const registerRedirectUrl = (url) => {
   };
 };
 
+export const clearRedirectUrl = () => {
+  return {
+    type: types.CLEAR_REDIRECT_URL
+  };
+};
+
 export const setUserForRegistration = (userInfo) => {
   return {
     type: types.SET_USER_FOR_REGISTER,

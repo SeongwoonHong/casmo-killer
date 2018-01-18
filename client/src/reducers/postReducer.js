@@ -66,7 +66,6 @@ const initialState = {
 };
 
 export default function post(state = initialState, action) {
-  console.log(action);
   switch (action.type) {
 
     // FETCH POST
@@ -442,6 +441,7 @@ export default function post(state = initialState, action) {
           status: 'INIT'
         }
       };
+
     default:
       return state;
   }

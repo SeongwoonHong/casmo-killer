@@ -46,8 +46,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     giveDislikesRequest: (id, type) => {
       return dispatch(actions.giveDislikesRequest(id, type));
     },
-    openUserInfoModal: (userInfo) => {
-      dispatch(actions.openUserInfoModal(userInfo));
+    openUserInfoModal: (userInfo, mode = 'user') => {
+      dispatch(actions.openUserInfoModal(userInfo, mode));
+    },
+    tagsSearchRequest: (tag) => {
+      return dispatch(actions.tagsSearchRequest(tag));
     }
   };
 };

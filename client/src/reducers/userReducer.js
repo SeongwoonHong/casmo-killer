@@ -13,11 +13,18 @@ const initialState = {
   userModalInfo: {
     _id: null,
     displayName: null,
-    avatar: null
-  }
+    avatar: null,
+    mode: null
+  },
+  tagsList: {
+    status: 'INIT',
+    data: [],
+    error: null
+  },
+  isModalOpened: false
 };
 
-export default function (state = initialState.user, action) {
+export default function (state = initialState, action) {
 
   switch (action.type) {
 
@@ -45,8 +52,10 @@ export default function (state = initialState.user, action) {
         userModalInfo: {
           _id: action.userInfo._id,
           displayName: action.userInfo.displayName,
-          avatar: action.userInfo.avatar
-        }
+          avatar: action.userInfo.avatar,
+          mode: action.mode
+        },
+        isModalOpened: action.shouldToggle ? !this.state.isModalOpened : true
       });
 
     case types.CLOSE_USERINFO_MODAL:
@@ -55,13 +64,36 @@ export default function (state = initialState.user, action) {
           _id: null,
           displayName: null,
           avatar: null
-        }
+        },
+        isModalOpened: false,
       });
     case types.BOOKMARK_SUCCESS:
       return Object.assign({}, state, {
         bookmarked: action.payload.bookmarked
       });
-
+    case types.TAGS_SEARCH:
+      return {
+        ...state,
+        tagsList: {
+          status: 'INIT'
+        }
+      };
+    case types.TAGS_SEARCH_SUCCESS:
+      return {
+        ...state,
+        tagsList: {
+          status: 'SUCCESS',
+          data: action.payload
+        }
+      };
+    case types.TAGS_SEARCH_FAILURE:
+      return {
+        ...state,
+        tagsList: {
+          status: 'FAILURE',
+          error: action.payload.error
+        }
+      };
     default:
       return state;
 

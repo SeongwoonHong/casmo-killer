@@ -1,13 +1,12 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
-/.idea
-/node_modules
-/client/public/index.dev.html
+.idea/
+node_modules/
 # testing
-/coverage
+coverage/
 
 # production
-/client/build
+client/build/
 
 # misc
 .DS_Store

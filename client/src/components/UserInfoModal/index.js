@@ -7,6 +7,7 @@ function mapStateToProps(state) {
   return {
     userInfo: state.user.userModalInfo,
     userPostsList: state.posts.userList,
+    userPostsListByTag: state.user.tagsList.data,
     userPagination: state.posts.userPagination
   };
 }
@@ -21,7 +22,10 @@ function mapDispatchToProps(dispatch) {
         page += 1;
       }
       dispatch(actions.searchPostsRequest(searchWord, null, page));
-    }
+    },
+    openUserInfoModal: (userInfo) => {
+      dispatch(actions.openUserInfoModal(userInfo));
+    },
   };
 }
 

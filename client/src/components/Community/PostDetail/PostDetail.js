@@ -24,6 +24,11 @@ class PostDetail extends Component {
     this.props.fetchPostRequest(this.props.postId);
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.location.pathname !== prevProps.location.pathname) {
+      this.props.fetchPostRequest(this.props.postId);
+    }
+  }
   componentWillUnmount() {
     // Important! If your component is navigating based on
     // some global state(from say componentWillReceiveProps)
@@ -125,6 +130,7 @@ class PostDetail extends Component {
             onLikesHandler={this.onLikesHandler}
             onDislikesHandler={this.onDislikesHandler}
             openUserInfoModal={this.props.openUserInfoModal}
+            tagsSearchRequest={this.props.tagsSearchRequest}
           />
         </div>
         <div className="card-action">

@@ -13,6 +13,17 @@ const PER_PAGE = 10;
 // sub routes for comments
 router.use('/comment', comment);
 
+router.post('/tags', (req, res) => {
+  let { tag } = req.body;
+  tag = tag.trim();
+  Post.find({
+    deleted: false, tags: { $regex: `${tag} `, $options: 'i' }
+  }).populate('author').exec((err, result) => {
+    if (err) throw err;
+    return res.json(result);
+  });
+});
+
 /* POST DETAIL */
 router.get('/detail/:id', (req, res) => {
   Post.findById({

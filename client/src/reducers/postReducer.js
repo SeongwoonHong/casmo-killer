@@ -441,6 +441,7 @@ export default function post(state = initialState, action) {
           status: 'INIT'
         }
       };
+
     default:
       return state;
   }

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
-import ConnectTransitionWrapper from '../ConnectTransitionWrapper/ConnectTransitionWrapper';
+import ConnectTransitionWrapper from 'sharedComponents/ConnectTransitionWrapper/ConnectTransitionWrapper';
 import Reply from './Reply';
 import * as actions from '../../actions/post';
 

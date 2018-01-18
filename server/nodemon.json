@@ -1,0 +1,11 @@
+{
+  "restartable": "rs",
+  "ignore": [
+    "./node_modules/",
+    "./package.json"
+  ],
+  "execMap": {
+    "js": "node"
+  },
+  "ext": "js json"
+}

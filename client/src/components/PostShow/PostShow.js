@@ -49,7 +49,7 @@ class PostShow extends Component {
         <div className="title" ref={el => this.component[1] = el}>
           <div className="info">
             #{ activePost.postNum }
-            { !!activePost.tags && activePost.tags.length > 0 && activePost.tags.trim().split(' ').map((tag) => {
+            { !!activePost.tags && activePost.tags.trim() && activePost.tags.trim().split(' ').map((tag) => {
               return (
                 <span
                   key={tag}

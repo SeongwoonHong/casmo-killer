@@ -6,7 +6,6 @@ import LoadingCircle from 'sharedComponents/LoadingCircle';
 import PlainBtn from 'sharedComponents/PlainBtn';
 import Search from '../../Search/Search';
 import PostList from '../../PostList/PostList';
-import BreadCrumbs from '../../BreadCrumbs/BreadCrumbs';
 import Sort from '../../Sort/Sort';
 import './Board.scss';
 
@@ -97,10 +96,7 @@ class Board extends Component {
       <div className="board">
         <div className="row">
           <div className="col s12">
-            <div className="board_breadcrumbs col s10 m11 l11">
-              <BreadCrumbs url={this.state.baseUrl} />
-            </div>
-            <div className="col s2 m1 l1">
+            <div className="col s2">
               {
                 this.props.user.isLoggedIn ?
                   <i
@@ -118,13 +114,11 @@ class Board extends Component {
               <div className="board_header_manager">
                 관리자:
                 <div className="user-btn">
-                  <PlainBtn
-                    onClick={
-                      () => { this.props.openUserInfoModal(this.props.boardAuthor.author); }
-                    }
-                  >
-                    <a href="#">{this.props.boardAuthor.author ? this.props.boardAuthor.author.displayName : null}</a>
-                  </PlainBtn>
+                  <Link
+                    to={`/user/info/${this.props.boardAuthor.author._id}`}
+                    >
+                    {this.props.boardAuthor.author.displayName}
+                  </Link>
                 </div>
               </div>
               {
@@ -155,7 +149,6 @@ class Board extends Component {
         <div className="board_postList">
           <PostList
             postsList={data}
-            baseUrl={this.state.baseUrl}
             page={this.state.page}
             selected={this.state.sortInfo.selected}
             openUserInfoModal={this.props.openUserInfoModal}

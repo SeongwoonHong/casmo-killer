@@ -105,7 +105,7 @@ class PostInputForm extends Component {
                     className="btn btn-primary"
                     text="Cancel"
                     to={
-                      this.props.formType === 'edit' && `/community/${this.props.data.boardId}/${this.props.data._id}`}
+                      this.props.formType === 'edit' && `/article/${this.props.data._id}`}
                     animateAtDidMount
                   />
                 :

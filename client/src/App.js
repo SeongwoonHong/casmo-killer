@@ -61,7 +61,9 @@ class App extends Component {
               <Route path="/error" component={ ErrorPage } />
               <Route component={ ErrorPage } />
             </Switch>
-            <UserInfoModal />
+            {
+              this.props.user.isModalOpened && <UserInfoModal />
+            }
           </div>
         </div>
         <AuthLoader />
@@ -74,7 +76,8 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    layout: state.layout
+    layout: state.layout,
+    user: state.user
   };
 };
 

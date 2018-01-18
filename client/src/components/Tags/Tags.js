@@ -13,6 +13,13 @@ class Tags extends Component {
       inputInitialSize: 5
     };
   }
+  componentWillMount = () => {
+    if (this.props.tags.trim()) {
+      this.setState({
+        tags: this.props.tags.trim().split(' ')
+      });
+    }
+  }
   onChange = (e) => {
     const inputValue = e.target.value;
     const lastChar = inputValue[inputValue.length - 1];
@@ -58,7 +65,6 @@ class Tags extends Component {
     } = this.props;
     return (
       <div
-        className="tags-container"
         onClick={this.focusOnInput}
         ref={el => this.component = el}
         onKeyDown={() => {}}
@@ -114,4 +120,5 @@ Tags.propTypes = {
   fieldClass: PropTypes.string,
   meta: PropTypes.object
 };
+
 export default Tags;

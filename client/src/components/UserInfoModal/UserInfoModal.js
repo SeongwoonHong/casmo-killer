@@ -29,14 +29,12 @@ class UserInfoModal extends Component {
       currentCategory: value
     });
   }
-
   render() {
     const {
       userInfo, closeUserInfoModal
     } = this.props;
     const { data } = this.props.userPostsList;
     // const { pageCount } = this.props.userPagination;
-
     if (userInfo === undefined || userInfo._id === null) {
       return null;
     }
@@ -59,44 +57,63 @@ class UserInfoModal extends Component {
         info
       </div>
     );
+    const renderByUser = (
+      <div className="userinfo-modal">
+        <div className="userinfo-modal-header">
+          <div className="userinfo-modal-avatar">
+            <img src={userInfo.avatar} alt="user avatar" />
+          </div>
+          <div className="userinfo-modal-info">
+            <div className="userinfo-modal-info-username">
+              <h2>{userInfo.displayName}</h2>
+            </div>
+            <div className="userinfo-modal-info-detail">
+              <div className="info-detail">
+                <div className="info-detail-score"><img src="/crown.png" alt="user level" /></div>
+              </div>
+              <div className="info-detail"><span className="activity_score"><i className="material-icons">directions_run</i>활동</span> 350
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="userinfo-modal-category">
+          <div className={classnames('category-btn category-infoBtn', { active: this.state.currentCategory === 'info' })}>
+            <a href="#" onClick={() => this.changeCategory('info')}>
+              <i className="small material-icons">info_outline</i>INFO
+            </a>
+          </div>
+          <div className={classnames('category-btn category-activityBtn', { active: this.state.currentCategory === 'activity' })}>
+            <a href="#" onClick={() => this.changeCategory('activity')}>
+              <i className="small material-icons">timeline</i>ACTIVITY
+            </a>
+          </div>
+        </div>
+        <div className="userinfo-modal-body">
+          { this.state.currentCategory === 'activity' ? activeView : infoView }
+        </div>
+      </div>
+    );
+    const renderByTags = (
+      <div className="userinfo-modal">
+        <PostList
+          postsList={this.props.userPostsListByTag}
+          baseUrl={this.state.baseUrl}
+          page={this.state.page}
+          closeAndRedirect
+          closeUserInfoModal={this.props.closeUserInfoModal}
+          openUserInfoModal={this.props.openUserInfoModal}
+          selected={0}
+        />
+      </div>
+    );
     return (
       <ModalContainer
         ref={ el => this.component = el }
         onClose={ closeUserInfoModal }>
-        <div className="userinfo-modal">
-          <div className="userinfo-modal-header">
-            <div className="userinfo-modal-avatar">
-              <img src={userInfo.avatar} alt="user avatar" />
-            </div>
-            <div className="userinfo-modal-info">
-              <div className="userinfo-modal-info-username">
-                <h2>{userInfo.displayName}</h2>
-              </div>
-              <div className="userinfo-modal-info-detail">
-                <div className="info-detail">
-                  <div className="info-detail-score"><img src="/crown.png" alt="user level" /></div>
-                </div>
-                <div className="info-detail"><span className="activity_score"><i className="material-icons">directions_run</i>활동</span> 350
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="userinfo-modal-category">
-            <div className={classnames('category-btn category-infoBtn', { active: this.state.currentCategory === 'info' })}>
-              <a href="#" onClick={() => this.changeCategory('info')}>
-                <i className="small material-icons">info_outline</i>INFO
-              </a>
-            </div>
-            <div className={classnames('category-btn category-activityBtn', { active: this.state.currentCategory === 'activity' })}>
-              <a href="#" onClick={() => this.changeCategory('activity')}>
-                <i className="small material-icons">timeline</i>ACTIVITY
-              </a>
-            </div>
-          </div>
-          <div className="userinfo-modal-body">
-            { this.state.currentCategory === 'activity' ? activeView : infoView }
-          </div>
-        </div>
+        {
+          this.props.userInfo.mode === 'user' ?
+          renderByUser : renderByTags
+        }
       </ModalContainer>
     );
   }

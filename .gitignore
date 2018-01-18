@@ -5,8 +5,11 @@ node_modules/
 # testing
 coverage/
 
+
 # production
 client/build/
+env/
+.env.**
 
 # misc
 .DS_Store

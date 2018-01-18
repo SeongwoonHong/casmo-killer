@@ -98,7 +98,7 @@ export default class Reply extends Component {
       comment, commentId, commentAuthor, postId
     } = this.props;
     const offset = document.querySelector('.community').offsetHeight;
-    TweenMax.to(document.querySelector('.app-wrapper .container'), 1, { scrollTo: { y: offset, autoKill: true }, ease: Bounce.easeOut });
+    TweenMax.to(document.querySelector('.app-wrapper'), 1, { scrollTo: { y: offset, autoKill: true }, ease: Bounce.easeOut });
     this.state.edit && this.toggleEdit();
     this.props.replyComment({
       comment, commentId, commentAuthor, postId

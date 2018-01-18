@@ -1,0 +1,28 @@
+/* Memo */
+
+.memo .info {
+    font-size: 18px;
+    padding: 20px 20px 0px 20px;
+    color: #90A4AE;
+}
+
+.memo .info .username {
+    color: #263238;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.memo .card-content {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.memo .card-content {
+    font-size: 18px;
+}
+
+.memo .footer {
+  font-size: 18px;
+  padding: 20px 20px 0px 20px;
+  color: #90A4AE;
+}

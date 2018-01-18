@@ -66,7 +66,6 @@ const initialState = {
 };
 
 export default function post(state = initialState, action) {
-  console.log(action);
   switch (action.type) {
 
     // FETCH POST

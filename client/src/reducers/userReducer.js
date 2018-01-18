@@ -14,6 +14,14 @@ const initialState = {
     _id: null,
     displayName: null,
     avatar: null
+  },
+  activity: {
+    status: 'INIT',
+    data: [],
+    error: null
+  },
+  activityPagination: {
+    pageCount: 1
   }
 };
 

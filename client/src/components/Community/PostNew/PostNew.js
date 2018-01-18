@@ -1,15 +1,10 @@
 import React, { Component } from 'react';
 import PostInputForm from '../../PostInputForm';
-import BreadCrumbs from '../../BreadCrumbs/BreadCrumbs';
 
 class PostNew extends Component {
   constructor(props) {
     super(props);
-    const pathName = this.props.location.pathname;
-    const indexOfPost = this.props.location.pathname.lastIndexOf('/');
-    const currentUrl = pathName.substring(0, indexOfPost);
     this.state = {
-      currentUrl,
       boardId: props.match.params.boardId
     };
   }
@@ -17,7 +12,7 @@ class PostNew extends Component {
   validateAndCreatePost= (values) => {
     return this.props.createPostRequest(values, this.state.boardId).then(() => {
       if (this.props.newPost.status === 'SUCCESS') {
-        this.props.history.push(`${this.state.currentUrl}/${this.props.newPost.data._id}`).then(
+        this.props.history.push(`/article/${this.props.newPost.data._id}`).then(
           () => {
             Materialize.toast('Success!', 2000);
           }
@@ -32,11 +27,10 @@ class PostNew extends Component {
   render() {
     return (
       <div className="post_new">
-        <BreadCrumbs url={this.props.location.pathname} />
         <PostInputForm
           validateAndPost={this.validateAndCreatePost}
           formName="PostsNewForm"
-          cancelUrl={this.state.currentUrl}
+          cancelUrl={`/articles/${this.state.boardId}`}
         />
       </div>
     );

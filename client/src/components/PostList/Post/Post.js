@@ -3,7 +3,6 @@ import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import TimeAgo from 'react-timeago';
 import krStrings from 'react-timeago/lib/language-strings/ko';
-import PlainBtn from 'sharedComponents/PlainBtn';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import './Post.scss';
 
@@ -38,7 +37,7 @@ class Post extends Component {
                 closeAndRedirect
                 :
                 <Link to={{
-                  pathname: `${this.props.baseUrl}/${id}`,
+                  pathname: `/article/${id}`,
                   state: { page, selected }
                 }}>{title}
                 </Link>
@@ -52,13 +51,11 @@ class Post extends Component {
                 <img src={authorName.avatar} alt="" className="circle avartar_circle" />
                 <span className="authorName">
                   <div className="user-btn">
-                    <PlainBtn
-                      onClick={
-                        () => { this.props.openUserInfoModal(authorName, 'tag', true); }
-                      }
-                    >
-                      <a href="#">{authorName.displayName}</a>
-                    </PlainBtn>
+                    <Link
+                      to={`/user/info/${authorName._id}`}
+                      >
+                      {authorName.displayName}
+                    </Link>
                   </div>
                 </span>
                 <p><TimeAgo date={date} formatter={formatter} /></p>

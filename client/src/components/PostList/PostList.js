@@ -4,7 +4,7 @@ import Post from './Post/Post';
 
 class PostList extends Component {
   render() {
-    const { postsList, baseUrl } = this.props;
+    const { postsList } = this.props;
     const mapToComponents = (data) => {
       return data.map((post) => {
         return (
@@ -16,7 +16,6 @@ class PostList extends Component {
             title={post.title}
             count={post.count}
             key={post._id}
-            baseUrl={baseUrl}
             date={post.date}
             page={this.props.page}
             selected={this.props.selected}
@@ -38,14 +37,12 @@ class PostList extends Component {
 
 PostList.defaultProps = {
   postsList: [],
-  baseUrl: '',
   page: 0,
   selected: 0
 };
 
 PostList.propTypes = {
   postsList: PropTypes.array,
-  baseUrl: PropTypes.string,
   page: PropTypes.number,
   selected: PropTypes.number
 };

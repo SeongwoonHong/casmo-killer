@@ -36,13 +36,11 @@ class PostShow extends Component {
           <div className="header-info">
             <div className="writer">
               <div className="user-btn">
-                <PlainBtn
-                  onClick={
-                    () => { this.props.openUserInfoModal(activePost.author); }
-                  }
-                >
-                  <a href="#">{activePost.author.displayName}</a>
-                </PlainBtn>
+                <Link
+                  to={`/user/info/${activePost.author._id}`}
+                  >
+                  {activePost.author.displayName}
+                </Link>
               </div>
             </div>
             <div className="created">Created : <TimeAgo date={activePost.date} formatter={formatter} />{ activePost.updated.length > 0 && <span> (edited)</span>}</div>
@@ -51,7 +49,7 @@ class PostShow extends Component {
         <div className="title" ref={el => this.component[1] = el}>
           <div className="info">
             #{ activePost.postNum }
-            { activePost.tags.length > 0 && activePost.tags.trim().split(' ').map((tag) => {
+            { !!activePost.tags && activePost.tags.trim() && activePost.tags.trim().split(' ').map((tag) => {
               return (
                 <span
                   key={tag}

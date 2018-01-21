@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Post = require('../db/models/post');
 const isAuthenticated = require('../middlewares/isAuthenticated');
+const Activity = require('../db/models/activity');
 
 const router = express.Router();
 
@@ -49,6 +50,7 @@ router.post('/update/:postId/:commentId', isAuthenticated, (req, res) => {
 //  commentId: 좋아요 눌러질 코멘트 아이디
 router.post('/likes/:postId/:commentId', isAuthenticated, (req, res) => {
   const { postId, commentId } = req.params;
+  let commentAuthor;
   if (!mongoose.Types.ObjectId.isValid(postId)) {
     return res.status(400).json({
       message: 'INVALID POST ID'
@@ -66,6 +68,8 @@ router.post('/likes/:postId/:commentId', isAuthenticated, (req, res) => {
       if (post.comments[i]._id == commentId) {
         const index = post.comments[i].likes.indexOf(req.user.displayName);
         const didDisLike = post.comments[i].disLikes.indexOf(req.user.displayName) !== -1;
+        commentAuthor = post.comments[i].author;
+
         if (didDisLike) {
           post.comments[i].disLikes.splice(post.comments[i].disLikes.indexOf(req.user.displayName), 1);
         }
@@ -85,6 +89,7 @@ router.post('/likes/:postId/:commentId', isAuthenticated, (req, res) => {
         .populate('author')
         .populate('comments.author', (errComment, commentResult) => {
           if (errComment) throw errComment;
+          Activity.createLikeActivity(req.user._id, postId, commentAuthor);
           return res.json(commentResult);
         });
     });
@@ -97,6 +102,7 @@ router.post('/likes/:postId/:commentId', isAuthenticated, (req, res) => {
 //  commentId: 싫어요 눌러질 코멘트 아이디
 router.post('/disLikes/:postId/:commentId', isAuthenticated, (req, res) => {
   const { postId, commentId } = req.params;
+  let commentAuthor;
   if (!mongoose.Types.ObjectId.isValid(postId)) {
     return res.status(400).json({
       message: 'INVALID POST ID'
@@ -114,6 +120,7 @@ router.post('/disLikes/:postId/:commentId', isAuthenticated, (req, res) => {
       if (post.comments[i]._id == commentId) {
         const index = post.comments[i].disLikes.indexOf(req.user.displayName);
         const didLike = post.comments[i].likes.indexOf(req.user.displayName) !== -1;
+        commentAuthor = post.comments[i].author;
         if (didLike) {
           post.comments[i].likes.splice(post.comments[i].likes.indexOf(req.user.displayName), 1);
         }
@@ -133,6 +140,7 @@ router.post('/disLikes/:postId/:commentId', isAuthenticated, (req, res) => {
         .populate('author')
         .populate('comments.author', (errComment, commentResult) => {
           if (errComment) throw errComment;
+          Activity.createDisLikeActivity(req.user._id, postId, commentAuthor);
           return res.json(commentResult);
         });
     });

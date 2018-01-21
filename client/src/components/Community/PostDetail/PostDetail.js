@@ -8,7 +8,6 @@ import ReplyList from '../../ReplyList';
 import PostShow from '../../PostShow/PostShow';
 import PostInputForm from '../../PostInputForm';
 import LoadingCircle from '../../Loading/LoadingCircle';
-import BreadCrumbs from '../../BreadCrumbs/BreadCrumbs';
 import Button from '../../Button/Button';
 // import { editPost, editPostFailure, editPostSuccess } from '../../../actions/post';
 import './PostDetail.scss';
@@ -16,11 +15,8 @@ import './PostDetail.scss';
 class PostDetail extends Component {
   constructor(props) {
     super(props);
-    const pathName = props.location.pathname;
-    const baseUrl = pathName.substring(0, pathName.lastIndexOf('/'));
     this.state = {
-      editMode: false,
-      baseUrl
+      editMode: false
     };
   }
 
@@ -76,7 +72,7 @@ class PostDetail extends Component {
     return this.props.onDeleteClick().then(() => {
       if (this.props.deletePost.status === 'SUCCESS') {
         Materialize.toast('A post is deleted!', 2000);
-        this.props.history.push(this.state.baseUrl);
+        this.props.history.push(`/articles/${this.props.activePost.data.boardId}`);
       } else {
         Materialize.toast($(`<span style="color: #00c853">Error: ${this.props.editPost.error.message}</span>`), 3000);
       }
@@ -169,7 +165,6 @@ class PostDetail extends Component {
 
     return (
       <div className="board_detail">
-        <BreadCrumbs url={this.state.baseUrl} />
         { this.state.editMode ? editView : detailView }
         <ReplyList
           comments={data.comments}

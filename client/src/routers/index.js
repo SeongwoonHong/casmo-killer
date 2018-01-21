@@ -91,5 +91,15 @@ export const MainMenuRoutes = [
     name: 'User',
     path: '/user',
     main: User
+  },
+  {
+    name: '게시글 목록',
+    path: '/articles',
+    main: CommunityWrapper
+  },
+  {
+    name: '게시글',
+    path: '/article',
+    main: CommunityWrapper
   }
 ];

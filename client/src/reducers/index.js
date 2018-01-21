@@ -7,6 +7,7 @@ import postReducer from './postReducer';
 import authReducer from './authReducer';
 import boardReducer from './boardReducer';
 import errorReducer from './errorReducer';
+import activityReducer from './activityReducer';
 
 export default combineReducers({
   posts: postReducer,
@@ -15,5 +16,6 @@ export default combineReducers({
   user: userReducer,
   auth: authReducer,
   error: errorReducer,
-  boards: boardReducer
+  boards: boardReducer,
+  activity: activityReducer
 });

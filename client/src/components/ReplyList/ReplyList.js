@@ -14,6 +14,7 @@ class ReplyList extends Component {
           !comment.deleted &&
           <Reply
             commentAuthor={comment.author.displayName}
+            commentAuthorId={comment.author._id}
             postAuthor={this.props.activePost.author}
             avatar={comment.avatar}
             comment={comment.memo}

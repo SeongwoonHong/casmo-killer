@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Materialize from 'materialize-css';
 import { Link } from 'react-router-dom';
 import LoadingCircle from '../../Loading/LoadingCircle';
-import BreadCrumbs from '../../BreadCrumbs/BreadCrumbs';
 import Button from '../../Button/Button';
 import './Community.scss';
 
@@ -51,7 +50,7 @@ class Community extends Component {
               </div>
               <div className="card-action">
                 <Link to={{
-                  pathname: `${this.state.baseUrl}/${board.boardId}`,
+                  pathname: `/articles/${board.boardId}`,
                   state: { page: 0, selected: 0, boardOId: board._id }
                   }}>들어가기
                 </Link>
@@ -78,7 +77,6 @@ class Community extends Component {
     }
     return (
       <div className="community">
-        <BreadCrumbs url={this.state.baseUrl} />
         {
           this.props.user.isLoggedIn &&
           <Button

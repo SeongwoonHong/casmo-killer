@@ -5,6 +5,7 @@ const Post = require('../db/models/post');
 const comment = require('./comment');
 const isAuthenticated = require('../middlewares/isAuthenticated');
 const Board = require('../db/models/board');
+const Activity = require('../db/models/activity');
 
 const router = express.Router();
 const PER_PAGE = 10;
@@ -165,6 +166,7 @@ router.post('/likes/:postId', isAuthenticated, (req, res) => {
         .populate('comments.author')
         .populate('author', (err2, finalResult) => {
           if (err2) throw err2;
+          Activity.createLikeActivity(req.user._id, req.params.postId);
           return res.json(finalResult);
         });
       // return res.json(result);
@@ -202,6 +204,7 @@ router.post('/disLikes/:postId', isAuthenticated, (req, res) => {
         .populate('comments.author')
         .populate('author', (err2, finalResult) => {
           if (err2) throw err2;
+          Activity.createDisLikeActivity(req.user._id, req.params.postId);
           return res.json(finalResult);
         });
     });
@@ -294,6 +297,7 @@ router.post('/reply', (req, res) => {
       rawContent
         .populate('author')
         .populate('comments.author', (errComment, commentResult) => {
+          Activity.createWritetActivity(req.user._id, commentResult._id, 'comment');
           return res.json(commentResult);
         });
     });
@@ -330,6 +334,7 @@ router.post('/:boardId', isAuthenticated, (req, res) => {
         message: 'Could not save post'
       });
     }
+    Activity.createWritetActivity(req.user._id, postResult._id);
     res.json(postResult);
   });
 });

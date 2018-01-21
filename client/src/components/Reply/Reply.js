@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import TimeAgo from 'react-timeago';
 import krStrings from 'react-timeago/lib/language-strings/ko';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
-import PlainBtn from 'sharedComponents/PlainBtn';
+import { Link } from 'react-router-dom';
 import animate from 'gsap-promise';
 import { Field } from 'redux-form';
 import Materialize from 'materialize-css';
@@ -106,8 +106,9 @@ export default class Reply extends Component {
   }
   render() {
     const {
-      postId, commentAuthor, comment, date, commentId, likes, disLikes, handleSubmit, isEdited, parentAuthor, parentContent, avatar
+      postId, commentAuthor, commentAuthorId, comment, date, commentId, likes, disLikes, handleSubmit, isEdited, parentAuthor, parentContent, avatar
     } = this.props;
+    console.log(this.props);
     const editView = (
       <Field
         name={`comment${commentId}`}
@@ -156,13 +157,11 @@ export default class Reply extends Component {
             <img src={avatar} alt="" className="circle avartar_circle" />
             <div className="header-info">
               <div className="writer">
-                <PlainBtn
-                  onClick={
-                    () => { this.props.openUserInfoModal(commentAuthor); }
-                  }
-                >
-                  <a href="#">{commentAuthor}</a>
-                </PlainBtn>
+                <Link
+                  to={`/user/info/${commentAuthorId}`}
+                  >
+                  {commentAuthor}
+                </Link>
               </div>
               <div className="created">Created : <TimeAgo date={date} formatter={formatter} />{ isEdited && <span> (edited)</span>}</div>
             </div>

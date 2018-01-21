@@ -25,9 +25,9 @@ class CommunityWrapper extends Component {
           <Route path="/community/favourites" render={props => loginCheckAndLoading(props, 'bookmark')} />
           <Route path="/community/myCommunity" render={props => loginCheckAndLoading(props, 'my')} />
           <Route path="/community/newboard" component={BoardNew} />
-          <Route path="/community/:boardId/new" component={RequireAuthentication(PostNew, '/community/communityAll')} />
-          <Route path="/community/:boardId/:postId" component={PostDetail} />
-          <Route path="/community/:boardId" component={Board} />
+          <Route path="/articles/:boardId/new" component={RequireAuthentication(PostNew, '/community/communityAll')} />
+          <Route path="/article/:postId" component={PostDetail} />
+          <Route path="/articles/:boardId" component={Board} />
           {/* <Route path="/" component="" /> */}
         </Switch>
       </div>

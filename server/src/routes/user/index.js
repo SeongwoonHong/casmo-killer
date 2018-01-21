@@ -43,4 +43,10 @@ router.put('/update/email', controller.updateEmail);
  */
 router.delete('/delete/account', controller.deleteAccount);
 
+/**
+ * fetch user activity
+ */
+router.get('/activity/:userId', controller.getUserActivity);
+router.get('/activity/:userId/:listType/:id', controller.getUserOldActivity);
+
 module.exports = router;

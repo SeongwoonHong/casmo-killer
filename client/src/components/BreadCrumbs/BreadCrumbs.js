@@ -14,16 +14,18 @@ function getBreadCrumbs(url) {
   const targets = url.split('/').filter(Boolean);
   targets.unshift('');
 
-  return targets.map((crumb, i, arr) => {
-    let p = arr.slice(0, i + 1).join('/');
-    if (i === 0) p = '/';
+  return targets
+    .filter(crumb => crumb !== 'article' && crumb !== 'articles')
+    .map((crumb, i, arr) => {
+      let p = arr.slice(0, i + 1).join('/');
+      if (i === 0) p = '/';
 
-    crumb = (i === 0) ? 'HOME' : crumb;
-    return {
-      name: crumb.toUpperCase(),
-      url: p
-    };
-  });
+      crumb = (i === 0) ? 'HOME' : crumb;
+      return {
+        name: crumb.toUpperCase(),
+        url: p
+      };
+    });
 }
 
 export default ({ url }) => {

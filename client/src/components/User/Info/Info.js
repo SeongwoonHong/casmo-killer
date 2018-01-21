@@ -72,7 +72,7 @@ class Info extends Component {
     // CANCEL IF USER IS READING THE LAST PAGE
     if (this.props.isLast) {
       return new Promise(
-        (resolve, reject)=> {
+        (resolve) => {
           resolve();
         }
       );

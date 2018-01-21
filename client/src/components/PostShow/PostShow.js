@@ -5,12 +5,11 @@ import TimeAgo from 'react-timeago';
 import krStrings from 'react-timeago/lib/language-strings/ko';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import animate from 'gsap-promise';
-import PlainBtn from 'sharedComponents/PlainBtn';
+import axios from 'axios'; // 테스트 임시용. 나중에 액션크리에이터에서 호출할거임 지금은 귀찮아서 여기서 테스트중!
 import PreferencesPanel from '../PreferencesPanel';
 import Iframe from '../Iframe/Iframe';
 import './PostShow.scss';
 
-import axios from 'axios'; // 테스트 임시용. 나중에 액션크리에이터에서 호출할거임 지금은 귀찮아서 여기서 테스트중!
 
 const formatter = buildFormatter(krStrings);
 class PostShow extends Component {

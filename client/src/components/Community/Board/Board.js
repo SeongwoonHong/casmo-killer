@@ -3,7 +3,6 @@ import ReactPaginate from 'react-paginate';
 import Materialize from 'materialize-css';
 import { Link } from 'react-router-dom';
 import LoadingCircle from 'sharedComponents/LoadingCircle';
-import PlainBtn from 'sharedComponents/PlainBtn';
 import Search from '../../Search/Search';
 import PostList from '../../PostList/PostList';
 import Sort from '../../Sort/Sort';

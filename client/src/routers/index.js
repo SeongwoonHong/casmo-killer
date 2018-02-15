@@ -3,7 +3,6 @@ import CommunityWrapper from '../components/Community';
 import Restaurants from '../components/Restaurants';
 import QnA from '../components/QnA';
 import Info from '../components/Info';
-import User from '../components/User';
 
 export const MainMenuRoutes = [
   {
@@ -23,7 +22,7 @@ export const MainMenuRoutes = [
       },
       {
         name: '나의 커뮤니티',
-        path: '/mycommunity'
+        path: '/myCommunity'
       },
       {
         name: '즐겨찾기',
@@ -86,11 +85,6 @@ export const MainMenuRoutes = [
         path: '/whatevery'
       }
     ]
-  },
-  {
-    name: 'User',
-    path: '/user',
-    main: User
   },
   {
     name: '게시글 목록',

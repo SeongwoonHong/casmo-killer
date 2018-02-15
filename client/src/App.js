@@ -1,18 +1,17 @@
-import 'materialize-css/dist/css/materialize.min.css';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
-import classnames from 'classnames';
 
-import * as actions from 'actions';
+import * as actions from '@actions';
 
-import breakPoint from 'sharedUtils/breakPoint';
-import LoadingOverlay from 'sharedComponents/LoadingOverlay';
+import breakPoint from '@sharedUtils/breakPoint';
+import LoadingOverlay from '@sharedComponents/LoadingOverlay';
 
 import { MainMenuRoutes } from './routers';
+import UserRoute from './routers/user';
 
 import TopNavigation from './components/Navigations/TopNavigation';
-import MainMenu from './components/Navigations/MainMenu';
+import AppNavigation from './components/Navigations/AppNavigation';
 import ErrorPage from './components/ErrorPage';
 import UserInfoModal from './components/UserInfoModal';
 import AuthLoader from './components/AuthLoader';
@@ -42,11 +41,9 @@ class App extends Component {
       <div className="root-container">
         <LoadingOverlay isVisible={ layout.isAppLoading } />
         <TopNavigation />
-        <div className="app-wrapper">
-          <Route path="/" component={ MainMenu } />
-          <div className={ classnames('component-container', {
-            widened: layout.isMainMenuVisible
-          }) }>
+        <div className="app-container">
+          <Route path="/" component={ AppNavigation } />
+          <div className="component-row">
             <Switch>
               {
                 MainMenuRoutes.map(route => (
@@ -58,6 +55,7 @@ class App extends Component {
                   />
                 ))
               }
+              <Route path="/user" component={ UserRoute } />
               <Route path="/error" component={ ErrorPage } />
               <Route component={ ErrorPage } />
             </Switch>

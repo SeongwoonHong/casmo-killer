@@ -31,7 +31,6 @@
     "gsap-promise": "^2.0.0",
     "html-webpack-plugin": "2.29.0",
     "jest": "20.0.4",
-    "materialize-css": "^0.100.2",
     "node-sass": "^4.7.2",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
@@ -88,6 +87,9 @@
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"
     ],
     "moduleNameMapper": {
+      "^@actions(.*)$": "<rootDir>/src/actions$1",
+      "^@sharedComponents(.*)$": "<rootDir>/src/components/shared$1",
+      "^@sharedUtils(.*)$": "<rootDir>/src/utils$1",
       "^react-native$": "react-native-web"
     },
     "moduleFileExtensions": [

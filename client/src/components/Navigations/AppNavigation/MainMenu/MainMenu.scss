@@ -1,0 +1,68 @@
+.Menu-container.Main-menu {
+    transform: translateX(-100%);
+    .main-menu {
+        > li {
+            > a {
+                border-bottom: none;
+                &.active {
+                    & + .sub-menu {
+                        background-color: #fff;
+                        border-bottom: 1px solid $main-menu-border-color;
+                        display: block;
+                        > li {
+                            > a {
+                                font-size: 12px;
+                                padding: 0 0 0 71px;
+                                &.active {
+                                    font-weight: 700;
+                                    text-decoration: underline;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            > .sub-menu {
+                display: none;
+            }
+            &:first-child {
+                > a {
+                    &.active {
+                        border-bottom: 1px solid $main-menu-border-color;
+                    }
+                }
+            }
+        }
+    }
+    @media screen and (min-width: 992px) {
+        .main-menu {
+            > li {
+                > a {
+                    border-bottom: 2px solid transparent;
+                    border-top: none;
+                    color: palette(Grey, 500);
+                    padding: 0 15px;
+                    &.active {
+                        background-color: transparent;
+                        border-color: palette(Grey, 100);
+                        color: palette(Grey, 100);
+                        & + .sub-menu {
+                            display: none;
+                        }
+                    }
+                    > .material-icons {
+                        color: inherit;
+                        margin-right: 15px;
+                    }
+                }
+                &:first-child {
+                    > a {
+                        &.active {
+                            border-bottom: 2px solid palette(Grey, 100);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

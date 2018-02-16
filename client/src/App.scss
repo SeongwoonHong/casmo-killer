@@ -3,8 +3,8 @@
 }
 html {
     background-color: #EEEEEE;
-    height: 100vh;
-    overflow-y: hidden;
+    // height: 100vh;
+    // overflow-y: hidden;
 }
 body {
     height: 100%;
@@ -35,4 +35,7 @@ textarea {
             margin-left: $main-menu-width;
         }
     }
+}
+input:focus {
+  outline: none !important;
 }

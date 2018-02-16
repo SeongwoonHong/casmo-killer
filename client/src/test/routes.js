@@ -3,10 +3,12 @@ import { Route, Switch } from 'react-router-dom';
 import manifestComponents from './manifest.js';
 
 const TestRoutes = ({ match }) => (
+
   <Switch>
     {
        Object.keys(manifestComponents).map((component, i) => {
          const componentData = manifestComponents[component];
+         console.log(componentData);
          let Component;
          if (i === 0) {
            Component = componentData.default || componentData.component.default;

@@ -86,7 +86,7 @@ module.exports = {
     alias: {
       // add aliases for import
       actions: path.resolve('./src/actions'),
-      sharedComponents: path.resolve('./src/components/shared'),
+      sharedComponents: path.resolve('./src/components-temp/shared'),
       sharedUtils: path.resolve('./src/utils'),
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/

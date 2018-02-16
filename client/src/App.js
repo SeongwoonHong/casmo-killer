@@ -1,4 +1,4 @@
-import 'materialize-css/dist/css/materialize.min.css';
+// import 'materialize-css/dist/css/materialize.min.css';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
@@ -11,11 +11,11 @@ import LoadingOverlay from 'sharedComponents/LoadingOverlay';
 
 import { MainMenuRoutes } from './routers';
 
-import TopNavigation from './components/Navigations/TopNavigation';
-import MainMenu from './components/Navigations/MainMenu';
-import ErrorPage from './components/ErrorPage';
-import UserInfoModal from './components/UserInfoModal';
-import AuthLoader from './components/AuthLoader';
+import TopNavigation from './components-temp/Navigations/TopNavigation';
+import MainMenu from './components-temp/Navigations/MainMenu';
+import ErrorPage from './components-temp/ErrorPage';
+import UserInfoModal from './components-temp/UserInfoModal';
+import AuthLoader from './components-temp/AuthLoader';
 
 import './App.scss';
 

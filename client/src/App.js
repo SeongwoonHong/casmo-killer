@@ -13,7 +13,7 @@ import UserRoute from './routers/user';
 import TopNavigation from './components/Navigations/TopNavigation';
 import AppNavigation from './components/Navigations/AppNavigation';
 import ErrorPage from './components/ErrorPage';
-import UserInfoModal from './components/UserInfoModal';
+// import UserInfoModal from './components/UserInfoModal';
 import AuthLoader from './components/AuthLoader';
 
 import './App.scss';
@@ -31,6 +31,7 @@ class App extends Component {
         }
       }, false);
     }
+
   }
 
   render() {
@@ -60,7 +61,7 @@ class App extends Component {
               <Route component={ ErrorPage } />
             </Switch>
             {
-              this.props.user.isModalOpened && <UserInfoModal />
+              // this.props.user.isModalOpened && <UserInfoModal />
             }
           </div>
         </div>

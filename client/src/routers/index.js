@@ -1,20 +1,20 @@
-import Home from '../components/Home';
-import CommunityWrapper from '../components/Community';
-import Restaurants from '../components/Restaurants';
-import QnA from '../components/QnA';
-import Info from '../components/Info';
+// import Home from '../components/Home';
+// import CommunityWrapper from '../components/Community';
+// import Restaurants from '../components/Restaurants';
+// import QnA from '../components/QnA';
+// import Info from '../components/Info';
 
 export const MainMenuRoutes = [
   {
     path: '/',
     exact: true,
-    main: Home
+    // main: Home
   },
   {
     name: '커뮤니티',
     path: '/community',
     icon: 'group',
-    main: CommunityWrapper,
+    // main: CommunityWrapper,
     children: [
       {
         name: '자유게시판',
@@ -38,7 +38,7 @@ export const MainMenuRoutes = [
     name: '맛집',
     path: '/restaurants',
     icon: 'free_breakfast',
-    main: Restaurants,
+    // main: Restaurants,
     children: [
       {
         name: '오늘의 맛집',
@@ -54,7 +54,7 @@ export const MainMenuRoutes = [
     name: 'Q&A',
     path: '/qna',
     icon: 'forum',
-    main: QnA,
+    // main: QnA,
     children: [
       {
         name: '최신질문',
@@ -74,7 +74,7 @@ export const MainMenuRoutes = [
     name: '정보',
     path: '/info',
     icon: 'event',
-    main: Info,
+    // main: Info,
     children: [
       {
         name: '인기상승',
@@ -89,11 +89,11 @@ export const MainMenuRoutes = [
   {
     name: '게시글 목록',
     path: '/articles',
-    main: CommunityWrapper
+    // main: CommunityWrapper
   },
   {
     name: '게시글',
     path: '/article',
-    main: CommunityWrapper
+    // main: CommunityWrapper
   }
 ];

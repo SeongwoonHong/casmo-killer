@@ -1,0 +1,45 @@
+.comment {
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+  border: 1px solid lightgrey;
+  border-radius: 4px;
+  padding: 10px 20px;
+  margin-top: 15px;
+  .comment-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    > span {
+      margin-left: 10px;
+
+    }
+  }
+  .comment-body {
+    overflow: hidden;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  .like-icon, .dislike-icon {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+  .comment-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+  .comment-footer {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid lightgrey;
+    padding-top: 10px;
+    .like-dislike {
+      display: inline-block;
+    }
+    .buttons {
+    }
+  }
+  .cursor {
+    cursor: pointer;
+  }
+}

@@ -1,9 +1,9 @@
-import Home from '../components/Home';
-import CommunityWrapper from '../components/Community';
-import Restaurants from '../components/Restaurants';
-import QnA from '../components/QnA';
-import Info from '../components/Info';
-import User from '../components/User';
+import Home from '../components-temp/Home';
+import CommunityWrapper from '../components-temp/Community';
+import Restaurants from '../components-temp/Restaurants';
+import QnA from '../components-temp/QnA';
+import Info from '../components-temp/Info';
+import User from '../components-temp/User';
 
 export const MainMenuRoutes = [
   {

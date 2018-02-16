@@ -13,7 +13,9 @@ const isDevelopment = process.env.NODE_ENV === 'development';
 
 const store = createStore(
   reducers,
-  isDevelopment ? window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__() : null,
+  isDevelopment
+    ? window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    : null,
   applyMiddleware(reduxThunk)
 );
 
@@ -43,4 +45,5 @@ ReactDOM.render(
 if (module.hot) {
   module.hot.accept();
 }
+
 registerServiceWorker();

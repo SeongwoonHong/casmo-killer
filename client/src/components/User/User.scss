@@ -1,0 +1,140 @@
+.User {
+    .user-page-title {
+        @include flex-box(space-between);
+        font-size: 16px;
+        color: palette(Blue Grey, 900);
+        margin: $user-box-padding $user-box-padding - 5px;
+        font-weight: 800;
+        text-transform: uppercase;
+        > .material-icons {
+            border: 1px solid palette(Blue Grey, 900);
+            border-radius: 5px;
+            font-size: 16px;
+            padding: 3px;
+        }
+    }
+    .Form-message {
+        font-size: 12px;
+        margin: $user-box-padding $user-box-padding 0;
+    }
+    .user-form-box {
+        background-color: #fff;
+        border: 1px solid $main-menu-border-color;
+        margin-bottom: 10px;
+        position: relative;
+    }
+    .user-form-header {
+        border-bottom: 1px solid $main-menu-border-color;
+        color: #003030;
+        padding: $user-box-padding;
+        > h3 {
+            font-size: 14px;
+            font-weight: 700;
+            margin: 0;
+            & + p {
+                font-size: 12px;
+                margin: $user-box-padding 0 0;
+            }
+        }
+        > .Form-message {
+            margin: $user-box-padding 0 0;
+        }
+    }
+    .user-form {
+        > .user-form-button {
+            &:last-child {
+                margin: $user-box-padding $user-box-padding $user-box-padding auto;
+            }
+        }
+    }
+    .user-form-fields {
+        border-bottom: 1px solid $main-menu-border-color;
+        padding: $user-box-padding;
+        > label {
+            color: palette(Blue Grey, 700);
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        > input {
+            background-color: #fff;
+            border: none;
+            box-shadow:
+                inset 0 0 0 1px $main-menu-border-color,
+                0 0 0 transparent;
+            box-sizing: border-box;
+            color: #000;
+            font-size: 12px;
+            height: 100%;
+            margin: $user-box-padding 0 0;
+            padding: 5px 7px;
+            width: 100%;
+            &:disabled {
+                border: none;
+                cursor: not-allowed;
+            }
+            & + p {
+                color: #6e6779;
+                font-size: 12px;
+                margin: 5px 0 0;
+                text-align: right;
+            }
+        }
+        > .avatar-preview {
+            @include flex-box(flex-start, flex-end);
+            margin-top: $user-box-padding;
+            > .avatar-wrapper {
+                @include flex-box(center);
+                @include rectanglify(100px);
+                background-color: palette(Teal, 50);
+                border: 1px solid palette(Teal, 100);
+                border-radius: 50%;
+                color: palette(Teal, 100);
+                > .avatar-img {
+                    @include rectanglify(100px);
+                    border-radius: 50%;
+                }
+            }
+            > input[type="file"] {
+                width: 0.1px;
+                height: 0.1px;
+                opacity: 0;
+                overflow: hidden;
+                position: absolute;
+                z-index: -88;
+                & + label {
+                    margin-left: $user-box-padding;
+                    text-align: center;
+                    > .user-form-button {
+                        margin-bottom: $user-box-padding - 10px;
+                    }
+                    > span {
+                        color: #6e6779;
+                        font-size: 12px;
+                        &.user-form-button {
+                            color: palette(Blue Grey, 50);
+                            margin-bottom: $user-box-padding - 10px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    button {
+        background-color: transparent;
+        border: none;
+    }
+    .user-form-button {
+        background-color: palette(Blue Grey, 700);
+        color: palette(Blue Grey, 50);
+        display: block;
+        font-size: 12px;
+        padding: 7px 10px;
+        text-align: center;
+        &:disabled {
+            background-color: palette(Blue Grey, 100);
+            cursor: not-allowed;
+        }
+    }
+}

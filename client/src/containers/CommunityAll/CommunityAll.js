@@ -75,7 +75,6 @@ class CommunityAll extends Component {
         </div>
       );
     }
-
     return (
       <div className="community">
         {

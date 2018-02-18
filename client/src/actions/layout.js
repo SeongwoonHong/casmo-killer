@@ -8,27 +8,15 @@ export const toggleMenu = (payload = null) => {
 };
 
 export const updateBreakpoint = (payload) => {
-  return (dispatch, getState) => {
-
-    const { layout } = getState();
-
-    if (layout.breakPoint !== 'xl' && payload === 'xl') {
-      dispatch(toggleMenu(true));
-    } else if (layout.breakPoint === 'xl' && payload !== 'xl') {
-      dispatch(toggleMenu(false));
-    }
-
-    dispatch({
-      type: types.UPDATE_BREAK_POINT,
-      payload
-    });
-
+  return {
+    type: types.UPDATE_BREAK_POINT,
+    payload
   };
 };
 
-export const toggleUserDropdown = (payload = null) => {
+export const toggleUserMenu = (payload = null) => {
   return {
-    type: types.TOGGLE_USER_DROPDOWN,
+    type: types.TOGGLE_USER_MENU,
     payload
   };
 };

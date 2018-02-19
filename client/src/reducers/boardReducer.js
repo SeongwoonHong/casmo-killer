@@ -15,6 +15,7 @@ const initialState = {
 };
 
 export default function board(state = initialState, action) {
+  console.log(action);
   switch (action.type) {
     // FETCH BOARDS
     case types.FETCH_BOARDS:
@@ -23,6 +24,7 @@ export default function board(state = initialState, action) {
           status: { $set: 'WAITING' },
         }
       });
+    // FETCH SUCCEESS
     case types.FETCH_BOARDS_SUCCESS:
       return update(state, {
         boardList: {
@@ -30,6 +32,7 @@ export default function board(state = initialState, action) {
           data: { $set: action.payload }
         }
       });
+    // FETCH FAILURE
     case types.FETCH_BOARDS_FAILURE:
       return update(state, {
         boardList: {
@@ -37,6 +40,13 @@ export default function board(state = initialState, action) {
           error: { $set: action.payload.response.data }
         }
       });
+
+
+
+
+
+
+
 
     // CREATE BOARD
     case types.CREATE_BOARD:

@@ -27,6 +27,7 @@ export function fetchPostsRequest(boardId, page, sort) {
     // Inform Login API is starting
     dispatch(fetchPosts());
     // API request
+    console.log('here ======================')
     return axios.get(`/api/post/${boardId}/${page}/${sort}`)
       .then((response) => {
         dispatch(fetchPostsSuccess(response.data));
@@ -252,20 +253,20 @@ export function resetPostProps() {
   };
 }
 
-export function createReply() {
+export function createComment() {
   return {
     type: types.CREATE_REPLY
   };
 }
 
-export function createReplySuccess(newPost) {
+export function createCommentSuccess(newPost) {
   return {
     type: types.CREATE_REPLY_SUCCESS,
     payload: newPost
   };
 }
 
-export function createReplyFailure(error) {
+export function createCommentFailure(error) {
   return {
     type: types.CREATE_REPLY_FAILURE,
     payload: error
@@ -278,22 +279,22 @@ export function replyCommentReset() {
   };
 }
 
-export function createReplyRequest(comment, postId, parentReply = {}) {
+export function createCommentRequest(comment, postId, parentReply = {}) {
   const data = {
     comment,
     postId,
     parentReply
   };
   return (dispatch) => {
-    dispatch(createReply());
+    dispatch(createComment());
     // tokenFromStorage
     return axios.post('/api/post/reply', data)
       .then((response) => {
         dispatch(replyCommentReset());
-        dispatch(createReplySuccess(response.data));
+        dispatch(createCommentSuccess(response.data));
       }).catch((error) => {
         console.log(error);
-        dispatch(createReplyFailure(error));
+        dispatch(createCommentFailure(error));
       });
   };
 }
@@ -450,7 +451,7 @@ export function updateCommentRequest(postId, commentId, contents) {
   };
 }
 
-export function replyComment(data) {
+export function replyCommentRequest(data) {
   return {
     type: types.REPLY_COMMENT_WAITING,
     payload: { data }

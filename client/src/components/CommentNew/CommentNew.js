@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import TextButton from '../Button/TextButton/TextButton';
+import Quote from '../Quote/Quote';
 import './CommentNew.scss';
 
 class CommentNew extends Component {
@@ -19,19 +20,31 @@ class CommentNew extends Component {
 
   handleReply = () => {
     if (this.state.comment.trim() !== '') {
-      this.props.onReply(this.state.comment, this.props.postId, this.props.replyComment);
+      this.props.createCommentRequest(this.state.comment, this.props.postId, this.props.replyComment);
       this.setState({
         comment: ''
       });
     }
   }
   render() {
+    const {
+      isLoggedIn, replyComment, replyCommentReset
+    } = this.props;
     return (
       <div className="comment-new">
         {
-          !this.props.isLoggedIn &&
+          !isLoggedIn &&
           <div className="required-login-overlay">You need to login to leave a comment</div>
         }
+        {
+            replyComment.status === 'WAITING' &&
+            <Quote
+              author={replyComment.parentAuthor}
+              content={replyComment.parentContent}
+              replyCommentReset={replyCommentReset}
+              isCloseButton
+            />
+          }
         <textarea
           id="reply"
           className="comment-new-body"
@@ -55,7 +68,7 @@ class CommentNew extends Component {
 CommentNew.defaultProps = {
   postId: '',
   onReply: () => {},
-  isLoggedIn: true,
+  isLoggedIn: false,
   replyComment: {
     status: 'INIT'
   }

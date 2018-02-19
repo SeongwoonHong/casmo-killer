@@ -1,12 +1,14 @@
 import axios from 'axios';
 import * as types from './types';
 
-// FETCH BOARDS
+// FETCH BOARDS START
 export function fetchBoards() {
   return {
     type: types.FETCH_BOARDS
   };
 }
+
+// FETCH BOARDS SUCEESS ACTION
 export function fetchBoardsSuccess(posts) {
   return {
     type: types.FETCH_BOARDS_SUCCESS,
@@ -14,17 +16,22 @@ export function fetchBoardsSuccess(posts) {
   };
 }
 
+// FETCH BOARDS FAILURE ACTION
 export function fetchBoardsFailure(error) {
   return {
     type: types.FETCH_BOARDS_FAILURE,
     payload: error
   };
 }
-export function fetchBoardsRequest(user, type) {
-  return (dispatch) => {
-    // Inform Login API is starting
+export const fetchBoardsRequest = (user, type, searchWord) => {
+
+  return async (dispatch) => {
+    // // FETCH START
     dispatch(fetchBoards());
-    let apiURL;
+
+    // Depend on type api URL is changed
+    // bookmarked board & my board need user info to fetch
+    let apiURL = '/api/board';
 
     if (type === 'bookmark') {
       apiURL = `/api/board/bookmark/${user}`;
@@ -34,16 +41,27 @@ export function fetchBoardsRequest(user, type) {
       apiURL = '/api/board/all';
     }
 
-    // API request
-    return axios.get(apiURL)
-      .then((response) => {
-        dispatch(fetchBoardsSuccess(response.data));
-      }).catch((error) => {
-        console.log(error);
-        dispatch(fetchBoardsFailure(error));
-      });
+    if (searchWord !== '' && searchWord !== undefined) {
+      apiURL += `/search/${searchWord}`;
+    }
+
+    try {
+      // API request
+      const response = await axios.get(apiURL);
+      dispatch(fetchBoardsSuccess(response.data));
+    } catch (err) {
+      dispatch(fetchBoardsFailure(err));
+    }
   };
 }
+
+
+
+
+
+
+
+
 
 // CREATE BOARD
 export function createBoard() {

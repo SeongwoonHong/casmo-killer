@@ -13,21 +13,21 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    giveLikesRequest: (postId, type, commentId) => {
-      return dispatch(actions.giveLikesRequest(postId, type, commentId));
-    },
-    giveDisLikesRequest: (postId, type, commentId) => {
-      return dispatch(actions.giveDislikesRequest(postId, type, commentId));
-    },
-    deleteCommentRequest: (postId, commentId, index) => {
-      return dispatch(actions.deleteCommentRequest(postId, commentId, index));
-    },
-    updateCommentRequest: (postId, commentId, contents) => {
-      return dispatch(actions.updateCommentRequest(postId, commentId, contents));
-    },
-    replyComment: (data) => {
-      return dispatch(actions.replyComment(data));
-    }
+    // giveLikesRequest: (postId, type, commentId) => {
+    //   return dispatch(actions.giveLikesRequest(postId, type, commentId));
+    // },
+    // giveDisLikesRequest: (postId, type, commentId) => {
+    //   return dispatch(actions.giveDislikesRequest(postId, type, commentId));
+    // },
+    // deleteCommentRequest: (postId, commentId, index) => {
+    //   return dispatch(actions.deleteCommentRequest(postId, commentId, index));
+    // },
+    // updateCommentRequest: (postId, commentId, contents) => {
+    //   return dispatch(actions.updateCommentRequest(postId, commentId, contents));
+    // },
+    // replyComment: (data) => {
+    //   return dispatch(actions.replyComment(data));
+    // }
   };
 };
 

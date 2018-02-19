@@ -14,13 +14,13 @@ const ReduxFormField = ({
     }
     {
       mode === 'rte' &&
-      <RichTextEditor {...input} className="materialize-textarea validate field" type={type} id={input.name} />
+      <RichTextEditor {...input} className="textarea validate field" type={type} id={input.name} />
     }
     {
       mode === 'textarea' &&
       <textarea
         {...input}
-        className="materialize-textarea validate field-textarea"
+        className="textarea validate field-textarea"
         type={type}
         id={input.name}
       />

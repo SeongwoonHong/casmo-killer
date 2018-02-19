@@ -8,7 +8,7 @@ const Board = require('../db/models/board');
 const Activity = require('../db/models/activity');
 
 const router = express.Router();
-const PER_PAGE = 10;
+const PER_PAGE = 3;
 
 // sub routes for comments
 router.use('/comment', comment);

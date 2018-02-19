@@ -20,5 +20,17 @@ export default {
   // Tags: {
   //   components: require('../components/Tags/Tags'),
   //   props: {}
-  // }
+  // },
+  CommunityAll: {
+    component: require('../containers/CommunityAll'),
+    props: {}
+  },
+  BoardList: {
+    components: require('../components/BoardList/BoardList'),
+    props: {}
+  },
+  Articles: {
+    components: require('../containers/Articles'),
+    props: { }
+  }
 };

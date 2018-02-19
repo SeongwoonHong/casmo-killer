@@ -4,13 +4,110 @@ const User = require('../db/models/user');
 
 const router = express.Router();
 
+/* GET SEARCH ALL BOARD LIST */
+router.get('/all/search/:searchWord', (req, res) => {
+
+  const { searchWord } = req.params;
+  const searchCondition = { $regex: searchWord };
+
+  Board.aggregate([
+    {
+      "$match": {
+        "deleted": false,
+        $or: [
+          { boardId: searchCondition },
+          { description: searchCondition }
+        ]
+      }
+    },
+    {
+      "$lookup": {
+        "localField": "author", // 기본 키
+        "from": "users", // join 할 collection명
+        "foreignField": "_id", // 외래 키
+        "as": "author" // 결과를 배출할 alias ( 필드명 )
+      }
+    },
+    {
+      "$lookup": {
+          "from": "posts", // <-- collection to join
+          "localField": "boardId",
+          "foreignField": "boardId",
+          "as": "postCount"
+      }
+    },
+    {
+      "$project": {
+        author: 1,
+        boardId: 1,
+        date: 1,
+        description: 1,
+        postsCount: {"$size": {
+            $filter : {
+                input: "$postCount",
+                as : "postCount_field",
+                cond : {
+                    $eq: ["$$postCount_field.deleted",false]
+                }
+            }
+        }}
+      }
+    }
+  ]).exec(function(err, Result){
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: 'Could not retrieve boards'
+      });
+    }
+    res.json(Result);
+  });
+});
+
 /* GET ALL BOARD LIST */
 router.get('/all', (req, res) => {
-  Board.find({ deleted: false })
-    .exec((err, boards) => {
-      if (err) throw err;
-      res.json(boards);
-    });
+  Board.aggregate([
+    {
+      "$match": {
+        "deleted": false
+      }
+    },
+    {
+      "$lookup": {
+        "localField": "author", // 기본 키
+        "from": "users", // join 할 collection명
+        "foreignField": "_id", // 외래 키
+        "as": "author" // 결과를 배출할 alias ( 필드명 )
+      }
+    },
+    {
+      "$lookup": {
+          "from": "posts", // <-- collection to join
+          "localField": "boardId",
+          "foreignField": "boardId",
+          "as": "postCount"
+      }
+    },
+    {
+      "$project": {
+        author: 1,
+        boardId: 1,
+        date: 1,
+        description: 1,
+        postsCount: {"$size": {
+            $filter : {
+                input: "$postCount",
+                as : "postCount_field",
+                cond : {
+                    $eq: ["$$postCount_field.deleted",false]
+                }
+            }
+        }}
+      }
+    }
+  ]).exec(function(err, Result){
+    res.json(Result);
+  });
 });
 
 /* GET BOOKMARK BOARD LIST */

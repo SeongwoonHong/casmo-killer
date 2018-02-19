@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
-import * as actions from 'actions';
+import * as actions from '@actions';
 import ArticleNew from './ArticleNew';
 
 const mapStateToProps = (state) => {

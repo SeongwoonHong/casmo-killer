@@ -1,0 +1,46 @@
+.quote {
+  position: relative;
+  margin: 5px;
+  padding: 7px 5px;
+  background-color: rgba(240, 244, 233, 1);
+  border-left: 5px solid #b6c49f;
+  .close {
+    cursor: pointer;
+    position: absolute;
+    left: -30px;
+    top: 0;
+    color: #95a5a6;
+    &:hover {
+      animation: bounce 0.3s ease-out infinite alternate;
+    }
+  }
+  .comment-author {
+    color: $reply-author;
+    font-style: italic;
+    font-weight: bold;
+    margin-bottom: 1%;
+    padding-left: 5px;
+    font-size: 12px;
+    > span {
+      color: initial;
+    }
+  }
+  .quote-comment {
+    color: $reply-content;
+    padding: 2px 5px;
+    border: initial;
+    overflow: hidden;
+    margin: initial;
+    resize: none;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 12px;
+    &:focus {
+      outline: none !important;
+    }
+  }
+  @keyframes bounce {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.2); }
+  }
+}

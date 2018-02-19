@@ -43,4 +43,24 @@ export default {
     props: {
     }
   },
+  CommunityAll: {
+    components: require('../containers/CommunityAll'),
+    props: {}
+  },
+  BoardList: {
+    components: require('../components/BoardList/BoardList'),
+    props: {}
+  },
+  Articles: {
+    components: require('../containers/Articles'),
+    props: { }
+  },
+  Quote: {
+    components: require('../components/Quote/Quote'),
+    props: {
+      author: 'seong1',
+      quote: 'HAHAHAHAHAHA THIS IS A TEST',
+      isCloseButton: true
+    }
+  }
 };

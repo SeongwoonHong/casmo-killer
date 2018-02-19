@@ -5,25 +5,25 @@ import './Quote.scss';
 class Quote extends Component {
   render() {
     const {
-      author, quote, isCloseButton, replyCommentReset
+      author, content, isCloseButton, replyCommentReset
     } = this.props;
     return (
       <div className="quote">
         {
           isCloseButton &&
-          <span
-            className="close"
+          <i
+            className="material-icons close"
             onClick={replyCommentReset}
             role="presentation"
             onKeyDown={() => {}}
           >
             close
-          </span>
+          </i>
         }
-        <div className="reply-author">
+        <div className="comment-author">
           { author } <span>wrote:</span>
         </div>
-        <pre readOnly className="reply-quote">{quote}</pre>
+        <pre readOnly className="quote-comment">{content}</pre>
       </div>
     );
   }

@@ -17,6 +17,10 @@
     overflow: hidden;
     white-space: pre-wrap;
     word-wrap: break-word;
+    margin: 15px 0px;
+  }
+  .comment-form {
+    margin-left: 5px;
   }
   .like-icon, .dislike-icon {
     width: 20px;
@@ -39,7 +43,19 @@
     .buttons {
     }
   }
+  .quote-wrapper {
+    margin: 15px;
+  }
   .cursor {
     cursor: pointer;
+  }
+  .textarea {
+    width: 100%;
+    resize: none;
+    min-height: 60px;
+    border: 1px solid lightgrey;
+    &:focus {
+      outline: none;
+    }
   }
 }

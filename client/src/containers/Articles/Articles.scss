@@ -1,0 +1,56 @@
+.board {
+  height: 1500px;
+
+  .board-side-searchbar {
+    float: right;
+    margin: 50px 20px 10px 0;
+  }
+
+  .pagination {
+    padding: 0 10px 0 0;
+    margin: 0;
+    border-radius: 30px;
+    display: inline-block;
+    line-height: 26px;
+    font-size: 20px;
+    -webkit-font-smoothing: antialiased;
+    list-style-type: disc;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    -webkit-padding-start: 40px;
+
+    li {
+      display: inline-block;
+      font-weight: 500;
+      text-decoration: none;
+
+      a {
+        font-weight: bold;
+        border: 1px solid #D2D2D2;
+        background: #F7F7F7;
+        color: #444;
+        padding: 0 10px;
+        border-radius: 2px;
+        text-align: center;
+        vertical-align: middle;
+        text-decoration: none;
+      }
+    }
+
+    li.active a {
+      background: #FFF;
+      border-color: #DBDBDB;
+      color: #323232;
+    }
+  }
+
+  .board-page {
+    text-align: center;
+  }
+
+  .row {
+    padding: 15px;
+  }
+}

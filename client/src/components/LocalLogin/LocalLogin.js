@@ -16,14 +16,20 @@ const initialState = {
   email: '',
   password: '',
   message: '',
-  successMsg: '',
+  successMsg: ''
 };
 
 class LocalLogin extends Component {
 
   constructor(props) {
+
     super(props);
+
     this.state = initialState;
+
+    this.onChangeHandler = this.onChangeHandler.bind(this);
+    this.onSubmitHandler = this.onSubmitHandler.bind(this);
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -32,11 +38,11 @@ class LocalLogin extends Component {
     }
   }
 
-  onChangeHandler = (e) => {
+  onChangeHandler(e) {
     this.setState({ [e.name]: e.value });
-  };
+  }
 
-  onSubmitHandler = () => {
+  onSubmitHandler() {
 
     const { isLogin } = this.props;
 
@@ -52,7 +58,7 @@ class LocalLogin extends Component {
       this.onRegister();
     }
 
-  };
+  }
 
   async onLogin() {
 
@@ -166,7 +172,7 @@ class LocalLogin extends Component {
       <UserPageContainer
         key={ 0 }
         className="Local-login"
-        formTitle={ `${formText} with Email`}
+        formTitle={ `${formText} with Email` }
         isLoading={ isLoading }
         onSubmit={ this.onSubmitHandler }
         button={

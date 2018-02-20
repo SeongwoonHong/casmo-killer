@@ -29,3 +29,5 @@ app.use('/api', api);
 app.listen(port, () => {
   console.log(`Express server is running on port ${port}`);
 });
+
+module.exports = app;

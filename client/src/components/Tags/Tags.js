@@ -51,6 +51,12 @@ class Tags extends Component {
     this.state.tags.splice(index, 1);
     this.setState(this.state);
   };
+  onBlurHandler = (e) => {
+    this.state.tags.push(e.target.value);
+    this.props.input.onChange(this.props.input.value.concat(`${this.state.tags[this.state.tags.length - 1]} `));
+    this.setState(this.state);
+    e.target.value = '';
+  }
   focusOnInput = () => {
     this.component.querySelector('.tags-input').focus();
   }
@@ -91,6 +97,7 @@ class Tags extends Component {
         <input
           type={type}
           onChange={this.onChange}
+          onBlur={this.onBlurHandler}
           id={input.name}
           placeholder="tags"
           className="tags-input"

@@ -15,7 +15,7 @@ class Article extends Component {
   }
   render() {
     const {
-      activePost, user, createCommentRequest, giveLikesRequest, giveDisLikesRequest, deleteCommentRequest, updateCommentRequest, replyCommentRequest, replyComment, replyCommentReset
+      activePost, user, createCommentRequest, giveLikesRequest, giveDisLikesRequest, deleteCommentRequest, updateCommentRequest, replyCommentRequest, replyComment, replyCommentReset, deletePostRequest, deletePost, openUserInfoModal, tagsSearchRequest, editPostRequest, editPost
     } = this.props;
     return (
       <div id="articles-container">
@@ -27,7 +27,16 @@ class Article extends Component {
           activePost.status === 'SUCCESS'
           &&
           <div>
-            <ArticleBody activePost={activePost.data} />
+            <ArticleBody
+              activePost={activePost.data}
+              deletePostRequest={deletePostRequest}
+              user={user}
+              deletePost={deletePost}
+              editPost={editPost}
+              openUserInfoModal={openUserInfoModal}
+              tagsSearchRequest={tagsSearchRequest}
+              editPostRequest={editPostRequest}
+            />
             <CommentList
               updateComment={this.props.updateComment}
               comments={activePost.data.comments}
@@ -38,7 +47,6 @@ class Article extends Component {
               deleteCommentRequest={deleteCommentRequest}
               updateCommentRequest={updateCommentRequest}
               replyCommentRequest={replyCommentRequest}
-              // user={this.props.user} 나중에 옮기면 이거 코멘트 풀어야함.
             />
             <CommentNew
               isLoggedIn={user.isLoggedIn}

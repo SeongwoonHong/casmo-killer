@@ -6,8 +6,10 @@ import TimeAgo from 'react-timeago';
 import krStrings from 'react-timeago/lib/language-strings/ko';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import animate from 'gsap-promise';
-import LikeDislike from '../../components/LikeDislike/LikeDislike';
-import Iframe from '../../components/Iframe/Iframe';
+import LikeDislike from '../LikeDislike/LikeDislike';
+import TextButton from '../Button/TextButton/TextButton';
+import Iframe from '../Iframe/Iframe';
+import ArticleForm from '../ArticleForm/ArticleForm';
 import './ArticleBody.scss';
 
 
@@ -16,20 +18,53 @@ class ArticleBody extends Component {
   constructor(props) {
     super(props);
     this.component = [];
+    this.state = {
+      editMode: false
+    };
   }
   componentDidMount = () => {
     animate.set(this.component, { autoAlpha: 0, y: '-10px' });
     animate.staggerTo(this.component, 0.3, { autoAlpha: 1, y: '0px' }, 0.15);
   }
+  componentWillUnmount = () => {
+    TweenMax.killTweensOf(this.component);
+  }
   tagsSearch = (tag) => {
-    // this.props.tagsSearchRequest(tag).then((res) => {
-    //   this.props.openUserInfoModal(res.payload, 'tag');
-    // });
+    this.props.tagsSearchRequest(tag).then((res) => {
+      this.props.openUserInfoModal(res.payload, 'tag');
+    });
+  }
+  deletePostRequest = () => {
+    return this.props.deletePostRequest().then(() => {
+      if (this.props.deletePost.status === 'SUCCESS') {
+        // Materialize.toast('A post is deleted!', 2000);
+        this.props.history.push(`/articles/${this.props.activePost.boardId}`);
+      } else {
+        // Materialize.toast($(`<span style="color: #00c853">Error: ${this.props.editPost.error.message}</span>`), 3000);
+      }
+    });
+  }
+  validateAndEditPost = (values) => {
+    const id = this.props.activePost._id;
+    return this.props.editPostRequest(id, values).then(() => {
+      if (this.props.editPost.status === 'SUCCESS') {
+        // Materialize.toast('Success!', 2000);
+        this.toggleEdit();
+      } else {
+        // Materialize.toast($(`<span style="color: #00c853">Error: ${this.props.editPost.error.message}</span>`), 3000);
+      }
+    }
+    );
+  }
+  toggleEdit = () => {
+    this.setState({
+      editMode: !this.state.editMode
+    });
   }
   render() {
-    const { activePost } = this.props;
-    return (
-      <div className="article-body">
+    const { activePost, user } = this.props;
+    const detailView = (
+      <div>
         <div className="header" ref={el => this.component[0] = el} >
           <img src={activePost.author.avatar} alt="" className="circle avatar-circle" />
           <div className="header-info">
@@ -76,6 +111,43 @@ class ArticleBody extends Component {
               // delay={0.3}
             />
           </div>
+        </div>
+      </div>
+    );
+    const editView = (
+      <ArticleForm
+        formType="edit"
+        validateAndCreatePost={this.validateAndEditPost}
+        toggleEdit={this.toggleEdit}
+      />
+    );
+    const footerButtons = (
+      [
+        <TextButton
+          onClick={this.toggleEdit}
+          onKeyDown={() => {}}
+          className=""
+          key="edit"
+        >
+          Edit
+        </TextButton>,
+        <TextButton
+          onClick={this.deletePostRequest}
+          onKeyDown={() => {}}
+          className=""
+          key="delete"
+        >
+          Delete
+        </TextButton>
+      ]
+    );
+    return (
+      <div className="article-body">
+        { this.state.editMode ? editView : detailView}
+        <div className="article-footer">
+          {
+            user.displayName === activePost.author.displayName && !this.state.editMode && footerButtons
+          }
         </div>
       </div>
     );

@@ -30,14 +30,14 @@ class Quote extends Component {
 }
 Quote.defaultProps = {
   author: '',
-  quote: '',
+  content: '',
   isCloseButton: false,
   replyCommentReset: () => { console.warn('function replyCommentReset is not defined'); }
 };
 
 Quote.propTypes = {
   author: PropTypes.string,
-  quote: PropTypes.string,
+  content: PropTypes.string,
   isCloseButton: PropTypes.bool,
   replyCommentReset: PropTypes.func
 };

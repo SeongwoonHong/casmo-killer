@@ -23,8 +23,8 @@ class Articles extends Component {
 
     this.state = {
       page,
-      // boardId: props.match.params.boardId,
-      boardId: 'ahahahah',
+      boardId: props.match.params.boardId,
+      // boardId: '',
       // boardOId,
       // baseUrl,
       // bookmarked,
@@ -127,7 +127,7 @@ class Articles extends Component {
                   className="btn waves-effect teal waves-light newBoard"
                   name="action"
                   // to={`${this.props.location.pathname}/newBoard`}
-                  to=""
+                  to={`/articles/${this.state.boardId}/new`}
                   text="New Board"
                   style={{ display: 'inline-block', width: '40%' }}
                 >

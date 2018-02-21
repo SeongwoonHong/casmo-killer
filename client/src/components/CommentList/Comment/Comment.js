@@ -32,10 +32,10 @@ class Comment extends Component {
     TweenMax.killTweensOf(this.disLike);
   }
   onDeleteHandler = () => {
-    this.props.deleteCommentRequest(this.props.postId, this.props.commentId, this.props.index)
-      // .then(() => {
-      //   Materialize.toast('The comment is deleted', 2000, 'round');
-      // }).catch(() => Materialize.toast('Something went wrong', 2000, 'round'));
+    this.props.deleteCommentRequest(this.props.postId, this.props.commentId, this.props.index);
+    // .then(() => {
+    //   Materialize.toast('The comment is deleted', 2000, 'round');
+    // }).catch(() => Materialize.toast('Something went wrong', 2000, 'round'));
   }
   likesHandler = (postId, type, commentId) => {
     if (this.props.user.isLoggedIn && (this.props.commentAuthor !== this.props.user.displayName)) {
@@ -103,7 +103,7 @@ class Comment extends Component {
   }
   render() {
     const {
-      comment, commentId, avatar, date, isEdited, likes, disLikes, form, parentAuthor, commentAuthor, parentCommentId, commentAuthorId, parentContent, handleSubmit, postId
+      comment, commentId, avatar, date, isEdited, likes, disLikes, form, parentAuthor, commentAuthor, commentAuthorId, parentContent, handleSubmit, postId
     } = this.props;
     const buttons = (
       <span>

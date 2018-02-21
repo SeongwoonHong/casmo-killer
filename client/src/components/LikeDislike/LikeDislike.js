@@ -10,17 +10,6 @@ class LikeDislike extends Component {
     this.like = [];
     this.disLike = [];
   }
-  componentDidMount = () => {
-    if (this.like && this.disLike) {
-      animate.set(this.like, { autoAlpha: 0, y: '-20px' });
-      animate.set(this.disLike, { autoAlpha: 0, y: '-20px' });
-      this.animateIn();
-    }
-  }
-  componentWillUnmount = () => {
-    TweenMax.killTweensOf(this.like);
-    TweenMax.killTweensOf(this.disLike);
-  }
   likesHandler = async () => {
     // this.props.onLikesHandler().then(() => this.clickAnimation(this.like));
     this.clickAnimation(this.like);
@@ -29,15 +18,6 @@ class LikeDislike extends Component {
   disLikesHandler = () => {
     this.clickAnimation(this.disLike);
     this.props.onDislikesHandler();
-  }
-  animateIn = async () => {
-    return animate.all([
-      await animate.to({}, this.props.delay),
-      animate.to(this.like[0], 0.5, { autoAlpha: 1, y: '0px' }),
-      animate.to(this.like[1], 0.5, { autoAlpha: 1 }),
-      animate.to(this.disLike[0], 0.5, { autoAlpha: 1, y: '0px' }),
-      animate.to(this.disLike[1], 0.5, { autoAlpha: 1 })
-    ]);
   }
   clickAnimation = (ref) => {
     animate.to(ref[0], 0.5, { scale: 1.5, ease: Expo.easeOut }).then(() => {

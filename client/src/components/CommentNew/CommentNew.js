@@ -67,7 +67,6 @@ class CommentNew extends Component {
 
 CommentNew.defaultProps = {
   postId: '',
-  onReply: () => {},
   isLoggedIn: false,
   replyComment: {
     status: 'INIT'
@@ -76,7 +75,6 @@ CommentNew.defaultProps = {
 
 CommentNew.propTypes = {
   postId: PropTypes.string,
-  onReply: PropTypes.func,
   isLoggedIn: PropTypes.bool,
   replyComment: PropTypes.object
 };

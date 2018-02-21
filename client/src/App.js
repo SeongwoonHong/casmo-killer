@@ -61,9 +61,9 @@ class App extends Component {
               <Route path="/error" component={ ErrorPage } />
               <Route component={ ErrorPage } />
             </Switch>
-            {
-              // this.props.user.isModalOpened && <UserInfoModal />
-            }
+            {/* {
+              this.props.user.isModalOpened && <UserInfoModal />
+            } */}
           </div>
         </div>
         <AuthLoader />

@@ -12,7 +12,6 @@ class Board extends Component {
     const {
       title, description, managerInfo, date, statsFirst, statsSecond, toURL, boardIcon
     } = this.props;
-
     const boardIconView = (
       <div className="dataItem-icon">
         <span className="board-icon-background">

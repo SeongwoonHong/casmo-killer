@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
 import * as actions from '@actions';
 import ArticleNew from './ArticleNew';
 
@@ -7,7 +6,8 @@ const mapStateToProps = (state) => {
   return {
     updateComment: state.posts.updateComment,
     user: state.user,
-    newPost: state.posts.newPost
+    newPost: state.posts.newPost,
+    data: state.posts.activePost.data
     // data: state.posts.activePost.data
     // activePost: state.posts.activePost,
     // postId: ownProps.match.params.postId,
@@ -29,6 +29,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default reduxForm({
-  form: 'PostForm'
-})(connect(mapStateToProps, mapDispatchToProps)(ArticleNew));
+export default connect(mapStateToProps, mapDispatchToProps)(ArticleNew);

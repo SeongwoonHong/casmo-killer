@@ -27,7 +27,6 @@ export function fetchPostsRequest(boardId, page, sort) {
     // Inform Login API is starting
     dispatch(fetchPosts());
     // API request
-    console.log('here ======================')
     return axios.get(`/api/post/${boardId}/${page}/${sort}`)
       .then((response) => {
         dispatch(fetchPostsSuccess(response.data));

@@ -30,17 +30,22 @@ export default function (state = initialState, action) {
 
     case types.LOGIN_SUCCESS:
       return Object.assign({}, state, {
-        isLoggedIn: true,
-        strategy: action.payload.strategy,
-        _id: action.payload._id,
-        email: action.payload.email,
-        displayName: action.payload.displayName,
-        avatar: action.payload.avatar || null,
-        bookmarked: action.payload.bookmarked
+        user: {
+          isLoggedIn: true,
+          strategy: action.payload.strategy,
+          _id: action.payload._id,
+          email: action.payload.email,
+          displayName: action.payload.displayName,
+          avatar: action.payload.avatar || null,
+          bookmarked: action.payload.bookmarked
+        }
       });
 
     case types.LOGOUT:
-      return initialState.user;
+      return {
+        ...state,
+        user: initialState.user
+      };
 
     case types.REMOVE_USER:
       return Object.assign({}, initialState.user, {

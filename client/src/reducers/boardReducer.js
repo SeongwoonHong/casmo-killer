@@ -15,7 +15,6 @@ const initialState = {
 };
 
 export default function board(state = initialState, action) {
-  console.log(action);
   switch (action.type) {
     // FETCH BOARDS
     case types.FETCH_BOARDS:

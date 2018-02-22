@@ -6,7 +6,7 @@ import UserSettings from './UserSettings';
 const mapStateToProps = (state) => {
   return {
     auth: state.auth,
-    user: state.user
+    user: state.user.user
   };
 };
 

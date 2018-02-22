@@ -1,0 +1,28 @@
+.comment-new {
+  position: relative;
+  margin-top: 10px;
+  padding: 0px 20px;
+  .required-login-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(50, 50, 50, .8);
+    color: #eee;
+    font-size: 20px;
+    z-index: 2;
+  }
+  .comment-new-body {
+    width: 100%;
+    min-height: 60px;
+    border: 1px solid lightgrey;
+    resize: none;
+    &:focus {
+      outline: none !important;
+    }
+  }
+}

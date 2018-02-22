@@ -47,7 +47,7 @@ class AuthLoader extends Component {
 
 export default connect(
   state => ({
-    user: state.user
+    user: state.user.user
   }),
   dispatch => ({
     loginSuccess: payload => dispatch(actions.loginSuccess(payload)),

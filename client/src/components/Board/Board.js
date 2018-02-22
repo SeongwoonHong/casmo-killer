@@ -19,16 +19,34 @@ class Board extends Component {
         </span>
       </div>
     );
+    const closeAndRedirect = (
+      <span
+        onClick={async () => {
+          await this.props.closeUserInfoModal();
+          this.props.history.push(toURL);
+        }}
+        role="presentation"
+        className="close-redirect"
+        onKeyDown={() => {}}
+      >
+        {title}
+      </span>
+    );
     return (
       <li className="dataItem">
         { boardIcon === 'true' ? boardIconView : ''}
         <div className="dataItem-main">
           <h4 className="dataItem-title">
-            <Link
-              to={toURL}
-            >
-              {title}
-            </Link>
+            {
+              this.props.closeAndRedirect ?
+                closeAndRedirect
+                :
+                <Link
+                  to={toURL}
+                >
+                  {title}
+                </Link>
+            }
           </h4>
           <div className="dataItem-description">
             <p>

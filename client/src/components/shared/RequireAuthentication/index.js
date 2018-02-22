@@ -25,7 +25,7 @@ export default function (ComposedComponent, route = '/') {
   }
   function mapStateToProps(state) {
     return {
-      user: state.user
+      user: state.user.user
     };
   }
   return connect(mapStateToProps)(withRouter(RequireAuthentication));

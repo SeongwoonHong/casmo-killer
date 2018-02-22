@@ -5,7 +5,7 @@ import AppNavigation from './AppNavigation';
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user,
+    user: state.user.user,
     layout: state.layout
   };
 };

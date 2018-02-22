@@ -5,7 +5,7 @@ import Info from './Info';
 
 function mapStateToProps(state) {
   return {
-    user: state.user,
+    user: state.user.user,
     activityList: state.activity.list,
     listStatus: state.activity.list.status,
     isLast: state.activity.list.isLast

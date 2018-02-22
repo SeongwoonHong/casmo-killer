@@ -38,20 +38,17 @@ describe('<UserInputField />', () => {
 
     const onChange = sinon.spy();
 
+    const target = { name: 'email', value: 'ssinsoo@gmail.com' };
+
     const component = shallow(
-      <UserInputField { ...props } onChange={ onChange } />
+      <UserInputField
+        { ...props }
+        onChange={ onChange } />
     );
 
-    component
-      .find('input')
-      .simulate('change', {
-        target: {
-          name: 'email',
-          value: 'ssinsoo@gmail.com'
-        }
-      });
+    component.find('input').simulate('change', { target });
 
-    expect(onChange.calledOnce).toEqual(true);
+    expect(onChange.calledWith(target)).toEqual(true);
 
   });
 

@@ -1,32 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import './LoadingCircle.scss';
 
 const LoadingCircle = (props) => {
   return (
-    <div className={ `preloader-wrapper active ${props.size}`}>
-      <div className="spinner-layer" style={ { borderColor: props.color } }>
-        <div className="circle-clipper left">
-          <div className="circle" />
-        </div>
-        <div className="gap-patch">
-          <div className="circle" />
-        </div>
-        <div className="circle-clipper right">
-          <div className="circle" />
-        </div>
-      </div>
-    </div>
+    <div id="loader" style={props.style} />
   );
 };
 
 LoadingCircle.propTypes = {
-  size: PropTypes.string,
-  color: PropTypes.string
+  style: PropTypes.object
 };
 
 LoadingCircle.defaultProps = {
-  size: '',
-  color: '#26a69a'
+  style: {}
 };
 
 export default LoadingCircle;

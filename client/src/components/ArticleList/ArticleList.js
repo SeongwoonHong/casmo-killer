@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './ArticleList.scss';
 import Board from '../Board/Board';
 
@@ -20,6 +21,8 @@ class ArticleList extends Component {
             date={data.date}
             key={data._id}
             boardIcon="false"
+            closeAndRedirect={this.props.closeAndRedirect}
+            closeUserInfoModal={this.props.closeUserInfoModal}
           />
         );
       });
@@ -32,5 +35,14 @@ class ArticleList extends Component {
     );
   }
 }
+
+ArticleList.defaultProps = {
+  closeAndRedirect: false,
+  closeUserInfoModal: () => {}
+};
+ArticleList.propTypes = {
+  closeAndRedirect: PropTypes.bool,
+  closeUserInfoModal: PropTypes.func
+};
 
 export default ArticleList;

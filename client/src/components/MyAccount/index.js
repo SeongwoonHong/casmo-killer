@@ -6,7 +6,7 @@ import MyAccount from './MyAccount';
 const mapStateToProps = (state) => {
   return {
     auth: state.auth,
-    user: state.user
+    user: state.user.user
   };
 };
 

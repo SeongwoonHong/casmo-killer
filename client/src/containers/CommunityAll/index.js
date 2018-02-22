@@ -5,7 +5,7 @@ import CommunityAll from './CommunityAll';
 const mapStateToProps = (state) => {
   return {
     boardList: state.boards.boardList,
-    user: state.user
+    user: state.user.user
   };
 };
 

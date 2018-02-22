@@ -14,7 +14,7 @@ class ArticleNew extends Component {
   validateAndCreatePost= (values) => {
     return this.props.createPostRequest(values, this.state.boardId).then(() => {
       if (this.props.newPost.status === 'SUCCESS') {
-        this.props.history.push(`/article/${this.props.newPost.data._id}`).then(
+        this.props.history.replace(`/article/${this.props.newPost.data._id}`).then(
           () => {
             // Materialize.toast('Success!', 2000);
           }

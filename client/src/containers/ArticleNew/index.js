@@ -5,7 +5,7 @@ import ArticleNew from './ArticleNew';
 const mapStateToProps = (state) => {
   return {
     updateComment: state.posts.updateComment,
-    user: state.user,
+    user: state.user.user,
     newPost: state.posts.newPost,
     data: state.posts.activePost.data
     // data: state.posts.activePost.data

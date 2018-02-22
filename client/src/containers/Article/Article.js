@@ -13,6 +13,15 @@ class Article extends Component {
   componentDidMount = () => {
     this.props.fetchPostRequest(this.props.postId);
   }
+  componentDidUpdate(prevProps) {
+    if (prevProps === undefined) {
+      return false;
+    }
+    if (this.props.match.params.id !== prevProps.match.params.id) {
+      this.props.fetchPostRequest(this.props.postId);
+    }
+  }
+
   render() {
     const {
       activePost, user, createCommentRequest, giveLikesRequest, giveDisLikesRequest, deleteCommentRequest, updateCommentRequest, replyCommentRequest, replyComment, replyCommentReset, deletePostRequest, deletePost, openUserInfoModal, tagsSearchRequest, editPostRequest, editPost

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import ModalContainer from 'sharedComponents/ModalContainer';
+import ModalContainer from '@sharedComponents/ModalContainer';
 import { withRouter } from 'react-router-dom';
 import classnames from 'classnames';
-import PostList from '../PostList/PostList';
+import ArticleList from '../ArticleList/ArticleList';
 import './UserInfoModal.scss';
 
 class UserInfoModal extends Component {
@@ -42,11 +42,14 @@ class UserInfoModal extends Component {
     const activeView = (
       <div className="userinfo-modal-body-activity">
         <div className="board_postList">
-          <PostList
+          {/* <PostList
             postsList={data}
             baseUrl={this.state.baseUrl}
             page={this.state.page}
             selected={0}
+          /> */}
+          <ArticleList
+            articleListData={data}
           />
         </div>
       </div>
@@ -95,7 +98,7 @@ class UserInfoModal extends Component {
     );
     const renderByTags = (
       <div className="userinfo-modal">
-        <PostList
+        {/* <PostList
           postsList={this.props.userPostsListByTag}
           baseUrl={this.state.baseUrl}
           page={this.state.page}
@@ -103,6 +106,11 @@ class UserInfoModal extends Component {
           closeUserInfoModal={this.props.closeUserInfoModal}
           openUserInfoModal={this.props.openUserInfoModal}
           selected={0}
+        /> */}
+        <ArticleList
+          articleListData={this.props.userPostsListByTag}
+          closeAndRedirect
+          closeUserInfoModal={this.props.closeUserInfoModal}
         />
       </div>
     );

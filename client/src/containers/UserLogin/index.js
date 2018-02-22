@@ -6,7 +6,7 @@ import UserLogin from './UserLogin';
 function mapStateToProps(state) {
   return {
     auth: state.auth,
-    user: state.user
+    user: state.user.user
   };
 }
 

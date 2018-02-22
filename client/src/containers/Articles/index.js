@@ -6,7 +6,7 @@ const mapStateToProps = (state) => {
   return {
     postsList: state.posts.list,
     pagination: state.posts.pagination,
-    user: state.user,
+    user: state.user.user,
     boardAuthor: state.posts.boardAuthor
   };
 };

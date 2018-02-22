@@ -48,7 +48,6 @@ export const fetchBoardsRequest = (user, type, searchWord) => {
     try {
       // API request
       const response = await axios.get(apiURL);
-      console.log(response.data);
       dispatch(fetchBoardsSuccess(response.data));
     } catch (err) {
       dispatch(fetchBoardsFailure(err));

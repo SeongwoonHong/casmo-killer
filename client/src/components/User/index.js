@@ -29,7 +29,7 @@ class User extends Component {
 
 export default connect(
   state => ({
-    user: state.user
+    user: state.user.user
   }),
   dispatch => ({
     registerRedirectUrl: url => dispatch(actions.registerRedirectUrl(url))

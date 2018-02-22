@@ -39,3 +39,6 @@ textarea {
         overflow-y: visible
     }
 }
+input:focus {
+  outline: none !important;
+}

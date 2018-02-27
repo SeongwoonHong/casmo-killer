@@ -29,7 +29,8 @@ export default function (state = initialState, action) {
   switch (action.type) {
 
     case types.LOGIN_SUCCESS:
-      return Object.assign({}, state, {
+      return Object.assign({}, state.user, {
+
         isLoggedIn: true,
         strategy: action.payload.strategy,
         _id: action.payload._id,
@@ -37,6 +38,7 @@ export default function (state = initialState, action) {
         displayName: action.payload.displayName,
         avatar: action.payload.avatar || null,
         bookmarked: action.payload.bookmarked
+
       });
 
     case types.LOGOUT:

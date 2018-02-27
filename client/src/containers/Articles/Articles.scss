@@ -1,9 +1,46 @@
 .board {
-  height: 1500px;
+  height: auto;
 
   .board-side-searchbar {
     float: right;
-    margin: 50px 20px 10px 0;
+    margin: 0 20px 10px 0;
+  }
+
+  .board-side-sort {
+    margin-left: 25px;
+  }
+
+  .board-bookmark {
+    float: right;
+    margin-right: 20px;
+  }
+
+  .bookmark-box {
+    width: 50px;
+    height: auto;
+  }
+
+  .board-header {
+    padding-right: 10px;
+    padding-left: 25px;
+  }
+
+  .board-header-manager, .btn-newboard  {
+    display: inline-block;
+  }
+
+  .btn-newboard {
+    float: right;
+  }
+
+  .row {
+    margin-top: 15px;
+    clear: both;
+  }
+
+  .user-btn a {
+    text-decoration: none;
+    color: #888;
   }
 
   .pagination {
@@ -48,9 +85,5 @@
 
   .board-page {
     text-align: center;
-  }
-
-  .row {
-    padding: 15px;
   }
 }

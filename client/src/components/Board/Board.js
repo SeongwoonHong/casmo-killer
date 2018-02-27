@@ -10,7 +10,7 @@ const formatter = buildFormatter(krStrings);
 class Board extends Component {
   render() {
     const {
-      title, description, managerInfo, date, statsFirst, statsSecond, toURL, boardIcon
+      title, description, managerInfo, date, statsFirst, statsSecond, toURL, boardIcon, page, selected, id
     } = this.props;
 
     const boardIconView = (
@@ -26,7 +26,10 @@ class Board extends Component {
         <div className="dataItem-main">
           <h4 className="dataItem-title">
             <Link
-              to={toURL}
+              to={{
+                pathname: toURL,
+                state: { page, selected, boardOId: id }
+              }}
             >
               {title}
             </Link>
@@ -50,7 +53,13 @@ class Board extends Component {
         <ul className="dataItem-manager">
           <li><img className="dataItem-manager-avatar" src={managerInfo[1] || '/no-avatar.svg'} alt="manager avatar" /></li>
           <li>{managerInfo[0]}</li>
-          <li>{managerInfo[2]}</li>
+          <li>
+            <Link
+              to={`/user/info/${managerInfo[3]}`}
+            >
+              {managerInfo[2]}
+            </Link>
+          </li>
           <li className="dataItem-manager-date"><TimeAgo date={date} formatter={formatter} /></li>
         </ul>
       </li>

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import RequireAuthentication from '@sharedComponents/RequireAuthentication';
+// import RequireAuthentication from '@sharedComponents/RequireAuthentication';
 import CommunityAll from '../containers/CommunityAll';
-import Articles from '../containers/Articles';
+// import Articles from '../containers/Articles';
 // import PostNew from './PostNew';
 // import BoardNew from './BoardNew';
 // import PostDetail from './PostDetail';
@@ -27,7 +27,7 @@ class Community extends Component {
           {/* <Route path="/community/newboard" component={BoardNew} /> */}
           {/* <Route path="/articles/:boardId/new" component={RequireAuthentication(PostNew, '/community/communityAll')} /> */}
           {/* <Route path="/article/:postId" component={PostDetail} /> */}
-          <Route path="/articles/:boardId" component={Articles} />
+          {/* <Route path="/articles/:boardId" component={Articles} /> */}
           {/* <Route path="/" component="" /> */}
         </Switch>
       </div>

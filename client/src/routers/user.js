@@ -12,6 +12,7 @@ import UserReset from '../containers/UserReset';
 import UserSettings from '../containers/UserSettings';
 import Delete from '../containers/UserDelete';
 import ErrorPage from '../components/ErrorPage';
+import UserInfo from '../containers/UserInfo';
 
 // import Info from '../components/Info';
 
@@ -30,6 +31,7 @@ class User extends Component {
           <Route path="/user/register/:token?" component={ UserRegister } />
           <Route path="/user/recover" component={ UserRecover } />
           <Route path="/user/reset/:token?" component={ UserReset } />
+          <Route path="/user/info/:userId" component={ UserInfo } />
           <PrivateRoute
             path="/user/settings/:token?"
             isLoggedIn={ user.isLoggedIn }

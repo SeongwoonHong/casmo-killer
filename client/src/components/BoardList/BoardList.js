@@ -12,7 +12,7 @@ class BoardList extends Component {
           <Board
             id={data._id}
             toURL={`/articles/${data.boardId}`}
-            managerInfo={['관리자', data.author[0].avatar, data.author[0].displayName]}
+            managerInfo={['관리자', data.author[0].avatar, data.author[0].displayName, data.author[0]._id]}
             statsFirst={data.postsCount}
             statsSecond="posts"
             title={data.boardId}
@@ -20,6 +20,8 @@ class BoardList extends Component {
             date={data.date}
             key={data._id}
             boardIcon="true"
+            page="0"
+            selected="0"
           />
         );
       });

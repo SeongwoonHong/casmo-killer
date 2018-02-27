@@ -39,28 +39,6 @@ class CommunityAll extends Component {
   render() {
     const { data, status, error } = this.props.boardList;
 
-    // const mapToComponents = (boardData) => {
-    //   return boardData.map((board) => {
-    //     return (
-    //       <div className="col s12 m6 l4" key={board.boardId}>
-    //         <div className="card teal darken-3">
-    //           <div className="card-content white-text board-card">
-    //             <span className="card-title">{board.boardId}</span>
-    //             <p>{board.description}</p>
-    //           </div>
-    //           <div className="card-action">
-    //             <Link to={{
-    //               pathname: `/articles/${board.boardId}`,
-    //               state: { page: 0, selected: 0, boardOId: board._id }
-    //               }}>들어가기
-    //             </Link>
-    //           </div>
-    //         </div>
-    //       </div>
-    //     );
-    //   });
-    // };
-
     if (status === 'WAITING' || status === 'INIT') {
       return (
         <div className="community">
@@ -78,9 +56,9 @@ class CommunityAll extends Component {
     return (
       <div className="community">
         {
-          // this.props.user.isLoggedIn &&
+          this.props.user.isLoggedIn &&
           <Link
-            className="btn waves-effect teal waves-light newBoard"
+            className="btn newBoard"
             name="action"
             to={`${this.props.location.pathname}/newBoard`}
             text="New Board"
@@ -95,7 +73,6 @@ class CommunityAll extends Component {
           />
         </div>
         <div className="row">
-          {/* {mapToComponents(data)} */}
           <BoardList boardListData={data} />
         </div>
       </div>

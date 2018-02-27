@@ -336,7 +336,7 @@ module.exports.updateEmail = async (req, res) => {
 module.exports.deleteAccount = async (req, res) => {
 
   const validations = Joi.validate(req.body, Joi.object({
-    password: Joi.string().required()
+    payload: Joi.string().required()
   }));
 
   if (validations.error) {
@@ -351,10 +351,22 @@ module.exports.deleteAccount = async (req, res) => {
       return errorUtils.noUser(res);
     }
 
-    const verified = await user.verifyPassword(req.body.password);
+    if (user.strategy === 'local') {
 
-    if (!verified) {
-      return errorUtils.wrongPwd(res);
+      const verified = await user.verifyPassword(req.body.payload);
+
+      if (!verified) {
+        return errorUtils.wrongPwd(res);
+      }
+
+    } else {
+
+      if (req.body.payload !== user.email) {
+        return res.status(401).send({
+          message: 'Your email is incorrect.'
+        });
+      }
+
     }
 
     const deletedUser = await user.remove();

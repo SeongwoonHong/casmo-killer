@@ -7,6 +7,13 @@ export const registerRedirectUrl = (url) => {
   };
 };
 
+export const registerRedirectMessage = (msg) => {
+  return {
+    type: types.REGISTER_REDIRECT_MESSAGE,
+    payload: msg
+  };
+};
+
 export const clearRedirectUrl = () => {
   return {
     type: types.CLEAR_REDIRECT_URL

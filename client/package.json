@@ -95,6 +95,7 @@
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"
     ],
     "moduleNameMapper": {
+      "^@assets(.*)$": "<rootDir>/src/assets$1",
       "^@actions(.*)$": "<rootDir>/src/actions$1",
       "^@sharedComponents(.*)$": "<rootDir>/src/components/shared$1",
       "^@sharedUtils(.*)$": "<rootDir>/src/utils$1",

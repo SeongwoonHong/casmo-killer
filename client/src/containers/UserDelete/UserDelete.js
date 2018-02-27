@@ -30,7 +30,7 @@ class Delete extends Component {
 
   onChangeHandler(e) {
     this.setState({ payload: e.value });
-  };
+  }
 
   async onSubmitHandler() {
 
@@ -91,7 +91,7 @@ class Delete extends Component {
 
     this.setState({ isLoading: false });
 
-  };
+  }
 
   render() {
 

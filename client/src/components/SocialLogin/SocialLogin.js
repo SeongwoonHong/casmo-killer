@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+import facebookImg from '@assets/facebook.png';
+import googleImg from '@assets/google.png';
+import kakaoImg from '@assets/kakao.png';
+
 import FormMessage from '@sharedComponents/FormMessage';
 import LoadingOverlay from '@sharedComponents/LoadingOverlay';
 
@@ -98,7 +102,7 @@ class SocialLogin extends Component {
               clientId={ facebookId }
               fields="name,email,picture"
               onSuccess={ this.onSuccess }>
-              <img src="/social-icons/facebook.png" alt="facebook-login" />
+              <img src={ facebookImg } alt="facebook-login" />
               <span className="center-align">Facebook</span>
             </FacebookAuth>
           </div>
@@ -106,7 +110,7 @@ class SocialLogin extends Component {
             <GoogleAuth
               clientId={ googleId }
               onSuccess={ this.onSuccess }>
-              <img src="/social-icons/google.png" alt="google-login" />
+              <img src={ googleImg } alt="google-login" />
               <span className="center-align">Google</span>
             </GoogleAuth>
           </div>
@@ -114,7 +118,7 @@ class SocialLogin extends Component {
             <KakaoAuth
               clientId={ kakaoId }
               onSuccess={ this.onSuccess }>
-              <img src="/social-icons/kakao.png" alt="kakao-login" />
+              <img src={ kakaoImg } alt="kakao-login" />
               <span className="center-align">Kakao</span>
             </KakaoAuth>
           </div>

@@ -42,14 +42,16 @@ export default function (state = initialState, action) {
       });
 
     case types.LOGOUT:
-      return {
-        ...state,
+      return Object.assign({}, state, {
         user: initialState.user
-      };
+      });
 
     case types.REMOVE_USER:
-      return Object.assign({}, initialState.user, {
-        isLoggedIn: true,
+      return Object.assign({}, state, {
+        user: {
+          ...state.user.user,
+          isLoggedIn: true,
+        }
       });
 
     case types.OPEN_USERINFO_MODAL:

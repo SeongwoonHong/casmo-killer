@@ -19,17 +19,20 @@ class Delete extends Component {
       isLoading: false,
       isSuccess: false,
       agreed: false,
-      password: '',
+      payload: '',
       message: ''
     };
 
+    this.onChangeHandler = this.onChangeHandler.bind(this);
+    this.onSubmitHandler = this.onSubmitHandler.bind(this);
+
   }
 
-  onChangeHandler = (e) => {
-    this.setState({ [e.name]: e.value });
+  onChangeHandler(e) {
+    this.setState({ payload: e.value });
   };
 
-  onSubmitHandler = async () => {
+  async onSubmitHandler() {
 
     if (!this.state.agreed) {
       this.setState({ agreed: true });
@@ -38,11 +41,11 @@ class Delete extends Component {
 
     this.setState({ isLoading: true });
 
-    if (this.state.password.length === 0) {
+    if (this.state.payload.length === 0) {
 
       this.setState({
         isSuccess: false,
-        message: 'Please enter your password to continue.'
+        message: 'Please enter your information to continue.'
       });
 
     } else {
@@ -51,7 +54,7 @@ class Delete extends Component {
 
         const { data } = await axios.delete('/api/user/delete/account', {
           data: {
-            password: this.state.password
+            payload: this.state.payload
           }
         });
 
@@ -93,10 +96,10 @@ class Delete extends Component {
   render() {
 
     const {
-      isLoading, isSuccess, agreed, password, message
+      isLoading, isSuccess, agreed, payload, message
     } = this.state;
 
-    const { logout } = this.props;
+    const { user, logout } = this.props;
 
     const button = (isComplete, agree, onClick) => {
       if (isComplete) {
@@ -127,7 +130,7 @@ class Delete extends Component {
         formTitle={
           !agreed
             ? 'Confirm Account Deletion'
-            : 'Please Confirm Your Password'
+            : 'Please Confirm Your Information'
         }
         formMsg={
           !agreed
@@ -145,9 +148,9 @@ class Delete extends Component {
           type={ isSuccess ? 'success' : 'error' } />
         <UserInputField
           isVisible={ agreed }
-          name="password"
+          name={ user.strategy === 'local' ? 'password' : 'email' }
           onChange={ this.onChangeHandler }
-          value={ password } />
+          value={ payload } />
       </UserPageContainer>
     );
 

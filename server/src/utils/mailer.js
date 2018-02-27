@@ -17,7 +17,7 @@ const transporter = nodemailer.createTransport({
 // TODO: put correct messasges for emails
 
 const mailOptions = (token, email) => {
-  const url = `http://localhost:4000/user/register/${token}`;
+  const url = `http://localhost:3000/user/register/${token}`;
   return {
     from: account,
     to: email,
@@ -31,7 +31,7 @@ const mailOptions = (token, email) => {
 };
 
 const mailOptionss = (token, email) => {
-  const url = `http://localhost:4000/user/settings/${token}`;
+  const url = `http://localhost:3000/user/settings/${token}`;
   return {
     from: account,
     to: email,
@@ -46,7 +46,7 @@ const mailOptionss = (token, email) => {
 };
 
 const mailOptionsss = (token, email) => {
-  const url = `http://localhost:4000/user/reset/${token}`;
+  const url = `http://localhost:3000/user/reset/${token}`;
   return {
     from: account,
     to: email,

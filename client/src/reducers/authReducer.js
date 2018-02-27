@@ -10,7 +10,8 @@ const initialState = {
     socialId: null,
     socialToken: null,
     redirectUrl: '/',
-    verificationToken: null
+    verificationToken: null,
+    message: ''
   }
 };
 
@@ -23,9 +24,15 @@ export default function (state = initialState.auth, action) {
         redirectUrl: action.payload
       });
 
+    case types.REGISTER_REDIRECT_MESSAGE:
+      return Object.assign({}, state, {
+        message: action.payload
+      });
+
     case types.CLEAR_REDIRECT_URL:
       return Object.assign({}, state, {
-        redirectUrl: initialState.auth.redirectUrl
+        redirectUrl: initialState.auth.redirectUrl,
+        message: initialState.auth.payload
       });
 
     case types.SET_USER_FOR_REGISTER:

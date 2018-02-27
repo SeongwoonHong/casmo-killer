@@ -74,10 +74,12 @@ export default function (state = initialState, action) {
         },
         isModalOpened: false,
       });
+
     case types.BOOKMARK_SUCCESS:
       return Object.assign({}, state, {
         bookmarked: action.payload.bookmarked
       });
+
     case types.TAGS_SEARCH:
       return {
         ...state,
@@ -85,6 +87,7 @@ export default function (state = initialState, action) {
           status: 'INIT'
         }
       };
+
     case types.TAGS_SEARCH_SUCCESS:
       return {
         ...state,
@@ -93,6 +96,7 @@ export default function (state = initialState, action) {
           data: action.payload
         }
       };
+
     case types.TAGS_SEARCH_FAILURE:
       return {
         ...state,
@@ -101,6 +105,7 @@ export default function (state = initialState, action) {
           error: action.payload.error
         }
       };
+
     default:
       return state;
 

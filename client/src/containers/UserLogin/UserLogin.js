@@ -58,9 +58,6 @@ class Login extends Component {
     const { match, auth } = this.props;
 
     const isLogin = match.params.type === 'login';
-    const message = auth.redirectUrl !== '/' && isLogin
-      ? 'Please log in to continue'
-      : '';
 
     return (
       <div className="Login">
@@ -70,7 +67,7 @@ class Login extends Component {
             { isLogin ? 'lock' : 'mode_edit' }
           </i>
         </h2>
-        <FormMessage message={ message } />
+        <FormMessage message={ auth.message } />
         <SocialLogin
           isLogin={ isLogin }
           onRegister={ this.onSocialRegister }

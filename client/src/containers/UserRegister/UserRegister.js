@@ -162,7 +162,7 @@ class Register extends Component {
   submitRegister = async () => {
 
     const {
-      strategy, email, socialId, socialToken, redirectUrl
+      strategy, email, socialId, socialToken
     } = this.props.auth;
 
     const {
@@ -201,7 +201,7 @@ class Register extends Component {
         const { isLoggedIn } = this.props.user;
 
         if (isLoggedIn) {
-          this.props.history.push(redirectUrl);
+          this.props.history.replace('/');
         }
 
       } else {

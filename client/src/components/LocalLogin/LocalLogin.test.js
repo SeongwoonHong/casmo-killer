@@ -3,7 +3,6 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { mount, shallow } from 'enzyme';
 import sinon from 'sinon';
-import axios from 'axios';
 import { validateEmail } from '@sharedUtils/inputValidators';
 
 import LocalLogin from './LocalLogin';
@@ -125,7 +124,7 @@ describe('<LocalLogin />', () => {
   });
 
   it('should reflect the response from the server to the state', () => {
-    //
+    // TODO: figure out a way to test async methods  (onLogin & onRegister)
   });
 
 });

@@ -1,22 +1,11 @@
 // layout
-export const UPDATE_BREAK_POINT = 'UPDATE_BREAK_POINT';
-export const TOGGLE_MAIN_MENU = 'TOGGLE_MAIN_MENU';
-export const TOGGLE_USER_MENU = 'TOGGLE_USER_MENU';
-export const TOGGLE_APP_LOADING = 'TOGGLE_APP_LOADING';
+export * from './layout/types';
 
 // auth
-export const REGISTER_REDIRECT_URL = 'REGISTER_REDIRECT_URL';
-export const REGISTER_REDIRECT_MESSAGE = 'REGISTER_REDIRECT_MESSAGE';
-export const CLEAR_REDIRECT_URL = 'CLEAR_REDIRECT_URL';
-export const SET_USER_FOR_REGISTER = 'SET_USER_FOR_REGISTER';
-export const RESET_AUTH_STATE = 'RESET_AUTH_STATE';
+export * from './auth/types';
 
 // user
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-export const LOGOUT = 'LOGOUT';
-export const REMOVE_USER = 'REMOVE_USER';
-export const OPEN_USERINFO_MODAL = 'OPEN_USERINFO_MODAL';
-export const CLOSE_USERINFO_MODAL = 'CLOSE_USERINFO_MODAL';
+export * from './user/types';
 
 // error
 export const SET_ERROR_STATE = 'SET_ERROR_STATE';

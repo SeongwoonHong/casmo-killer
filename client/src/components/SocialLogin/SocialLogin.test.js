@@ -22,4 +22,8 @@ describe('<SocialLogin />', () => {
     expect(wrapper.find('.user-form-header > p')).to.have.length(0);
   });
 
+  it('should reflect the response from the server to the state', () => {
+    // TODO: figure out a way to test async methods  (onLogin & onRegister)
+  });
+
 });

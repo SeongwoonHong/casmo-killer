@@ -3,6 +3,8 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { mount, shallow } from 'enzyme';
 import sinon from 'sinon';
+
+import axios from 'axios';
 import { validateEmail } from '@sharedUtils/inputValidators';
 
 import LocalLogin from './LocalLogin';
@@ -123,8 +125,29 @@ describe('<LocalLogin />', () => {
 
   });
 
-  it('should reflect the response from the server to the state', () => {
-    // TODO: figure out a way to test async methods  (onLogin & onRegister)
+  it('should resolve the response from the server to the state', async () => {
+
+    const spy = sinon.spy();
+
+    const userData = { data: { user: { isLoggedIn: true } } };
+    const promise = Promise.resolve(userData);
+
+    sinon.stub(axios, 'post').callsFake(() => promise);
+
+    const components = shallow(
+      <LocalLogin
+        isLogin={ true }
+        onSuccess={ spy } />
+    );
+
+    components.setState({ email: 'email@address.com', password: 'password' });
+
+    components.instance().onLogin();
+
+    await promise;
+
+    expect(spy.calledWith(userData.data.user)).toEqual(true);
+
   });
 
 });

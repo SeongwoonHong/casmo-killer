@@ -1,6 +1,6 @@
-import * as types from '../actions/types';
+import * as types from '@actions/types';
 
-const initialState = {
+export const initialState = {
   user: {
     isLoggedIn: false,
     strategy: null,

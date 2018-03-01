@@ -58,7 +58,7 @@ class Article extends Component {
               replyCommentRequest={replyCommentRequest}
             />
             <CommentNew
-              isLoggedIn={user.isLoggedIn}
+              user={user}
               postId={activePost.data._id}
               createCommentRequest={createCommentRequest}
               replyCommentReset={replyCommentReset}

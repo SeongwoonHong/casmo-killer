@@ -15,6 +15,17 @@ describe('layout actions', () => {
 
   });
 
+  it('should dispatch toggleMenu action with no payload', () => {
+
+    const expectedAction = {
+      type: types.TOGGLE_MAIN_MENU,
+      payload: null
+    };
+
+    expect(actions.toggleMenu()).toEqual(expectedAction);
+
+  });
+
   it('should dispatch updateBreakpoint action', () => {
 
     const payload = 'xs';
@@ -39,6 +50,17 @@ describe('layout actions', () => {
 
   });
 
+  it('should dispatch toggleUserMenu action with no payload', () => {
+
+    const expectedAction = {
+      type: types.TOGGLE_USER_MENU,
+      payload: null
+    };
+
+    expect(actions.toggleUserMenu()).toEqual(expectedAction);
+
+  });
+
   it('should dispatch toggleAppLoading action', () => {
 
     const payload = false;
@@ -48,6 +70,17 @@ describe('layout actions', () => {
     };
 
     expect(actions.toggleAppLoading(payload)).toEqual(expectedAction);
+
+  });
+
+  it('should dispatch toggleAppLoading action with no payload', () => {
+
+    const expectedAction = {
+      type: types.TOGGLE_APP_LOADING,
+      payload: null
+    };
+
+    expect(actions.toggleAppLoading()).toEqual(expectedAction);
 
   });
 

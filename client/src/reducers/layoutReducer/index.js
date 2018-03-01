@@ -1,7 +1,7 @@
-import * as types from '../actions/types';
-import breakPoint from '../utils/breakPoint';
+import * as types from '@actions/types';
+import breakPoint from '../../utils/breakPoint';
 
-const initialState = {
+export const initialState = {
   layout: {
     breakPoint: breakPoint(window.innerWidth),
     isMainMenuVisible: false,

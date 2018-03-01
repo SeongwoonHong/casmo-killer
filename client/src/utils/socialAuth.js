@@ -57,7 +57,9 @@ export const loadSdk = (provider) => {
       js = document.createElement('script');
       js.id = id;
       js.src = scriptUrl(provider);
-      fjs.parentNode.insertBefore(js, fjs);
+      if (fjs) {
+        fjs.parentNode.insertBefore(js, fjs);
+      }
       js.onload = () => resolve(true);
 
     }

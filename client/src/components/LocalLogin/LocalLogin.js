@@ -11,32 +11,38 @@ import UserInputField from '../UserInputField';
 
 import './LocalLogin.scss';
 
-const initialState = {
-  isLoading: false,
-  email: '',
-  password: '',
-  message: '',
-  successMsg: '',
-};
-
 class LocalLogin extends Component {
 
   constructor(props) {
+
     super(props);
-    this.state = initialState;
+
+    this.initialState = {
+      isLoading: false,
+      email: '',
+      password: '',
+      message: '',
+      successMsg: ''
+    };
+
+    this.state = this.initialState;
+
+    this.onChangeHandler = this.onChangeHandler.bind(this);
+    this.onSubmitHandler = this.onSubmitHandler.bind(this);
+
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.isLogin !== nextProps.isLogin) {
-      this.setState(initialState);
+      this.setState(this.initialState);
     }
   }
 
-  onChangeHandler = (e) => {
+  onChangeHandler(e) {
     this.setState({ [e.name]: e.value });
-  };
+  }
 
-  onSubmitHandler = () => {
+  onSubmitHandler() {
 
     const { isLogin } = this.props;
 
@@ -52,7 +58,7 @@ class LocalLogin extends Component {
       this.onRegister();
     }
 
-  };
+  }
 
   async onLogin() {
 
@@ -166,7 +172,7 @@ class LocalLogin extends Component {
       <UserPageContainer
         key={ 0 }
         className="Local-login"
-        formTitle={ `${formText} with Email`}
+        formTitle={ `${formText} with Email` }
         isLoading={ isLoading }
         onSubmit={ this.onSubmitHandler }
         button={

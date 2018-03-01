@@ -25,8 +25,11 @@ const initialState = {
 class SecuritySettings extends Component {
 
   constructor(props) {
+
     super(props);
+
     this.state = initialState;
+
   }
 
   onChangeHandler = (e) => {
@@ -161,6 +164,8 @@ class SecuritySettings extends Component {
       message,
     } = this.state;
 
+    const { strategy } = this.props;
+
     return (
       <UserPageContainer
         className="Security-settings"
@@ -172,6 +177,7 @@ class SecuritySettings extends Component {
           <div className="button-group">
             <button
               type="button"
+              disabled={ strategy }
               className="user-form-button"
               onClick={ () => {
                 if (isVerified) {

@@ -60,7 +60,9 @@ class UserMenu extends Component {
 
   render() {
 
-    const { active, user, toggleUserMenu, logout } = this.props;
+    const {
+      active, user, toggleUserMenu, logout
+    } = this.props;
 
     const MenuLinks = (isLoggedIn) => {
 

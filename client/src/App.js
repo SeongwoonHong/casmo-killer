@@ -1,4 +1,3 @@
-// import 'materialize-css/dist/css/materialize.min.css';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
@@ -33,6 +32,12 @@ class App extends Component {
       }, false);
     }
 
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.location.pathname.indexOf('/user') > -1) {
+      this.props.registerRedirectUrl(this.props.location.pathname);
+    }
   }
 
   render() {
@@ -84,7 +89,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     toggleMenu: () => dispatch(actions.toggleMenu()),
-    updateBreakpoint: size => dispatch(actions.updateBreakpoint(size))
+    updateBreakpoint: size => dispatch(actions.updateBreakpoint(size)),
+    registerRedirectUrl: url => dispatch(actions.registerRedirectUrl(url))
   };
 };
 

@@ -1,9 +1,16 @@
-import * as types from './types';
+import * as types from '../types';
 
 export const registerRedirectUrl = (url) => {
   return {
     type: types.REGISTER_REDIRECT_URL,
     payload: url
+  };
+};
+
+export const registerRedirectMessage = (msg) => {
+  return {
+    type: types.REGISTER_REDIRECT_MESSAGE,
+    payload: msg
   };
 };
 

@@ -91,9 +91,10 @@ module.exports = {
     extensions: ['.web.js', '.mjs', '.js', '.json', '.web.jsx', '.jsx'],
     alias: {
       // add aliases for import
-      actions: path.resolve('./src/actions'),
-      sharedComponents: path.resolve('./src/components/shared'),
-      sharedUtils: path.resolve('./src/utils'),
+      '@assets': path.resolve('./src/assets'),
+      '@actions': path.resolve('./src/actions'),
+      '@sharedComponents': path.resolve('./src/components/shared'),
+      '@sharedUtils': path.resolve('./src/utils'),
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
@@ -124,7 +125,7 @@ module.exports = {
             options: {
               formatter: eslintFormatter,
               eslintPath: require.resolve('eslint'),
-              
+
             },
             loader: require.resolve('eslint-loader'),
           },
@@ -152,7 +153,7 @@ module.exports = {
             include: paths.appSrc,
             loader: require.resolve('babel-loader'),
             options: {
-              
+
               compact: true,
             },
           },

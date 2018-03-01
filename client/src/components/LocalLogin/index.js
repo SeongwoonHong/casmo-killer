@@ -1,3 +1,1 @@
-import LocalLogin from './LocalLogin';
-
-export default LocalLogin;
+export { default } from './LocalLogin';

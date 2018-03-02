@@ -1,10 +1,8 @@
 language: node_js
 node_js:
   - stable
-script: cd ./client && npm install && npm test && npm run build && cd ../server &&
+script: cd ./client && npm install && npm test -- --coverage && npm run build && COVERALLS_REPO_TOKEN=$coveralls_repo_token npm run coveralls && cd ../server &&
   npm install && npm test
-after_script:
- - cd ../client && COVERALLS_REPO_TOKEN=$coveralls_repo_token npm run coveralls && cd ../server
 deploy:
   provider: heroku
   skip_cleanup: true

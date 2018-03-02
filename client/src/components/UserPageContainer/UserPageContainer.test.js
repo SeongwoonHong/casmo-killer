@@ -3,7 +3,6 @@ import { shallow } from 'enzyme';
 import sinon from 'sinon';
 
 import UserPageContainer from './UserPageContainer';
-import { expect } from "chai";
 
 describe('<UserPageContainer />', () => {
 

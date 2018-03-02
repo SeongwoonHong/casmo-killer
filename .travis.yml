@@ -1,0 +1,14 @@
+language: node_js
+
+node_js:
+  - "stable"
+
+script: cd ./client && npm install && npm test && npm run build && cd ../server && npm install && npm test
+
+before_deploy:
+  - cd ./server
+
+deploy:
+  provider: heroku
+  api_key: 57e762f2-f03d-4a0e-a59c-ebee904c6084
+  app: infinite-plateau-29080

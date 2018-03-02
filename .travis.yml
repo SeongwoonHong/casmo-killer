@@ -4,7 +4,7 @@ node_js:
 script: cd ./client && npm install && npm test && npm run build && cd ../server &&
   npm install && npm test
 after_script:
- - COVERALLS_REPO_TOKEN=$coveralls_repo_token npm run coveralls
+ - cd ../client && COVERALLS_REPO_TOKEN=$coveralls_repo_token npm run coveralls && cd ../server
 deploy:
   provider: heroku
   skip_cleanup: true

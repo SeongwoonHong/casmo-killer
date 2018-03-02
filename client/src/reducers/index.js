@@ -10,8 +10,8 @@ import errorReducer from './errorReducer';
 import activityReducer from './activityReducer';
 
 export default combineReducers({
-  posts: postReducer,
   form: formReducer,
+  posts: postReducer,
   layout: layoutReducer,
   user: userReducer,
   auth: authReducer,

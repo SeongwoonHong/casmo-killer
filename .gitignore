@@ -8,6 +8,7 @@ __snapshots__/
 
 # production
 client/build/
+server/public/
 env/
 .env.**
 

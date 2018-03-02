@@ -40,13 +40,6 @@ export default function board(state = initialState, action) {
         }
       });
 
-
-
-
-
-
-
-
     // CREATE BOARD
     case types.CREATE_BOARD:
       return update(state, {

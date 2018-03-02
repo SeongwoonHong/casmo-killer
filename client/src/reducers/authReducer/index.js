@@ -1,6 +1,6 @@
-import * as types from '../actions/types';
+import * as types from '@actions/types';
 
-const initialState = {
+export const initialState = {
   auth: {
     strategy: null,
     email: null,
@@ -32,7 +32,7 @@ export default function (state = initialState.auth, action) {
     case types.CLEAR_REDIRECT_URL:
       return Object.assign({}, state, {
         redirectUrl: initialState.auth.redirectUrl,
-        message: initialState.auth.payload
+        message: initialState.auth.message
       });
 
     case types.SET_USER_FOR_REGISTER:
@@ -44,7 +44,7 @@ export default function (state = initialState.auth, action) {
           : state.displayName,
         avatar: action.payload.avatar || state.avatar,
         socialId: action.payload.socialId || state.socialId,
-        socialToken: action.payload.socialToken || state.socialToken,
+        socialToken: action.payload.socialToken || state.socialToken
       });
 
     case types.RESET_AUTH_STATE:

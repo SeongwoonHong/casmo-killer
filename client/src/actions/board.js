@@ -23,6 +23,7 @@ export function fetchBoardsFailure(error) {
     payload: error
   };
 }
+
 export const fetchBoardsRequest = (user, type, searchWord) => {
 
   return async (dispatch) => {
@@ -53,15 +54,7 @@ export const fetchBoardsRequest = (user, type, searchWord) => {
       dispatch(fetchBoardsFailure(err));
     }
   };
-}
-
-
-
-
-
-
-
-
+};
 
 // CREATE BOARD
 export function createBoard() {
@@ -69,6 +62,7 @@ export function createBoard() {
     type: types.CREATE_BOARD
   };
 }
+
 export function createBoardSuccess(newBoard) {
   return {
     type: types.CREATE_BOARD_SUCCESS,
@@ -103,6 +97,7 @@ export function bookmark() {
     type: types.BOOKMARK
   };
 }
+
 export function bookmarkSuccess(bookmarkResult) {
   return {
     type: types.BOOKMARK_SUCCESS,

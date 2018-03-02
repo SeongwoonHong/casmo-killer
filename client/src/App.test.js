@@ -15,6 +15,6 @@ beforeEach(() => {
   container = shallow(<App store={ store } />);
 });
 
-it('renders App component', () => {
+it('renders App component consistently', () => {
   expect(container).toMatchSnapshot();
 });

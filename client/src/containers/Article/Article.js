@@ -2,11 +2,8 @@ import React, { Component } from 'react';
 import LoadingCircle from '@sharedComponents/LoadingCircle';
 import ArticleBody from '../../components/ArticleBody/ArticleBody';
 import CommentList from '../../components/CommentList/CommentList';
-// import Comment from '../../components/CommentList/Comment/Comment';
 import CommentNew from '../../components/CommentNew/CommentNew';
-// import Button from '../../components/Button/TextButton/TextButton';
 
-// import Quote from '../../components/Quote/Quote';
 import './Article.scss';
 
 class Article extends Component {
@@ -21,7 +18,24 @@ class Article extends Component {
       this.props.fetchPostRequest(this.props.postId);
     }
   }
-
+  onLikesHandler = () => {
+    return new Promise((resolve, reject) => {
+      if ((this.props.user.displayName !== this.props.activePost.data.author.displayName) && this.props.user.isLoggedIn) {
+        this.props.giveLikesRequest(this.props.activePost.data._id, 'post');
+        return resolve();
+      }
+      return reject();
+    });
+  }
+  onDislikesHandler = () => {
+    return new Promise((resolve, reject) => {
+      if ((this.props.user.displayName !== this.props.activePost.data.author.displayName) && this.props.user.isLoggedIn) {
+        this.props.giveDisLikesRequest(this.props.activePost.data._id, 'post');
+        return resolve();
+      }
+      return reject();
+    });
+  }
   render() {
     const {
       activePost, user, createCommentRequest, giveLikesRequest, giveDisLikesRequest, deleteCommentRequest, updateCommentRequest, replyCommentRequest, replyComment, replyCommentReset, deletePostRequest, deletePost, openUserInfoModal, tagsSearchRequest, editPostRequest, editPost
@@ -45,6 +59,8 @@ class Article extends Component {
               openUserInfoModal={openUserInfoModal}
               tagsSearchRequest={tagsSearchRequest}
               editPostRequest={editPostRequest}
+              giveLikesRequest={this.onLikesHandler}
+              giveDisLikesRequest={this.onDislikesHandler}
             />
             <CommentList
               updateComment={this.props.updateComment}

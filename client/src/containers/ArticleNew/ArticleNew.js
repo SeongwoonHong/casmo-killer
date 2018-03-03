@@ -16,11 +16,11 @@ class ArticleNew extends Component {
       if (this.props.newPost.status === 'SUCCESS') {
         this.props.history.replace(`/article/${this.props.newPost.data._id}`).then(
           () => {
-            // Materialize.toast('Success!', 2000);
+            // our custom toast will go here
           }
         );
       } else {
-        // Materialize.toast($(`<span style="color: #00c853">Error: ${this.props.newPost.error.message}</span>`), 3000);
+        // our custom toast will go here
       }
     });
   }

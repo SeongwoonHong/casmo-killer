@@ -10,7 +10,7 @@ const ReduxFormField = ({
   <div className="input-field">
     {
       mode === 'field' &&
-      <input {...input} className="validate field" type={type} id={input.name} required />
+      <input {...input} className="validate field" type={type} id={input.name} placeholder={input.name} required />
     }
     {
       mode === 'rte' &&

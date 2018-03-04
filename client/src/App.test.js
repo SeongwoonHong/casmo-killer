@@ -16,6 +16,5 @@ beforeEach(() => {
 });
 
 it('renders App component consistently', () => {
-  expect(true).toEqual(true);
-  // expect(container).toMatchSnapshot();
+  expect(container).toMatchSnapshot();
 });

@@ -1,0 +1,42 @@
+.User-dropdown {
+    @media screen and (min-width: 992px) {
+        @include abs-elem($top-nav-size + 2px, 0, auto, auto);
+        background-color: #F5F5F5;
+        border-bottom: 1px solid $main-menu-border-color;
+        border-left: 1px solid $main-menu-border-color;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        /* TODO: refactor this so that it doesn't conflic with menucontainer style */
+        display: none !important;
+        width: $user-dropdown-width;
+        &:before {
+            @include rectanglify(0);
+            @include abs-elem(-5px, 17px, auto, auto);
+            content: '';
+            display: block;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 5px solid #F5F5F5;
+        }
+        > li {
+            > a {
+                @include flex-box(flex-start);
+                width: 100%;
+                > * {
+                    color: palette(Grey, 800);
+                }
+                &.active {
+                    background-color: #fff;
+                    border-top: 1px solid $main-menu-border-color;
+                    > .material-icons,
+                    > span {
+                        color: palette(Grey, 800);
+                    }
+                }
+            }
+        }
+        &.active {
+            /* TODO: refactor this so that it doesn't conflic with menucontainer style */
+            display: block !important;
+        }
+    }
+}

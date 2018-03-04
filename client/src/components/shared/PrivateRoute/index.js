@@ -12,8 +12,15 @@ const PrivateRoute = ({
         if (isLoggedIn) {
           return <Component {...props} />;
         }
-        onEnter(props.location.pathname);
-        return <Redirect to="/user/auth/login" />;
+        onEnter('Please log in to continue');
+        return (
+          <Redirect to={{
+            pathname: '/user/auth/login',
+            state: {
+              from: props.location.pathname
+            }
+          }} />
+        );
       }}
     />
   );

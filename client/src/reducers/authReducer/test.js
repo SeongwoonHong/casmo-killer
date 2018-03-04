@@ -9,23 +9,6 @@ describe('authReducer', () => {
     expect(reducer(undefined, {})).toEqual(initialState.auth);
   });
 
-  it('should register redirect url', () => {
-
-    const redirectUrl = '/test/url';
-
-    expect(
-      reducer(undefined, {
-        type: types.REGISTER_REDIRECT_URL,
-        payload: redirectUrl
-      })
-    ).toEqual(
-      Object.assign({}, initialState.auth, {
-        redirectUrl
-      })
-    );
-
-  });
-
   it('should register redirect message', () => {
 
     const message = 'redirect message';

@@ -1,3 +1,4 @@
+/* eslint react/no-unused-state: 0 */
 import React, { Component } from 'react';
 import ModalContainer from '@sharedComponents/ModalContainer';
 import { withRouter } from 'react-router-dom';

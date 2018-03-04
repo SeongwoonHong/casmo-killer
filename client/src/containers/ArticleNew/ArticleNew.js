@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 import ArticleForm from '../../components/ArticleForm/ArticleForm';
 import './ArticleNew.scss';
 
@@ -14,13 +15,14 @@ class ArticleNew extends Component {
   validateAndCreatePost= (values) => {
     return this.props.createPostRequest(values, this.state.boardId).then(() => {
       if (this.props.newPost.status === 'SUCCESS') {
-        this.props.history.replace(`/article/${this.props.newPost.data._id}`).then(
-          () => {
-            // Materialize.toast('Success!', 2000);
-          }
-        );
+        toast.success('Success!', {
+          position: toast.POSITION_TOP_RIGHT
+        });
+        this.props.history.replace(`/article/${this.props.newPost.data._id}`);
       } else {
-        // Materialize.toast($(`<span style="color: #00c853">Error: ${this.props.newPost.error.message}</span>`), 3000);
+        toast.error('Something went wrong', {
+          position: toast.POSITION_TOP_RIGHT
+        });
       }
     });
   }

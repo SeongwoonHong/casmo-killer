@@ -31,7 +31,7 @@ class Tags extends Component {
       const tag = this.splitByDelimeter(inputValue, delimeters[delimeterIndex]);
       if (tag.trim() && this.state.tags.indexOf(tag) === -1 && this.props.input.value.trim().split(' ').indexOf(tag) === -1) {
         this.state.tags.push(tag);
-        this.props.input.onChange(this.props.input.value.concat(`${tag} `));
+        this.props.input.onChange(this.props.input.value.trim().concat(` ${tag} `));
         this.setState(this.state);
       }
       e.target.value = '';
@@ -53,7 +53,7 @@ class Tags extends Component {
   };
   onBlurHandler = (e) => {
     this.state.tags.push(e.target.value);
-    this.props.input.onChange(this.props.input.value.concat(`${this.state.tags[this.state.tags.length - 1]} `));
+    this.props.input.onChange(this.props.input.value.trim().concat(` ${this.state.tags[this.state.tags.length - 1]} `));
     this.setState(this.state);
     e.target.value = '';
   }

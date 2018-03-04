@@ -8,16 +8,6 @@ const mapStateToProps = (state) => {
     user: state.user.user,
     newPost: state.posts.newPost,
     data: state.posts.activePost.data
-    // data: state.posts.activePost.data
-    // activePost: state.posts.activePost,
-    // postId: ownProps.match.params.postId,
-    // deletePost: state.posts.deletePost,
-    // editPost: state.posts.editPost,
-    // newComment: state.posts.newComment,
-    // likes: state.posts.likes,
-    // disLikes: state.posts.disLikes,
-    // user: state.user,
-    // replyComment: state.replyComment
   };
 };
 

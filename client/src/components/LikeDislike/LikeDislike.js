@@ -11,13 +11,14 @@ class LikeDislike extends Component {
     this.disLike = [];
   }
   likesHandler = async () => {
-    // this.props.onLikesHandler().then(() => this.clickAnimation(this.like));
-    this.clickAnimation(this.like);
-    this.props.onLikesHandler();
+    this.props.onLikesHandler()
+      .then(() => this.clickAnimation(this.like))
+      .catch(() => {}); // once we have our custom toast, it will go here to indicate that users cannot give likes or dislikes to their own posts.
   }
   disLikesHandler = () => {
-    this.clickAnimation(this.disLike);
-    this.props.onDislikesHandler();
+    this.props.onDislikesHandler()
+      .then(() => this.clickAnimation(this.disLike))
+      .catch(() => {}); // once we have our custom toast, it will go here to indicate that users cannot give likes or dislikes to their own posts.
   }
   clickAnimation = (ref) => {
     animate.to(ref[0], 0.5, { scale: 1.5, ease: Expo.easeOut }).then(() => {

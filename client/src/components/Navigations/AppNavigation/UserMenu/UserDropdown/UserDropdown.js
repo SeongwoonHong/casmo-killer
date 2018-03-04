@@ -1,3 +1,7 @@
+/* eslint jsx-a11y/click-events-have-key-events: 0 */
+/* eslint jsx-a11y/no-noninteractive-element-interactions: 0 */
+/* eslint jsx-a11y/click-events-have-key-events: 0 */
+/* eslint jsx-a11y/no-noninteractive-element-interactions: 0 */
 import React, { Component } from 'react';
 import classnames from 'classnames';
 import { NavLink } from 'react-router-dom';

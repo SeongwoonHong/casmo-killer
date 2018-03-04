@@ -126,10 +126,6 @@ describe('<LocalLogin />', () => {
 
   });
 
-<<<<<<< HEAD
-  it('should reflect the response from the server to the state', () => {
-    // TODO: figure out a way to test async methods  (onLogin & onRegister)
-=======
   it('should resolve the response from the server to the state', async () => {
 
     const spy = sinon.spy();
@@ -153,7 +149,6 @@ describe('<LocalLogin />', () => {
 
     expect(spy.calledWith(userData.data.user)).toEqual(true);
 
->>>>>>> 581ec1ff399c6620d6d80ff7b0886a82fafce46d
   });
 
 });

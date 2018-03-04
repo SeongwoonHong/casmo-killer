@@ -1,11 +1,8 @@
 import axios from 'axios';
 
 import * as storage from '@sharedUtils/storage';
-<<<<<<< HEAD
-import * as types from '../types';
-=======
+
 import * as types from './types';
->>>>>>> 581ec1ff399c6620d6d80ff7b0886a82fafce46d
 
 import { resetAuthState } from '../auth';
 import { toggleAppLoading } from '../layout';

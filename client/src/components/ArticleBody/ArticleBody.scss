@@ -15,6 +15,8 @@
     }
     .circle {
       border-radius: 50%;
+      width: 50px;
+      height: 50px;
     }
     .header-info {
       line-height: normal;
@@ -64,7 +66,8 @@
     }
     .like-dislike-wrapper {
       border-top: 1px solid lightgrey;
-      padding-top: 10px
+      padding-top: 10px;
+      margin-bottom: 10px;
     }
   }
 }

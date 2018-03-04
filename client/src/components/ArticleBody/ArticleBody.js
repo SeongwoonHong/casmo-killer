@@ -37,10 +37,10 @@ class ArticleBody extends Component {
   deletePostRequest = () => {
     return this.props.deletePostRequest().then(() => {
       if (this.props.deletePost.status === 'SUCCESS') {
-        // Materialize.toast('A post is deleted!', 2000);
+        // our custom toast will go here
         this.props.history.push(`/articles/${this.props.activePost.boardId}`);
       } else {
-        // Materialize.toast($(`<span style="color: #00c853">Error: ${this.props.editPost.error.message}</span>`), 3000);
+        // our custom toast will go here
       }
     });
   }
@@ -48,10 +48,10 @@ class ArticleBody extends Component {
     const id = this.props.activePost._id;
     return this.props.editPostRequest(id, values).then(() => {
       if (this.props.editPost.status === 'SUCCESS') {
-        // Materialize.toast('Success!', 2000);
+        // our custom toast will go here
         this.toggleEdit();
       } else {
-        // Materialize.toast($(`<span style="color: #00c853">Error: ${this.props.editPost.error.message}</span>`), 3000);
+        // our custom toast will go here
       }
     }
     );
@@ -102,13 +102,13 @@ class ArticleBody extends Component {
         <div className="contents" ref={el => this.component[2] = el}>
           <Iframe
             content={activePost.contents}
-            // stylesheets='<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">'
           />
           <div className="like-dislike-wrapper">
             <LikeDislike
-              // onLikesHandler={this.props.onLikesHandler}
-              // onDislikesHandler={this.props.onDislikesHandler}
-              // delay={0.3}
+              onLikesHandler={this.props.giveLikesRequest}
+              onDislikesHandler={this.props.giveDisLikesRequest}
+              likes={activePost.likes.length}
+              disLikes={activePost.disLikes.length}
             />
           </div>
         </div>

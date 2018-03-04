@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 import TextButton from '../Button/TextButton/TextButton';
 import Quote from '../Quote/Quote';
 import './CommentNew.scss';
@@ -20,11 +21,14 @@ class CommentNew extends Component {
 
   handleReply = () => {
     if (this.state.comment.trim() !== '') {
-      this.props.createCommentRequest(this.state.comment, this.props.postId, this.props.replyComment);
-      this.setState({
-        comment: ''
-      });
+      this.props.createCommentRequest(this.state.comment, this.props.postId, this.props.replyComment)
+        .then(() => toast.info('Success!', { position: toast.POSITION_TOP_RIGHT }));
+    } else {
+      toast.error('Comment cannot be empty');
     }
+    this.setState({
+      comment: ''
+    });
   }
   render() {
     const {

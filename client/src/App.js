@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
-
 import * as actions from '@actions';
-
 import breakPoint from '@sharedUtils/breakPoint';
 import LoadingOverlay from '@sharedComponents/LoadingOverlay';
+import { ToastContainer } from 'react-toastify';
 
 import { MainMenuRoutes } from './routers';
 import UserRoute from './routers/user';
@@ -72,6 +71,7 @@ class App extends Component {
           </div>
         </div>
         <AuthLoader />
+        <ToastContainer autoClose={3000} />
       </div>
     );
 

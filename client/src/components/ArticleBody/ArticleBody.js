@@ -6,12 +6,13 @@ import TimeAgo from 'react-timeago';
 import krStrings from 'react-timeago/lib/language-strings/ko';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import animate from 'gsap-promise';
+import { toast } from 'react-toastify';
+
 import LikeDislike from '../LikeDislike/LikeDislike';
 import TextButton from '../Button/TextButton/TextButton';
 import Iframe from '../Iframe/Iframe';
 import ArticleForm from '../ArticleForm/ArticleForm';
 import './ArticleBody.scss';
-
 
 const formatter = buildFormatter(krStrings);
 class ArticleBody extends Component {
@@ -37,21 +38,30 @@ class ArticleBody extends Component {
   deletePostRequest = () => {
     return this.props.deletePostRequest().then(() => {
       if (this.props.deletePost.status === 'SUCCESS') {
-        // our custom toast will go here
+        toast.info('Success!', {
+          position: toast.POSITION_TOP_RIGHT
+        });
         this.props.history.push(`/articles/${this.props.activePost.boardId}`);
       } else {
-        // our custom toast will go here
+        toast.error('Something went wrong', {
+          position: toast.POSITION_TOP_RIGHT
+        });
       }
     });
   }
   validateAndEditPost = (values) => {
     const id = this.props.activePost._id;
     return this.props.editPostRequest(id, values).then(() => {
-      if (this.props.editPost.status === 'SUCCESS') {
-        // our custom toast will go here
+      if (this.props.editPost.status === 'SUCCESS' || this.props.editPost.status === 'INIT') {
+        toast.info('Success!', {
+          position: toast.POSITION_TOP_RIGHT
+        });
         this.toggleEdit();
       } else {
-        // our custom toast will go here
+        console.log(this.props.editPost.status);
+        toast.error('Something went wrong', {
+          position: toast.POSITION_TOP_RIGHT
+        });
       }
     }
     );

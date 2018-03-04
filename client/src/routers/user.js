@@ -13,19 +13,17 @@ import UserSettings from '../containers/UserSettings';
 import Delete from '../containers/UserDelete';
 import ErrorPage from '../components/ErrorPage';
 
-// import Info from '../components/Info';
-
 import '../components/User/User.scss';
 
 class User extends Component {
 
   componentWillUnmount() {
-    this.props.clearRedirectUrl();
+    this.props.registerRedirectMessage('');
   }
 
   render() {
 
-    const { user, registerRedirectUrl } = this.props;
+    const { user, registerRedirectMessage } = this.props;
 
     return (
       <div className="User">
@@ -38,12 +36,12 @@ class User extends Component {
             path="/user/settings/:token?"
             isLoggedIn={ user.isLoggedIn }
             component={ UserSettings }
-            onEnter={ url => registerRedirectUrl(url) } />
+            onEnter={ msg => registerRedirectMessage(msg) } />
           <PrivateRoute
             path="/user/delete"
             isLoggedIn={ user.isLoggedIn }
             component={ Delete }
-            onEnter={ url => registerRedirectUrl(url) } />
+            onEnter={ msg => registerRedirectMessage(msg) } />
           <Route component={ ErrorPage } />
         </Switch>
       </div>
@@ -57,7 +55,6 @@ export default connect(
     user: state.user.user
   }),
   dispatch => ({
-    clearRedirectUrl: () => dispatch(actions.clearRedirectUrl()),
-    registerRedirectUrl: url => dispatch(actions.registerRedirectUrl(url))
+    registerRedirectMessage: msg => dispatch(actions.registerRedirectMessage(msg))
   })
 )(User);

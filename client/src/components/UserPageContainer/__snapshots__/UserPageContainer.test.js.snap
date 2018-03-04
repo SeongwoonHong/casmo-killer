@@ -1,0 +1,412 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<UserPageContainer /> renders the component consistently 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <UserPageContainer
+    className="test"
+    disabled={false}
+    formMsg=""
+    formTitle="test-form"
+    icon=""
+    isLoading={false}
+    onSubmit={[Function]}
+    title=""
+>
+    <p>
+        testing
+    </p>
+</UserPageContainer>,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        null,
+        <div
+          className="user-form-box"
+>
+          <LoadingOverlay
+                    circleColor="#1F4B40"
+                    circleSize=""
+                    isVisible={false}
+                    overlayColor="rgba(256,256,256,.75)"
+          />
+          <div
+                    className="user-form-header"
+          >
+                    <h3>
+                              test-form
+                    </h3>
+          </div>
+          <form
+                    className="user-form"
+                    noValidate={true}
+                    onSubmit={[Function]}
+          >
+                    <p>
+                              testing
+                    </p>
+                    <button
+                              className="user-form-button"
+                              disabled={false}
+                              type="submit"
+                    >
+                              Submit
+                    </button>
+          </form>
+</div>,
+      ],
+      "className": "test",
+    },
+    "ref": null,
+    "rendered": Array [
+      null,
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            <LoadingOverlay
+              circleColor="#1F4B40"
+              circleSize=""
+              isVisible={false}
+              overlayColor="rgba(256,256,256,.75)"
+/>,
+            <div
+              className="user-form-header"
+>
+              <h3>
+                            test-form
+              </h3>
+</div>,
+            <form
+              className="user-form"
+              noValidate={true}
+              onSubmit={[Function]}
+>
+              <p>
+                            testing
+              </p>
+              <button
+                            className="user-form-button"
+                            disabled={false}
+                            type="submit"
+              >
+                            Submit
+              </button>
+</form>,
+          ],
+          "className": "user-form-box",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "circleColor": "#1F4B40",
+              "circleSize": "",
+              "isVisible": false,
+              "overlayColor": "rgba(256,256,256,.75)",
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <h3>
+                  test-form
+</h3>,
+                null,
+              ],
+              "className": "user-form-header",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "test-form",
+                },
+                "ref": null,
+                "rendered": "test-form",
+                "type": "h3",
+              },
+              null,
+            ],
+            "type": "div",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <p>
+                  testing
+</p>,
+                <button
+                  className="user-form-button"
+                  disabled={false}
+                  type="submit"
+>
+                  Submit
+</button>,
+              ],
+              "className": "user-form",
+              "noValidate": true,
+              "onSubmit": [Function],
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "testing",
+                },
+                "ref": null,
+                "rendered": "testing",
+                "type": "p",
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "Submit",
+                  "className": "user-form-button",
+                  "disabled": false,
+                  "type": "submit",
+                },
+                "ref": null,
+                "rendered": "Submit",
+                "type": "button",
+              },
+            ],
+            "type": "form",
+          },
+        ],
+        "type": "div",
+      },
+    ],
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          null,
+          <div
+            className="user-form-box"
+>
+            <LoadingOverlay
+                        circleColor="#1F4B40"
+                        circleSize=""
+                        isVisible={false}
+                        overlayColor="rgba(256,256,256,.75)"
+            />
+            <div
+                        className="user-form-header"
+            >
+                        <h3>
+                                    test-form
+                        </h3>
+            </div>
+            <form
+                        className="user-form"
+                        noValidate={true}
+                        onSubmit={[Function]}
+            >
+                        <p>
+                                    testing
+                        </p>
+                        <button
+                                    className="user-form-button"
+                                    disabled={false}
+                                    type="submit"
+                        >
+                                    Submit
+                        </button>
+            </form>
+</div>,
+        ],
+        "className": "test",
+      },
+      "ref": null,
+      "rendered": Array [
+        null,
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              <LoadingOverlay
+                circleColor="#1F4B40"
+                circleSize=""
+                isVisible={false}
+                overlayColor="rgba(256,256,256,.75)"
+/>,
+              <div
+                className="user-form-header"
+>
+                <h3>
+                                test-form
+                </h3>
+</div>,
+              <form
+                className="user-form"
+                noValidate={true}
+                onSubmit={[Function]}
+>
+                <p>
+                                testing
+                </p>
+                <button
+                                className="user-form-button"
+                                disabled={false}
+                                type="submit"
+                >
+                                Submit
+                </button>
+</form>,
+            ],
+            "className": "user-form-box",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "circleColor": "#1F4B40",
+                "circleSize": "",
+                "isVisible": false,
+                "overlayColor": "rgba(256,256,256,.75)",
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <h3>
+                    test-form
+</h3>,
+                  null,
+                ],
+                "className": "user-form-header",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": "test-form",
+                  },
+                  "ref": null,
+                  "rendered": "test-form",
+                  "type": "h3",
+                },
+                null,
+              ],
+              "type": "div",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <p>
+                    testing
+</p>,
+                  <button
+                    className="user-form-button"
+                    disabled={false}
+                    type="submit"
+>
+                    Submit
+</button>,
+                ],
+                "className": "user-form",
+                "noValidate": true,
+                "onSubmit": [Function],
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": "testing",
+                  },
+                  "ref": null,
+                  "rendered": "testing",
+                  "type": "p",
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": "Submit",
+                    "className": "user-form-button",
+                    "disabled": false,
+                    "type": "submit",
+                  },
+                  "ref": null,
+                  "rendered": "Submit",
+                  "type": "button",
+                },
+              ],
+              "type": "form",
+            },
+          ],
+          "type": "div",
+        },
+      ],
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;

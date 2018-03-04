@@ -13,7 +13,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     loginSuccess: (payload, shouldReset) => dispatch(actions.loginSuccess(payload, shouldReset)),
-    clearRedirectUrl: () => dispatch(actions.clearRedirectUrl()),
     setUserForRegistration: userInfo => dispatch(actions.setUserForRegistration(userInfo))
   };
 }

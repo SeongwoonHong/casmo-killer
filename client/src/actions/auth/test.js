@@ -3,25 +3,15 @@ import * as types from './types';
 
 describe('auth actions', () => {
 
-  it('should dispatch registerRedirectUrl action', () => {
+  it('should dispatch registerRedirectMessage action', () => {
 
-    const payload = '/test/url';
+    const payload = 'please log in to continue';
     const expectedAction = {
-      type: types.REGISTER_REDIRECT_URL,
+      type: types.REGISTER_REDIRECT_MESSAGE,
       payload
     };
 
-    expect(actions.registerRedirectUrl(payload)).toEqual(expectedAction);
-
-  });
-
-  it('should dispatch clearRedirectUrl action', () => {
-
-    const expectedAction = {
-      type: types.CLEAR_REDIRECT_URL
-    };
-
-    expect(actions.clearRedirectUrl()).toEqual(expectedAction);
+    expect(actions.registerRedirectMessage(payload)).toEqual(expectedAction);
 
   });
 

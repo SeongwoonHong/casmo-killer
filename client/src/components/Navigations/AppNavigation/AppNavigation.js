@@ -30,7 +30,7 @@ class AppNavigation extends Component {
   render() {
 
     const {
-      user, layout, closeAllMenu, toggleMenu, toggleUserMenu, logout
+      location, user, layout, closeAllMenu, toggleMenu, toggleUserMenu, logout
     } = this.props;
 
     const SubMenus = (routes) => {
@@ -78,6 +78,7 @@ class AppNavigation extends Component {
             active={ layout.isUserMenuVisible }
             user={ user }
             layout={ layout }
+            currentRoute={ location.pathname }
             toggleUserMenu={ toggleUserMenu }
             logout={ logout } />
         </div>

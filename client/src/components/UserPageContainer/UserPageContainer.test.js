@@ -14,15 +14,13 @@ describe('<UserPageContainer />', () => {
 
   it('renders the component consistently', () => {
 
-    // const component = shallow(
-    //   <UserPageContainer { ...props }>
-    //     <p>testing</p>
-    //   </UserPageContainer>
-    // );
-    //
-    // expect(component).toMatchSnapshot();
+    const component = shallow(
+      <UserPageContainer { ...props }>
+        <p>testing</p>
+      </UserPageContainer>
+    );
 
-    expect(true).toEqual(true);
+    expect(component).toMatchSnapshot();
 
   });
 

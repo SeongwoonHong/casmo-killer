@@ -1,0 +1,261 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<UserLogin /> renders the component consistently 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <Login
+    auth={
+        Object {
+            "message": "",
+          }
+    }
+    match={
+        Object {
+            "params": Object {
+              "type": "login",
+            },
+          }
+    }
+    user={
+        Object {
+            "isLoggedIn": false,
+          }
+    }
+/>,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <h2
+          className="user-page-title"
+>
+          Login to your account
+          <i
+                    className="material-icons"
+          >
+                    lock
+          </i>
+</h2>,
+        <FormMessage
+          message=""
+          type="error"
+/>,
+        <SocialLogin
+          isLogin={true}
+          onRegister={[Function]}
+          onSuccess={[Function]}
+/>,
+        <LocalLogin
+          isLogin={true}
+          onSuccess={[Function]}
+          redirectUrl="/"
+/>,
+      ],
+      "className": "Login",
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            "Login to your account",
+            <i
+              className="material-icons"
+>
+              lock
+</i>,
+          ],
+          "className": "user-page-title",
+        },
+        "ref": null,
+        "rendered": Array [
+          "Login to your account",
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "lock",
+              "className": "material-icons",
+            },
+            "ref": null,
+            "rendered": "lock",
+            "type": "i",
+          },
+        ],
+        "type": "h2",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "message": "",
+          "type": "error",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "isLogin": true,
+          "onRegister": [Function],
+          "onSuccess": [Function],
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "isLogin": true,
+          "onSuccess": [Function],
+          "redirectUrl": "/",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+    ],
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <h2
+            className="user-page-title"
+>
+            Login to your account
+            <i
+                        className="material-icons"
+            >
+                        lock
+            </i>
+</h2>,
+          <FormMessage
+            message=""
+            type="error"
+/>,
+          <SocialLogin
+            isLogin={true}
+            onRegister={[Function]}
+            onSuccess={[Function]}
+/>,
+          <LocalLogin
+            isLogin={true}
+            onSuccess={[Function]}
+            redirectUrl="/"
+/>,
+        ],
+        "className": "Login",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              "Login to your account",
+              <i
+                className="material-icons"
+>
+                lock
+</i>,
+            ],
+            "className": "user-page-title",
+          },
+          "ref": null,
+          "rendered": Array [
+            "Login to your account",
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "lock",
+                "className": "material-icons",
+              },
+              "ref": null,
+              "rendered": "lock",
+              "type": "i",
+            },
+          ],
+          "type": "h2",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "message": "",
+            "type": "error",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "isLogin": true,
+            "onRegister": [Function],
+            "onSuccess": [Function],
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "isLogin": true,
+            "onSuccess": [Function],
+            "redirectUrl": "/",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+      ],
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;

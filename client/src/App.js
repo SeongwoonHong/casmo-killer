@@ -33,15 +33,9 @@ class App extends Component {
 
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.location.pathname.indexOf('/user') > -1) {
-      this.props.registerRedirectUrl(this.props.location.pathname);
-    }
-  }
-
   render() {
 
-    const { layout } = this.props;
+    const { layout, user } = this.props;
 
     return (
       <div className="root-container">
@@ -66,7 +60,7 @@ class App extends Component {
               <Route component={ ErrorPage } />
             </Switch>
             {
-              this.props.user.isModalOpened && <UserInfoModal />
+              user.isModalOpened && <UserInfoModal />
             }
           </div>
         </div>
@@ -88,9 +82,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    toggleMenu: () => dispatch(actions.toggleMenu()),
-    updateBreakpoint: size => dispatch(actions.updateBreakpoint(size)),
-    registerRedirectUrl: url => dispatch(actions.registerRedirectUrl(url))
+    updateBreakpoint: size => dispatch(actions.updateBreakpoint(size))
   };
 };
 

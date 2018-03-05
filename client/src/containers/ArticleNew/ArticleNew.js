@@ -13,6 +13,15 @@ class ArticleNew extends Component {
     this.cancelUrl = `/articles/${this.state.boardId}`;
   }
   validateAndCreatePost= (values) => {
+    const title = values.title.trim();
+    const contents = values.contents.split('<span data-text="true">')[1].split('</span>')[0].trim();
+    if (!title || !contents) {
+      return (
+        toast.error('Title and Content cannot be empty', {
+          position: toast.POSITION_TOP_RIGHT
+        })
+      );
+    }
     return this.props.createPostRequest(values, this.state.boardId).then(() => {
       if (this.props.newPost.status === 'SUCCESS') {
         toast.success('Success!', {

@@ -31,7 +31,5 @@ export default connect(
   state => ({
     user: state.user.user
   }),
-  dispatch => ({
-    registerRedirectUrl: url => dispatch(actions.registerRedirectUrl(url))
-  })
+  dispatch => ({})
 )(User);

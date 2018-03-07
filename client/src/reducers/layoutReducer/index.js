@@ -7,6 +7,7 @@ export const initialState = {
     isMainMenuVisible: false,
     isUserMenuVisible: false,
     isAppLoading: true,
+    toastMessage: null
   }
 };
 

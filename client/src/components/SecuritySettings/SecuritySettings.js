@@ -177,7 +177,7 @@ class SecuritySettings extends Component {
           <div className="button-group">
             <button
               type="button"
-              disabled={ strategy }
+              disabled={ strategy !== 'local' }
               className="user-form-button"
               onClick={ () => {
                 if (isVerified) {

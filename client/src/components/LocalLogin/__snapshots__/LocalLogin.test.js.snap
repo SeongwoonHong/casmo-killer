@@ -1,0 +1,159 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<LocalLogin /> renders the component consistently 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <LocalLogin />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Array [
+    <UserPageContainer
+      button={
+            <button
+                  className="user-form-button"
+                  type="submit"
+            >
+                  Sign Up
+            </button>
+      }
+      className="Local-login"
+      disabled={false}
+      formMsg=""
+      formTitle="Sign Up with Email"
+      icon=""
+      isLoading={false}
+      onSubmit={[Function]}
+      title=""
+>
+      <FormMessage
+            message=""
+            type="error"
+      />
+      <UserInputField
+            disabled={false}
+            isVisible={true}
+            message=""
+            name="email"
+            onChange={[Function]}
+            placeholder=""
+            title=""
+            type=""
+            value=""
+      />
+      <FormMessage
+            message=""
+            type="success"
+      />
+      <UserInputField
+            disabled={false}
+            isVisible={true}
+            message=""
+            name="password"
+            onChange={[Function]}
+            placeholder=""
+            title=""
+            type=""
+            value=""
+      />
+</UserPageContainer>,
+    <div
+      className="other-options"
+>
+      <Link
+            replace={false}
+            to="/user/auth/login"
+      >
+            Log In With Email
+      </Link>
+      <Link
+            replace={false}
+            to="/user/recover"
+      >
+            Forgot Your Password?
+      </Link>
+</div>,
+  ],
+  Symbol(enzyme.__nodes__): Array [
+    Array [
+      <UserPageContainer
+        button={
+                <button
+                        className="user-form-button"
+                        type="submit"
+                >
+                        Sign Up
+                </button>
+        }
+        className="Local-login"
+        disabled={false}
+        formMsg=""
+        formTitle="Sign Up with Email"
+        icon=""
+        isLoading={false}
+        onSubmit={[Function]}
+        title=""
+>
+        <FormMessage
+                message=""
+                type="error"
+        />
+        <UserInputField
+                disabled={false}
+                isVisible={true}
+                message=""
+                name="email"
+                onChange={[Function]}
+                placeholder=""
+                title=""
+                type=""
+                value=""
+        />
+        <FormMessage
+                message=""
+                type="success"
+        />
+        <UserInputField
+                disabled={false}
+                isVisible={true}
+                message=""
+                name="password"
+                onChange={[Function]}
+                placeholder=""
+                title=""
+                type=""
+                value=""
+        />
+</UserPageContainer>,
+      <div
+        className="other-options"
+>
+        <Link
+                replace={false}
+                to="/user/auth/login"
+        >
+                Log In With Email
+        </Link>
+        <Link
+                replace={false}
+                to="/user/recover"
+        >
+                Forgot Your Password?
+        </Link>
+</div>,
+    ],
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;

@@ -18,8 +18,7 @@ describe('<UserInputField />', () => {
       <UserInputField { ...props } />
     );
 
-    expect(true).toEqual(true);
-    // expect(component).toMatchSnapshot();
+    expect(component).toMatchSnapshot();
 
   });
 

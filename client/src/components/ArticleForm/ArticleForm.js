@@ -65,7 +65,6 @@ class ArticleForm extends Component {
             type="text"
             component={ReduxFormField}
             mode="field"
-            // label="Title*"
             fieldClass={fieldClass}
           />
           <Field
@@ -92,7 +91,6 @@ class ArticleForm extends Component {
               Save
             </TextButton>
             <Link
-              // to={`/articles/${this.props.match.params.id}`}
               to={this.props.formType !== 'edit' ? this.props.cancelUrl : '#'}
             >
               <TextButton

@@ -4,11 +4,10 @@
 node_modules/
 # testing
 coverage/
-__snapshots__/
 
 # production
 client/build/
-server/build/
+server/public/
 env/
 .env.**
 

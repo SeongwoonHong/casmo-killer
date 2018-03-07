@@ -6,12 +6,13 @@ import TimeAgo from 'react-timeago';
 import krStrings from 'react-timeago/lib/language-strings/ko';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import animate from 'gsap-promise';
+import { toast } from 'react-toastify';
+
 import LikeDislike from '../LikeDislike/LikeDislike';
 import TextButton from '../Button/TextButton/TextButton';
 import Iframe from '../Iframe/Iframe';
 import ArticleForm from '../ArticleForm/ArticleForm';
 import './ArticleBody.scss';
-
 
 const formatter = buildFormatter(krStrings);
 class ArticleBody extends Component {
@@ -37,21 +38,30 @@ class ArticleBody extends Component {
   deletePostRequest = () => {
     return this.props.deletePostRequest().then(() => {
       if (this.props.deletePost.status === 'SUCCESS') {
-        // Materialize.toast('A post is deleted!', 2000);
+        toast.info('Success!', {
+          position: toast.POSITION_TOP_RIGHT
+        });
         this.props.history.push(`/articles/${this.props.activePost.boardId}`);
       } else {
-        // Materialize.toast($(`<span style="color: #00c853">Error: ${this.props.editPost.error.message}</span>`), 3000);
+        toast.error('Something went wrong', {
+          position: toast.POSITION_TOP_RIGHT
+        });
       }
     });
   }
   validateAndEditPost = (values) => {
     const id = this.props.activePost._id;
     return this.props.editPostRequest(id, values).then(() => {
-      if (this.props.editPost.status === 'SUCCESS') {
-        // Materialize.toast('Success!', 2000);
+      if (this.props.editPost.status === 'SUCCESS' || this.props.editPost.status === 'INIT') {
+        toast.info('Success!', {
+          position: toast.POSITION_TOP_RIGHT
+        });
         this.toggleEdit();
       } else {
-        // Materialize.toast($(`<span style="color: #00c853">Error: ${this.props.editPost.error.message}</span>`), 3000);
+        console.log(this.props.editPost.status);
+        toast.error('Something went wrong', {
+          position: toast.POSITION_TOP_RIGHT
+        });
       }
     }
     );
@@ -102,13 +112,13 @@ class ArticleBody extends Component {
         <div className="contents" ref={el => this.component[2] = el}>
           <Iframe
             content={activePost.contents}
-            // stylesheets='<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">'
           />
           <div className="like-dislike-wrapper">
             <LikeDislike
-              // onLikesHandler={this.props.onLikesHandler}
-              // onDislikesHandler={this.props.onDislikesHandler}
-              // delay={0.3}
+              onLikesHandler={this.props.giveLikesRequest}
+              onDislikesHandler={this.props.giveDisLikesRequest}
+              likes={activePost.likes.length}
+              disLikes={activePost.disLikes.length}
             />
           </div>
         </div>

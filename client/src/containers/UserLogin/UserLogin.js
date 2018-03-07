@@ -12,15 +12,14 @@ class Login extends Component {
 
   componentWillReceiveProps(nextProps) {
 
-    const {
-      history, auth, user, clearRedirectUrl
-    } = nextProps;
+    const { history, user } = nextProps;
 
     if (user.isLoggedIn) {
 
-      const { redirectUrl } = auth;
-      clearRedirectUrl();
-      history.replace(redirectUrl);
+      history.replace(this.props.location && this.props.location.state
+        ? this.props.location.state.from
+        : '/'
+      );
 
     }
 
@@ -55,9 +54,10 @@ class Login extends Component {
 
   render() {
 
-    const { match, auth } = this.props;
+    const { location, match, auth } = this.props;
 
     const isLogin = match.params.type === 'login';
+    const redirectUrl = location && location.state ? location.state.from : '/';
 
     return (
       <div className="Login">
@@ -74,7 +74,7 @@ class Login extends Component {
           onSuccess={ this.onLoginSuccess } />
         <LocalLogin
           isLogin={ isLogin }
-          redirectUrl={ auth.redirectUrl }
+          redirectUrl={ redirectUrl }
           onSuccess={ this.onLoginSuccess } />
       </div>
     );

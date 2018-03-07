@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 import TextButton from '../Button/TextButton/TextButton';
 import Quote from '../Quote/Quote';
 import './CommentNew.scss';
@@ -20,20 +21,32 @@ class CommentNew extends Component {
 
   handleReply = () => {
     if (this.state.comment.trim() !== '') {
-      this.props.createCommentRequest(this.state.comment, this.props.postId, this.props.replyComment);
-      this.setState({
-        comment: ''
-      });
+      this.props.createCommentRequest(this.state.comment, this.props.postId, this.props.replyComment)
+        .then(() => toast.info('Success!', { position: toast.POSITION_TOP_RIGHT }));
+    } else {
+      toast.error('Comment cannot be empty');
     }
+    this.setState({
+      comment: ''
+    });
   }
   render() {
     const {
-      isLoggedIn, replyComment, replyCommentReset
+      user, replyComment, replyCommentReset
     } = this.props;
+    const header = (
+      <div className="comment-header">
+        <img src={user.avatar} alt={user.avatar} className="comment-avatar" />
+        <span>{ user.displayName }</span>
+      </div>
+    );
     return (
       <div className="comment-new">
         {
-          !isLoggedIn &&
+          user.isLoggedIn && header
+        }
+        {
+          !user.isLoggedIn &&
           <div className="required-login-overlay">You need to login to leave a comment</div>
         }
         {
@@ -50,6 +63,7 @@ class CommentNew extends Component {
           className="comment-new-body"
           value={this.state.comment}
           onChange={this.handleChange}
+          placeholder="Leave a comment"
         />
         <TextButton
           onClick={this.handleReply}
@@ -67,7 +81,7 @@ class CommentNew extends Component {
 
 CommentNew.defaultProps = {
   postId: '',
-  isLoggedIn: false,
+  user: {},
   replyComment: {
     status: 'INIT'
   }
@@ -75,7 +89,7 @@ CommentNew.defaultProps = {
 
 CommentNew.propTypes = {
   postId: PropTypes.string,
-  isLoggedIn: PropTypes.bool,
+  user: PropTypes.object,
   replyComment: PropTypes.object
 };
 export default CommentNew;

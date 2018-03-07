@@ -5,13 +5,10 @@ import './TextButton.scss';
 
 class TextButton extends Component {
   render() {
-    const loader = (
-      <div className="loader" />
-    );
     return (
       <button
         id={this.props.id}
-        className={classnames('btn blue', this.props.className)}
+        className={classnames('btn outline white-purple', this.props.className)}
         type={this.props.type}
         role={this.props.role}
         style={this.props.style}
@@ -20,8 +17,9 @@ class TextButton extends Component {
         disabled={this.props.disabled}
         onMouseEnter={this.props.onMouseEnter}
         onMouseLeave={this.props.onMouseLeave}
+        ref={el => this.component = el}
       >
-        { this.props.isLoading ? loader : this.props.children }
+        { this.props.children }
       </button>
     );
   }
@@ -34,7 +32,6 @@ TextButton.propTypes = {
   style: PropTypes.object,
   type: PropTypes.string,
   disabled: PropTypes.bool,
-  isLoading: PropTypes.bool,
   onClick: PropTypes.func,
   onKeyDown: PropTypes.func,
   onMouseEnter: PropTypes.func,
@@ -46,7 +43,6 @@ TextButton.defaultProps = {
   role: 'presentation',
   type: '',
   disabled: false,
-  isLoading: false,
   style: {},
   onClick: () => {},
   onKeyDown: () => {},

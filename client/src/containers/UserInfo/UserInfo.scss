@@ -1,0 +1,18 @@
+.userInfoHeader {
+  margin: 0 auto;
+  max-width: 1280px;
+  width: 90%;
+
+  .userInfo {
+    margin: 0.5rem 0 1rem 0;
+
+    .userName, .userAvatar {
+      padding: 10px;
+    }
+    img {
+      width: 270px;
+      height: auto;
+      border-radius: 50%;
+    }
+  }
+}

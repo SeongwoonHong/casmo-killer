@@ -38,7 +38,7 @@ export function fetchActivityRequest(isInitial, listType, id, userId) {
     // Inform Login API is starting
     dispatch(fetchActivity());
     // API request
-    let url = '/api/user/activity';
+    let url = '/api/activity';
     url = isInitial ? `${url}/${userId}` : `${url}/${userId}/${listType}/${id}`;
     return axios.get(url)
       .then((response) => {

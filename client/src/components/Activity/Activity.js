@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import TimeAgo from 'react-timeago';
 import { Link } from 'react-router-dom';
+import krStrings from 'react-timeago/lib/language-strings/ko';
+import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 
 import './Activity.scss';
+
+const formatter = buildFormatter(krStrings);
 
 class Activity extends Component {
 
@@ -78,12 +82,9 @@ class Activity extends Component {
         <div className="card">
           <div className="info">
             {activityDescription(data)}
-          </div>
-          <div className="card-content">
-            {data.contents}
-          </div>
-          <div className="footer">
-            <span className="star-count"><TimeAgo date={data.date} /></span>
+            <div className="dateAgo">
+              <span><TimeAgo date={data.date} formatter={formatter} /></span>
+            </div>
           </div>
         </div>
       </div>

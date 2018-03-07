@@ -1,41 +1,19 @@
 .board {
   height: auto;
 
-  .board-side-searchbar {
-    float: right;
-    margin: 0 20px 10px 0;
-  }
-
-  .board-side-sort {
-    margin-left: 25px;
-  }
-
-  .board-bookmark {
-    float: right;
-    margin-right: 20px;
-  }
-
   .bookmark-box {
-    width: 50px;
+    width: 40px;
     height: auto;
   }
 
-  .board-header {
-    padding-right: 10px;
-    padding-left: 25px;
-  }
-
-  .board-header-manager, .btn-newboard  {
-    display: inline-block;
-  }
-
-  .btn-newboard {
-    float: right;
-  }
-
-  .row {
-    margin-top: 15px;
-    clear: both;
+  .board-header-first, .board-header-second {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    -webkit-display: flex;
+    -webkit-align-items: center;
+    -webkit-justify-content: space-between;
+    margin: 15px 0;
   }
 
   .user-btn a {
@@ -83,7 +61,7 @@
     }
   }
 
-  .board-page {
+  .pagination {
     text-align: center;
   }
 }

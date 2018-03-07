@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import Materialize from 'materialize-css';
+// import Materialize from 'materialize-css';
 import { Link, withRouter } from 'react-router-dom';
 import BoardList from '../../components/BoardList/BoardList';
 import Search from '../../components/Search/Search';
+import AlignHorizontal from '../../components/AlignHorizontal/AlignHorizontal';
+import AlignVertical from '../../components/AlignVertical/AlignVertical';
+import TextButton from '../../components/Button/TextButton/TextButton';
 import './CommunityAll.scss';
 
 class CommunityAll extends Component {
@@ -46,7 +49,7 @@ class CommunityAll extends Component {
         </div>
       );
     } else if (error) {
-      Materialize.toast($(`<span style="color: #00c853">Error: ${error.message}</span>`), 3000);
+      // Materialize.toast($(`<span style="color: #00c853">Error: ${error.message}</span>`), 3000);
       return (
         <div className="community">
           {error.message}
@@ -54,28 +57,29 @@ class CommunityAll extends Component {
       );
     }
     return (
-      <div className="community">
-        {
-          this.props.user.isLoggedIn &&
-          <Link
-            className="btn newBoard"
-            name="action"
-            to={`${this.props.location.pathname}/newBoard`}
-            text="New Board"
-            style={{ display: 'inline-block', width: '40%' }}
-          >
-            <img className="btn-newboard" src="/new.svg" alt="new board button" />
-          </Link>
-        }
-        <div className="community-searchbar">
+      <AlignVertical className="community">
+        <AlignHorizontal className="community-horizontal-block">
+          {
+            this.props.user.isLoggedIn &&
+            <Link
+              to="/community/new"
+              className="btn newBoard"
+            >
+              <TextButton>
+                새 게시판
+              </TextButton>
+            </Link>
+          }
           <Search
+            className="community-searchbar"
             onSearch={this.handleSearchBoards}
           />
-        </div>
-        <div className="row">
-          <BoardList boardListData={data} />
-        </div>
-      </div>
+        </AlignHorizontal>
+        <BoardList
+          className="row"
+          boardListData={data}
+        />
+      </AlignVertical>
     );
   }
 }

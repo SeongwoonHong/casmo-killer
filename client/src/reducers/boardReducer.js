@@ -15,7 +15,6 @@ const initialState = {
 };
 
 export default function board(state = initialState, action) {
-  console.log(action);
   switch (action.type) {
     // FETCH BOARDS
     case types.FETCH_BOARDS:
@@ -40,13 +39,6 @@ export default function board(state = initialState, action) {
           error: { $set: action.payload.response.data }
         }
       });
-
-
-
-
-
-
-
 
     // CREATE BOARD
     case types.CREATE_BOARD:

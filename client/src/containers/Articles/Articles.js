@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
-// import LoadingCircle from 'sharedComponents/LoadingCircle';
+import LoadingCircle from '@sharedComponents/LoadingCircle';
 import Sort from '../../components/Sort/Sort';
 import Search from '../../components/Search/Search';
 import ArticleList from '../../components/ArticleList/ArticleList';
 import Bookmark from '../../components/Bookmark/Bookmark';
+import TextButton from '../../components/Button/TextButton/TextButton';
+import AlignHorizontal from '../../components/AlignHorizontal/AlignHorizontal';
+import AlignVertical from '../../components/AlignVertical/AlignVertical';
+import DisplayManager from '../../components/DisplayManager/DisplayManager';
 import './Articles.scss';
 
 class Articles extends Component {
@@ -16,7 +20,6 @@ class Articles extends Component {
     const selected = props.location.state === undefined ? 0 : parseInt(props.location.state.selected, 10);
     const boardOId = props.location.state === undefined ? '' : props.location.state.boardOId;
     const bookmarked = props.user.isLoggedIn ? props.user.bookmarked.includes(boardOId) : false;
-    console.log(props.user);
 
     this.state = {
       page,
@@ -79,7 +82,7 @@ class Articles extends Component {
     if (status === 'WAITING' || boardAuthor.author === null) {
       return (
         <div className="board_loading">
-          {/* <LoadingCircle /> */}
+          <LoadingCircle color="#515151" />
         </div>
       );
     } else if (status === 'FAILURE') {
@@ -92,90 +95,62 @@ class Articles extends Component {
     }
 
     return (
-      <div className="board">
-        <div className="row">
-          <div className="board-bookmark">
-            {
-              this.props.user.isLoggedIn ?
-                <Bookmark
-                  onBookmark={this.handleBookmark}
-                  bookmarkStat={this.state.bookmarked}
-                />
-               : ''
-            }
-          </div>
-        </div>
-        <div className="row">
-          <div className="board-header">
-            <div className="board-header-manager">
-              관리자:
-              <div className="user-btn">
-                <Link
-                  to={`/user/info/${this.props.boardAuthor.author._id}`}
-                  >
-                  {this.props.boardAuthor.author.displayName}
-                </Link>
-              </div>
-            </div>
-            {
-              this.props.user.isLoggedIn &&
-              <Link
-                className="btn-newboard"
-                name="action"
-                // to={`${this.props.location.pathname}/newBoard`}
-                to=""
-                text="New Board"
-                style={{ display: 'inline-block', width: '40%' }}
-              >
-                <img className="btn-newboard" src="/new.svg" alt="new board button" />
-              </Link>
-            }
-          </div>
-        </div>
-        <div className="board-side row">
-          <div className="board-side-sort">
-            <Sort
-              selected={this.state.sortInfo.selected}
-              sortInfo={this.state.sortInfo.listKor}
-              onSort={this.handleSortPosts} />
-          </div>
-          <div className="board-side-searchbar">
-            <Search
-              onSearch={this.handleSearchPosts}
+      <AlignVertical className="board">
+        {
+          this.props.user.isLoggedIn ?
+            <Bookmark
+              onBookmark={this.handleBookmark}
+              bookmarkStat={this.state.bookmarked}
             />
-          </div>
-        </div>
-        <div className="row">
-          <ArticleList
-            articleListData={data}
+           : ''
+        }
+        <AlignHorizontal className="board-header-first">
+          <DisplayManager
+            className="board-header-manager"
+            authorId={this.props.boardAuthor.author._id}
+            authorDisplayName={this.props.boardAuthor.author.displayName}
+            authorAvatar={this.props.boardAuthor.author.avatar}
           />
-        </div>
-        {/* <div className="board_postList">
-          <PostList
-            postsList={data}
-            page={this.state.page}
+          {
+            this.props.user.isLoggedIn &&
+            <Link
+              to={`/articles/${this.state.boardId}/new`}
+              className="btn-newBoard"
+            >
+              <TextButton>
+                새 글쓰기
+              </TextButton>
+            </Link>
+          }
+        </AlignHorizontal>
+        <AlignHorizontal className="board-header-second row">
+          <Sort
             selected={this.state.sortInfo.selected}
-            openUserInfoModal={this.props.openUserInfoModal}
+            sortInfo={this.state.sortInfo.listKor}
+            onSort={this.handleSortPosts} />
+          <Search
+            onSearch={this.handleSearchPosts}
           />
-        </div> */}
-        <div className="board-page">
-          <ReactPaginate
-            previousLabel="<"
-            nextLabel=">"
-            breakLabel="..."
-            breakClassName="break-me"
-            pageCount={pageCount}
-            marginPagesDisplayed={2}
-            forcePage={this.state.page}
-            pageRangeDisplayed={5}
-            onPageChange={this.handlePageClick}
-            containerClassName="pagination"
-            pageClassName="pagination-page"
-            subContainerClassName="pages pagination"
-            activeClassName="active"
-          />
-        </div>
-      </div>
+        </AlignHorizontal>
+        <ArticleList
+          articleListData={data}
+        />
+        <ReactPaginate
+          previousLabel="<"
+          nextLabel=">"
+          breakLabel="..."
+          breakClassName="break-me"
+          pageCount={pageCount}
+          marginPagesDisplayed={2}
+          forcePage={this.state.page}
+          pageRangeDisplayed={5}
+          onPageChange={this.handlePageClick}
+          containerClassName="pagination"
+          pageClassName="pagination-page"
+          subContainerClassName="pages pagination"
+          activeClassName="active"
+        />
+      </AlignVertical>
     );
   }
 }

@@ -12,7 +12,6 @@ class Board extends Component {
     const {
       title, description, managerInfo, date, statsFirst, statsSecond, toURL, boardIcon, page, selected, id
     } = this.props;
-
     const boardIconView = (
       <div className="dataItem-icon">
         <span className="board-icon-background">
@@ -20,19 +19,37 @@ class Board extends Component {
         </span>
       </div>
     );
+    const closeAndRedirect = (
+      <span
+        onClick={async () => {
+          await this.props.closeUserInfoModal();
+          this.props.history.push(toURL);
+        }}
+        role="presentation"
+        className="close-redirect"
+        onKeyDown={() => {}}
+      >
+        {title}
+      </span>
+    );
     return (
       <li className="dataItem">
         { boardIcon === 'true' ? boardIconView : ''}
         <div className="dataItem-main">
           <h4 className="dataItem-title">
-            <Link
-              to={{
-                pathname: toURL,
-                state: { page, selected, boardOId: id }
-              }}
-            >
-              {title}
-            </Link>
+            {
+              this.props.closeAndRedirect ?
+                closeAndRedirect
+                :
+                <Link
+                  to={{
+                    pathname: toURL,
+                    state: { page, selected, boardOId: id }
+                  }}
+                >
+                  {title}
+                </Link>
+            }
           </h4>
           <div className="dataItem-description">
             <p>
@@ -55,7 +72,10 @@ class Board extends Component {
           <li>{managerInfo[0]}</li>
           <li>
             <Link
-              to={`/user/info/${managerInfo[3]}`}
+              to={{
+                pathname: `/user/info/${managerInfo[3]}`,
+                state: { userName: managerInfo[2], avatar: managerInfo[1] }
+                }}
             >
               {managerInfo[2]}
             </Link>

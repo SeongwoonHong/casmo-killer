@@ -48,21 +48,12 @@ export const fetchBoardsRequest = (user, type, searchWord) => {
     try {
       // API request
       const response = await axios.get(apiURL);
-      console.log(response.data);
       dispatch(fetchBoardsSuccess(response.data));
     } catch (err) {
       dispatch(fetchBoardsFailure(err));
     }
   };
-}
-
-
-
-
-
-
-
-
+};
 
 // CREATE BOARD
 export function createBoard() {
@@ -85,16 +76,16 @@ export function createBoardFailure(error) {
 }
 
 export function createBoardRequest(contents) {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch(createBoard());
     // tokenFromStorage
-    return axios.post('/api/board', contents)
-      .then((response) => {
-        dispatch(createBoardSuccess(response.data));
-      }).catch((error) => {
-        console.log(error);
-        dispatch(createBoardFailure(error));
-      });
+    try {
+      const response = await axios.post('/api/board', contents);
+      return dispatch(createBoardSuccess(response.data));
+    } catch (error) {
+      console.log(error);
+      dispatch(createBoardFailure(error));
+    }
   };
 }
 

@@ -85,6 +85,7 @@ module.exports = {
     extensions: ['.web.js', '.mjs', '.js', '.json', '.web.jsx', '.jsx'],
     alias: {
       // add aliases for import
+      '@assets': path.resolve('./src/assets'),
       '@actions': path.resolve('./src/actions'),
       '@sharedComponents': path.resolve('./src/components/shared'),
       '@sharedUtils': path.resolve('./src/utils'),

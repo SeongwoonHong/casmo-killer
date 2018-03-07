@@ -1,10 +1,11 @@
 import axios from 'axios';
 
 import * as storage from '@sharedUtils/storage';
+
 import * as types from './types';
 
-import { resetAuthState } from './auth';
-import { toggleAppLoading } from './layout';
+import { resetAuthState } from '../auth';
+import { toggleAppLoading } from '../layout';
 
 export const loginSuccess = (payload, shouldReset = false) => {
 

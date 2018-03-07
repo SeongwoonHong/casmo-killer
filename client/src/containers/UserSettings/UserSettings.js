@@ -5,8 +5,8 @@ import * as storage from '@sharedUtils/storage';
 import LoadingOverlay from '@sharedComponents/LoadingOverlay';
 import FormMessage from '@sharedComponents/FormMessage';
 
-import ProfileSettings from '../../components/ProfileSettings/ProfileSettings';
-import SecuritySettings from '../../components/SecuritySettings/SecuritySettings';
+import ProfileSettings from '../../components/ProfileSettings';
+import SecuritySettings from '../../components/SecuritySettings';
 
 import './UserSettings.scss';
 
@@ -108,11 +108,8 @@ class MyAccount extends Component {
         <ProfileSettings
           user={ user }
           onSuccess={ this.onProfileChange } />
-        {
-          user.strategy === 'local'
-            ? <SecuritySettings />
-            : null
-        }
+        <SecuritySettings
+          strategy={ user.strategy } />
       </div>
     );
 

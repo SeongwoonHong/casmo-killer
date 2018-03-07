@@ -1,24 +1,14 @@
 // layout
-export const UPDATE_BREAK_POINT = 'UPDATE_BREAK_POINT';
-export const TOGGLE_MAIN_MENU = 'TOGGLE_MAIN_MENU';
-export const TOGGLE_USER_MENU = 'TOGGLE_USER_MENU';
-export const TOGGLE_APP_LOADING = 'TOGGLE_APP_LOADING';
+export * from './layout/types';
 
 // auth
-export const REGISTER_REDIRECT_URL = 'REGISTER_REDIRECT_URL';
-export const CLEAR_REDIRECT_URL = 'CLEAR_REDIRECT_URL';
-export const SET_USER_FOR_REGISTER = 'SET_USER_FOR_REGISTER';
-export const RESET_AUTH_STATE = 'RESET_AUTH_STATE';
+export * from './auth/types';
 
 // user
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-export const LOGOUT = 'LOGOUT';
-export const REMOVE_USER = 'REMOVE_USER';
-export const OPEN_USERINFO_MODAL = 'OPEN_USERINFO_MODAL';
-export const CLOSE_USERINFO_MODAL = 'CLOSE_USERINFO_MODAL';
+export * from './user/types';
 
 // error
-export const SET_ERROR_STATE = 'SET_ERROR_STATE';
+export * from './error/types';
 
 export const POST_EDIT = 'POST_EDIT';
 export const POST_EDIT_SUCCESS = 'POST_EDIT_SUCCESS';
@@ -112,10 +102,6 @@ export const BOOKMARK = 'BOOKMARK';
 export const BOOKMARK_SUCCESS = 'BOOKMARK_SUCCESS';
 export const BOOKMARK_FAILURE = 'BOOKMARK_FAILURE';
 
-// Tags search
-export const TAGS_SEARCH = 'TAGS_SEARCH';
-export const TAGS_SEARCH_SUCCESS = 'TAGS_SEARCH_SUCCESS';
-export const TAGS_SEARCH_FAILURE = 'TAGS_SEARCH_FAILURE';
 // ACTIVITY
 export const FETCH_ACTIVITY = 'FETCH_ACTIVITY';
 export const FETCH_ACTIVITY_SUCCESS = 'FETCH_ACTIVITY_SUCCESS';

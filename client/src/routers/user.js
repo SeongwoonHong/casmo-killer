@@ -20,6 +20,10 @@ import '../components/User/User.scss';
 
 class User extends Component {
 
+  componentWillUnmount() {
+    this.props.clearRedirectUrl();
+  }
+
   render() {
 
     const { user, registerRedirectUrl } = this.props;
@@ -55,6 +59,7 @@ export default connect(
     user: state.user.user
   }),
   dispatch => ({
+    clearRedirectUrl: () => dispatch(actions.clearRedirectUrl()),
     registerRedirectUrl: url => dispatch(actions.registerRedirectUrl(url))
   })
 )(User);

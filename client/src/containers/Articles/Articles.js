@@ -21,8 +21,6 @@ class Articles extends Component {
     const boardOId = props.location.state === undefined ? '' : props.location.state.boardOId;
     const bookmarked = props.user.isLoggedIn ? props.user.bookmarked.includes(boardOId) : false;
 
-    console.log(bookmarked);
-
     this.state = {
       page,
       boardId: props.match.params.boardId,
@@ -48,7 +46,7 @@ class Articles extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      bookmarked: nextProps.user.isLoggedIn && nextProps.user.bookmarked.includes(nextProps.location.state.boardOId)
+      bookmarked: nextProps.user.isLoggedIn && nextProps.user.bookmarked.includes(this.props.location.state.boardOId)
     });
   }
 

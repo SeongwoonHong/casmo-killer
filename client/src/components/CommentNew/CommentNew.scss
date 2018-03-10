@@ -4,6 +4,7 @@
   margin-bottom: 100px;
   padding: 10px 20px;
   border: 1px solid lightgrey;
+  background-color: #fff;
   border-radius: 5px;
   .required-login-overlay {
     position: absolute;
@@ -23,6 +24,7 @@
   .comment-new-body {
     width: 100%;
     min-height: 60px;
+    border-radius: 5px;
     border: 1px solid lightgrey;
     font-size: 14px;
     resize: none;

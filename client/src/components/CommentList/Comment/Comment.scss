@@ -51,6 +51,7 @@
       display: inline-block;
     }
     .buttons {
+      color: grey;
     }
   }
   .quote-wrapper {
@@ -60,10 +61,13 @@
     cursor: pointer;
   }
   .textarea {
+    margin-top: 10px;
     width: 100%;
     resize: none;
     min-height: 60px;
+    padding: 5px;
     border: 1px solid lightgrey;
+    font-size: 12px;
     &:focus {
       outline: none;
     }

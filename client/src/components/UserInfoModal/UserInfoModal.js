@@ -4,6 +4,7 @@ import ModalContainer from '@sharedComponents/ModalContainer';
 import { withRouter } from 'react-router-dom';
 import classnames from 'classnames';
 import ArticleList from '../ArticleList/ArticleList';
+import TextButton from '../Button/TextButton/TextButton';
 import './UserInfoModal.scss';
 
 class UserInfoModal extends Component {
@@ -108,6 +109,7 @@ class UserInfoModal extends Component {
           openUserInfoModal={this.props.openUserInfoModal}
           selected={0}
         /> */}
+        <TextButton className="btn-mobile-close" onClick={closeUserInfoModal}>X</TextButton>
         <ArticleList
           articleListData={this.props.userPostsListByTag}
           closeAndRedirect

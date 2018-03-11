@@ -44,7 +44,7 @@ class Article extends Component {
       <div id="articles-container">
         {
           activePost.status === 'WAITING'
-          && <LoadingCircle />
+          && <LoadingCircle color="#515151" />
         }
         {
           activePost.status === 'SUCCESS'

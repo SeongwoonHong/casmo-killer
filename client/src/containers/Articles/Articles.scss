@@ -1,9 +1,24 @@
 .board {
-  height: 1500px;
+  height: auto;
 
-  .board-side-searchbar {
-    float: right;
-    margin: 50px 20px 10px 0;
+  .bookmark-box {
+    width: 40px;
+    height: auto;
+  }
+
+  .board-header-first, .board-header-second {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    -webkit-display: flex;
+    -webkit-align-items: center;
+    -webkit-justify-content: space-between;
+    margin: 15px 0;
+  }
+
+  .user-btn a {
+    text-decoration: none;
+    color: #888;
   }
 
   .pagination {
@@ -46,11 +61,7 @@
     }
   }
 
-  .board-page {
+  .pagination {
     text-align: center;
-  }
-
-  .row {
-    padding: 15px;
   }
 }

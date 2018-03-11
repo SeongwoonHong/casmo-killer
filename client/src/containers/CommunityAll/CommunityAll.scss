@@ -3,7 +3,16 @@
   height: auto;
 }
 
-.community-searchbar {
-  float: right;
-  margin: 50px 20px 10px 0;
+.community-horizontal-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  -webkit-display: flex;
+  -webkit-align-items: center;
+  -webkit-justify-content: space-between;
+  margin: 15px 0;
+}
+
+.community {
+  margin-bottom: 30px;
 }

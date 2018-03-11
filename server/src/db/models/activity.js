@@ -5,7 +5,7 @@ const type = 'POST_WRITE POST_LIKE POST_DISLIKE COMMENT_WRITE COMMENT_LIKE COMME
 
 const Activity = new Schema({
   type: { type: String, enum: type },
-  userId: { type: mongoose.Schema.Types.ObjectId },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   payload: {
     post: {
       postId: { type: mongoose.Schema.Types.ObjectId, ref: 'post' },

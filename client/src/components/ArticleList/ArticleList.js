@@ -13,7 +13,7 @@ class ArticleList extends Component {
           <Board
             id={data._id}
             toURL={`/article/${data._id}`}
-            managerInfo={['작성자', data.author.avatar, data.author.displayName]}
+            managerInfo={['작성자', data.author.avatar, data.author.displayName, data.author._id]}
             statsFirst={`${data.comments.length} replies`}
             statsSecond={`${data.count} views`}
             title={data.title}

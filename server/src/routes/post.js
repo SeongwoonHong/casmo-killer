@@ -248,7 +248,8 @@ router.get('/:boardId/:page/:sortType', (req, res) => {
 
               const json = {
                 meta,
-                posts
+                posts,
+                board: resultBoard._id
               };
               res.json(json);
             });

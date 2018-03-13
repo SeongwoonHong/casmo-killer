@@ -1,8 +1,10 @@
 .article-body {
   box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
   border: 1px solid lightgrey;
+  background-color: #fff;
   border-radius: 4px;
   padding: 10px 20px;
+  margin-top: 20px;
   .header {
     width: 100%;
     display: flex;
@@ -34,8 +36,6 @@
   }
   .title {
     margin-top: 5px;
-    border-bottom: 1px solid lightgrey;
-    padding-bottom: 15px;
     .info {
       color: #bbb;
       font-size: 14px;
@@ -54,20 +54,25 @@
       }
     }
     .card-title {
-      font-size: 2rem;
+      font-size: 25px;
       font-weight: 400;
     }
   }
   .contents {
     margin-top: 10px;
     word-wrap: break-word;
+    margin-bottom: 10px;
     .preferences {
       margin-top: 20px;
     }
     .like-dislike-wrapper {
       border-top: 1px solid lightgrey;
       padding-top: 10px;
-      margin-bottom: 10px;
+      padding-left: 10px;
+      margin-bottom: 15px;
     }
+  }
+  .article-footer {
+    padding: 0px 0px 20px 0px;
   }
 }

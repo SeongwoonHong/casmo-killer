@@ -16,7 +16,8 @@ class Comment extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      edit: false
+      edit: false,
+      height: null
     };
   }
   componentWillMount() {
@@ -101,6 +102,11 @@ class Comment extends Component {
       edit: !this.state.edit
     });
   }
+  resizeHandler = () => {
+    this.setState({
+      height: document.getElementById(`comment${this.props.commentId}`).scrollHeight
+    });
+  }
   render() {
     const {
       comment, commentId, avatar, date, isEdited, likes, disLikes, form, parentAuthor, commentAuthor, commentAuthorId, parentContent, handleSubmit, postId
@@ -145,6 +151,8 @@ class Comment extends Component {
         type="text"
         component={ReduxFormField}
         mode="textarea"
+        style={{ height: `${this.state.height}px` }}
+        onChange={this.resizeHandler}
       />
     );
     return (

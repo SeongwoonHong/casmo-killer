@@ -9,13 +9,15 @@ class CommentNew extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      comment: ''
+      comment: '',
+      height: null
     };
   }
 
   handleChange = (e) => {
     this.setState({
-      comment: e.target.value
+      comment: e.target.value,
+      height: this.textarea.scrollHeight
     });
   }
 
@@ -30,6 +32,7 @@ class CommentNew extends Component {
       comment: ''
     });
   }
+
   render() {
     const {
       user, replyComment, replyCommentReset
@@ -63,12 +66,14 @@ class CommentNew extends Component {
           className="comment-new-body"
           value={this.state.comment}
           onChange={this.handleChange}
+          ref={el => this.textarea = el}
+          style={{ height: `${this.state.height}px` }}
           placeholder="Leave a comment"
         />
         <TextButton
           onClick={this.handleReply}
           onKeyDown={this.handleReply}
-          className=""
+          className="btn-comment-new"
           role="button"
           tabIndex={0}
         >

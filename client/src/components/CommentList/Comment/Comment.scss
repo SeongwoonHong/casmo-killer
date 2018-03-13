@@ -1,6 +1,7 @@
 .comment {
   box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
   border: 1px solid lightgrey;
+  background-color: #fff;
   border-radius: 4px;
   padding: 10px 20px;
   margin-top: 15px;
@@ -10,7 +11,16 @@
     align-items: center;
     > span {
       margin-left: 10px;
-
+      font-size: 12px;
+    }
+    a {
+      text-decoration: none;
+      &:visited {
+        color: #000;
+      }
+      &:hover {
+        color: grey;
+      }
     }
   }
   .comment-body {
@@ -41,6 +51,7 @@
       display: inline-block;
     }
     .buttons {
+      color: grey;
     }
   }
   .quote-wrapper {
@@ -50,10 +61,13 @@
     cursor: pointer;
   }
   .textarea {
+    margin-top: 10px;
     width: 100%;
     resize: none;
     min-height: 60px;
+    padding: 5px;
     border: 1px solid lightgrey;
+    font-size: 12px;
     &:focus {
       outline: none;
     }

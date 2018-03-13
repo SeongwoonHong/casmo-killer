@@ -26,6 +26,7 @@ class Community extends Component {
           <Route path="/community/favourites" render={props => loginCheckAndLoading(props, 'bookmark')} />
           <Route path="/community/myCommunity" render={props => loginCheckAndLoading(props, 'my')} />
           <Route path="/community/new" component={ArticlesNew} />
+          <Route path="/community/free" render={() => <Redirect to="/articles/free" />} />
           {/* <Route path="/community/newboard" component={BoardNew} /> */}
           {/* <Route path="/articles/:boardId/new" component={RequireAuthentication(PostNew, '/community/communityAll')} /> */}
           {/* <Route path="/article/:postId" component={PostDetail} /> */}

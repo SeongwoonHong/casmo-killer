@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import LoadingCircle from '@sharedComponents/LoadingCircle';
-import Sort from '../../components/Sort/Sort';
-import Search from '../../components/Search/Search';
-import ArticleList from '../../components/ArticleList/ArticleList';
-import Bookmark from '../../components/Bookmark/Bookmark';
-import TextButton from '../../components/Button/TextButton/TextButton';
-import AlignHorizontal from '../../components/AlignHorizontal/AlignHorizontal';
-import AlignVertical from '../../components/AlignVertical/AlignVertical';
-import DisplayManager from '../../components/DisplayManager/DisplayManager';
+import Sort from 'components/Sort/Sort';
+import Search from 'components/Search/Search';
+import ArticleList from 'components/ArticleList/ArticleList';
+import Bookmark from 'components/Bookmark/Bookmark';
+import TextButton from 'components/Button/TextButton/TextButton';
+import AlignHorizontal from 'components/AlignHorizontal/AlignHorizontal';
+import AlignVertical from 'components/AlignVertical/AlignVertical';
+import DisplayManager from 'components/DisplayManager/DisplayManager';
 import './Articles.scss';
 
 class Articles extends Component {
@@ -18,9 +19,9 @@ class Articles extends Component {
     // const baseUrl = props.location.pathname;
     const page = props.location.state === undefined ? 0 : parseInt(props.location.state.page, 10);
     const selected = props.location.state === undefined ? 0 : parseInt(props.location.state.selected, 10);
-    const boardOId = props.location.state === undefined ? '' : props.location.state.boardOId;
+    const boardOId = null;
     const bookmarked = props.user.isLoggedIn ? props.user.bookmarked.includes(boardOId) : false;
-
+    console.log(this);
     this.state = {
       page,
       boardId: props.match.params.boardId,
@@ -38,15 +39,20 @@ class Articles extends Component {
   componentDidMount() {
     const { sortInfo } = this.state;
 
-    this.props.fetchPostsRequest(
+    return this.props.fetchPostsRequest(
       this.state.boardId,
       this.state.page,
-      sortInfo.listEng[sortInfo.selected]);
+      sortInfo.listEng[sortInfo.selected]).then(()=> {
+        this.setState({
+          boardOId: this.props.boardInfo.board,
+          bookmarked: this.props.user.isLoggedIn ? this.props.user.bookmarked.includes(this.props.boardInfo.board) : false
+        });
+      });
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      bookmarked: nextProps.user.isLoggedIn && nextProps.user.bookmarked.includes(this.props.location.state.boardOId)
+      bookmarked: nextProps.user.isLoggedIn && nextProps.user.bookmarked.includes(this.state.boardOId),
     });
   }
 
@@ -77,7 +83,11 @@ class Articles extends Component {
   }
 
   handleBookmark = () => {
-    this.props.bookmarkRequest(this.state.boardOId, this.props.user);
+    this.props.bookmarkRequest(this.state.boardOId, this.props.user).then(() => {
+      this.setState({
+        bookmarked: !this.state.bookmarked
+      });
+    });
   }
 
   render() {
@@ -92,7 +102,9 @@ class Articles extends Component {
         </div>
       );
     } else if (status === 'FAILURE') {
-      // Materialize.toast($(`<span style="color: #00c853">Error: ${error.message}</span>`), 3000);
+      toast.error(`${error.message}`, {
+        position: toast.POSITION_TOP_RIGHT
+      });
       return (
         <div className="board">
           {error.message}

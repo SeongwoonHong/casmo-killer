@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import Materialize from 'materialize-css';
+import { toast } from 'react-toastify';
 import { Link, withRouter } from 'react-router-dom';
 import BoardList from '../../components/BoardList/BoardList';
 import Search from '../../components/Search/Search';
@@ -49,7 +49,9 @@ class CommunityAll extends Component {
         </div>
       );
     } else if (error) {
-      // Materialize.toast($(`<span style="color: #00c853">Error: ${error.message}</span>`), 3000);
+      toast.error(`${error.message}`, {
+        position: toast.POSITION_TOP_RIGHT
+      });
       return (
         <div className="community">
           {error.message}

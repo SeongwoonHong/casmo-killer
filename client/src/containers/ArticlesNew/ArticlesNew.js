@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 import ArticlesForm from '../../components/ArticlesForm/ArticlesForm';
 import './ArticlesNew.scss';
 
@@ -9,13 +10,15 @@ class ArticlesNew extends Component {
     return this.props.createBoardRequest(values).then(() => {
       if (this.props.newBoard.status === 'SUCCESS') {
         this.props.history.push({ pathname: `/articles/${this.props.newBoard.data.boardId}` }).then(
-          () => {
-            // Materialize.toast('Success!', 2000);
-          }
+          toast.info('Success!', {
+            position: toast.POSITION_TOP_RIGHT
+          })
         );
 
       } else {
-        // Materialize.toast($(`<span style="color: #00c853">Error: ${this.props.newBoard.error.message}</span>`), 3000);
+        toast.error(`${this.props.newBoard.error.message}`, {
+          position: toast.POSITION_TOP_RIGHT
+        });
       }
     });
   }

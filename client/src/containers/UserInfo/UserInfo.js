@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { toast } from 'react-toastify';
 import ActivityList from '../../components/ActivityList/ActivityList';
 import AlignHorizontal from '../../components/AlignHorizontal/AlignHorizontal';
 import AlignVertical from '../../components/AlignVertical/AlignVertical';
@@ -89,7 +90,9 @@ class UserInfo extends Component {
     return this.props.fetchActivityRequest(false, 'old', lastId, this.props.match.params.userId).then(() => {
       // IF IT IS LAST PAGE, NOTIFY
       if (this.props.isLast) {
-        // Materialize.toast('You are reading the last page', 2000);
+        toast.info('You are reading the last page!', {
+          position: toast.POSITION_TOP_RIGHT
+        });
       }
     });
   }

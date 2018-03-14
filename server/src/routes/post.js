@@ -8,7 +8,7 @@ const Board = require('../db/models/board');
 const Activity = require('../db/models/activity');
 
 const router = express.Router();
-const PER_PAGE = 3;
+const PER_PAGE = 10;
 
 // sub routes for comments
 router.use('/comment', comment);
@@ -248,7 +248,8 @@ router.get('/:boardId/:page/:sortType', (req, res) => {
 
               const json = {
                 meta,
-                posts
+                posts,
+                board: resultBoard._id
               };
               res.json(json);
             });

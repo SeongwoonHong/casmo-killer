@@ -27,6 +27,9 @@ const initialState = {
   boardAuthor: {
     author: null
   },
+  boardInfo: {
+    board: null
+  },
   activePost: {
     status: 'INIT',
     data: null,
@@ -86,6 +89,9 @@ export default function post(state = initialState, action) {
         },
         boardAuthor: {
           author: { $set: action.payload.meta.author }
+        },
+        boardInfo: {
+          board: { $set: action.payload.board }
         }
       });
     case types.FETCH_POSTS_FAILURE:

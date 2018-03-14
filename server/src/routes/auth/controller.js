@@ -233,7 +233,7 @@ module.exports.localLogin = async (req, res) => {
     }
 
     const {
-      strategy, _id, displayName, avatar
+      strategy, _id, displayName, avatar, bookmarked
     } = user;
 
     // if the email is registered with a social authentication
@@ -266,6 +266,7 @@ module.exports.localLogin = async (req, res) => {
           email,
           displayName,
           avatar,
+          bookmarked
         }
       });
 

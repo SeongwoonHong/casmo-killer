@@ -22,7 +22,7 @@ class Search extends Component {
 
   render() {
     return (
-      <div className="search-box">
+      <div className={ `search-box ${this.props.className}`}>
         <form onSubmit={this.handleSearch}>
           <input
             type="text"

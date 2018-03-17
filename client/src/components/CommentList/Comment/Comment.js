@@ -161,8 +161,11 @@ class Comment extends Component {
           <img src={avatar} alt={avatar} className="comment-avatar" />
           <span>
             <Link
-              to={`/user/info/${commentAuthorId}`}
-              >
+              to={{
+                pathname: `/user/info/${commentAuthorId}`,
+                state: { userName: commentAuthor, avatar }
+                }}
+            >
               {commentAuthor}
             </Link>
             <div className="created">Created : <TimeAgo date={date} formatter={formatter} />{ isEdited && <span> (edited)</span>}</div>

@@ -81,8 +81,11 @@ class ArticleBody extends Component {
             <div className="writer">
               <div className="user-btn">
                 <Link
-                  to={`/user/info/${activePost.author._id}`}
-                  >
+                  to={{
+                    pathname: `/user/info/${activePost.author._id}`,
+                    state: { userName: activePost.author.displayName, avatar: activePost.author.avatar }
+                    }}
+                >
                   {activePost.author.displayName}
                 </Link>
               </div>

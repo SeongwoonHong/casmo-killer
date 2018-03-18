@@ -22,7 +22,7 @@ class CommentList extends Component {
                 !comment.deleted &&
                 <Comment
                   commentAuthor={comment.author.displayName}
-                  commentAuthorId={comment.author.$oid}
+                  commentAuthorId={comment.author._id}
                   // postAuthor={this.props.activePost.author}
                   updateComment={this.props.updateComment} // from article container
                   user={this.props.user} // from article container

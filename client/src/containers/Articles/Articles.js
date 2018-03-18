@@ -21,7 +21,7 @@ class Articles extends Component {
     const selected = props.location.state === undefined ? 0 : parseInt(props.location.state.selected, 10);
     const boardOId = null;
     const bookmarked = props.user.isLoggedIn ? props.user.bookmarked.includes(boardOId) : false;
-    console.log(this);
+
     this.state = {
       page,
       boardId: props.match.params.boardId,
@@ -42,15 +42,16 @@ class Articles extends Component {
     return this.props.fetchPostsRequest(
       this.state.boardId,
       this.state.page,
-      sortInfo.listEng[sortInfo.selected]).then(()=> {
-        this.setState({
-          boardOId: this.props.boardInfo.board,
-          bookmarked: this.props.user.isLoggedIn ? this.props.user.bookmarked.includes(this.props.boardInfo.board) : false
-        });
+      sortInfo.listEng[sortInfo.selected]).then(() => {
+      this.setState({
+        boardOId: this.props.boardInfo.board,
+        bookmarked: this.props.user.isLoggedIn ? this.props.user.bookmarked.includes(this.props.boardInfo.board) : false
       });
+    });
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
     this.setState({
       bookmarked: nextProps.user.isLoggedIn && nextProps.user.bookmarked.includes(this.state.boardOId),
     });

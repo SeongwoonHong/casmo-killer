@@ -319,7 +319,8 @@ module.exports.localRegister = async (req, res) => {
           _id: user._id,
           email: user.email,
           displayName: user.displayName,
-          avatar: user.avatar
+          avatar: user.avatar,
+          bookmarked: user.bookmarked
         }
       });
 
@@ -384,7 +385,8 @@ module.exports.socialLogin = async (req, res) => {
               _id: emailDup._id,
               email: emailDup.email,
               displayName: emailDup.displayName,
-              avatar: emailDup.avatar
+              avatar: emailDup.avatar,
+              bookmarked: emailDup.bookmarked
             }
           });
       }
@@ -410,7 +412,8 @@ module.exports.socialLogin = async (req, res) => {
           displayName: socialProfile.displayName,
           avatar: socialProfile.avatar,
           socialId: socialProfile.socialId,
-          socialToken: socialProfile.socialToken
+          socialToken: socialProfile.socialToken,
+          bookmarked: socialProfile.bookmarked
         }
       });
     }
@@ -433,7 +436,8 @@ module.exports.socialLogin = async (req, res) => {
           _id: socialUser._id,
           email: socialUser.email,
           displayName: socialUser.displayName,
-          avatar: socialUser.avatar
+          avatar: socialUser.avatar,
+          bookmarked: socialUser.bookmarked
         }
       });
 
@@ -507,7 +511,8 @@ module.exports.socialRegister = async (req, res) => {
           _id: user._id,
           email: user.email,
           displayName: user.displayName,
-          avatar: user.avatar
+          avatar: user.avatar,
+          bookmarked: user.bookmarked
         }
       });
 

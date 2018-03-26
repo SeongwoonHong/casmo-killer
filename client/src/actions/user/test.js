@@ -6,7 +6,7 @@ import * as types from '../types';
 
 const mockStore = configureMockStore([thunk]);
 
-describe('auth actions', () => {
+describe('user actions', () => {
 
   it('should dispatch loginSuccess resetAuthState action only', () => {
 
@@ -19,9 +19,12 @@ describe('auth actions', () => {
     ];
 
     const store = mockStore({});
-    store.dispatch(actions.loginSuccess('shit'));
 
-    expect(store.getActions()).toEqual(expectedActions);
+    store
+      .dispatch(actions.loginSuccess('shit'))
+      .then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
 
   });
 
@@ -39,9 +42,11 @@ describe('auth actions', () => {
     ];
 
     const store = mockStore({});
-    store.dispatch(actions.loginSuccess('shit', true));
 
-    expect(store.getActions()).toEqual(expectedActions);
+    store.dispatch(actions.loginSuccess('shit', true))
+      .then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
 
   });
 

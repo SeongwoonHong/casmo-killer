@@ -8,6 +8,7 @@ import CommunityAll from '../containers/CommunityAll';
 // import PostNew from './PostNew';
 import ArticlesNew from '../containers/ArticlesNew';
 // import PostDetail from './PostDetail';
+import CommunityLanding from '../containers/CommunityLanding';
 
 
 class Community extends Component {
@@ -27,6 +28,7 @@ class Community extends Component {
           <Route path="/community/myCommunity" render={props => loginCheckAndLoading(props, 'my')} />
           <Route path="/community/new" component={ArticlesNew} />
           <Route path="/community/free" render={() => <Redirect to="/articles/free" />} />
+          <Route path="/community" component={CommunityLanding} />
           {/* <Route path="/community/newboard" component={BoardNew} /> */}
           {/* <Route path="/articles/:boardId/new" component={RequireAuthentication(PostNew, '/community/communityAll')} /> */}
           {/* <Route path="/article/:postId" component={PostDetail} /> */}

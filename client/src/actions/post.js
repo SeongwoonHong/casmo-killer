@@ -457,6 +457,20 @@ export function replyCommentRequest(data) {
   };
 }
 
+export function fetchMostLikedPosts() {
+  return (dispatch) => {
+    dispatch(fetchPost());
+
+    return axios.get('/api/post/mostLikedPosts')
+      .then((response) => {
+        dispatch(fetchPostSuccess(response.data));
+      }).catch((error) => {
+        console.log(error);
+        dispatch(fetchPostFailure(error));
+      });
+  };
+}
+
 // export function replyCommentRequest() {
 //   return (dispatch) => {
 //     dispatch(replyComment());

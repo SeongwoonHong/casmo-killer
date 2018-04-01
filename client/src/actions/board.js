@@ -56,6 +56,20 @@ export const fetchBoardsRequest = (user, type, searchWord) => {
   };
 };
 
+export const fetchBoardsRequestWithSort = (sortType = 'asc', limit = 10000) => {
+  return async (dispatch) => {
+    dispatch(fetchBoards());
+    const apiURL = `/api/board/all/${sortType}/${limit}`;
+
+    try {
+      const response = await axios.get(apiURL);
+      dispatch(fetchBoardsSuccess(response.data));
+    } catch (err) {
+      dispatch(fetchBoardsFailure(err));
+    }
+  };
+};
+
 // CREATE BOARD
 export function createBoard() {
   return {

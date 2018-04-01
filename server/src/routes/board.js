@@ -67,7 +67,11 @@ router.get('/all/search/:searchWord', (req, res) => {
 });
 
 /* GET ALL BOARD LIST */
-router.get('/all', (req, res) => {
+router.get(/\/all.*/, (req, res) => {
+  // asc ascending
+  // des descending
+  const sortType = req.params.sortType === 'asc' ? 1 : -1;
+  const limit = +req.params.limit || 10000;
   Board.aggregate([
     {
       "$match": {
@@ -106,7 +110,11 @@ router.get('/all', (req, res) => {
             }
         }}
       }
-    }
+    },
+    {
+      "$sort" : { postsCount: sortType }
+    },
+    { "$limit" : limit }
   ]).exec(function(err, Result){
     if (err) throw err;
     res.json(Result);

@@ -11,8 +11,8 @@ import LocalLogin from './LocalLogin';
 
 describe('<LocalLogin />', () => {
 
-  let component = null;
-  let mockObj = null;
+  let component;
+  let mockObj;
 
   beforeEach(() => {
     component = shallow(<LocalLogin />);

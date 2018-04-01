@@ -1,8 +1,6 @@
 /* eslint react/jsx-boolean-value: 0 */
 import React from 'react';
-import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router-dom';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import sinon from 'sinon';
 import configureStore from 'redux-mock-store';
 
@@ -106,6 +104,7 @@ describe('<UserLogin />', () => {
 
 });
 
+// TODO: this may be removed later as this is only testing the connect HOC, which comes directly from the library
 describe('<ConnectedUserLogin />', () => {
 
   const initialState = {

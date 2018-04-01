@@ -1,8 +1,6 @@
 /* eslint react/jsx-boolean-value: 0 */
 import React from 'react';
-import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router-dom';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import sinon from 'sinon';
 import axios from 'axios';
 

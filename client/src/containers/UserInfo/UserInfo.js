@@ -24,8 +24,13 @@ class UserInfo extends Component {
       }
     );
 
-    (window.outerWidth < 990 && document.querySelector('.app-container').addEventListener('scroll', this.scrollFunc))
-    || (window.outerWidth > 990 && document.querySelector('.root-container').addEventListener('scroll', this.scrollFunc));
+    (window.innerWidth <= 991 && document.querySelector('.app-container').addEventListener('scroll', this.scrollFunc))
+    || (window.innerWidth > 991 && document.querySelector('.root-container').addEventListener('scroll', this.scrollFunc));
+  }
+
+  shouldComponentUpdate(nextProps) {
+    const update = JSON.stringify(this.props) !== JSON.stringify(nextProps);
+    return update;
   }
 
   componentDidUpdate(prevProps) {
@@ -41,8 +46,8 @@ class UserInfo extends Component {
     clearTimeout(this.loadUntilScrollableTimeoutId);
 
     // REMOVE WINDOWS SCROLL LISTENER
-    (window.outerWidth < 990 && document.querySelector('.app-container').removeEventListener('scroll', this.scrollFunc))
-    || (window.outerWidth > 990 && document.querySelector('.root-container').removeEventListener('scroll', this.scrollFunc));
+    (window.innerWidth <= 991 && document.querySelector('.app-container').removeEventListener('scroll', this.scrollFunc))
+    || (window.innerWidth > 991 && document.querySelector('.root-container').removeEventListener('scroll', this.scrollFunc));
   }
 
   loadUntilScrollable = () => {
@@ -59,8 +64,8 @@ class UserInfo extends Component {
     }
   };
   scrollEvent() {
-    if ((window.outerWidth < 990 && (window.innerHeight + (document.querySelector('.app-container').scrollTop) > (document.querySelector('.User').scrollHeight - 50)))
-      || (window.outerWidth > 990 && (window.innerHeight + (document.querySelector('.root-container').scrollTop) > (document.querySelector('.User').scrollHeight - 50)))) {
+    if ((window.innerWidth <= 991 && (window.innerHeight + (document.querySelector('.app-container').scrollTop) > (document.querySelector('.User').scrollHeight - 50)))
+      || (window.innerWidth > 991 && (window.innerHeight + (document.querySelector('.root-container').scrollTop) > (document.querySelector('.User').scrollHeight - 50)))) {
       if (!this.state.loadingState) {
         this.loadOldMemo();
         this.setState({

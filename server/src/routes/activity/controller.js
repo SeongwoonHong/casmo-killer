@@ -26,7 +26,9 @@ module.exports.getUserActivity = async (req, res) => {
           message: 'Could not retrieve activity'
         });
       }
-
+      activities = activities.filter(activity =>
+        activity.payload.post.postId !== null && activity.payload.post.postId.deleted === false
+      );
       res.json(activities);
     });
 };
@@ -56,7 +58,7 @@ module.exports.getUserOldActivity = async (req, res) => {
 
   const objId = new mongoose.Types.ObjectId(req.params.id);
   // GET OLDER MEMO
-  Activity.find({ writer: req.params.username, _id: { $lt: objId } })
+  Activity.find({ writer: req.params.username, _id: { $lt: objId }})
     .populate('userId')
     .populate('payload.post.postId')
     .populate('payload.post.commentId')
@@ -64,6 +66,9 @@ module.exports.getUserOldActivity = async (req, res) => {
     .limit(PER_PAGE)
     .exec((err, activities) => {
       if (err) throw err;
+      activities = activities.filter(activity =>
+        activity.payload.post.postId !== null && activity.payload.post.postId.deleted === false
+      );
       return res.json(activities);
     });
 };

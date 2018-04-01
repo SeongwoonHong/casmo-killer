@@ -10,12 +10,12 @@ const formatter = buildFormatter(krStrings);
 class Board extends Component {
   render() {
     const {
-      title, description, managerInfo, date, statsFirst, statsSecond, toURL, boardIcon, page, selected, id
+      title, description, managerInfo, date, statsFirst, statsSecond, toURL, boardIcon, page, selected, id, mobile
     } = this.props;
     const boardIconView = (
-      <div className="dataItem-icon">
-        <span className="board-icon-background">
-          <img className="board-icon" src="/chat.svg" alt="chat icon" />
+      <div className="dataItem__icon">
+        <span className="board__iconBackground">
+          <img className="board__icon" src="/chat.svg" alt="chat icon" />
         </span>
       </div>
     );
@@ -33,10 +33,10 @@ class Board extends Component {
       </span>
     );
     return (
-      <li className="dataItem">
-        { boardIcon === 'true' ? boardIconView : ''}
-        <div className="dataItem-main">
-          <h4 className="dataItem-title">
+      <div className="dataItem">
+        { boardIcon === 'true' && !mobile ? boardIconView : ''}
+        <div className="dataItem__main">
+          <h4 className="dataItem__title">
             {
               this.props.closeAndRedirect ?
                 closeAndRedirect
@@ -51,38 +51,55 @@ class Board extends Component {
                 </Link>
             }
           </h4>
-          <div className="dataItem-description">
-            <p>
-              {description}
-            </p>
-          </div>
+          {
+            !mobile &&
+            <div className="dataItem__description">
+              <p>
+                {description}
+              </p>
+            </div>
+          }
         </div>
-        <div className="dataItem-stats">
+        <div className="dataItem__stats">
           <dl>
-            <dt className="dataItem-stats-first">
+            <dt className="dataItem__firstStats">
               {statsFirst}
             </dt>
-            <dd className="dataItem-stats-second">
+            <dd className="dataItem__secondStats">
               {statsSecond}
             </dd>
           </dl>
         </div>
-        <ul className="dataItem-manager">
-          <li><img className="dataItem-manager-avatar" src={managerInfo[1] || '/no-avatar.svg'} alt="manager avatar" /></li>
-          <li>{managerInfo[0]}</li>
-          <li>
-            <Link
-              to={{
-                pathname: `/user/info/${managerInfo[3]}`,
-                state: { userName: managerInfo[2], avatar: managerInfo[1] }
-                }}
-            >
-              {managerInfo[2]}
-            </Link>
-          </li>
-          <li className="dataItem-manager-date"><TimeAgo date={date} formatter={formatter} /></li>
-        </ul>
-      </li>
+        <div className="dataItem__manager">
+          {
+            !mobile &&
+            <div>
+              <Link
+                to={{
+                  pathname: `/user/info/${managerInfo[3]}`,
+                  state: { userName: managerInfo[2], avatar: managerInfo[1] }
+                  }}
+              >
+                <img className="dataItem__managerAvatar" src={managerInfo[1] || '/no-avatar.svg'} alt="manager avatar" />
+              </Link>
+            </div>
+          }
+          <div className="dataItem__managerInfo">
+            <div>{managerInfo[0]}</div>
+            <div>
+              <Link
+                to={{
+                  pathname: `/user/info/${managerInfo[3]}`,
+                  state: { userName: managerInfo[2], avatar: managerInfo[1] }
+                  }}
+              >
+                {managerInfo[2]}
+              </Link>
+            </div>
+            <div className="dataItem__managerDate"><TimeAgo date={date} formatter={formatter} /></div>
+          </div>
+        </div>
+      </div>
     );
   }
 }

@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import LoadingOverlay from '@sharedComponents/LoadingOverlay';
-import Sort from 'components/Sort/Sort';
-import Search from 'components/Search/Search';
-import ArticleList from 'components/ArticleList/ArticleList';
-import Bookmark from 'components/Bookmark/Bookmark';
-import TextButton from 'components/Button/TextButton/TextButton';
-import AlignHorizontal from 'components/AlignHorizontal/AlignHorizontal';
-import AlignVertical from 'components/AlignVertical/AlignVertical';
-import DisplayManager from 'components/DisplayManager/DisplayManager';
+import { toast } from 'react-toastify';
+import LoadingCircle from '@sharedComponents/LoadingCircle';
+
+import Sort from '../../components/Sort/Sort';
+import Search from '../../components/Search/Search';
+import ArticleList from '../../components/ArticleList/ArticleList';
+import Bookmark from '../../components/Bookmark/Bookmark';
+import TextButton from '../../components/Button/TextButton/TextButton';
+import AlignHorizontal from '../../components/AlignHorizontal/AlignHorizontal';
+import AlignVertical from '../../components/AlignVertical/AlignVertical';
+import DisplayManager from '../../components/DisplayManager/DisplayManager';
 import './Articles.scss';
 
 class Articles extends Component {

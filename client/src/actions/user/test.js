@@ -1,10 +1,10 @@
-import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import configureStore from 'redux-mock-store';
 
 import * as actions from './index';
 import * as types from '../types';
 
-const mockStore = configureMockStore([thunk]);
+const mockStore = configureStore([thunk]);
 
 describe('user actions', () => {
 

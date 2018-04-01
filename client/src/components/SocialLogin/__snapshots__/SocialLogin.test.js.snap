@@ -1,0 +1,1009 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<SocialLogin /> renders the component consistently 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <SocialLogin />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <LoadingOverlay
+          circleColor="#1F4B40"
+          circleSize=""
+          isVisible={false}
+          overlayColor="rgba(256,256,256,.75)"
+/>,
+        <div
+          className="user-form-header"
+>
+          <h3>
+                    Social Login
+          </h3>
+          <p>
+                    User your favourite social network to sign up.
+          </p>
+</div>,
+        <FormMessage
+          message=""
+          type="error"
+/>,
+        <div
+          className="social-btn-wrapper"
+>
+          <div
+                    className="facebook"
+          >
+                    <FacebookAuth
+                              clientId="137341360260151"
+                              fields="name,email,picture"
+                              isDisabled={false}
+                              onFailure={[Function]}
+                              onSuccess={[Function]}
+                              scope="public_profile,email"
+                              version="2.9"
+                    >
+                              <img
+                                        alt="facebook-login"
+                                        src="facebook.png"
+                              />
+                              <span
+                                        className="center-align"
+                              >
+                                        Facebook
+                              </span>
+                    </FacebookAuth>
+          </div>
+          <div
+                    className="google"
+          >
+                    <GoogleAuth
+                              clientId="754520959165-qfcdlss8glpjrjs59oldmtnj24m7tfk6.apps.googleusercontent.com"
+                              fetchBasicProfile={true}
+                              hostedDomain=""
+                              onFailure={[Function]}
+                              onSuccess={[Function]}
+                              prompt="select_account"
+                              scope="profile email"
+                              uxMode="popup"
+                    >
+                              <img
+                                        alt="google-login"
+                                        src="google.png"
+                              />
+                              <span
+                                        className="center-align"
+                              >
+                                        Google
+                              </span>
+                    </GoogleAuth>
+          </div>
+          <div
+                    className="kakao"
+          >
+                    <KakaoAuth
+                              clientId="788acae6dc56555e6f4dc4064514177a"
+                              onFailure={[Function]}
+                              onSuccess={[Function]}
+                    >
+                              <img
+                                        alt="kakao-login"
+                                        src="kakao.png"
+                              />
+                              <span
+                                        className="center-align"
+                              >
+                                        Kakao
+                              </span>
+                    </KakaoAuth>
+          </div>
+</div>,
+      ],
+      "className": "Social-login user-form-box",
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "circleColor": "#1F4B40",
+          "circleSize": "",
+          "isVisible": false,
+          "overlayColor": "rgba(256,256,256,.75)",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            <h3>
+              Social Login
+</h3>,
+            <p>
+              User your favourite social network to sign up.
+</p>,
+          ],
+          "className": "user-form-header",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "Social Login",
+            },
+            "ref": null,
+            "rendered": "Social Login",
+            "type": "h3",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "User your favourite social network to sign up.",
+            },
+            "ref": null,
+            "rendered": "User your favourite social network to sign up.",
+            "type": "p",
+          },
+        ],
+        "type": "div",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "message": "",
+          "type": "error",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            <div
+              className="facebook"
+>
+              <FacebookAuth
+                            clientId="137341360260151"
+                            fields="name,email,picture"
+                            isDisabled={false}
+                            onFailure={[Function]}
+                            onSuccess={[Function]}
+                            scope="public_profile,email"
+                            version="2.9"
+              >
+                            <img
+                                          alt="facebook-login"
+                                          src="facebook.png"
+                            />
+                            <span
+                                          className="center-align"
+                            >
+                                          Facebook
+                            </span>
+              </FacebookAuth>
+</div>,
+            <div
+              className="google"
+>
+              <GoogleAuth
+                            clientId="754520959165-qfcdlss8glpjrjs59oldmtnj24m7tfk6.apps.googleusercontent.com"
+                            fetchBasicProfile={true}
+                            hostedDomain=""
+                            onFailure={[Function]}
+                            onSuccess={[Function]}
+                            prompt="select_account"
+                            scope="profile email"
+                            uxMode="popup"
+              >
+                            <img
+                                          alt="google-login"
+                                          src="google.png"
+                            />
+                            <span
+                                          className="center-align"
+                            >
+                                          Google
+                            </span>
+              </GoogleAuth>
+</div>,
+            <div
+              className="kakao"
+>
+              <KakaoAuth
+                            clientId="788acae6dc56555e6f4dc4064514177a"
+                            onFailure={[Function]}
+                            onSuccess={[Function]}
+              >
+                            <img
+                                          alt="kakao-login"
+                                          src="kakao.png"
+                            />
+                            <span
+                                          className="center-align"
+                            >
+                                          Kakao
+                            </span>
+              </KakaoAuth>
+</div>,
+          ],
+          "className": "social-btn-wrapper",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <FacebookAuth
+                clientId="137341360260151"
+                fields="name,email,picture"
+                isDisabled={false}
+                onFailure={[Function]}
+                onSuccess={[Function]}
+                scope="public_profile,email"
+                version="2.9"
+>
+                <img
+                                alt="facebook-login"
+                                src="facebook.png"
+                />
+                <span
+                                className="center-align"
+                >
+                                Facebook
+                </span>
+</FacebookAuth>,
+              "className": "facebook",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "class",
+              "props": Object {
+                "children": Array [
+                  <img
+                    alt="facebook-login"
+                    src="facebook.png"
+/>,
+                  <span
+                    className="center-align"
+>
+                    Facebook
+</span>,
+                ],
+                "clientId": "137341360260151",
+                "fields": "name,email,picture",
+                "isDisabled": false,
+                "onFailure": [Function],
+                "onSuccess": [Function],
+                "scope": "public_profile,email",
+                "version": "2.9",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "alt": "facebook-login",
+                    "src": "facebook.png",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": "img",
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": "Facebook",
+                    "className": "center-align",
+                  },
+                  "ref": null,
+                  "rendered": "Facebook",
+                  "type": "span",
+                },
+              ],
+              "type": [Function],
+            },
+            "type": "div",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <GoogleAuth
+                clientId="754520959165-qfcdlss8glpjrjs59oldmtnj24m7tfk6.apps.googleusercontent.com"
+                fetchBasicProfile={true}
+                hostedDomain=""
+                onFailure={[Function]}
+                onSuccess={[Function]}
+                prompt="select_account"
+                scope="profile email"
+                uxMode="popup"
+>
+                <img
+                                alt="google-login"
+                                src="google.png"
+                />
+                <span
+                                className="center-align"
+                >
+                                Google
+                </span>
+</GoogleAuth>,
+              "className": "google",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "class",
+              "props": Object {
+                "children": Array [
+                  <img
+                    alt="google-login"
+                    src="google.png"
+/>,
+                  <span
+                    className="center-align"
+>
+                    Google
+</span>,
+                ],
+                "clientId": "754520959165-qfcdlss8glpjrjs59oldmtnj24m7tfk6.apps.googleusercontent.com",
+                "fetchBasicProfile": true,
+                "hostedDomain": "",
+                "onFailure": [Function],
+                "onSuccess": [Function],
+                "prompt": "select_account",
+                "scope": "profile email",
+                "uxMode": "popup",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "alt": "google-login",
+                    "src": "google.png",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": "img",
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": "Google",
+                    "className": "center-align",
+                  },
+                  "ref": null,
+                  "rendered": "Google",
+                  "type": "span",
+                },
+              ],
+              "type": [Function],
+            },
+            "type": "div",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <KakaoAuth
+                clientId="788acae6dc56555e6f4dc4064514177a"
+                onFailure={[Function]}
+                onSuccess={[Function]}
+>
+                <img
+                                alt="kakao-login"
+                                src="kakao.png"
+                />
+                <span
+                                className="center-align"
+                >
+                                Kakao
+                </span>
+</KakaoAuth>,
+              "className": "kakao",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "class",
+              "props": Object {
+                "children": Array [
+                  <img
+                    alt="kakao-login"
+                    src="kakao.png"
+/>,
+                  <span
+                    className="center-align"
+>
+                    Kakao
+</span>,
+                ],
+                "clientId": "788acae6dc56555e6f4dc4064514177a",
+                "onFailure": [Function],
+                "onSuccess": [Function],
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "alt": "kakao-login",
+                    "src": "kakao.png",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": "img",
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": "Kakao",
+                    "className": "center-align",
+                  },
+                  "ref": null,
+                  "rendered": "Kakao",
+                  "type": "span",
+                },
+              ],
+              "type": [Function],
+            },
+            "type": "div",
+          },
+        ],
+        "type": "div",
+      },
+    ],
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <LoadingOverlay
+            circleColor="#1F4B40"
+            circleSize=""
+            isVisible={false}
+            overlayColor="rgba(256,256,256,.75)"
+/>,
+          <div
+            className="user-form-header"
+>
+            <h3>
+                        Social Login
+            </h3>
+            <p>
+                        User your favourite social network to sign up.
+            </p>
+</div>,
+          <FormMessage
+            message=""
+            type="error"
+/>,
+          <div
+            className="social-btn-wrapper"
+>
+            <div
+                        className="facebook"
+            >
+                        <FacebookAuth
+                                    clientId="137341360260151"
+                                    fields="name,email,picture"
+                                    isDisabled={false}
+                                    onFailure={[Function]}
+                                    onSuccess={[Function]}
+                                    scope="public_profile,email"
+                                    version="2.9"
+                        >
+                                    <img
+                                                alt="facebook-login"
+                                                src="facebook.png"
+                                    />
+                                    <span
+                                                className="center-align"
+                                    >
+                                                Facebook
+                                    </span>
+                        </FacebookAuth>
+            </div>
+            <div
+                        className="google"
+            >
+                        <GoogleAuth
+                                    clientId="754520959165-qfcdlss8glpjrjs59oldmtnj24m7tfk6.apps.googleusercontent.com"
+                                    fetchBasicProfile={true}
+                                    hostedDomain=""
+                                    onFailure={[Function]}
+                                    onSuccess={[Function]}
+                                    prompt="select_account"
+                                    scope="profile email"
+                                    uxMode="popup"
+                        >
+                                    <img
+                                                alt="google-login"
+                                                src="google.png"
+                                    />
+                                    <span
+                                                className="center-align"
+                                    >
+                                                Google
+                                    </span>
+                        </GoogleAuth>
+            </div>
+            <div
+                        className="kakao"
+            >
+                        <KakaoAuth
+                                    clientId="788acae6dc56555e6f4dc4064514177a"
+                                    onFailure={[Function]}
+                                    onSuccess={[Function]}
+                        >
+                                    <img
+                                                alt="kakao-login"
+                                                src="kakao.png"
+                                    />
+                                    <span
+                                                className="center-align"
+                                    >
+                                                Kakao
+                                    </span>
+                        </KakaoAuth>
+            </div>
+</div>,
+        ],
+        "className": "Social-login user-form-box",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "circleColor": "#1F4B40",
+            "circleSize": "",
+            "isVisible": false,
+            "overlayColor": "rgba(256,256,256,.75)",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              <h3>
+                Social Login
+</h3>,
+              <p>
+                User your favourite social network to sign up.
+</p>,
+            ],
+            "className": "user-form-header",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Social Login",
+              },
+              "ref": null,
+              "rendered": "Social Login",
+              "type": "h3",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "User your favourite social network to sign up.",
+              },
+              "ref": null,
+              "rendered": "User your favourite social network to sign up.",
+              "type": "p",
+            },
+          ],
+          "type": "div",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "message": "",
+            "type": "error",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              <div
+                className="facebook"
+>
+                <FacebookAuth
+                                clientId="137341360260151"
+                                fields="name,email,picture"
+                                isDisabled={false}
+                                onFailure={[Function]}
+                                onSuccess={[Function]}
+                                scope="public_profile,email"
+                                version="2.9"
+                >
+                                <img
+                                                alt="facebook-login"
+                                                src="facebook.png"
+                                />
+                                <span
+                                                className="center-align"
+                                >
+                                                Facebook
+                                </span>
+                </FacebookAuth>
+</div>,
+              <div
+                className="google"
+>
+                <GoogleAuth
+                                clientId="754520959165-qfcdlss8glpjrjs59oldmtnj24m7tfk6.apps.googleusercontent.com"
+                                fetchBasicProfile={true}
+                                hostedDomain=""
+                                onFailure={[Function]}
+                                onSuccess={[Function]}
+                                prompt="select_account"
+                                scope="profile email"
+                                uxMode="popup"
+                >
+                                <img
+                                                alt="google-login"
+                                                src="google.png"
+                                />
+                                <span
+                                                className="center-align"
+                                >
+                                                Google
+                                </span>
+                </GoogleAuth>
+</div>,
+              <div
+                className="kakao"
+>
+                <KakaoAuth
+                                clientId="788acae6dc56555e6f4dc4064514177a"
+                                onFailure={[Function]}
+                                onSuccess={[Function]}
+                >
+                                <img
+                                                alt="kakao-login"
+                                                src="kakao.png"
+                                />
+                                <span
+                                                className="center-align"
+                                >
+                                                Kakao
+                                </span>
+                </KakaoAuth>
+</div>,
+            ],
+            "className": "social-btn-wrapper",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": <FacebookAuth
+                  clientId="137341360260151"
+                  fields="name,email,picture"
+                  isDisabled={false}
+                  onFailure={[Function]}
+                  onSuccess={[Function]}
+                  scope="public_profile,email"
+                  version="2.9"
+>
+                  <img
+                                    alt="facebook-login"
+                                    src="facebook.png"
+                  />
+                  <span
+                                    className="center-align"
+                  >
+                                    Facebook
+                  </span>
+</FacebookAuth>,
+                "className": "facebook",
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "class",
+                "props": Object {
+                  "children": Array [
+                    <img
+                      alt="facebook-login"
+                      src="facebook.png"
+/>,
+                    <span
+                      className="center-align"
+>
+                      Facebook
+</span>,
+                  ],
+                  "clientId": "137341360260151",
+                  "fields": "name,email,picture",
+                  "isDisabled": false,
+                  "onFailure": [Function],
+                  "onSuccess": [Function],
+                  "scope": "public_profile,email",
+                  "version": "2.9",
+                },
+                "ref": null,
+                "rendered": Array [
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "alt": "facebook-login",
+                      "src": "facebook.png",
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": "img",
+                  },
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": "Facebook",
+                      "className": "center-align",
+                    },
+                    "ref": null,
+                    "rendered": "Facebook",
+                    "type": "span",
+                  },
+                ],
+                "type": [Function],
+              },
+              "type": "div",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": <GoogleAuth
+                  clientId="754520959165-qfcdlss8glpjrjs59oldmtnj24m7tfk6.apps.googleusercontent.com"
+                  fetchBasicProfile={true}
+                  hostedDomain=""
+                  onFailure={[Function]}
+                  onSuccess={[Function]}
+                  prompt="select_account"
+                  scope="profile email"
+                  uxMode="popup"
+>
+                  <img
+                                    alt="google-login"
+                                    src="google.png"
+                  />
+                  <span
+                                    className="center-align"
+                  >
+                                    Google
+                  </span>
+</GoogleAuth>,
+                "className": "google",
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "class",
+                "props": Object {
+                  "children": Array [
+                    <img
+                      alt="google-login"
+                      src="google.png"
+/>,
+                    <span
+                      className="center-align"
+>
+                      Google
+</span>,
+                  ],
+                  "clientId": "754520959165-qfcdlss8glpjrjs59oldmtnj24m7tfk6.apps.googleusercontent.com",
+                  "fetchBasicProfile": true,
+                  "hostedDomain": "",
+                  "onFailure": [Function],
+                  "onSuccess": [Function],
+                  "prompt": "select_account",
+                  "scope": "profile email",
+                  "uxMode": "popup",
+                },
+                "ref": null,
+                "rendered": Array [
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "alt": "google-login",
+                      "src": "google.png",
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": "img",
+                  },
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": "Google",
+                      "className": "center-align",
+                    },
+                    "ref": null,
+                    "rendered": "Google",
+                    "type": "span",
+                  },
+                ],
+                "type": [Function],
+              },
+              "type": "div",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": <KakaoAuth
+                  clientId="788acae6dc56555e6f4dc4064514177a"
+                  onFailure={[Function]}
+                  onSuccess={[Function]}
+>
+                  <img
+                                    alt="kakao-login"
+                                    src="kakao.png"
+                  />
+                  <span
+                                    className="center-align"
+                  >
+                                    Kakao
+                  </span>
+</KakaoAuth>,
+                "className": "kakao",
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "class",
+                "props": Object {
+                  "children": Array [
+                    <img
+                      alt="kakao-login"
+                      src="kakao.png"
+/>,
+                    <span
+                      className="center-align"
+>
+                      Kakao
+</span>,
+                  ],
+                  "clientId": "788acae6dc56555e6f4dc4064514177a",
+                  "onFailure": [Function],
+                  "onSuccess": [Function],
+                },
+                "ref": null,
+                "rendered": Array [
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "alt": "kakao-login",
+                      "src": "kakao.png",
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": "img",
+                  },
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": "Kakao",
+                      "className": "center-align",
+                    },
+                    "ref": null,
+                    "rendered": "Kakao",
+                    "type": "span",
+                  },
+                ],
+                "type": [Function],
+              },
+              "type": "div",
+            },
+          ],
+          "type": "div",
+        },
+      ],
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;

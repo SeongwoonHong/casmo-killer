@@ -255,7 +255,7 @@ router.get('/:boardId/:page/:sortType', (req, res) => {
             });
         });
       } else {
-        return res.status(400).json({
+        return res.status(404).json({
           message: `There is no board ${req.params.boardId}`
         });
       }

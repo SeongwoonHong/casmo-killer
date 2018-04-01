@@ -3,8 +3,20 @@ import './BoardList.scss';
 import Board from '../Board/Board';
 
 class BoardList extends Component {
+
+  isMobileDevice() {
+    if (navigator.userAgent.match(/Android/i)
+    || navigator.userAgent.match(/webOS/i)
+    || navigator.userAgent.match(/iPhone/i)
+    || navigator.userAgent.match(/iPad/i)
+    || navigator.userAgent.match(/iPod/i)
+    || navigator.userAgent.match(/BlackBerry/i)
+    || navigator.userAgent.match(/Windows Phone/i)
+    ) return true;
+    return false;
+  }
   render() {
-    const { boardListData } = this.props;
+    const { boardListData, className } = this.props;
 
     const mapToComponents = (listData) => {
       return listData.map((data) => {
@@ -22,15 +34,16 @@ class BoardList extends Component {
             boardIcon="true"
             page="0"
             selected="0"
+            mobile={this.isMobileDevice()}
           />
         );
       });
     };
 
     return (
-      <ol className="dataList">
+      <div className={className}>
         {mapToComponents(boardListData)}
-      </ol>
+      </div>
     );
   }
 }

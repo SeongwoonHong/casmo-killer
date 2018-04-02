@@ -32,6 +32,7 @@ describe('<UserRegister />', () => {
         auth={ auth }
         match={ { params: { token: auth.token } } } />
     );
+
     mockGet = sinon.stub(axios, 'get');
     mockPost = sinon.stub(axios, 'post');
 
@@ -44,10 +45,6 @@ describe('<UserRegister />', () => {
 
   it('should render the component consistently', () => {
     expect(component).toMatchSnapshot();
-  });
-
-  it('should verify the token for registration', () => {
-    // TODO: figure this out
   });
 
   it('should construct the component state with correct props', () => {

@@ -103,7 +103,7 @@ describe('<LocalLogin />', () => {
 
   });
 
-  it('should resolve the response from the server to the state when loggingin', async () => {
+  it('should resolve the response from the server to the state when logging-in', async () => {
 
     const spy = sinon.spy();
 

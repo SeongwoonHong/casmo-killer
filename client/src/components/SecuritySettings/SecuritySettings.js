@@ -11,32 +11,37 @@ import UserInputField from '../UserInputField';
 
 import './SecuritySettings.scss';
 
-const initialState = {
-  isLoading: false,
-  isEditing: false,
-  isVerified: false,
-  isSuccess: false,
-  currentPassword: '',
-  newPassword: '',
-  confirmPassword: '',
-  message: ''
-};
-
 class SecuritySettings extends Component {
 
   constructor(props) {
 
     super(props);
 
-    this.state = initialState;
+    this.initialState = {
+      isLoading: false,
+      isEditing: false,
+      isVerified: false,
+      isSuccess: false,
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: '',
+      message: ''
+    };
+
+    this.state = this.initialState;
+
+    this.onChangeHandler = this.onChangeHandler.bind(this);
+    this.onSubmitHandler = this.onSubmitHandler.bind(this);
+    this.verifyCurrentPassword = this.verifyCurrentPassword.bind(this);
+    this.submitNewPassword = this.submitNewPassword.bind(this);
 
   }
 
-  onChangeHandler = (e) => {
+  onChangeHandler(e) {
     this.setState({ [e.name]: e.value });
-  };
+  }
 
-  onSubmitHandler = () => {
+  onSubmitHandler() {
 
     this.setState({
       isLoading: true,
@@ -49,9 +54,9 @@ class SecuritySettings extends Component {
       this.submitNewPassword();
     }
 
-  };
+  }
 
-  verifyCurrentPassword = async () => {
+  async verifyCurrentPassword() {
 
     const { currentPassword } = this.state;
 
@@ -72,7 +77,7 @@ class SecuritySettings extends Component {
 
         if (status === 204) {
 
-          this.setState(Object.assign({}, initialState, {
+          this.setState(Object.assign({}, this.initialState, {
             isVerified: true
           }));
 
@@ -99,9 +104,9 @@ class SecuritySettings extends Component {
 
     this.setState({ isLoading: false });
 
-  };
+  }
 
-  submitNewPassword = async () => {
+  async submitNewPassword() {
 
     const { newPassword, confirmPassword } = this.state;
 
@@ -149,7 +154,7 @@ class SecuritySettings extends Component {
 
     this.setState({ isLoading: false });
 
-  };
+  }
 
   render() {
 
@@ -181,7 +186,7 @@ class SecuritySettings extends Component {
               className="user-form-button"
               onClick={ () => {
                 if (isVerified) {
-                  this.setState(initialState);
+                  this.setState(this.initialState);
                 } else if (!isEditing) {
                   this.setState({ isEditing: true });
                 }

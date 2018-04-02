@@ -22,6 +22,9 @@ class MyAccount extends Component {
       message: ''
     };
 
+    this.onProfileChange = this.onProfileChange.bind(this);
+    this.verifyToken = this.verifyToken.bind(this);
+
   }
 
   componentDidMount() {
@@ -35,12 +38,12 @@ class MyAccount extends Component {
 
   }
 
-  onProfileChange = async (userInfo) => {
+  async onProfileChange(userInfo) {
     const user = await storage.set('ckUser', userInfo);
     this.props.loginSuccess(user);
-  };
+  }
 
-  verifyToken = async (token) => {
+  async verifyToken(token) {
 
     this.setState({ isLoading: true });
 
@@ -74,7 +77,7 @@ class MyAccount extends Component {
         console.error(error);
         this.setState({
           isSuccess: false,
-          message: error.response.data.message
+          message: error.response && error.response.data.message
         });
 
       }
@@ -83,7 +86,7 @@ class MyAccount extends Component {
 
     this.setState({ isLoading: false });
 
-  };
+  }
 
   render() {
 

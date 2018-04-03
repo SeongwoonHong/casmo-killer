@@ -24,14 +24,14 @@ router.get('/verify/status', controller.verifyLoginStatus);
 router.post('/verify/password', controller.verifyPassword);
 
 /**
- * update user's profile information, (excluding password)
- */
-router.put('/update/profile', upload.any(), controller.updateProfile);
-
-/**
  * update user's password
  */
 router.put('/update/password', controller.updatePassword);
+
+/**
+ * update user's profile information, (excluding password)
+ */
+router.put('/update/profile', upload.any(), controller.updateProfile);
 
 /**
  * update user's email

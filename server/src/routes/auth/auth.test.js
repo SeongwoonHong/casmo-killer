@@ -18,7 +18,7 @@ chai.use(chaiHttp);
 
 beforeEach(populateUsers);
 
-describe('POST /request/verification', () => {
+describe('POST /api/auth/request/verification', () => {
 
   it('should reject an invalid email address', (done) => {
 

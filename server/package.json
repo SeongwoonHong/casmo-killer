@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "NODE_ENV=development nodemon --config './nodemon.json' app.js",
     "start": "NODE_ENV=production node app.js",
-    "test": "NODE_ENV=test && mocha src/**/*.test.js --exit",
+    "test": "NODE_ENV=test mocha src/**/*.test.js --exit",
     "test-watch": "NODE_ENV=test nodemon --config './nodemon.json' node_modules/.bin/mocha src/**/*.test.js --exit"
   },
   "repository": {

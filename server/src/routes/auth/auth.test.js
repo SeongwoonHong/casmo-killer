@@ -351,6 +351,8 @@ describe('POST /api/auth/register/local', () => {
       .send(testData)
       .end((err, res) => {
 
+        console.log(res);
+
         expect(res).to.have.status(200);
         expect(res).to.have.cookie('ckToken');
 

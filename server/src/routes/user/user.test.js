@@ -184,6 +184,7 @@ describe('PUT /api/user/update/profile', () => {
       .put('/api/user/update/profile')
       .send(testData)
       .end((err, res) => {
+        console.log(res);
 
         expect(res).to.have.status(200);
         expect(res).to.have.cookie('ckToken');

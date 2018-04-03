@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import LoadingCircle from '@sharedComponents/LoadingCircle';
+import { ToastContainer, toast } from 'react-toastify';
+
+import LoadingOverlay from '@sharedComponents/LoadingOverlay';
 
 import Sort from '../../components/Sort/Sort';
 import Search from '../../components/Search/Search';

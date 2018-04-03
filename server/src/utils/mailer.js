@@ -61,34 +61,67 @@ const mailOptionsss = (token, email) => {
 };
 
 module.exports.verifyNewEmail = (token, email) => {
+
   return new Promise((resolve, reject) => {
+
+    if (process.env.NODE_ENV === 'test') {
+      return resolve({ envelope: { to: email } });
+    }
+
     transporter.sendMail(mailOptions(token, email), (error, info) => {
+
       if (error) {
         reject(error);
       }
+
       resolve(info);
+
     });
+
   });
+
 };
 
 module.exports.verifyEmailUpdate = (token, email) => {
+
   return new Promise((resolve, reject) => {
+
+    if (process.env.NODE_ENV === 'test') {
+      return resolve({ envelope: { to: email } });
+    }
+
     transporter.sendMail(mailOptionss(token, email), (error, info) => {
+
       if (error) {
         reject(error);
       }
+
       resolve(info);
+
     });
+
   });
+
 };
 
 module.exports.requestPwdReset = (token, email) => {
+
   return new Promise((resolve, reject) => {
+
+    if (process.env.NODE_ENV === 'test') {
+      return resolve({ envelope: { to: email } });
+    }
+
     transporter.sendMail(mailOptionsss(token, email), (error, info) => {
+
       if (error) {
         reject(error);
       }
+
       resolve(info);
+
     });
+
   });
+
 };

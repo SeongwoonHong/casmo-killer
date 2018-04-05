@@ -40,6 +40,12 @@ class Register extends Component {
       errorMsg: ''
     };
 
+    this.onChangeHandler = this.onChangeHandler.bind(this);
+    this.onImageUpload = this.onImageUpload.bind(this);
+    this.onSubmitHandler = this.onSubmitHandler.bind(this);
+    this.submitRegister = this.submitRegister.bind(this);
+    this.verifyToken = this.verifyToken.bind(this);
+
   }
 
   componentDidMount() {
@@ -65,19 +71,20 @@ class Register extends Component {
 
   }
 
-  onChangeHandler = (e) => {
+  onChangeHandler(e) {
     this.setState({
       [e.name]: {
         ...this.state[e.name],
         value: e.value
       }
     });
-  };
+  }
 
-  onSubmitHandler = async () => {
+  async onSubmitHandler() {
 
     const resetState = {};
 
+    // remove any previous validation messages
     Object.keys(this.state).forEach((key) => {
       resetState[key] = this.state[key];
       if (Object.prototype.hasOwnProperty.call(this.state[key], 'message')) {
@@ -85,6 +92,7 @@ class Register extends Component {
       }
     });
 
+    // empty the messages and set the loading status to true
     this.setState(Object.assign({}, resetState, {
       isLoading: true
     }));
@@ -96,6 +104,8 @@ class Register extends Component {
       forPassword: ''
     };
 
+    // validate displayName and register validation messages
+    // if there are any
     errorMsg.forDisplayName = await validateDisplayName(displayName.value);
 
     this.setState({
@@ -105,14 +115,18 @@ class Register extends Component {
       }
     });
 
+    // validate the password only when it's local signup
     if (this.props.auth.strategy === 'local') {
+
       errorMsg.forPassword = await validatePassword(password.value);
+
       this.setState({
         password: {
           ...this.state.password,
           message: errorMsg.forPassword
         }
       });
+
     }
 
     if (
@@ -124,9 +138,10 @@ class Register extends Component {
       this.setState({ isLoading: false });
     }
 
-  };
+  }
 
-  onImageUpload = (e) => {
+  // TODO: move image upload to its own component
+  onImageUpload(e) {
 
     this.setState({ isLoading: true });
 
@@ -157,9 +172,9 @@ class Register extends Component {
 
     reader.readAsDataURL(image);
 
-  };
+  }
 
-  submitRegister = async () => {
+  async submitRegister() {
 
     const {
       strategy, email, socialId, socialToken
@@ -214,6 +229,7 @@ class Register extends Component {
 
     } catch (error) {
 
+      console.error(error);
       console.error(error.response.data.error);
       this.setState({
         errorMsg: error.response.data.message
@@ -223,9 +239,9 @@ class Register extends Component {
 
     this.setState({ isLoading: false });
 
-  };
+  }
 
-  verifyToken = async (token) => {
+  async verifyToken(token) {
 
     const {
       history, setUserForRegistration, setErrorState
@@ -258,7 +274,7 @@ class Register extends Component {
 
       setErrorState({
         errorTitle: 'The registration link is invalid.',
-        errorMsg: error.response.data.message
+        errorMsg: error.response && error.response.data.message
       });
 
       history.push('/error');
@@ -267,7 +283,7 @@ class Register extends Component {
 
     this.setState({ isMounted: true });
 
-  };
+  }
 
   render() {
 

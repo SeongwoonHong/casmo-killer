@@ -9,7 +9,13 @@ cloudinary.config({
 const imgCloud = {
 
   upload: (file, username) => {
+
     return new Promise((resolve, reject) => {
+
+      if (process.env.NODE_ENV === 'test') {
+        return resolve(file);
+      }
+
       cloudinary.v2.uploader.upload(file, {
         public_id: username,
         discard_original_filename: true,
@@ -21,12 +27,17 @@ const imgCloud = {
           }
         ]
       }, (error, result) => {
+
         if (error) {
           reject(error);
         }
+
         resolve(result.eager[0].secure_url);
+
       });
+
     });
+
   }
 
 };

@@ -11,7 +11,7 @@ export const loginSuccess = (payload, shouldReset = false) => {
 
   return async (dispatch) => {
 
-    let newUser = null;
+    let newUser = payload;
 
     try {
       newUser = await storage.set('ckUser', payload);

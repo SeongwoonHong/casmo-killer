@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import TransitionGroup from 'react-transition-group-plus';
 
-import Activity from 'components/Activity/Activity';
+import Activity from '../Activity/Activity';
 
 class ActivityList extends Component {
 

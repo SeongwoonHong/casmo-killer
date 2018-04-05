@@ -82,7 +82,7 @@ class Delete extends Component {
         console.error(error);
         this.setState({
           isSuccess: false,
-          message: error.response.data.message
+          message: error.response && error.response.data.message
         });
 
       }

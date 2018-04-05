@@ -80,9 +80,9 @@ class Comment extends Component {
     }
     return this.props.updateCommentRequest(postId, commentId, contents).then(() => {
       if (this.props.updateComment.status === 'SUCCESS') {
-        toast.info('Your comment is updated', { position: toast.POSITION_TOP_RIGHT })
+        toast.info('Your comment is updated', { position: toast.POSITION_TOP_RIGHT });
       } else {
-        toast.error('Something went wrong', { position: toast.POSITION_TOP_RIGHT })
+        toast.error('Something went wrong', { position: toast.POSITION_TOP_RIGHT });
       }
       this.setState({ edit: false });
     });

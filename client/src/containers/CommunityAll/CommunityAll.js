@@ -79,7 +79,7 @@ class CommunityAll extends Component {
           />
         </AlignHorizontal>
         <BoardList
-          className="row"
+          className="boardList"
           boardListData={data}
         />
       </AlignVertical>

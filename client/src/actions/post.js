@@ -31,7 +31,6 @@ export function fetchPostsRequest(boardId, page, sort) {
       .then((response) => {
         dispatch(fetchPostsSuccess(response.data));
       }).catch((error) => {
-        console.log(error);
         dispatch(fetchPostsFailure(error));
       });
   };

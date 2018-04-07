@@ -2,8 +2,10 @@ const chalk = require('chalk');
 
 module.exports.server = (res, error, message = 'Internal Server Error.') => {
 
-  console.log(chalk.bgRed(message));
-  console.log(chalk.bgRed(error));
+  if (process.env.NODE_ENV === 'development') {
+    console.log(chalk.bgRed(message));
+    console.log(chalk.bgRed(error));
+  }
 
   res.status(500).send({ error, message });
 
@@ -11,7 +13,9 @@ module.exports.server = (res, error, message = 'Internal Server Error.') => {
 
 module.exports.validation = (res, error) => {
 
-  console.log(chalk.bgRed(error));
+  if (process.env.NODE_ENV === 'development') {
+    console.log(chalk.bgRed(error));
+  }
 
   const type = error.details[0].type.indexOf('required') > -1
     ? 'required'

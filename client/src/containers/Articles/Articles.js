@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import LoadingCircle from '@sharedComponents/LoadingCircle';
-import Sort from 'components/Sort/Sort';
-import Search from 'components/Search/Search';
-import ArticleList from 'components/ArticleList/ArticleList';
-import Bookmark from 'components/Bookmark/Bookmark';
-import TextButton from 'components/Button/TextButton/TextButton';
-import AlignHorizontal from 'components/AlignHorizontal/AlignHorizontal';
-import AlignVertical from 'components/AlignVertical/AlignVertical';
-import DisplayManager from 'components/DisplayManager/DisplayManager';
+import { ToastContainer, toast } from 'react-toastify';
+
+import LoadingOverlay from '@sharedComponents/LoadingOverlay';
+
+import Sort from '../../components/Sort/Sort';
+import Search from '../../components/Search/Search';
+import ArticleList from '../../components/ArticleList/ArticleList';
+import Bookmark from '../../components/Bookmark/Bookmark';
+import TextButton from '../../components/Button/TextButton/TextButton';
+import AlignHorizontal from '../../components/AlignHorizontal/AlignHorizontal';
+import AlignVertical from '../../components/AlignVertical/AlignVertical';
+import DisplayManager from '../../components/DisplayManager/DisplayManager';
 import './Articles.scss';
 
 class Articles extends Component {
@@ -50,9 +52,20 @@ class Articles extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (this.props.postsList.status === 'FAILURE') {
+      toast(`${this.props.postsList.error.message}`, {
+        position: toast.POSITION_TOP_RIGHT,
+        type: toast.TYPE.ERROR
+      });
+      this.props.history.replace('/404');
+    }
     this.setState({
       bookmarked: nextProps.user.isLoggedIn && nextProps.user.bookmarked.includes(this.state.boardOId),
     });
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return JSON.stringify(this.props) !== JSON.stringify(nextProps);
   }
 
   handlePageClick = (data) => {
@@ -90,23 +103,14 @@ class Articles extends Component {
   }
 
   render() {
-    const { data, status, error } = this.props.postsList;
+    const { data, status } = this.props.postsList;
     const { pageCount } = this.props.pagination;
-    const { boardAuthor } = this.props;
+    // const { boardAuthor } = this.props;
 
-    if (status === 'WAITING' || boardAuthor.author === null) {
+    if (status === 'WAITING' || status === 'INIT' || status === 'FAILURE') {
       return (
         <div className="board_loading">
-          <LoadingCircle color="#515151" />
-        </div>
-      );
-    } else if (status === 'FAILURE') {
-      toast.error(`${error.message}`, {
-        position: toast.POSITION_TOP_RIGHT
-      });
-      return (
-        <div className="board">
-          {error.message}
+          <LoadingOverlay />
         </div>
       );
     }
@@ -167,6 +171,7 @@ class Articles extends Component {
           subContainerClassName="pages pagination"
           activeClassName="active"
         />
+        <ToastContainer />
       </AlignVertical>
     );
   }

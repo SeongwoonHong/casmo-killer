@@ -1,0 +1,179 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<UserDelete /> should render the component consistently 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <Delete
+    user={
+        Object {
+            "strategy": "local",
+          }
+    }
+/>,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "function",
+    "props": Object {
+      "button": <button
+        className="user-form-button"
+        type="submit"
+>
+        Agree
+</button>,
+      "children": Array [
+        <FormMessage
+          message=""
+          type="error"
+/>,
+        <UserInputField
+          disabled={false}
+          isVisible={false}
+          message=""
+          name="password"
+          onChange={[Function]}
+          placeholder=""
+          title=""
+          type=""
+          value=""
+/>,
+      ],
+      "className": "Delete",
+      "disabled": false,
+      "formMsg": "This will permanently delete your account. This process is irreversible.",
+      "formTitle": "Confirm Account Deletion",
+      "icon": "delete_forever",
+      "isLoading": false,
+      "onSubmit": [Function],
+      "title": "Account Delete",
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "message": "",
+          "type": "error",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": null,
+          "disabled": false,
+          "isVisible": false,
+          "message": "",
+          "name": "password",
+          "onChange": [Function],
+          "placeholder": "",
+          "title": "",
+          "type": "",
+          "value": "",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+    ],
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "function",
+      "props": Object {
+        "button": <button
+          className="user-form-button"
+          type="submit"
+>
+          Agree
+</button>,
+        "children": Array [
+          <FormMessage
+            message=""
+            type="error"
+/>,
+          <UserInputField
+            disabled={false}
+            isVisible={false}
+            message=""
+            name="password"
+            onChange={[Function]}
+            placeholder=""
+            title=""
+            type=""
+            value=""
+/>,
+        ],
+        "className": "Delete",
+        "disabled": false,
+        "formMsg": "This will permanently delete your account. This process is irreversible.",
+        "formTitle": "Confirm Account Deletion",
+        "icon": "delete_forever",
+        "isLoading": false,
+        "onSubmit": [Function],
+        "title": "Account Delete",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "message": "",
+            "type": "error",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": null,
+            "disabled": false,
+            "isVisible": false,
+            "message": "",
+            "name": "password",
+            "onChange": [Function],
+            "placeholder": "",
+            "title": "",
+            "type": "",
+            "value": "",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+      ],
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;

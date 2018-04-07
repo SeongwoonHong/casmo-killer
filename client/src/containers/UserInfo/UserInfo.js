@@ -18,28 +18,19 @@ class UserInfo extends Component {
 
   componentDidMount() {
 
-    const loadUntilScrollable = () => {
-      // IF THE SCROLLBAR DOES NOT EXIST,
-      if ((document.querySelector('.User').scrollHeight) < window.innerHeight) {
-        this.loadOldMemo().then(
-          () => {
-            // DO THIS RECURSIVELY UNLESS IT'S LAST PAGE
-            if (!this.props.isLast) {
-              loadUntilScrollable();
-            }
-          }
-        );
-      }
-    };
-
     this.props.fetchActivityRequest(true, undefined, undefined, this.props.match.params.userId).then(
       () => {
-        setTimeout(loadUntilScrollable, 1000);
+        this.loadUntilScrollable();
       }
     );
 
-    (window.outerWidth < 990 && document.querySelector('.app-container').addEventListener('scroll', this.scrollFunc))
-    || (window.outerWidth > 990 && document.querySelector('.root-container').addEventListener('scroll', this.scrollFunc));
+    (window.innerWidth <= 991 && document.querySelector('.app-container').addEventListener('scroll', this.scrollFunc))
+    || (window.innerWidth > 991 && document.querySelector('.root-container').addEventListener('scroll', this.scrollFunc));
+  }
+
+  shouldComponentUpdate(nextProps) {
+    const update = JSON.stringify(this.props) !== JSON.stringify(nextProps);
+    return update;
   }
 
   componentDidUpdate(prevProps) {
@@ -52,15 +43,29 @@ class UserInfo extends Component {
   componentWillUnmount() {
     // STOPS THE loadMemoLoop
     clearTimeout(this.memoLoaderTimeoutId);
+    clearTimeout(this.loadUntilScrollableTimeoutId);
 
     // REMOVE WINDOWS SCROLL LISTENER
-    (window.outerWidth < 990 && document.querySelector('.app-container').removeEventListener('scroll', this.scrollFunc))
-    || (window.outerWidth > 990 && document.querySelector('.root-container').removeEventListener('scroll', this.scrollFunc));
+    (window.innerWidth <= 991 && document.querySelector('.app-container').removeEventListener('scroll', this.scrollFunc))
+    || (window.innerWidth > 991 && document.querySelector('.root-container').removeEventListener('scroll', this.scrollFunc));
   }
 
+  loadUntilScrollable = () => {
+    // IF THE SCROLLBAR DOES NOT EXIST,
+    if ((document.querySelector('.User').scrollHeight) < window.innerHeight) {
+      this.loadOldMemo().then(
+        () => {
+          // DO THIS RECURSIVELY UNLESS IT'S LAST PAGE
+          if (!this.props.isLast) {
+            loadUntilScrollable();
+          }
+        }
+      );
+    }
+  };
   scrollEvent() {
-    if ((window.outerWidth < 990 && (window.innerHeight + (document.querySelector('.app-container').scrollTop) > (document.querySelector('.User').scrollHeight - 50)))
-      || (window.outerWidth > 990 && (window.innerHeight + (document.querySelector('.root-container').scrollTop) > (document.querySelector('.User').scrollHeight - 50)))) {
+    if ((window.innerWidth <= 991 && (window.innerHeight + (document.querySelector('.app-container').scrollTop) > (document.querySelector('.User').scrollHeight - 50)))
+      || (window.innerWidth > 991 && (window.innerHeight + (document.querySelector('.root-container').scrollTop) > (document.querySelector('.User').scrollHeight - 50)))) {
       if (!this.state.loadingState) {
         this.loadOldMemo();
         this.setState({

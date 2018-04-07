@@ -1,0 +1,294 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<UserSettings /> should render the component consistently 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <MyAccount
+    match={
+        Object {
+            "params": Object {},
+          }
+    }
+    user={
+        Object {
+            "strategy": "local",
+          }
+    }
+/>,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <LoadingOverlay
+          circleColor="#fff"
+          circleSize=""
+          isVisible={false}
+          overlayColor="rgba(0,0,0,.75)"
+/>,
+        <h2
+          className="user-page-title"
+>
+          My Account
+          <i
+                    className="material-icons"
+          >
+                    person
+          </i>
+</h2>,
+        <FormMessage
+          message=""
+          type="error"
+/>,
+        <ProfileSettings
+          onSuccess={[Function]}
+          user={
+                    Object {
+                              "strategy": "local",
+                            }
+          }
+/>,
+        <SecuritySettings
+          strategy="local"
+/>,
+      ],
+      "className": "My-account",
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "circleColor": "#fff",
+          "circleSize": "",
+          "isVisible": false,
+          "overlayColor": "rgba(0,0,0,.75)",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            "My Account",
+            <i
+              className="material-icons"
+>
+              person
+</i>,
+          ],
+          "className": "user-page-title",
+        },
+        "ref": null,
+        "rendered": Array [
+          "My Account",
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "person",
+              "className": "material-icons",
+            },
+            "ref": null,
+            "rendered": "person",
+            "type": "i",
+          },
+        ],
+        "type": "h2",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "message": "",
+          "type": "error",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "onSuccess": [Function],
+          "user": Object {
+            "strategy": "local",
+          },
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "strategy": "local",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+    ],
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <LoadingOverlay
+            circleColor="#fff"
+            circleSize=""
+            isVisible={false}
+            overlayColor="rgba(0,0,0,.75)"
+/>,
+          <h2
+            className="user-page-title"
+>
+            My Account
+            <i
+                        className="material-icons"
+            >
+                        person
+            </i>
+</h2>,
+          <FormMessage
+            message=""
+            type="error"
+/>,
+          <ProfileSettings
+            onSuccess={[Function]}
+            user={
+                        Object {
+                                    "strategy": "local",
+                                  }
+            }
+/>,
+          <SecuritySettings
+            strategy="local"
+/>,
+        ],
+        "className": "My-account",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "circleColor": "#fff",
+            "circleSize": "",
+            "isVisible": false,
+            "overlayColor": "rgba(0,0,0,.75)",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              "My Account",
+              <i
+                className="material-icons"
+>
+                person
+</i>,
+            ],
+            "className": "user-page-title",
+          },
+          "ref": null,
+          "rendered": Array [
+            "My Account",
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "person",
+                "className": "material-icons",
+              },
+              "ref": null,
+              "rendered": "person",
+              "type": "i",
+            },
+          ],
+          "type": "h2",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "message": "",
+            "type": "error",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "onSuccess": [Function],
+            "user": Object {
+              "strategy": "local",
+            },
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "strategy": "local",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+      ],
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;

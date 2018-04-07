@@ -10,6 +10,7 @@ class Article extends Component {
   componentDidMount = () => {
     this.props.fetchPostRequest(this.props.postId);
   }
+
   componentDidUpdate(prevProps) {
     if (prevProps === undefined) {
       return false;

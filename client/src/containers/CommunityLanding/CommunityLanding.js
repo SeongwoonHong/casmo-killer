@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './CommunityLanding.scss';
-// import Board from '../../components/Board/Board';
 import SimplePost from '../../components/SimplePost/SimplePost';
 
 class CommunityLanding extends Component {
@@ -18,10 +17,9 @@ class CommunityLanding extends Component {
   )
 
   render() {
-    const { boardList, activePost } = this.props;
-    // console.log(activePost.data);
-    if (boardList.status !== 'SUCCESS' || activePost.status !== 'SUCCESS') return null;
-    console.log(activePost.data);
+    const { hotBoardList, hotPostList } = this.props;
+    if (hotBoardList.status !== 'SUCCESS' || hotPostList.status !== 'SUCCESS') return null;
+
     return (
       <div id="community-landing">
         <div className="top">
@@ -29,7 +27,7 @@ class CommunityLanding extends Component {
             <div className="title"><i className="material-icons">whatshot</i> Hot Boards</div>
             <div className="body">
               {
-                boardList.data.map((data) => {
+                hotBoardList.data.map((data) => {
                   return (
                     <SimplePost
                       key={data._id}
@@ -48,7 +46,7 @@ class CommunityLanding extends Component {
             <div className="title"><i className="material-icons">child_care</i> Hot Posts</div>
             <div className="body">
               {
-                activePost.data.map((data) => {
+                hotPostList.data.map((data) => {
                   return (
                     <SimplePost
                       key={data._id}

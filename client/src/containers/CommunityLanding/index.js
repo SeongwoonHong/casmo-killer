@@ -4,8 +4,8 @@ import CommunityLanding from './CommunityLanding';
 
 const mapStateToProps = (state) => {
   return {
-    boardList: state.boards.boardList,
-    activePost: state.posts.activePost,
+    hotBoardList: state.boards.hotBoardList,
+    hotPostList: state.posts.hotPostList,
   };
 };
 
@@ -16,7 +16,7 @@ const mapDispatchToProps = (dispatch) => {
     },
     fetchMostLikedPosts: () => {
       return dispatch(actions.fetchMostLikedPosts());
-    }
+    },
   };
 };
 

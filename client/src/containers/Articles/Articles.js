@@ -41,12 +41,12 @@ class Articles extends Component {
     return this.props.fetchPostsRequest(
       this.state.boardId,
       this.state.page,
-      sortInfo.listEng[sortInfo.selected]).then(()=> {
-        this.setState({
-          boardOId: this.props.boardInfo.board,
-          bookmarked: this.props.user.isLoggedIn ? this.props.user.bookmarked.includes(this.props.boardInfo.board) : false
-        });
+      sortInfo.listEng[sortInfo.selected]).then(() => {
+      this.setState({
+        boardOId: this.props.boardInfo.board,
+        bookmarked: this.props.user.isLoggedIn ? this.props.user.bookmarked.includes(this.props.boardInfo.board) : false
       });
+    });
   }
 
   componentWillReceiveProps(nextProps) {

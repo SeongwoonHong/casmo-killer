@@ -7,11 +7,8 @@ const chaiHttp = require('chai-http');
 const { expect } = require('chai');
 
 const jwtUtils = require('../../utils/jwtUtils');
-
 const { users, populateUsers } = require('../../utils/testSeed');
-
 const User = require('../../db/models/user');
-
 const app = require('../../../app');
 
 chai.use(chaiHttp);
@@ -350,8 +347,6 @@ describe('POST /api/auth/register/local', () => {
       .post('/api/auth/register/local')
       .send(testData)
       .end((err, res) => {
-
-        console.log(res);
 
         expect(res).to.have.status(200);
         expect(res).to.have.cookie('ckToken');

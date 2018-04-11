@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import * as actions from '@actions';
 import breakPoint from '@sharedUtils/breakPoint';
 import LoadingOverlay from '@sharedComponents/LoadingOverlay';
@@ -42,6 +42,7 @@ class App extends Component {
         <LoadingOverlay isVisible={ layout.isAppLoading } />
         <TopNavigation />
         <div className="app-container">
+          <Route exact path="/" render={() => <Redirect to="/community" />} />
           <Route path="/" component={ AppNavigation } />
           <div className="component-row">
             <Switch>

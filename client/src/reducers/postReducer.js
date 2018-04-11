@@ -65,7 +65,12 @@ const initialState = {
     parentAuthor: null,
     parentContent: null,
     error: null
-  }
+  },
+  hotPostList: {
+    status: 'INIT',
+    data: [],
+    error: null,
+  },
 };
 
 export default function post(state = initialState, action) {
@@ -102,7 +107,27 @@ export default function post(state = initialState, action) {
         }
       });
 
-
+      // FETCH HOT POSTS
+    case types.FETCH_HOT_POSTS:
+      return update(state, {
+        hotPostList: {
+          status: { $set: 'WAITING' },
+        },
+      });
+    case types.FETCH_HOT_POSTS_SUCCESS:
+      return update(state, {
+        hotPostList: {
+          status: { $set: 'SUCCESS' },
+          data: { $set: action.payload }
+        },
+      });
+    case types.FETCH_HOT_POSTS_FAILURE:
+      return update(state, {
+        hotPostList: {
+          status: { $set: 'FAILURE' },
+          error: { $set: action.payload.response.data }
+        },
+      });
       // SEARCH POSTS
     case types.SEARCH_POSTS:
       return update(state, {

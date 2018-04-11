@@ -456,6 +456,40 @@ export function replyCommentRequest(data) {
   };
 }
 
+export function fetchHotPosts() {
+  return {
+    type: types.FETCH_HOT_POSTS
+  };
+}
+
+export function fetchHotPostsSuccess(posts) {
+  return {
+    type: types.FETCH_HOT_POSTS_SUCCESS,
+    payload: posts
+  };
+}
+
+export function fetchHotPostsFailure(error) {
+  return {
+    type: types.FETCH_HOT_POSTS_FAILURE,
+    payload: error
+  };
+}
+
+export function fetchMostLikedPosts() {
+  return (dispatch) => {
+    dispatch(fetchHotPosts());
+
+    return axios.get('/api/post/mostLikedPosts')
+      .then((response) => {
+        dispatch(fetchHotPostsSuccess(response.data));
+      }).catch((error) => {
+        console.log(error);
+        dispatch(fetchHotPostsFailure(error));
+      });
+  };
+}
+
 // export function replyCommentRequest() {
 //   return (dispatch) => {
 //     dispatch(replyComment());

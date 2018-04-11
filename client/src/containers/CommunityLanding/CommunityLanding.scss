@@ -1,0 +1,47 @@
+#community-landing {
+  > .top {
+    width: 100%;
+    margin: 10px auto;
+    display: flex;
+    justify-content: space-evenly;
+    .hot-boards, .hot-posts {
+      width: 48%;
+      display: inline-block;
+      vertical-align: top;
+      i {
+        vertical-align: bottom;
+        color: grey;
+      }
+      .simple-post {
+        &:nth-child(even) {
+          background-color: white;
+        }
+        &:nth-child(odd) {
+          background-color: #f3f3f3;
+        }
+      }
+    }
+    .title {
+      margin-bottom: 10px;
+      font-weight: 650;
+      color: grey;
+    }
+    .body {
+      box-shadow: 3px 4px 1px rgba(0, 0, 0, .05);
+    }
+  }
+}
+
+@media screen and (max-width: 650px) {
+  #community-landing {
+    > .top {
+      flex-direction: column;
+      .hot-boards, .hot-posts {
+        width: 100%;
+      }
+      .hot-posts {
+        margin-top: 10px;
+      }
+    }
+  }
+}

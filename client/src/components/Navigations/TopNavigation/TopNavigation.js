@@ -23,7 +23,7 @@ class TopNavigation extends Component {
             </i>
           </button>
           <h1>
-            <Link to="/">
+            <Link to="/community">
               CK BOARD
             </Link>
           </h1>

@@ -56,6 +56,41 @@ export const fetchBoardsRequest = (user, type, searchWord) => {
   };
 };
 
+export function fetchHotBoards() {
+  return {
+    type: types.FETCH_HOT_BOARDS
+  };
+}
+
+// FETCH BOARDS SUCEESS ACTION
+export function fetchHotBoardsSuccess(posts) {
+  return {
+    type: types.FETCH_HOT_BOARDS_SUCCESS,
+    payload: posts
+  };
+}
+
+export function fetchHotBoardsFailure(error) {
+  return {
+    type: types.FETCH_HOT_BOARDS_FAILURE,
+    payload: error
+  };
+}
+
+export const fetchBoardsRequestWithSort = (sortType = 'asc', limit = 10000) => {
+  return async (dispatch) => {
+    dispatch(fetchHotBoards());
+    const apiURL = `/api/board/all/${sortType}/${limit}`;
+
+    try {
+      const response = await axios.get(apiURL);
+      dispatch(fetchHotBoardsSuccess(response.data));
+    } catch (err) {
+      dispatch(fetchHotBoardsFailure(err));
+    }
+  };
+};
+
 // CREATE BOARD
 export function createBoard() {
   return {

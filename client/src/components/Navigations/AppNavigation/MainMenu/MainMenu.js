@@ -51,12 +51,12 @@ class MainMenu extends Component {
         className="Main-menu"
         onClose={ () => toggleMenu(false) }>
         <ul className="main-menu">
-          <li>
+          {/* <li>
             <NavLink exact to="/">
               <i className="material-icons">home</i>
               <span>Home</span>
             </NavLink>
-          </li>
+          </li> */}
           { MenuLinks(menus) }
         </ul>
       </MenuContainer>

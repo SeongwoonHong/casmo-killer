@@ -210,6 +210,45 @@ router.post('/disLikes/:postId', isAuthenticated, (req, res) => {
     });
   });
 });
+
+/* GET MOST LIKES POSTS */
+router.get('/mostLikedPosts', (req, res) => {
+  Post.aggregate([
+    {
+      "$match": {
+        "deleted": false
+      }
+    },
+    {
+      "$project":
+      {
+        "title": 1,
+        "contents": 1,
+        "boardId": 1,
+        "commentCount": 1,
+        "date": 1,
+        "count": 1,
+        "author": 1,
+        "likesCount": { "$size": "$likes" }
+      }
+    },
+    {
+      "$lookup": {
+        "localField": "author", // 기본 키
+        "from": "users", // join 할 collection명
+        "foreignField": "_id", // 외래 키
+        "as": "author" // 결과를 배출할 alias ( 필드명 )
+      }
+    },
+    { "$limit" : 10 },
+    { "$sort": { "likesCount": -1 } }
+  ]).exec((err, result) => {
+    if (err) throw err;
+    return res.json(result);
+  })
+})
+
+
 /* GET POST LIST */
 router.get('/:boardId/:page/:sortType', (req, res) => {
   const skipSize = (req.params.page - 1) * PER_PAGE;

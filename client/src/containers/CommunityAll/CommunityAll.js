@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import { Link, withRouter } from 'react-router-dom';
+import LoadingCircle from '@sharedComponents/LoadingCircle';
 import BoardList from '../../components/BoardList/BoardList';
 import Search from '../../components/Search/Search';
 import AlignHorizontal from '../../components/AlignHorizontal/AlignHorizontal';
@@ -45,7 +46,7 @@ class CommunityAll extends Component {
     if (status === 'WAITING' || status === 'INIT') {
       return (
         <div className="community">
-          Loading
+          <LoadingCircle />
         </div>
       );
     } else if (error) {

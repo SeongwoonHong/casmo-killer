@@ -11,6 +11,7 @@ const app = express();
 const port = process.env.PORT || 4000;
 
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 
 const jwtMiddleware = require('./src/middlewares/jwtMiddleware');
 const api = require('./src/routes');
@@ -21,6 +22,7 @@ require('./src/db');
 // default middlewares
 app.use(morgan('dev'));
 app.use(express.json());
+app.use(cookieParser(process.env.cookieSecret));
 app.use(jwtMiddleware);
 
 // api endpoints

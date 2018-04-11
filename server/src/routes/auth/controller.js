@@ -257,7 +257,8 @@ module.exports.localLogin = async (req, res) => {
     return res
       .cookie(cookieKeyName, accessToken, {
         httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 7
+        signed: true,
+        maxAge: 1000 * 60 * 60 * 24 * 7,
       })
       .send({
         user: {
@@ -311,6 +312,7 @@ module.exports.localRegister = async (req, res) => {
     return res
       .cookie(cookieKeyName, accessToken, {
         httpOnly: true,
+        signed: true,
         maxAge: 1000 * 60 * 60 * 24 * 7
       })
       .send({
@@ -377,6 +379,7 @@ module.exports.socialLogin = async (req, res) => {
         return res
           .cookie(cookieKeyName, accessToken, {
             httpOnly: true,
+            signed: true,
             maxAge: 1000 * 60 * 60 * 24 * 7
           })
           .send({
@@ -393,6 +396,7 @@ module.exports.socialLogin = async (req, res) => {
     }
 
   } catch (error) {
+    console.log(error);
     return errorUtils.server(res, error);
   }
 
@@ -428,6 +432,7 @@ module.exports.socialLogin = async (req, res) => {
     return res
       .cookie(cookieKeyName, accessToken, {
         httpOnly: true,
+        signed: true,
         maxAge: 1000 * 60 * 60 * 24 * 7
       })
       .send({
@@ -503,6 +508,7 @@ module.exports.socialRegister = async (req, res) => {
     return res
       .cookie(cookieKeyName, accessToken, {
         httpOnly: true,
+        signed: true,
         maxAge: 1000 * 60 * 60 * 24 * 7
       })
       .send({

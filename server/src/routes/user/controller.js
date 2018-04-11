@@ -1,5 +1,4 @@
 const Joi = require('joi');
-const mongoose = require('mongoose');
 const User = require('../../db/models/user');
 
 const {
@@ -219,6 +218,7 @@ module.exports.updateProfile = async (req, res) => {
     return res
       .cookie(cookieKeyName, accessToken, {
         httpOnly: true,
+        signed: true,
         maxAge: 1000 * 60 * 60 * 24 * 7
       })
       .send({
@@ -301,6 +301,7 @@ module.exports.updateEmail = async (req, res) => {
         return res
           .cookie(cookieKeyName, accessToken, {
             httpOnly: true,
+            signed: true,
             maxAge: 1000 * 60 * 60 * 24 * 7
           })
           .send({

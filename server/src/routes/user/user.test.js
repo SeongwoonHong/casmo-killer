@@ -6,12 +6,8 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const { expect } = require('chai');
 
-const jwtUtils = require('../../utils/jwtUtils');
-
 const { users, populateUsers } = require('../../utils/testSeed');
-
 const User = require('../../db/models/user');
-
 const app = require('../../../app');
 
 chai.use(chaiHttp);
@@ -184,7 +180,6 @@ describe('PUT /api/user/update/profile', () => {
       .put('/api/user/update/profile')
       .send(testData)
       .end((err, res) => {
-        console.log(res);
 
         expect(res).to.have.status(200);
         expect(res).to.have.cookie('ckToken');
@@ -206,7 +201,7 @@ describe('PUT /api/user/update/profile', () => {
 
 });
 
-// TODO: this testing may not be possible because email can only be updated ever 24 hrs
+// TODO: this may not be possible because email can only be updated after 24 hrs
 describe('PUT /api/user/update/email', () => {});
 
 describe('DELETE /api/user/delete/account', () => {

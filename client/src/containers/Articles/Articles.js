@@ -22,7 +22,8 @@ class Articles extends Component {
     const page = props.location.state === undefined ? 0 : parseInt(props.location.state.page, 10);
     const selected = props.location.state === undefined ? 0 : parseInt(props.location.state.selected, 10);
     const boardOId = null;
-    const bookmarked = props.user.isLoggedIn ? props.user.bookmarked.includes(boardOId) : false;
+    const bookmarked = props.user.isLoggedIn && props.user.bookmarked.includes(this.props.boardInfo.board);
+
     this.state = {
       page,
       boardId: props.match.params.boardId,
@@ -46,12 +47,12 @@ class Articles extends Component {
       sortInfo.listEng[sortInfo.selected]).then(() => {
       this.setState({
         boardOId: this.props.boardInfo.board,
-        bookmarked: this.props.user.isLoggedIn ? this.props.user.bookmarked.includes(this.props.boardInfo.board) : false
+        bookmarked: this.props.user.isLoggedIn && this.props.user.bookmarked.includes(this.props.boardInfo.board)
       });
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps() {
     if (this.props.postsList.status === 'FAILURE') {
       toast(`${this.props.postsList.error.message}`, {
         position: toast.POSITION_TOP_RIGHT,
@@ -59,13 +60,10 @@ class Articles extends Component {
       });
       this.props.history.replace('/404');
     }
-    this.setState({
-      bookmarked: nextProps.user.isLoggedIn && nextProps.user.bookmarked.includes(this.state.boardOId),
-    });
   }
 
-  shouldComponentUpdate(nextProps) {
-    return JSON.stringify(this.props) !== JSON.stringify(nextProps);
+  shouldComponentUpdate(nextProps, nextState) {
+    return (JSON.stringify(this.props) !== JSON.stringify(nextProps)) || (this.state.bookmarked !== nextState.bookmarked);
   }
 
   handlePageClick = (data) => {

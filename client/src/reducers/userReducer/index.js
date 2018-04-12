@@ -77,7 +77,15 @@ export default function (state = initialState, action) {
 
     case types.BOOKMARK_SUCCESS:
       return Object.assign({}, state, {
-        bookmarked: action.payload.bookmarked
+        user: {
+          isLoggedIn: true,
+          strategy: action.payload.strategy,
+          _id: action.payload._id,
+          email: action.payload.email,
+          displayName: action.payload.displayName,
+          avatar: action.payload.avatar || null,
+          bookmarked: action.payload.bookmarked
+        }
       });
 
     case types.TAGS_SEARCH:

@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import update from 'react-addons-update';
-import * as types from '../actions/types';
+import * as types from '@actions/types';
 
 const initialState = {
   newPost: {

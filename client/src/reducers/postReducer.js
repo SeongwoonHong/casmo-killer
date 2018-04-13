@@ -329,6 +329,11 @@ export default function post(state = initialState, action) {
         deletePost: {
           status: { $set: 'INIT' },
           error: { $set: null }
+        },
+        list: {
+          status: { $set: 'INIT' },
+          data: { $set: [] },
+          error: { $set: null }
         }
       });
 

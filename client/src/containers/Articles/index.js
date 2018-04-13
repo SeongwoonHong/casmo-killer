@@ -39,6 +39,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     bookmarkRequest: (boardId, user) => {
       return dispatch(actions.bookmarkRequest(boardId, user));
+    },
+    resetPostProps: () => {
+      return dispatch(actions.resetPostProps());
     }
   };
 };

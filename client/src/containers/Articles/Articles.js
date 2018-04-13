@@ -66,6 +66,10 @@ class Articles extends Component {
     return (JSON.stringify(this.props) !== JSON.stringify(nextProps)) || (this.state.bookmarked !== nextState.bookmarked);
   }
 
+  componentWillUnmount() {
+    this.props.resetPostProps();
+  }
+
   handlePageClick = (data) => {
     const { selected } = data;
     const { sortInfo } = this.state;

@@ -126,6 +126,7 @@
   },
   "proxy": "http://localhost:4000",
   "devDependencies": {
-    "coveralls": "^3.0.0"
+    "coveralls": "^3.0.0",
+    "husky": "^0.14.3"
   }
 }

@@ -76,7 +76,7 @@
     "test": "node scripts/test.js --env=jsdom",
     "coverage": "node scripts/test.js --env=jsdom --coverage",
     "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls",
-    "prepush": "eslint src"
+    "prepush": "lint-staged"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -128,6 +128,7 @@
   "proxy": "http://localhost:4000",
   "devDependencies": {
     "coveralls": "^3.0.0",
-    "husky": "^0.14.3"
+    "husky": "^0.14.3",
+    "lint-staged": "^7.0.4"
   }
 }

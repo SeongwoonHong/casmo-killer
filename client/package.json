@@ -75,7 +75,8 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
     "coverage": "node scripts/test.js --env=jsdom --coverage",
-    "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls"
+    "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls",
+    "prepush": "eslint src"
   },
   "jest": {
     "collectCoverageFrom": [

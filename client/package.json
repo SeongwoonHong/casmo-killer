@@ -76,7 +76,7 @@
     "test": "node scripts/test.js --env=jsdom",
     "coverage": "node scripts/test.js --env=jsdom --coverage",
     "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls",
-    "precommit": "lint-staged"
+    "precommit": "npm run lint-staged"
   },
   "jest": {
     "collectCoverageFrom": [

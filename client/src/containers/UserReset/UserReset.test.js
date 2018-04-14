@@ -3,10 +3,10 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import sinon from 'sinon';
 import axios from 'axios';
+import { validatePassword } from '@sharedUtils/inputValidators';
 
 import UserReset from './UserReset';
 
-import { validatePassword } from '@sharedUtils/inputValidators';
 
 describe('<UserReset />', () => {
 

@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
-import * as actions from '@actions';
-
 
 import ErrorPage from '../../components/ErrorPage';
 import Info from './Info';
@@ -10,11 +7,7 @@ import Info from './Info';
 import './User.scss';
 
 class User extends Component {
-
   render() {
-
-    const { user, registerRedirectUrl } = this.props;
-
     return (
       <div className="User">
         <Switch>
@@ -24,12 +17,6 @@ class User extends Component {
       </div>
     );
   }
-
 }
 
-export default connect(
-  state => ({
-    user: state.user.user
-  }),
-  dispatch => ({})
-)(User);
+export default User;

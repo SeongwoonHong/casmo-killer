@@ -15,14 +15,9 @@
                     font-weight: 400;
                     width: 100%;
                 }
-                &:disabled {
-                    > .preloader-wrapper {
-                        @include rectanglify(30px);
-                        margin: 0 auto;
-                        > .spinner-layer {
-                            border-color: palette(Grey, 900);
-                        }
-                    }
+                > .Loading-circle {
+                    @include rectanglify(30px);
+                    border-width: 3px;
                 }
             }
             &.facebook {

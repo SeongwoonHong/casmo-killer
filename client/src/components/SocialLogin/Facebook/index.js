@@ -74,23 +74,12 @@ class FacebookAuth extends Component {
 
   responseApi = (authResponse) => {
 
-    const {
-      // language: locale,
-      // fields,
-      onSuccess
-    } = this.props;
+    const { onSuccess } = this.props;
 
     onSuccess({
       provider: 'facebook',
       accessToken: authResponse.accessToken
     });
-
-    // window.FB.api('/me', {
-    //   locale,
-    //   fields
-    // }, (me) => {
-    //   Object.assign(me, authResponse);
-    // });
 
   };
 
@@ -145,7 +134,7 @@ class FacebookAuth extends Component {
         {
           this.state.isSdkLoaded
             ? children
-            : <LoadingCircle color="#515151" />
+            : <LoadingCircle />
         }
       </button>
     );

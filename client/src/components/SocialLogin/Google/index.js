@@ -113,8 +113,6 @@ class GoogleAuth extends Component {
           accessToken: response.getAuthResponse().access_token
         });
 
-        // this._handleSigninSuccess(response);
-
       } catch (error) {
 
         onFailure(error);
@@ -136,7 +134,7 @@ class GoogleAuth extends Component {
         {
           this.state.isSdkLoaded
             ? children
-            : <LoadingCircle color="#515151" />
+            : <LoadingCircle />
         }
       </button>
     );

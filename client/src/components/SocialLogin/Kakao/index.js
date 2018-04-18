@@ -48,13 +48,6 @@ class KakaoAuth extends Component {
           provider: 'kakao',
           accessToken: response.access_token
         });
-        // window.Kakao.API.request({
-        //   url: '/v1/user/me',
-        //   success: (profile) => {
-        //     console.log(profile);
-        //   },
-        //   fail: onFailure
-        // });
       },
       fail: onFailure
     });
@@ -73,7 +66,7 @@ class KakaoAuth extends Component {
         {
           this.state.isSdkLoaded
             ? children
-            : <LoadingCircle color="#515151" />
+            : <LoadingCircle />
         }
       </button>
     );

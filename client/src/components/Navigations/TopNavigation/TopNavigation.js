@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 
 import './TopNavigation.scss';
 
-import SearchForm from '../SearchForm/SearchForm';
-
 class TopNavigation extends Component {
 
   render() {
@@ -27,7 +25,6 @@ class TopNavigation extends Component {
               CK BOARD
             </Link>
           </h1>
-          <SearchForm styleClass="dt" />
           <button
             type="button"
             className="top-nav-btn"

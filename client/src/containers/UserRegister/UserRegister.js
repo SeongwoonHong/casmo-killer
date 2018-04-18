@@ -211,13 +211,15 @@ class Register extends Component {
       if (data && data.user) {
 
         const user = await storage.set('ckUser', data.user);
-        this.props.loginSuccess(user, true);
+        this.props.loginSuccess(user, true).then(() => {
 
-        const { isLoggedIn } = this.props.user;
+          const { isLoggedIn } = this.props.user;
 
-        if (isLoggedIn) {
-          this.props.history.replace('/');
-        }
+          if (isLoggedIn) {
+            this.props.history.replace('/');
+          }
+
+        });
 
       } else {
 

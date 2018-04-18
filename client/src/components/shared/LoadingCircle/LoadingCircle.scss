@@ -9,6 +9,7 @@
 }*/
 
 .Loading-circle {
+    @include rectanglify(150px);
     animation: spin 1s linear infinite;
     border: 5px solid #f3f3f3;
     border-top: 5px solid #555;

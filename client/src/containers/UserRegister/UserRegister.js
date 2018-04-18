@@ -211,15 +211,14 @@ class Register extends Component {
       if (data && data.user) {
 
         const user = await storage.set('ckUser', data.user);
-        this.props.loginSuccess(user, true).then(() => {
 
-          const { isLoggedIn } = this.props.user;
+        await this.props.loginSuccess(user, true);
 
-          if (isLoggedIn) {
-            this.props.history.replace('/');
-          }
+        const { isLoggedIn } = this.props.user;
 
-        });
+        if (isLoggedIn) {
+          this.props.history.replace('/');
+        }
 
       } else {
 
@@ -234,7 +233,7 @@ class Register extends Component {
       console.error(error);
       console.error(error.response.data.error);
       this.setState({
-        errorMsg: error.response.data.message
+        errorMsg: error.response && error.response.data.message
       });
 
     }

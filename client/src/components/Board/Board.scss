@@ -92,10 +92,25 @@
   &__managerInfo {
     display: flex;
     flex-direction: column;
-    
+    width: 75px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: normal;
+
     a {
       text-decoration: none;
       color: #8d9aa6;
+    }
+
+    a:hover {
+      color: #DB4015;
+    }
+
+    div {
+      width: 75px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-wrap: normal;
     }
   }
 

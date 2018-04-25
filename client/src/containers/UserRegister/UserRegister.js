@@ -14,8 +14,6 @@ import FormMessage from '@sharedComponents/FormMessage';
 import UserPageContainer from '../../components/UserPageContainer';
 import UserInputField from '../../components/UserInputField';
 
-import './UserRegister.scss';
-
 class Register extends Component {
 
   constructor(props) {
@@ -348,7 +346,7 @@ class Register extends Component {
           value={ password.value } />
 
         <FormMessage message={ avatar.message } />
-        <div className="user-form-fields">
+        <div className="User__form__fields user-form-fields">
           <label>Profile Picture</label>
           <div className="avatar-preview">
             <div className="avatar-wrapper">

@@ -124,17 +124,18 @@ class FacebookAuth extends Component {
 
   render() {
 
-    const { children } = this.props;
+    const { className, children } = this.props;
 
     return (
       <button
         type="button"
+        className={ className }
         disabled={ !this.state.isSdkLoaded }
         onClick={ this.click }>
         {
           this.state.isSdkLoaded
             ? children
-            : <LoadingCircle />
+            : <LoadingCircle className={ `${className}__circle`} />
         }
       </button>
     );
@@ -144,6 +145,7 @@ class FacebookAuth extends Component {
 
 
 FacebookAuth.propTypes = {
+  className: PropTypes.string.isRequired,
   clientId: PropTypes.string.isRequired,
   onSuccess: PropTypes.func.isRequired,
   onFailure: PropTypes.func,

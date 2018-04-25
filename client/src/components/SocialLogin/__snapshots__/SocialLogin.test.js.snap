@@ -25,7 +25,7 @@ ShallowWrapper {
           overlayColor="rgba(256,256,256,.75)"
 />,
         <div
-          className="user-form-header"
+          className="User__form__header"
 >
           <h3>
                     Social Login
@@ -39,12 +39,13 @@ ShallowWrapper {
           type="error"
 />,
         <div
-          className="social-btn-wrapper"
+          className="Social-login__row"
 >
           <div
-                    className="facebook"
+                    className="Social-login__wrapper Social-login__wrapper--facebook"
           >
                     <FacebookAuth
+                              className="Social-login__btn"
                               clientId="137341360260151"
                               fields="name,email,picture"
                               isDisabled={false}
@@ -55,19 +56,21 @@ ShallowWrapper {
                     >
                               <img
                                         alt="facebook-login"
+                                        className="Social-login__btn__img"
                                         src="facebook.png"
                               />
                               <span
-                                        className="center-align"
+                                        className="Social-login__btn__text"
                               >
                                         Facebook
                               </span>
                     </FacebookAuth>
           </div>
           <div
-                    className="google"
+                    className="Social-login__wrapper Social-login__wrapper--google"
           >
                     <GoogleAuth
+                              className="Social-login__btn"
                               clientId="754520959165-qfcdlss8glpjrjs59oldmtnj24m7tfk6.apps.googleusercontent.com"
                               fetchBasicProfile={true}
                               hostedDomain=""
@@ -79,29 +82,32 @@ ShallowWrapper {
                     >
                               <img
                                         alt="google-login"
+                                        className="Social-login__btn__img"
                                         src="google.png"
                               />
                               <span
-                                        className="center-align"
+                                        className="Social-login__btn__text"
                               >
                                         Google
                               </span>
                     </GoogleAuth>
           </div>
           <div
-                    className="kakao"
+                    className="Social-login__wrapper Social-login__wrapper--kakao"
           >
                     <KakaoAuth
+                              className="Social-login__btn"
                               clientId="788acae6dc56555e6f4dc4064514177a"
                               onFailure={[Function]}
                               onSuccess={[Function]}
                     >
                               <img
                                         alt="kakao-login"
+                                        className="Social-login__btn__img"
                                         src="kakao.png"
                               />
                               <span
-                                        className="center-align"
+                                        className="Social-login__btn__text"
                               >
                                         Kakao
                               </span>
@@ -109,7 +115,7 @@ ShallowWrapper {
           </div>
 </div>,
       ],
-      "className": "Social-login user-form-box",
+      "className": "Social-login User__form__row",
     },
     "ref": null,
     "rendered": Array [
@@ -140,7 +146,7 @@ ShallowWrapper {
               User your favourite social network to sign up.
 </p>,
           ],
-          "className": "user-form-header",
+          "className": "User__form__header",
         },
         "ref": null,
         "rendered": Array [
@@ -188,9 +194,10 @@ ShallowWrapper {
         "props": Object {
           "children": Array [
             <div
-              className="facebook"
+              className="Social-login__wrapper Social-login__wrapper--facebook"
 >
               <FacebookAuth
+                            className="Social-login__btn"
                             clientId="137341360260151"
                             fields="name,email,picture"
                             isDisabled={false}
@@ -201,19 +208,21 @@ ShallowWrapper {
               >
                             <img
                                           alt="facebook-login"
+                                          className="Social-login__btn__img"
                                           src="facebook.png"
                             />
                             <span
-                                          className="center-align"
+                                          className="Social-login__btn__text"
                             >
                                           Facebook
                             </span>
               </FacebookAuth>
 </div>,
             <div
-              className="google"
+              className="Social-login__wrapper Social-login__wrapper--google"
 >
               <GoogleAuth
+                            className="Social-login__btn"
                             clientId="754520959165-qfcdlss8glpjrjs59oldmtnj24m7tfk6.apps.googleusercontent.com"
                             fetchBasicProfile={true}
                             hostedDomain=""
@@ -225,36 +234,39 @@ ShallowWrapper {
               >
                             <img
                                           alt="google-login"
+                                          className="Social-login__btn__img"
                                           src="google.png"
                             />
                             <span
-                                          className="center-align"
+                                          className="Social-login__btn__text"
                             >
                                           Google
                             </span>
               </GoogleAuth>
 </div>,
             <div
-              className="kakao"
+              className="Social-login__wrapper Social-login__wrapper--kakao"
 >
               <KakaoAuth
+                            className="Social-login__btn"
                             clientId="788acae6dc56555e6f4dc4064514177a"
                             onFailure={[Function]}
                             onSuccess={[Function]}
               >
                             <img
                                           alt="kakao-login"
+                                          className="Social-login__btn__img"
                                           src="kakao.png"
                             />
                             <span
-                                          className="center-align"
+                                          className="Social-login__btn__text"
                             >
                                           Kakao
                             </span>
               </KakaoAuth>
 </div>,
           ],
-          "className": "social-btn-wrapper",
+          "className": "Social-login__row",
         },
         "ref": null,
         "rendered": Array [
@@ -264,6 +276,7 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": <FacebookAuth
+                className="Social-login__btn"
                 clientId="137341360260151"
                 fields="name,email,picture"
                 isDisabled={false}
@@ -274,15 +287,16 @@ ShallowWrapper {
 >
                 <img
                                 alt="facebook-login"
+                                className="Social-login__btn__img"
                                 src="facebook.png"
                 />
                 <span
-                                className="center-align"
+                                className="Social-login__btn__text"
                 >
                                 Facebook
                 </span>
 </FacebookAuth>,
-              "className": "facebook",
+              "className": "Social-login__wrapper Social-login__wrapper--facebook",
             },
             "ref": null,
             "rendered": Object {
@@ -293,14 +307,16 @@ ShallowWrapper {
                 "children": Array [
                   <img
                     alt="facebook-login"
+                    className="Social-login__btn__img"
                     src="facebook.png"
 />,
                   <span
-                    className="center-align"
+                    className="Social-login__btn__text"
 >
                     Facebook
 </span>,
                 ],
+                "className": "Social-login__btn",
                 "clientId": "137341360260151",
                 "fields": "name,email,picture",
                 "isDisabled": false,
@@ -317,6 +333,7 @@ ShallowWrapper {
                   "nodeType": "host",
                   "props": Object {
                     "alt": "facebook-login",
+                    "className": "Social-login__btn__img",
                     "src": "facebook.png",
                   },
                   "ref": null,
@@ -329,7 +346,7 @@ ShallowWrapper {
                   "nodeType": "host",
                   "props": Object {
                     "children": "Facebook",
-                    "className": "center-align",
+                    "className": "Social-login__btn__text",
                   },
                   "ref": null,
                   "rendered": "Facebook",
@@ -346,6 +363,7 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": <GoogleAuth
+                className="Social-login__btn"
                 clientId="754520959165-qfcdlss8glpjrjs59oldmtnj24m7tfk6.apps.googleusercontent.com"
                 fetchBasicProfile={true}
                 hostedDomain=""
@@ -357,15 +375,16 @@ ShallowWrapper {
 >
                 <img
                                 alt="google-login"
+                                className="Social-login__btn__img"
                                 src="google.png"
                 />
                 <span
-                                className="center-align"
+                                className="Social-login__btn__text"
                 >
                                 Google
                 </span>
 </GoogleAuth>,
-              "className": "google",
+              "className": "Social-login__wrapper Social-login__wrapper--google",
             },
             "ref": null,
             "rendered": Object {
@@ -376,14 +395,16 @@ ShallowWrapper {
                 "children": Array [
                   <img
                     alt="google-login"
+                    className="Social-login__btn__img"
                     src="google.png"
 />,
                   <span
-                    className="center-align"
+                    className="Social-login__btn__text"
 >
                     Google
 </span>,
                 ],
+                "className": "Social-login__btn",
                 "clientId": "754520959165-qfcdlss8glpjrjs59oldmtnj24m7tfk6.apps.googleusercontent.com",
                 "fetchBasicProfile": true,
                 "hostedDomain": "",
@@ -401,6 +422,7 @@ ShallowWrapper {
                   "nodeType": "host",
                   "props": Object {
                     "alt": "google-login",
+                    "className": "Social-login__btn__img",
                     "src": "google.png",
                   },
                   "ref": null,
@@ -413,7 +435,7 @@ ShallowWrapper {
                   "nodeType": "host",
                   "props": Object {
                     "children": "Google",
-                    "className": "center-align",
+                    "className": "Social-login__btn__text",
                   },
                   "ref": null,
                   "rendered": "Google",
@@ -430,21 +452,23 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": <KakaoAuth
+                className="Social-login__btn"
                 clientId="788acae6dc56555e6f4dc4064514177a"
                 onFailure={[Function]}
                 onSuccess={[Function]}
 >
                 <img
                                 alt="kakao-login"
+                                className="Social-login__btn__img"
                                 src="kakao.png"
                 />
                 <span
-                                className="center-align"
+                                className="Social-login__btn__text"
                 >
                                 Kakao
                 </span>
 </KakaoAuth>,
-              "className": "kakao",
+              "className": "Social-login__wrapper Social-login__wrapper--kakao",
             },
             "ref": null,
             "rendered": Object {
@@ -455,14 +479,16 @@ ShallowWrapper {
                 "children": Array [
                   <img
                     alt="kakao-login"
+                    className="Social-login__btn__img"
                     src="kakao.png"
 />,
                   <span
-                    className="center-align"
+                    className="Social-login__btn__text"
 >
                     Kakao
 </span>,
                 ],
+                "className": "Social-login__btn",
                 "clientId": "788acae6dc56555e6f4dc4064514177a",
                 "onFailure": [Function],
                 "onSuccess": [Function],
@@ -475,6 +501,7 @@ ShallowWrapper {
                   "nodeType": "host",
                   "props": Object {
                     "alt": "kakao-login",
+                    "className": "Social-login__btn__img",
                     "src": "kakao.png",
                   },
                   "ref": null,
@@ -487,7 +514,7 @@ ShallowWrapper {
                   "nodeType": "host",
                   "props": Object {
                     "children": "Kakao",
-                    "className": "center-align",
+                    "className": "Social-login__btn__text",
                   },
                   "ref": null,
                   "rendered": "Kakao",
@@ -518,7 +545,7 @@ ShallowWrapper {
             overlayColor="rgba(256,256,256,.75)"
 />,
           <div
-            className="user-form-header"
+            className="User__form__header"
 >
             <h3>
                         Social Login
@@ -532,12 +559,13 @@ ShallowWrapper {
             type="error"
 />,
           <div
-            className="social-btn-wrapper"
+            className="Social-login__row"
 >
             <div
-                        className="facebook"
+                        className="Social-login__wrapper Social-login__wrapper--facebook"
             >
                         <FacebookAuth
+                                    className="Social-login__btn"
                                     clientId="137341360260151"
                                     fields="name,email,picture"
                                     isDisabled={false}
@@ -548,19 +576,21 @@ ShallowWrapper {
                         >
                                     <img
                                                 alt="facebook-login"
+                                                className="Social-login__btn__img"
                                                 src="facebook.png"
                                     />
                                     <span
-                                                className="center-align"
+                                                className="Social-login__btn__text"
                                     >
                                                 Facebook
                                     </span>
                         </FacebookAuth>
             </div>
             <div
-                        className="google"
+                        className="Social-login__wrapper Social-login__wrapper--google"
             >
                         <GoogleAuth
+                                    className="Social-login__btn"
                                     clientId="754520959165-qfcdlss8glpjrjs59oldmtnj24m7tfk6.apps.googleusercontent.com"
                                     fetchBasicProfile={true}
                                     hostedDomain=""
@@ -572,29 +602,32 @@ ShallowWrapper {
                         >
                                     <img
                                                 alt="google-login"
+                                                className="Social-login__btn__img"
                                                 src="google.png"
                                     />
                                     <span
-                                                className="center-align"
+                                                className="Social-login__btn__text"
                                     >
                                                 Google
                                     </span>
                         </GoogleAuth>
             </div>
             <div
-                        className="kakao"
+                        className="Social-login__wrapper Social-login__wrapper--kakao"
             >
                         <KakaoAuth
+                                    className="Social-login__btn"
                                     clientId="788acae6dc56555e6f4dc4064514177a"
                                     onFailure={[Function]}
                                     onSuccess={[Function]}
                         >
                                     <img
                                                 alt="kakao-login"
+                                                className="Social-login__btn__img"
                                                 src="kakao.png"
                                     />
                                     <span
-                                                className="center-align"
+                                                className="Social-login__btn__text"
                                     >
                                                 Kakao
                                     </span>
@@ -602,7 +635,7 @@ ShallowWrapper {
             </div>
 </div>,
         ],
-        "className": "Social-login user-form-box",
+        "className": "Social-login User__form__row",
       },
       "ref": null,
       "rendered": Array [
@@ -633,7 +666,7 @@ ShallowWrapper {
                 User your favourite social network to sign up.
 </p>,
             ],
-            "className": "user-form-header",
+            "className": "User__form__header",
           },
           "ref": null,
           "rendered": Array [
@@ -681,9 +714,10 @@ ShallowWrapper {
           "props": Object {
             "children": Array [
               <div
-                className="facebook"
+                className="Social-login__wrapper Social-login__wrapper--facebook"
 >
                 <FacebookAuth
+                                className="Social-login__btn"
                                 clientId="137341360260151"
                                 fields="name,email,picture"
                                 isDisabled={false}
@@ -694,19 +728,21 @@ ShallowWrapper {
                 >
                                 <img
                                                 alt="facebook-login"
+                                                className="Social-login__btn__img"
                                                 src="facebook.png"
                                 />
                                 <span
-                                                className="center-align"
+                                                className="Social-login__btn__text"
                                 >
                                                 Facebook
                                 </span>
                 </FacebookAuth>
 </div>,
               <div
-                className="google"
+                className="Social-login__wrapper Social-login__wrapper--google"
 >
                 <GoogleAuth
+                                className="Social-login__btn"
                                 clientId="754520959165-qfcdlss8glpjrjs59oldmtnj24m7tfk6.apps.googleusercontent.com"
                                 fetchBasicProfile={true}
                                 hostedDomain=""
@@ -718,36 +754,39 @@ ShallowWrapper {
                 >
                                 <img
                                                 alt="google-login"
+                                                className="Social-login__btn__img"
                                                 src="google.png"
                                 />
                                 <span
-                                                className="center-align"
+                                                className="Social-login__btn__text"
                                 >
                                                 Google
                                 </span>
                 </GoogleAuth>
 </div>,
               <div
-                className="kakao"
+                className="Social-login__wrapper Social-login__wrapper--kakao"
 >
                 <KakaoAuth
+                                className="Social-login__btn"
                                 clientId="788acae6dc56555e6f4dc4064514177a"
                                 onFailure={[Function]}
                                 onSuccess={[Function]}
                 >
                                 <img
                                                 alt="kakao-login"
+                                                className="Social-login__btn__img"
                                                 src="kakao.png"
                                 />
                                 <span
-                                                className="center-align"
+                                                className="Social-login__btn__text"
                                 >
                                                 Kakao
                                 </span>
                 </KakaoAuth>
 </div>,
             ],
-            "className": "social-btn-wrapper",
+            "className": "Social-login__row",
           },
           "ref": null,
           "rendered": Array [
@@ -757,6 +796,7 @@ ShallowWrapper {
               "nodeType": "host",
               "props": Object {
                 "children": <FacebookAuth
+                  className="Social-login__btn"
                   clientId="137341360260151"
                   fields="name,email,picture"
                   isDisabled={false}
@@ -767,15 +807,16 @@ ShallowWrapper {
 >
                   <img
                                     alt="facebook-login"
+                                    className="Social-login__btn__img"
                                     src="facebook.png"
                   />
                   <span
-                                    className="center-align"
+                                    className="Social-login__btn__text"
                   >
                                     Facebook
                   </span>
 </FacebookAuth>,
-                "className": "facebook",
+                "className": "Social-login__wrapper Social-login__wrapper--facebook",
               },
               "ref": null,
               "rendered": Object {
@@ -786,14 +827,16 @@ ShallowWrapper {
                   "children": Array [
                     <img
                       alt="facebook-login"
+                      className="Social-login__btn__img"
                       src="facebook.png"
 />,
                     <span
-                      className="center-align"
+                      className="Social-login__btn__text"
 >
                       Facebook
 </span>,
                   ],
+                  "className": "Social-login__btn",
                   "clientId": "137341360260151",
                   "fields": "name,email,picture",
                   "isDisabled": false,
@@ -810,6 +853,7 @@ ShallowWrapper {
                     "nodeType": "host",
                     "props": Object {
                       "alt": "facebook-login",
+                      "className": "Social-login__btn__img",
                       "src": "facebook.png",
                     },
                     "ref": null,
@@ -822,7 +866,7 @@ ShallowWrapper {
                     "nodeType": "host",
                     "props": Object {
                       "children": "Facebook",
-                      "className": "center-align",
+                      "className": "Social-login__btn__text",
                     },
                     "ref": null,
                     "rendered": "Facebook",
@@ -839,6 +883,7 @@ ShallowWrapper {
               "nodeType": "host",
               "props": Object {
                 "children": <GoogleAuth
+                  className="Social-login__btn"
                   clientId="754520959165-qfcdlss8glpjrjs59oldmtnj24m7tfk6.apps.googleusercontent.com"
                   fetchBasicProfile={true}
                   hostedDomain=""
@@ -850,15 +895,16 @@ ShallowWrapper {
 >
                   <img
                                     alt="google-login"
+                                    className="Social-login__btn__img"
                                     src="google.png"
                   />
                   <span
-                                    className="center-align"
+                                    className="Social-login__btn__text"
                   >
                                     Google
                   </span>
 </GoogleAuth>,
-                "className": "google",
+                "className": "Social-login__wrapper Social-login__wrapper--google",
               },
               "ref": null,
               "rendered": Object {
@@ -869,14 +915,16 @@ ShallowWrapper {
                   "children": Array [
                     <img
                       alt="google-login"
+                      className="Social-login__btn__img"
                       src="google.png"
 />,
                     <span
-                      className="center-align"
+                      className="Social-login__btn__text"
 >
                       Google
 </span>,
                   ],
+                  "className": "Social-login__btn",
                   "clientId": "754520959165-qfcdlss8glpjrjs59oldmtnj24m7tfk6.apps.googleusercontent.com",
                   "fetchBasicProfile": true,
                   "hostedDomain": "",
@@ -894,6 +942,7 @@ ShallowWrapper {
                     "nodeType": "host",
                     "props": Object {
                       "alt": "google-login",
+                      "className": "Social-login__btn__img",
                       "src": "google.png",
                     },
                     "ref": null,
@@ -906,7 +955,7 @@ ShallowWrapper {
                     "nodeType": "host",
                     "props": Object {
                       "children": "Google",
-                      "className": "center-align",
+                      "className": "Social-login__btn__text",
                     },
                     "ref": null,
                     "rendered": "Google",
@@ -923,21 +972,23 @@ ShallowWrapper {
               "nodeType": "host",
               "props": Object {
                 "children": <KakaoAuth
+                  className="Social-login__btn"
                   clientId="788acae6dc56555e6f4dc4064514177a"
                   onFailure={[Function]}
                   onSuccess={[Function]}
 >
                   <img
                                     alt="kakao-login"
+                                    className="Social-login__btn__img"
                                     src="kakao.png"
                   />
                   <span
-                                    className="center-align"
+                                    className="Social-login__btn__text"
                   >
                                     Kakao
                   </span>
 </KakaoAuth>,
-                "className": "kakao",
+                "className": "Social-login__wrapper Social-login__wrapper--kakao",
               },
               "ref": null,
               "rendered": Object {
@@ -948,14 +999,16 @@ ShallowWrapper {
                   "children": Array [
                     <img
                       alt="kakao-login"
+                      className="Social-login__btn__img"
                       src="kakao.png"
 />,
                     <span
-                      className="center-align"
+                      className="Social-login__btn__text"
 >
                       Kakao
 </span>,
                   ],
+                  "className": "Social-login__btn",
                   "clientId": "788acae6dc56555e6f4dc4064514177a",
                   "onFailure": [Function],
                   "onSuccess": [Function],
@@ -968,6 +1021,7 @@ ShallowWrapper {
                     "nodeType": "host",
                     "props": Object {
                       "alt": "kakao-login",
+                      "className": "Social-login__btn__img",
                       "src": "kakao.png",
                     },
                     "ref": null,
@@ -980,7 +1034,7 @@ ShallowWrapper {
                     "nodeType": "host",
                     "props": Object {
                       "children": "Kakao",
-                      "className": "center-align",
+                      "className": "Social-login__btn__text",
                     },
                     "ref": null,
                     "rendered": "Kakao",

@@ -94,7 +94,7 @@ ShallowWrapper {
           type="error"
 />,
         <div
-          className="user-form-fields"
+          className="User__form__fields user-form-fields"
 >
           <label>
                     Profile Picture
@@ -304,7 +304,7 @@ ShallowWrapper {
               </label>
 </div>,
           ],
-          "className": "user-form-fields",
+          "className": "User__form__fields user-form-fields",
         },
         "ref": null,
         "rendered": Array [
@@ -514,7 +514,7 @@ ShallowWrapper {
             type="error"
 />,
           <div
-            className="user-form-fields"
+            className="User__form__fields user-form-fields"
 >
             <label>
                         Profile Picture
@@ -724,7 +724,7 @@ ShallowWrapper {
                 </label>
 </div>,
             ],
-            "className": "user-form-fields",
+            "className": "User__form__fields user-form-fields",
           },
           "ref": null,
           "rendered": Array [

@@ -162,16 +162,17 @@ ShallowWrapper {
     "props": Object {
       "children": Array [
         <h2
-          className="user-page-title"
+          className="User__page__title"
 >
           Login to your account
           <i
-                    className="material-icons"
+                    className="User__page__title__icons material-icons"
           >
                     lock
           </i>
 </h2>,
         <FormMessage
+          className="Login__message"
           message=""
           type="error"
 />,
@@ -198,12 +199,12 @@ ShallowWrapper {
           "children": Array [
             "Login to your account",
             <i
-              className="material-icons"
+              className="User__page__title__icons material-icons"
 >
               lock
 </i>,
           ],
-          "className": "user-page-title",
+          "className": "User__page__title",
         },
         "ref": null,
         "rendered": Array [
@@ -214,7 +215,7 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": "lock",
-              "className": "material-icons",
+              "className": "User__page__title__icons material-icons",
             },
             "ref": null,
             "rendered": "lock",
@@ -228,6 +229,7 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "function",
         "props": Object {
+          "className": "Login__message",
           "message": "",
           "type": "error",
         },
@@ -272,16 +274,17 @@ ShallowWrapper {
       "props": Object {
         "children": Array [
           <h2
-            className="user-page-title"
+            className="User__page__title"
 >
             Login to your account
             <i
-                        className="material-icons"
+                        className="User__page__title__icons material-icons"
             >
                         lock
             </i>
 </h2>,
           <FormMessage
+            className="Login__message"
             message=""
             type="error"
 />,
@@ -308,12 +311,12 @@ ShallowWrapper {
             "children": Array [
               "Login to your account",
               <i
-                className="material-icons"
+                className="User__page__title__icons material-icons"
 >
                 lock
 </i>,
             ],
-            "className": "user-page-title",
+            "className": "User__page__title",
           },
           "ref": null,
           "rendered": Array [
@@ -324,7 +327,7 @@ ShallowWrapper {
               "nodeType": "host",
               "props": Object {
                 "children": "lock",
-                "className": "material-icons",
+                "className": "User__page__title__icons material-icons",
               },
               "ref": null,
               "rendered": "lock",
@@ -338,6 +341,7 @@ ShallowWrapper {
           "key": undefined,
           "nodeType": "function",
           "props": Object {
+            "className": "Login__message",
             "message": "",
             "type": "error",
           },

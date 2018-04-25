@@ -6,8 +6,6 @@ import FormMessage from '@sharedComponents/FormMessage';
 import UserPageContainer from '../../components/UserPageContainer';
 import UserInputField from '../../components/UserInputField';
 
-// import './Recover.scss';
-
 class Recover extends Component {
 
   constructor(props) {
@@ -93,7 +91,7 @@ class Recover extends Component {
         button={
           <button
             type="submit"
-            className="user-form-button">
+            className="User__form__btn">
             {
               message.length > 0 && isSuccess
                 ? 'Resend'

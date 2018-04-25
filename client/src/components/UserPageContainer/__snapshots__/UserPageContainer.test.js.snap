@@ -33,7 +33,7 @@ ShallowWrapper {
       "children": Array [
         null,
         <div
-          className="user-form-box"
+          className="User__form__row test__form__row"
 >
           <LoadingOverlay
                     circleColor="#1F4B40"
@@ -42,14 +42,16 @@ ShallowWrapper {
                     overlayColor="rgba(256,256,256,.75)"
           />
           <div
-                    className="user-form-header"
+                    className="User__form__header test__form__header"
           >
-                    <h3>
+                    <h3
+                              className="User__form__header__title test__form__header__title"
+                    >
                               test-form
                     </h3>
           </div>
           <form
-                    className="user-form"
+                    className="User__form test__form user-form"
                     noValidate={true}
                     onSubmit={[Function]}
           >
@@ -57,7 +59,7 @@ ShallowWrapper {
                               testing
                     </p>
                     <button
-                              className="user-form-button"
+                              className="User__form__btn user-form-button"
                               disabled={false}
                               type="submit"
                     >
@@ -84,14 +86,16 @@ ShallowWrapper {
               overlayColor="rgba(256,256,256,.75)"
 />,
             <div
-              className="user-form-header"
+              className="User__form__header test__form__header"
 >
-              <h3>
+              <h3
+                            className="User__form__header__title test__form__header__title"
+              >
                             test-form
               </h3>
 </div>,
             <form
-              className="user-form"
+              className="User__form test__form user-form"
               noValidate={true}
               onSubmit={[Function]}
 >
@@ -99,7 +103,7 @@ ShallowWrapper {
                             testing
               </p>
               <button
-                            className="user-form-button"
+                            className="User__form__btn user-form-button"
                             disabled={false}
                             type="submit"
               >
@@ -107,7 +111,7 @@ ShallowWrapper {
               </button>
 </form>,
           ],
-          "className": "user-form-box",
+          "className": "User__form__row test__form__row",
         },
         "ref": null,
         "rendered": Array [
@@ -131,12 +135,14 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": Array [
-                <h3>
+                <h3
+                  className="User__form__header__title test__form__header__title"
+>
                   test-form
 </h3>,
                 null,
               ],
-              "className": "user-form-header",
+              "className": "User__form__header test__form__header",
             },
             "ref": null,
             "rendered": Array [
@@ -146,6 +152,7 @@ ShallowWrapper {
                 "nodeType": "host",
                 "props": Object {
                   "children": "test-form",
+                  "className": "User__form__header__title test__form__header__title",
                 },
                 "ref": null,
                 "rendered": "test-form",
@@ -165,14 +172,14 @@ ShallowWrapper {
                   testing
 </p>,
                 <button
-                  className="user-form-button"
+                  className="User__form__btn user-form-button"
                   disabled={false}
                   type="submit"
 >
                   Submit
 </button>,
               ],
-              "className": "user-form",
+              "className": "User__form test__form user-form",
               "noValidate": true,
               "onSubmit": [Function],
             },
@@ -195,7 +202,7 @@ ShallowWrapper {
                 "nodeType": "host",
                 "props": Object {
                   "children": "Submit",
-                  "className": "user-form-button",
+                  "className": "User__form__btn user-form-button",
                   "disabled": false,
                   "type": "submit",
                 },
@@ -221,7 +228,7 @@ ShallowWrapper {
         "children": Array [
           null,
           <div
-            className="user-form-box"
+            className="User__form__row test__form__row"
 >
             <LoadingOverlay
                         circleColor="#1F4B40"
@@ -230,14 +237,16 @@ ShallowWrapper {
                         overlayColor="rgba(256,256,256,.75)"
             />
             <div
-                        className="user-form-header"
+                        className="User__form__header test__form__header"
             >
-                        <h3>
+                        <h3
+                                    className="User__form__header__title test__form__header__title"
+                        >
                                     test-form
                         </h3>
             </div>
             <form
-                        className="user-form"
+                        className="User__form test__form user-form"
                         noValidate={true}
                         onSubmit={[Function]}
             >
@@ -245,7 +254,7 @@ ShallowWrapper {
                                     testing
                         </p>
                         <button
-                                    className="user-form-button"
+                                    className="User__form__btn user-form-button"
                                     disabled={false}
                                     type="submit"
                         >
@@ -272,14 +281,16 @@ ShallowWrapper {
                 overlayColor="rgba(256,256,256,.75)"
 />,
               <div
-                className="user-form-header"
+                className="User__form__header test__form__header"
 >
-                <h3>
+                <h3
+                                className="User__form__header__title test__form__header__title"
+                >
                                 test-form
                 </h3>
 </div>,
               <form
-                className="user-form"
+                className="User__form test__form user-form"
                 noValidate={true}
                 onSubmit={[Function]}
 >
@@ -287,7 +298,7 @@ ShallowWrapper {
                                 testing
                 </p>
                 <button
-                                className="user-form-button"
+                                className="User__form__btn user-form-button"
                                 disabled={false}
                                 type="submit"
                 >
@@ -295,7 +306,7 @@ ShallowWrapper {
                 </button>
 </form>,
             ],
-            "className": "user-form-box",
+            "className": "User__form__row test__form__row",
           },
           "ref": null,
           "rendered": Array [
@@ -319,12 +330,14 @@ ShallowWrapper {
               "nodeType": "host",
               "props": Object {
                 "children": Array [
-                  <h3>
+                  <h3
+                    className="User__form__header__title test__form__header__title"
+>
                     test-form
 </h3>,
                   null,
                 ],
-                "className": "user-form-header",
+                "className": "User__form__header test__form__header",
               },
               "ref": null,
               "rendered": Array [
@@ -334,6 +347,7 @@ ShallowWrapper {
                   "nodeType": "host",
                   "props": Object {
                     "children": "test-form",
+                    "className": "User__form__header__title test__form__header__title",
                   },
                   "ref": null,
                   "rendered": "test-form",
@@ -353,14 +367,14 @@ ShallowWrapper {
                     testing
 </p>,
                   <button
-                    className="user-form-button"
+                    className="User__form__btn user-form-button"
                     disabled={false}
                     type="submit"
 >
                     Submit
 </button>,
                 ],
-                "className": "user-form",
+                "className": "User__form test__form user-form",
                 "noValidate": true,
                 "onSubmit": [Function],
               },
@@ -383,7 +397,7 @@ ShallowWrapper {
                   "nodeType": "host",
                   "props": Object {
                     "children": "Submit",
-                    "className": "user-form-button",
+                    "className": "User__form__btn user-form-button",
                     "disabled": false,
                     "type": "submit",
                   },

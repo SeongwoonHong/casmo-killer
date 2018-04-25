@@ -4,7 +4,7 @@ import onClickOutside from 'react-onclickoutside';
 
 import './UserMenu.scss';
 
-import MenuContainer from '../shared/MenuContainer';
+import MenuContainer from '../../shared/MenuContainer';
 
 import UserDropdownBtn from './UserDropdownBtn';
 import UserDropdown from './UserDropdown';
@@ -34,7 +34,6 @@ class UserMenu extends Component {
         className="User-menu"
         onClose={ () => toggleUserMenu(false) }>
         <UserDropdownBtn
-          active={ active }
           isLoggedIn={ user.isLoggedIn }
           displayName={ user.displayName }
           avatar={ user.avatar }

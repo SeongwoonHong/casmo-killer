@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 import './MainMenu.scss';
 
-import MenuContainer from '../shared/MenuContainer';
+import MenuContainer from '../../shared/MenuContainer';
 
 class MainMenu extends Component {
 
@@ -15,20 +15,28 @@ class MainMenu extends Component {
       return routes.map((route) => {
         if (route.name && route.icon) {
           return (
-            <li key={ route.name }>
+            <li
+              className="Main-menu__list__items"
+              key={ route.name }>
               <NavLink
+                className="Main-menu__list__items__links"
                 to={ route.path }>
-                <i className="material-icons">
+                <i className="Main-menu__list__items__links__icons material-icons">
                   { route.icon }
                 </i>
-                <span>{ route.name }</span>
+                <span className="Main-menu__list__items__links__text">
+                  { route.name }
+                </span>
               </NavLink>
-              <ul className="sub-menu">
+              <ul className="Main-menu__list__items__sub sub-menu">
                 {
                   route.children
                     ? route.children.map(child => (
-                      <li key={ child.name }>
+                      <li
+                        className="Main-menu__list__items__sub__items"
+                        key={ child.name }>
                         <NavLink
+                          className="Main-menu__list__items__sub__items__links"
                           exact
                           to={ route.path + child.path }>
                           { child.name }
@@ -50,13 +58,7 @@ class MainMenu extends Component {
         active={ active }
         className="Main-menu"
         onClose={ () => toggleMenu(false) }>
-        <ul className="main-menu">
-          {/* <li>
-            <NavLink exact to="/">
-              <i className="material-icons">home</i>
-              <span>Home</span>
-            </NavLink>
-          </li> */}
+        <ul className="Main-menu__list">
           { MenuLinks(menus) }
         </ul>
       </MenuContainer>

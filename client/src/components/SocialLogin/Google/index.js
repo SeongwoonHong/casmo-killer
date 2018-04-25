@@ -113,8 +113,6 @@ class GoogleAuth extends Component {
           accessToken: response.getAuthResponse().access_token
         });
 
-        // this._handleSigninSuccess(response);
-
       } catch (error) {
 
         onFailure(error);
@@ -126,17 +124,18 @@ class GoogleAuth extends Component {
 
   render() {
 
-    const { children } = this.props;
+    const { className, children } = this.props;
 
     return (
       <button
         type="button"
+        className={ className }
         disabled={ !this.state.isSdkLoaded }
         onClick={ this.click }>
         {
           this.state.isSdkLoaded
             ? children
-            : <LoadingCircle color="#515151" />
+            : <LoadingCircle className={ `${className}__circle`} />
         }
       </button>
     );
@@ -146,6 +145,7 @@ class GoogleAuth extends Component {
 }
 
 GoogleAuth.propTypes = {
+  className: PropTypes.string.isRequired,
   clientId: PropTypes.string.isRequired,
   onSuccess: PropTypes.func.isRequired,
   onFailure: PropTypes.func,

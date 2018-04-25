@@ -16,7 +16,7 @@ ShallowWrapper {
     <UserPageContainer
       button={
             <button
-                  className="user-form-button"
+                  className="User__form__btn Local-login__form__btn"
                   type="submit"
             >
                   Sign Up
@@ -63,15 +63,17 @@ ShallowWrapper {
       />
 </UserPageContainer>,
     <div
-      className="other-options"
+      className="Local-login__options"
 >
       <Link
+            className="Local-login__options__links"
             replace={false}
             to="/user/auth/login"
       >
             Log In With Email
       </Link>
       <Link
+            className="Local-login__options__links"
             replace={false}
             to="/user/recover"
       >
@@ -84,7 +86,7 @@ ShallowWrapper {
       <UserPageContainer
         button={
                 <button
-                        className="user-form-button"
+                        className="User__form__btn Local-login__form__btn"
                         type="submit"
                 >
                         Sign Up
@@ -131,15 +133,17 @@ ShallowWrapper {
         />
 </UserPageContainer>,
       <div
-        className="other-options"
+        className="Local-login__options"
 >
         <Link
+                className="Local-login__options__links"
                 replace={false}
                 to="/user/auth/login"
         >
                 Log In With Email
         </Link>
         <Link
+                className="Local-login__options__links"
                 replace={false}
                 to="/user/recover"
         >

@@ -14,8 +14,6 @@ import FormMessage from '@sharedComponents/FormMessage';
 import UserPageContainer from '../../components/UserPageContainer';
 import UserInputField from '../../components/UserInputField';
 
-import './UserRegister.scss';
-
 class Register extends Component {
 
   constructor(props) {
@@ -211,7 +209,8 @@ class Register extends Component {
       if (data && data.user) {
 
         const user = await storage.set('ckUser', data.user);
-        this.props.loginSuccess(user, true);
+
+        await this.props.loginSuccess(user, true);
 
         const { isLoggedIn } = this.props.user;
 
@@ -232,7 +231,7 @@ class Register extends Component {
       console.error(error);
       console.error(error.response.data.error);
       this.setState({
-        errorMsg: error.response.data.message
+        errorMsg: error.response && error.response.data.message
       });
 
     }
@@ -347,7 +346,7 @@ class Register extends Component {
           value={ password.value } />
 
         <FormMessage message={ avatar.message } />
-        <div className="user-form-fields">
+        <div className="User__form__fields user-form-fields">
           <label>Profile Picture</label>
           <div className="avatar-preview">
             <div className="avatar-wrapper">

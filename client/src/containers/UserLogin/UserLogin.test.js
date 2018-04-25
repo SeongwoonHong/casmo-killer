@@ -32,9 +32,9 @@ describe('<UserLogin />', () => {
   });
 
   it('should display correct text and icons', () => {
-    expect(component.find('.user-page-title').text()).toEqual('Login to your accountlock');
+    expect(component.find('.User__page__title').text()).toEqual('Login to your accountlock');
     component.setProps({ match: { params: { type: 'register' } } });
-    expect(component.find('.user-page-title').text()).toEqual('Sign up for freemode_edit');
+    expect(component.find('.User__page__title').text()).toEqual('Sign up for freemode_edit');
   });
 
   it('should trigger componentWillReceiveProps when login status changes', () => {

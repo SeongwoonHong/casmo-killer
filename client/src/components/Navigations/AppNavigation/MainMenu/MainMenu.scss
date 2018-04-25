@@ -1,32 +1,48 @@
-.Menu-container.Main-menu {
+.Main-menu {
     transform: translateX(-100%);
-    .main-menu {
-        > li {
-            > a {
+    &__list {
+        &__items {
+            &__links {
                 border-bottom: none;
+                border-top: 1px solid transparent;
+                cursor: pointer;
+                font-size: 13px;
+                padding: 0 24px;
                 &.active {
-                    & + .sub-menu {
-                        background-color: #fff;
-                        border-bottom: 1px solid $main-menu-border-color;
+                    background-color: #fff;
+                    color: palette(Grey, 900);
+                    font-weight: 700;
+                    > .Main-menu__list__items__links__icons {
+                        color: inherit;
+                    }
+                    & + .Main-menu__list__items__sub {
                         display: block;
-                        > li {
-                            > a {
-                                font-size: 12px;
-                                padding: 0 0 0 71px;
-                                &.active {
-                                    font-weight: 700;
-                                    text-decoration: underline;
-                                }
-                            }
+                    }
+                }
+                &__icons {
+                    color: inherit;
+                    font-size: 20px;
+                    height: $top-nav-size;
+                    line-height: $top-nav-size;
+                    margin-right: 27px;
+                }
+            }
+            &__sub {
+                background-color: #fff;
+                border-bottom: 1px solid $main-menu-border-color;
+                display: none;
+                &__items {
+                    &__links {
+                        padding: 0 0 0 71px;
+                        &.active {
+                            font-weight: 700;
+                            text-decoration: underline;
                         }
                     }
                 }
             }
-            > .sub-menu {
-                display: none;
-            }
             &:first-child {
-                > a {
+                .Main-menu__list__items__links {
                     &.active {
                         border-bottom: 1px solid $main-menu-border-color;
                     }
@@ -35,9 +51,9 @@
         }
     }
     @media screen and (min-width: 992px) {
-        .main-menu {
-            > li {
-                > a {
+        &__list {
+            &__items {
+                &__links {
                     border-bottom: 2px solid transparent;
                     border-top: none;
                     color: palette(Grey, 500);
@@ -46,19 +62,19 @@
                         background-color: transparent;
                         border-color: palette(Grey, 100);
                         color: palette(Grey, 100);
-                        & + .sub-menu {
+                        & + .Main-menu__list__items__sub {
                             display: none;
                         }
                     }
-                    > .material-icons {
+                    &__icons {
                         color: inherit;
                         margin-right: 15px;
                     }
                 }
                 &:first-child {
-                    > a {
+                    .Main-menu__list__items__links {
                         &.active {
-                            border-bottom: 2px solid palette(Grey, 100);
+                            border-bottom: 2px solid $accent-colour;
                         }
                     }
                 }

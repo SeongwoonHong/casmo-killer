@@ -1,3 +1,5 @@
+@import url('styles/fonts/NanumSquare/font.css');
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -5,9 +7,13 @@
 }
 html {
     background-color: #e8e8e8;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Nanum Square', sans-serif;
+    font-size: 12px;
     height: 100vh;
     overflow: hidden;
+}
+ul {
+    list-style: none;
 }
 .root-container {
     height: 100vh;

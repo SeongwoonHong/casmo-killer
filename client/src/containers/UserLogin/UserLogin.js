@@ -61,13 +61,23 @@ class Login extends Component {
 
     return (
       <div className="Login">
-        <h2 className="user-page-title">
-          { isLogin ? 'Login to your account' : 'Sign up for free' }
-          <i className="material-icons">
-            { isLogin ? 'lock' : 'mode_edit' }
+        <h2 className="User__page__title">
+          {
+            isLogin
+            ? 'Login to your account'
+            : 'Sign up for free'
+          }
+          <i className="User__page__title__icons material-icons">
+            {
+              isLogin
+              ? 'lock'
+              : 'mode_edit'
+            }
           </i>
         </h2>
-        <FormMessage message={ auth.message } />
+        <FormMessage
+          className="Login__message"
+          message={ auth.message } />
         <SocialLogin
           isLogin={ isLogin }
           onRegister={ this.onSocialRegister }

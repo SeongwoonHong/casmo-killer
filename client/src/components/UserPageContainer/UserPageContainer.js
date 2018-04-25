@@ -9,31 +9,37 @@ const UserPageContainer = (props) => {
       {
         props.title
           ? (
-            <h2 className="user-page-title">
+            <h2 className="User__page__title">
               { props.title }
-              <i className="material-icons">
+              <i className="User__page__title__icons material-icons">
                 { props.icon }
               </i>
             </h2>
           )
           : null
       }
-      <div className="user-form-box">
+      <div className={ `User__form__row ${props.className}__form__row`}>
         <LoadingOverlay
           isVisible={ props.isLoading }
           overlayColor="rgba(256,256,256,.75)"
           circleColor="#1F4B40" />
-        <div className="user-form-header">
-          <h3>{ props.formTitle }</h3>
+        <div className={ `User__form__header ${props.className}__form__header`}>
+          <h3 className={ `User__form__header__title ${props.className}__form__header__title`}>
+            { props.formTitle }
+          </h3>
           {
             props.formMsg
-              ? <p>{ props.formMsg }</p>
+              ? (
+                <p className={ `User__form__header__subtitle ${props.className}__form__header__subtitle` }>
+                  { props.formMsg }
+                </p>
+              )
               : null
           }
         </div>
         <form
           noValidate
-          className="user-form"
+          className={ `User__form ${props.className}__form user-form` }
           onSubmit={ (e) => {
             e.preventDefault();
             props.onSubmit();
@@ -45,7 +51,7 @@ const UserPageContainer = (props) => {
               : (
                 <button
                   type="submit"
-                  className="user-form-button"
+                  className="User__form__btn user-form-button"
                   disabled={ props.disabled }>
                   Submit
                 </button>

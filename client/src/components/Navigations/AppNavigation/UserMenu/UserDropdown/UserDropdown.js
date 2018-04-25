@@ -27,34 +27,56 @@ class UserDropdown extends Component {
               this.props.toggleUserMenu(false);
             });
           } }>
-          <li className="notification">
-            <NavLink to="/user/notifications">
-              <i className="material-icons">notifications</i>
-              <span>Notifications</span>
+          <li className="User-dropdown__items--notification">
+            <NavLink
+              className="User-dropdown__items__links"
+              to="/user/notifications">
+              <i className="User-dropdown__items__links__icons material-icons">
+                notifications
+              </i>
+              <span className="User-dropdown__items__links__text">
+                Notifications
+              </span>
               <span className="notification-badge">N</span>
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/user/dashboard">
-              <i className="material-icons">dashboard</i>
-              <span>My Board</span>
+          <li className="User-dropdown__items">
+            <NavLink
+              className="User-dropdown__items__links"
+              to="/user/dashboard">
+              <i className="User-dropdown__items__links__icons material-icons">
+                dashboard
+              </i>
+              <span className="User-dropdown__items__links__text">
+                My Board
+              </span>
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/user/settings">
-              <i className="material-icons">settings</i>
-              <span>My Account</span>
+          <li className="User-dropdown__items">
+            <NavLink
+              className="User-dropdown__items__links"
+              to="/user/settings">
+              <i className="User-dropdown__items__links__icons material-icons">
+                settings
+              </i>
+              <span className="User-dropdown__items__links__text">
+                My Account
+              </span>
             </NavLink>
           </li>
-          <li className="divider" />
-          <li>
+          <li className="User-dropdown__items">
             <a
+              className="User-dropdown__items__links"
               role="button"
               tabIndex={ 0 }
               onKeyDown={ () => {} }
               onClick={ () => onLogout() }>
-              <i className="material-icons">power_settings_new</i>
-              <span>Log out</span>
+              <i className="User-dropdown__items__links__icons material-icons">
+                power_settings_new
+              </i>
+              <span className="User-dropdown__items__links__text">
+                Log out
+              </span>
             </a>
           </li>
         </ul>
@@ -71,27 +93,38 @@ class UserDropdown extends Component {
             this.props.toggleUserMenu(false);
           });
         } }>
-        <li>
-          <NavLink to={{
-            pathname: '/user/auth/login',
-            state: {
-              from: currentRoute
-            }
-          }}>
-            <i className="material-icons">person</i>
-            <span>Log In</span>
+        <li className="User-dropdown__items">
+          <NavLink
+            className="User-dropdown__items__links"
+            to={{
+              pathname: '/user/auth/login',
+              state: {
+                from: currentRoute
+              }
+            }}>
+            <i className="User-dropdown__items__links__icons material-icons">
+              person
+            </i>
+            <span className="User-dropdown__items__links__text">
+              Log In
+            </span>
           </NavLink>
         </li>
-        <li className="divider" />
-        <li>
-          <NavLink to={{
-            pathname: '/user/auth/signup',
-            state: {
-              from: currentRoute
-            }
-          }}>
-            <i className="material-icons">person_add</i>
-            <span>Sign Up</span>
+        <li className="User-dropdown__items">
+          <NavLink
+            className="User-dropdown__items__links"
+            to={{
+              pathname: '/user/auth/signup',
+              state: {
+                from: currentRoute
+              }
+            }}>
+            <i className="User-dropdown__items__links__icons material-icons">
+              person_add
+            </i>
+            <span className="User-dropdown__items__links__text">
+              Sign Up
+            </span>
           </NavLink>
         </li>
       </ul>

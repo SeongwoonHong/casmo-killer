@@ -1,0 +1,15 @@
+.Top-nav-btn {
+    @include rectanglify($top-nav-size);
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    padding: 0;
+    &:focus {
+        outline: none;
+    }
+    &__icons {
+        font-size: 24px;
+        height: 100%;
+        line-height: $top-nav-size;
+    }
+}

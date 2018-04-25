@@ -12,8 +12,11 @@ class SubMenu extends Component {
     const MenuLinks = (routes) => {
       return routes.map((route) => {
         return (
-          <li key={ route.name }>
+          <li
+            className="Sub-menu__list__items"
+            key={ route.name }>
             <NavLink
+              className="Sub-menu__list__items__links"
               exact
               to={ parent + route.path }>
               { route.name }
@@ -25,7 +28,7 @@ class SubMenu extends Component {
 
     return (
       <div className="Sub-menu">
-        <ul>
+        <ul className="Sub-menu__list">
           { MenuLinks(items) }
         </ul>
       </div>

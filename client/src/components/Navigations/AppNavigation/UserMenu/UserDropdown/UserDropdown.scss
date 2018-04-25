@@ -1,11 +1,44 @@
 .User-dropdown {
+    &__items {
+        &__links {
+            border-bottom: 1px solid transparent;
+            border-top: 1px solid transparent;
+            cursor: pointer;
+            padding: 0 24px;
+            &.active {
+                background-color: #fff;
+                border-color: $main-menu-border-color;
+                color: palette(Grey, 900);
+                font-weight: 700;
+                > .User-dropdown__items__links__icons {
+                    color: inherit;
+                }
+            }
+            &__icons {
+                color: #888888;
+                font-size: 20px;
+                height: $top-nav-size;
+                line-height: $top-nav-size;
+                margin-right: 27px;
+            }
+            &__text {
+                line-height: $top-nav-size;
+            }
+        }
+        &:first-child {
+            .User-dropdown__items__links {
+                &.active {
+                    border-top: none;
+                }
+            }
+        }
+    }
     @media screen and (min-width: 992px) {
         @include abs-elem($top-nav-size + 2px, 0, auto, auto);
         background-color: #F5F5F5;
         border-bottom: 1px solid $main-menu-border-color;
         border-left: 1px solid $main-menu-border-color;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        /* TODO: refactor this so that it doesn't conflic with menucontainer style */
         display: none !important;
         width: $user-dropdown-width;
         &:before {
@@ -17,8 +50,8 @@
             border-right: 5px solid transparent;
             border-bottom: 5px solid #F5F5F5;
         }
-        > li {
-            > a {
+        &__items {
+            &__links {
                 @include flex-box(flex-start);
                 width: 100%;
                 > * {
@@ -27,15 +60,14 @@
                 &.active {
                     background-color: #fff;
                     border-top: 1px solid $main-menu-border-color;
-                    > .material-icons,
-                    > span {
+                    > .User-dropdown__items__links__icons,
+                    > .User-dropdown__items__links__text {
                         color: palette(Grey, 800);
                     }
                 }
             }
         }
         &.active {
-            /* TODO: refactor this so that it doesn't conflic with menucontainer style */
             display: block !important;
         }
     }

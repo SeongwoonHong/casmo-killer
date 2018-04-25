@@ -1,23 +1,23 @@
-.App-navigation-overlay {
-    @include abs-elem(0, 0, 0, 0, absolute);
-    background-color: rgba(0, 0, 0, .7);
-    display: none;
-    z-index: 88;
-    &.active {
-        display: block;
-        @media screen and (min-width: 992px) {
-            display: none;
+.App-navigation {
+    &__overlay {
+        @include abs-elem(0, 0, 0, 0, absolute);
+        background-color: rgba(0, 0, 0, .7);
+        display: none;
+        z-index: 88;
+        &.active {
+            display: block;
+            @media screen and (min-width: 992px) {
+                display: none;
+            }
         }
     }
-}
-.App-navigation {
     @media screen and (min-width: 992px) {
         background-color: palette(Grey, 800);
         border-bottom: 2px solid palette(Grey, 900);
         position: sticky;
         top: 0;
         z-index: 99;
-        > .component-row {
+        &__row {
             @include flex-box(space-between);
         }
     }

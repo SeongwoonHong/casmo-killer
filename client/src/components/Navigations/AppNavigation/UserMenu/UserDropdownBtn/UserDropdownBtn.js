@@ -1,55 +1,59 @@
 import React from 'react';
-import classnames from 'classnames';
+
+import TopNavBtn from '../../../shared/TopNavBtn';
 
 import './UserDropdownBtn.scss';
 
 const UserDropdownBtn = ({
-  active, isLoggedIn, displayName, avatar, level, toggleUserMenu
+  isLoggedIn, displayName, avatar, level, toggleUserMenu
 }) => {
 
   return (
-    <button
-      type="button"
-      className={ classnames('User-dropdown-btn top-nav-btn', {
-        active,
-        loggedIn: isLoggedIn
-      }) }
-      onClick={ () => toggleUserMenu() }>
+    <TopNavBtn
+      className={
+        isLoggedIn
+        ? 'User-dropdown-btn__btn--loggedIn'
+        : ''
+      }
+      classPrefix="User-dropdown-btn"
+      icon="person_outline"
+      onClick={ toggleUserMenu }>
       {
         isLoggedIn && displayName
           ? (
-            <div className="user-info">
-              <div className="user-avatar">
+            <div className="User-dropdown-btn__btn__row">
+              <div className="User-dropdown-btn__btn__avatar">
                 {
                   avatar
-                    ? (
-                      <img
-                        src={ avatar }
-                        alt={ displayName } />
-                    )
-                    : (
-                      <span>
-                        { displayName[0] }
-                      </span>
-                    )
+                  ? (
+                    <img
+                      className="User-dropdown-btn__btn__avatar__img"
+                      src={ avatar }
+                      alt={ displayName } />
+                  )
+                  : (
+                    <span className="User-dropdown-btn__btn__avatar__text">
+                      { displayName[0] }
+                    </span>
+                  )
                 }
               </div>
-              <div className="user-username">
-                <span>{ displayName }</span>
-                <span>{ level || 'newbie' }</span>
+              <div className="User-dropdown-btn__btn__username">
+                <span className="User-dropdown-btn__btn__username__text">
+                  { displayName }
+                </span>
+                <span className="User-dropdown-btn__btn__username__level">
+                  { level || 'newbie' }
+                </span>
               </div>
-              <i className="material-icons">
+              <i className="User-dropdown-btn__btn__icon material-icons">
                 arrow_drop_down
               </i>
             </div>
-          )
-          : (
-            <i className="material-icons">
-              person_outline
-            </i>
-          )
+        )
+        : null
       }
-    </button>
+    </TopNavBtn>
   );
 
 };

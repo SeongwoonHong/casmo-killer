@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { toast } from 'react-toastify';
 
 import * as storage from '@sharedUtils/storage';
 import FormMessage from '@sharedComponents/FormMessage';

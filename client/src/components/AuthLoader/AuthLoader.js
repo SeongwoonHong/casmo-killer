@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 import * as storage from '@sharedUtils/storage';
 
@@ -7,6 +8,30 @@ class AuthLoader extends Component {
 
   componentDidMount() {
     this.verifyLoginStatus();
+  }
+
+  componentWillReceiveProps(nextProps) {
+
+    const { user } = nextProps;
+
+    if (this.props.user.isLoggedIn !== user.isLoggedIn) {
+
+      if (!user.isLoggedIn) {
+
+        toast.info('Successfully logged out', {
+          position: toast.POSITION_TOP_RIGHT
+        });
+
+      } else if (user.isLoggedIn) {
+
+        toast.info(`Welcome ${user.displayName}!`, {
+          position: toast.POSITION_TOP_RIGHT
+        });
+
+      }
+
+    }
+
   }
 
   verifyLoginStatus = async () => {

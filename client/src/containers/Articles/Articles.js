@@ -45,21 +45,19 @@ class Articles extends Component {
       this.state.boardId,
       this.state.page,
       sortInfo.listEng[sortInfo.selected]).then(() => {
-      this.setState({
-        boardOId: this.props.boardInfo.board,
-        bookmarked: this.props.user.isLoggedIn && this.props.user.bookmarked.includes(this.props.boardInfo.board)
-      });
+      if (this.props.postsList.status === 'SUCCESS') {
+        this.setState({
+          boardOId: this.props.boardInfo.board,
+          bookmarked: this.props.user.isLoggedIn && this.props.user.bookmarked.includes(this.props.boardInfo.board)
+        });
+      } else if (this.props.postsList.status === 'FAILURE') {
+        toast(`${this.props.postsList.error.message}`, {
+          position: toast.POSITION_TOP_RIGHT,
+          type: toast.TYPE.ERROR
+        });
+        this.props.history.replace('/404');
+      }
     });
-  }
-
-  componentWillReceiveProps() {
-    if (this.props.postsList.status === 'FAILURE') {
-      toast(`${this.props.postsList.error.message}`, {
-        position: toast.POSITION_TOP_RIGHT,
-        type: toast.TYPE.ERROR
-      });
-      this.props.history.replace('/404');
-    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {

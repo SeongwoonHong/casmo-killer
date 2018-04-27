@@ -45,6 +45,13 @@ describe('<UserSettings />', () => {
     const spy = sinon.spy(UserSettings.prototype, 'verifyToken');
     const replace = sinon.spy();
 
+    shallow(
+      <UserSettings
+        user={ userData }
+        history={ { replace } }
+        match={ { params: paramData } } />
+    );
+
     expect(spy.calledWith(paramData.token)).toEqual(true);
     expect(replace.calledWith('/user/settings')).toEqual(true);
 
@@ -66,6 +73,14 @@ describe('<UserSettings />', () => {
     const promise = Promise.resolve(responseData);
 
     mockPut.callsFake(() => promise);
+
+    shallow(
+      <UserSettings
+        user={ { isLoggedIn: true } }
+        history={ { replace: () => {} } }
+        loginSuccess={ spy }
+        match={ { params: { token: 'abcdeft' } } } />
+    );
 
     await promise;
 

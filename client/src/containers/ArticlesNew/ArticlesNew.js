@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import ArticlesForm from '../../components/ArticlesForm/ArticlesForm';
+
 import './ArticlesNew.scss';
+
+import ArticlesForm from '../../components/ArticlesForm/ArticlesForm';
 
 class ArticlesNew extends Component {
 
@@ -12,7 +14,9 @@ class ArticlesNew extends Component {
 
       if (this.props.newBoard.status === 'SUCCESS') {
 
-        this.props.history.push({ pathname: `/articles/${this.props.newBoard.data.boardId}` });
+        this.props.history.push({
+          pathname: `/articles/${this.props.newBoard.data.boardId}`
+        });
 
         toast.info('Success!', {
           position: toast.POSITION_TOP_RIGHT

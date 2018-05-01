@@ -34,7 +34,7 @@ class CommunityLanding extends Component {
                       key={ data._id }
                       to={ `/articles/${data.boardId}` }
                       title={ data.boardId }
-                      author={ data.author[0].displayName }
+                      author={ data.author.displayName }
                       number={ this.renderBoardNumber(data.postsCount) }
                       date={ data.date }
                     />
@@ -53,7 +53,7 @@ class CommunityLanding extends Component {
                       key={ data._id }
                       title={ data.title }
                       to={ `/article/${data._id}` }
-                      author={ data.author[0].displayName }
+                      author={ data.author.displayName }
                       number={ this.renderPostNumber(data.likesCount) }
                       date={ data.date }
                     />

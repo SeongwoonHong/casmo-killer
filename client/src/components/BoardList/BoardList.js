@@ -24,7 +24,7 @@ class BoardList extends Component {
           <Board
             id={data._id}
             toURL={`/articles/${data.boardId}`}
-            managerInfo={['관리자', data.author[0].avatar, data.author[0].displayName, data.author[0]._id]}
+            managerInfo={['관리자', data.author.avatar, data.author.displayName, data.author._id]}
             statsFirst={data.postsCount}
             statsSecond="posts"
             title={data.boardId}

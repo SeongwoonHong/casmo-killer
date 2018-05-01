@@ -90,6 +90,14 @@ router.get(/\/all.*/, (req, res) => {
       }
     },
     {
+      '$unwind': '$author'
+    },
+    {
+      '$match': {
+        '_id': mongoose.Schema.Types.ObjectId
+      }
+    },
+    {
       '$lookup': {
         'from': 'posts', // <-- collection to join
         'localField': 'boardId',

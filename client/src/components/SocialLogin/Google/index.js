@@ -17,7 +17,22 @@ class GoogleAuth extends Component {
 
   componentDidMount() {
 
+    this._isMounted = true;
     this.loadSdkLibrary();
+
+  }
+
+  componentWillUnmount() {
+
+    this._isMounted = false;
+
+  }
+
+  setStateIfMounted(state) {
+
+    if (this._isMounted) {
+      this.setState(state);
+    }
 
   }
 
@@ -61,35 +76,8 @@ class GoogleAuth extends Component {
       });
     }
 
-    this.setState({
+    this.setStateIfMounted({
       isSdkLoaded: true
-    });
-
-  }
-
-  _handleSigninSuccess(res) {
-
-    const { onSuccess } = this.props;
-
-    const basicProfile = res.getBasicProfile();
-    const authResponse = res.getAuthResponse();
-
-    res.googleId = basicProfile.getId();
-    res.tokenObj = authResponse;
-    res.tokenId = authResponse.id_token;
-    res.accessToken = authResponse.access_token;
-    res.profileObj = {
-      googleId: basicProfile.getId(),
-      imageUrl: basicProfile.getImageUrl(),
-      email: basicProfile.getEmail(),
-      name: basicProfile.getName(),
-      givenName: basicProfile.getGivenName(),
-      familyName: basicProfile.getFamilyName()
-    };
-
-    onSuccess({
-      provider: 'kakao',
-      accessToken: res.accessToken
     });
 
   }

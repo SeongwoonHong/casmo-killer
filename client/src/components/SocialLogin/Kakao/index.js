@@ -17,23 +17,43 @@ class KakaoAuth extends Component {
 
   componentDidMount() {
 
+    this._isMounted = true;
+
     this.loadSdkLibrary();
+
+  }
+
+  componentWillUnmount() {
+
+    this._isMounted = false;
+
+  }
+
+  setStateIfMounted(state) {
+
+    if (this._isMounted) {
+      this.setState(state);
+    }
 
   }
 
   async loadSdkLibrary() {
 
-    const { clientId } = this.props;
+    if (this._isMounted) {
 
-    const shouldInit = await loadSdk('kakao');
+      const { clientId } = this.props;
 
-    if (shouldInit) {
-      window.Kakao.init(clientId);
+      const shouldInit = await loadSdk('kakao');
+
+      if (shouldInit) {
+        window.Kakao.init(clientId);
+      }
+
+      this.setStateIfMounted({
+        isSdkLoaded: true
+      });
+
     }
-
-    this.setState({
-      isSdkLoaded: true
-    });
 
   }
 

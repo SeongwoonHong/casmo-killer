@@ -19,6 +19,11 @@ class KakaoAuth extends Component {
 
     this._isMounted = true;
 
+    if (document.getElementById('kakao-sdk')) {
+      this.sdkLoaded();
+      return;
+    }
+
     this.loadSdkLibrary();
 
   }
@@ -54,6 +59,14 @@ class KakaoAuth extends Component {
       });
 
     }
+
+  }
+
+  sdkLoaded() {
+
+    this.setState({
+      isSdkLoaded: true
+    });
 
   }
 

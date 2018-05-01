@@ -18,6 +18,12 @@ class GoogleAuth extends Component {
   componentDidMount() {
 
     this._isMounted = true;
+
+    if (document.getElementById('google-login')) {
+      this.sdkLoaded();
+      return;
+    }
+
     this.loadSdkLibrary();
 
   }
@@ -65,9 +71,7 @@ class GoogleAuth extends Component {
         if (!window.gapi.auth2.getAuthInstance()) {
           window.gapi.auth2
             .init(params)
-            .then((response) => {
-              console.log(response);
-            })
+            .then(() => {})
             .catch((error) => {
               onFailure(error);
             });
@@ -77,6 +81,14 @@ class GoogleAuth extends Component {
     }
 
     this.setStateIfMounted({
+      isSdkLoaded: true
+    });
+
+  }
+
+  sdkLoaded() {
+
+    this.setState({
       isSdkLoaded: true
     });
 

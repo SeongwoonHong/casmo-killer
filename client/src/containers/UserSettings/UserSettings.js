@@ -99,9 +99,9 @@ class MyAccount extends Component {
           isVisible={ isLoading }
           overlayColor="rgba(0,0,0,.75)"
           circleColor="#fff" />
-        <h2 className="user-page-title">
+        <h2 className="User__page__title">
           My Account
-          <i className="material-icons">
+          <i className="User__page__title__icons material-icons">
             person
           </i>
         </h2>

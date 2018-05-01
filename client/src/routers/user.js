@@ -40,7 +40,7 @@ class User extends Component {
             component={ UserSettings }
             onEnter={ msg => registerRedirectMessage(msg) } />
           <PrivateRoute
-            path="/user/delete"
+            path="/user/deactivate"
             isLoggedIn={ user.isLoggedIn }
             component={ Delete }
             onEnter={ msg => registerRedirectMessage(msg) } />

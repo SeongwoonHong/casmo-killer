@@ -367,9 +367,9 @@ module.exports.deleteAccount = async (req, res) => {
 
     }
 
-    const deletedUser = await user.remove();
+    const deletedUser = await user.deactivate();
 
-    if (deletedUser.email !== user.email) {
+    if (deletedUser.ok !== 1) {
       return res.send({
         message: `Failed to delete the account associated with ${user.email}.`
       });

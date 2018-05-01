@@ -124,17 +124,17 @@ class Delete extends Component {
     return (
       <UserPageContainer
         className="Delete"
-        title="Account Delete"
+        title="Deactivate Your Account"
         icon="delete_forever"
         isLoading={ isLoading }
         formTitle={
           !agreed
-            ? 'Confirm Account Deletion'
+            ? 'Confirm Account Deactivation'
             : 'Please Confirm Your Information'
         }
         formMsg={
           !agreed
-            ? 'This will permanently delete your account. This process is irreversible.'
+            ? 'This will permanently deactivate your account. This process is irreversible.'
             : null
         }
         onSubmit={ this.onSubmitHandler }

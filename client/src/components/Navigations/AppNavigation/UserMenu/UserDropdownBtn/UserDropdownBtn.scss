@@ -2,9 +2,13 @@
     display: none;
     @media screen and (min-width: 992px) {
         @include flex-box();
+        @include rectanglify(50px);
         display: block;
         margin-left: auto;
         margin-right: 0;
+        > .Top-nav-btn__icons {
+            line-height: 50px;
+        }
         &--loggedIn {
             width: auto;
         }
@@ -54,7 +58,6 @@
         }
         &:hover {
             background-color: palette(Grey, 700);
-            height: 50px;
         }
     }
 }

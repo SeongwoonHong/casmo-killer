@@ -10,7 +10,7 @@ const TopNavBtn = ({
     <button
       type="button"
       className={ `Top-nav-btn ${classPrefix}__btn ${className}`}
-      onClick={ onClick }>
+      onClick={ () => onClick() }>
       {
         children ||
         <i className={ `Top-nav-btn__icons material-icons ${classPrefix}__icon`}>

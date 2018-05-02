@@ -36,6 +36,17 @@ class Iframe extends Component {
     ref.type = 'text/css';
     ref.href = this.props.stylesheets;
     head.appendChild(ref);
+    const style = document.createElement('style');
+    style.textContent =
+      'blockquote {' +
+      '  -webkit-margin-end: initial !important;' +
+      ' -webkit-margin-after: initial !important;' +
+      ' -webkit-margin-start: initial !important;' +
+      ' -webkit-margin-before: initial !important;' +
+      ' border-left: 5px solid #b6c49f;' +
+      ' background-color: #f0f4e9;' +
+      '}';
+    head.appendChild(style);
   }
   render() {
     return (

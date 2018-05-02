@@ -1,0 +1,912 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<UserDropdown /> renders the component consistently 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <UserDropdown
+    active={true}
+    currentRoute="/"
+    isLoggedIn={true}
+    onLogout={[Function]}
+/>,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <li
+          className="User-dropdown__items"
+>
+          <NavLink
+                    activeClassName="active"
+                    ariaCurrent="true"
+                    className="User-dropdown__items__links"
+                    to="/user/notifications"
+          >
+                    <i
+                              className="User-dropdown__items__links__icons material-icons"
+                    >
+                              notifications
+                    </i>
+                    <span
+                              className="User-dropdown__items__links__text"
+                    >
+                              Notifications
+                    </span>
+                    <span
+                              className="notification-badge"
+                    >
+                              N
+                    </span>
+          </NavLink>
+</li>,
+        <li
+          className="User-dropdown__items"
+>
+          <NavLink
+                    activeClassName="active"
+                    ariaCurrent="true"
+                    className="User-dropdown__items__links"
+                    to="/user/dashboard"
+          >
+                    <i
+                              className="User-dropdown__items__links__icons material-icons"
+                    >
+                              dashboard
+                    </i>
+                    <span
+                              className="User-dropdown__items__links__text"
+                    >
+                              My Board
+                    </span>
+          </NavLink>
+</li>,
+        <li
+          className="User-dropdown__items"
+>
+          <NavLink
+                    activeClassName="active"
+                    ariaCurrent="true"
+                    className="User-dropdown__items__links"
+                    to="/user/settings"
+          >
+                    <i
+                              className="User-dropdown__items__links__icons material-icons"
+                    >
+                              settings
+                    </i>
+                    <span
+                              className="User-dropdown__items__links__text"
+                    >
+                              My Account
+                    </span>
+          </NavLink>
+</li>,
+        <li
+          className="User-dropdown__items"
+>
+          <a
+                    className="User-dropdown__items__links"
+                    onClick={[Function]}
+                    onKeyDown={[Function]}
+                    role="button"
+                    tabIndex={0}
+          >
+                    <i
+                              className="User-dropdown__items__links__icons material-icons"
+                    >
+                              power_settings_new
+                    </i>
+                    <span
+                              className="User-dropdown__items__links__text"
+                    >
+                              Log out
+                    </span>
+          </a>
+</li>,
+      ],
+      "className": "User-dropdown main-menu active",
+      "onClick": [Function],
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": <NavLink
+            activeClassName="active"
+            ariaCurrent="true"
+            className="User-dropdown__items__links"
+            to="/user/notifications"
+>
+            <i
+                        className="User-dropdown__items__links__icons material-icons"
+            >
+                        notifications
+            </i>
+            <span
+                        className="User-dropdown__items__links__text"
+            >
+                        Notifications
+            </span>
+            <span
+                        className="notification-badge"
+            >
+                        N
+            </span>
+</NavLink>,
+          "className": "User-dropdown__items",
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "activeClassName": "active",
+            "ariaCurrent": "true",
+            "children": Array [
+              <i
+                className="User-dropdown__items__links__icons material-icons"
+>
+                notifications
+</i>,
+              <span
+                className="User-dropdown__items__links__text"
+>
+                Notifications
+</span>,
+              <span
+                className="notification-badge"
+>
+                N
+</span>,
+            ],
+            "className": "User-dropdown__items__links",
+            "to": "/user/notifications",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "notifications",
+                "className": "User-dropdown__items__links__icons material-icons",
+              },
+              "ref": null,
+              "rendered": "notifications",
+              "type": "i",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Notifications",
+                "className": "User-dropdown__items__links__text",
+              },
+              "ref": null,
+              "rendered": "Notifications",
+              "type": "span",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "N",
+                "className": "notification-badge",
+              },
+              "ref": null,
+              "rendered": "N",
+              "type": "span",
+            },
+          ],
+          "type": [Function],
+        },
+        "type": "li",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": <NavLink
+            activeClassName="active"
+            ariaCurrent="true"
+            className="User-dropdown__items__links"
+            to="/user/dashboard"
+>
+            <i
+                        className="User-dropdown__items__links__icons material-icons"
+            >
+                        dashboard
+            </i>
+            <span
+                        className="User-dropdown__items__links__text"
+            >
+                        My Board
+            </span>
+</NavLink>,
+          "className": "User-dropdown__items",
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "activeClassName": "active",
+            "ariaCurrent": "true",
+            "children": Array [
+              <i
+                className="User-dropdown__items__links__icons material-icons"
+>
+                dashboard
+</i>,
+              <span
+                className="User-dropdown__items__links__text"
+>
+                My Board
+</span>,
+            ],
+            "className": "User-dropdown__items__links",
+            "to": "/user/dashboard",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "dashboard",
+                "className": "User-dropdown__items__links__icons material-icons",
+              },
+              "ref": null,
+              "rendered": "dashboard",
+              "type": "i",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "My Board",
+                "className": "User-dropdown__items__links__text",
+              },
+              "ref": null,
+              "rendered": "My Board",
+              "type": "span",
+            },
+          ],
+          "type": [Function],
+        },
+        "type": "li",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": <NavLink
+            activeClassName="active"
+            ariaCurrent="true"
+            className="User-dropdown__items__links"
+            to="/user/settings"
+>
+            <i
+                        className="User-dropdown__items__links__icons material-icons"
+            >
+                        settings
+            </i>
+            <span
+                        className="User-dropdown__items__links__text"
+            >
+                        My Account
+            </span>
+</NavLink>,
+          "className": "User-dropdown__items",
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "activeClassName": "active",
+            "ariaCurrent": "true",
+            "children": Array [
+              <i
+                className="User-dropdown__items__links__icons material-icons"
+>
+                settings
+</i>,
+              <span
+                className="User-dropdown__items__links__text"
+>
+                My Account
+</span>,
+            ],
+            "className": "User-dropdown__items__links",
+            "to": "/user/settings",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "settings",
+                "className": "User-dropdown__items__links__icons material-icons",
+              },
+              "ref": null,
+              "rendered": "settings",
+              "type": "i",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "My Account",
+                "className": "User-dropdown__items__links__text",
+              },
+              "ref": null,
+              "rendered": "My Account",
+              "type": "span",
+            },
+          ],
+          "type": [Function],
+        },
+        "type": "li",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": <a
+            className="User-dropdown__items__links"
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            role="button"
+            tabIndex={0}
+>
+            <i
+                        className="User-dropdown__items__links__icons material-icons"
+            >
+                        power_settings_new
+            </i>
+            <span
+                        className="User-dropdown__items__links__text"
+            >
+                        Log out
+            </span>
+</a>,
+          "className": "User-dropdown__items",
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              <i
+                className="User-dropdown__items__links__icons material-icons"
+>
+                power_settings_new
+</i>,
+              <span
+                className="User-dropdown__items__links__text"
+>
+                Log out
+</span>,
+            ],
+            "className": "User-dropdown__items__links",
+            "onClick": [Function],
+            "onKeyDown": [Function],
+            "role": "button",
+            "tabIndex": 0,
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "power_settings_new",
+                "className": "User-dropdown__items__links__icons material-icons",
+              },
+              "ref": null,
+              "rendered": "power_settings_new",
+              "type": "i",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Log out",
+                "className": "User-dropdown__items__links__text",
+              },
+              "ref": null,
+              "rendered": "Log out",
+              "type": "span",
+            },
+          ],
+          "type": "a",
+        },
+        "type": "li",
+      },
+    ],
+    "type": "ul",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <li
+            className="User-dropdown__items"
+>
+            <NavLink
+                        activeClassName="active"
+                        ariaCurrent="true"
+                        className="User-dropdown__items__links"
+                        to="/user/notifications"
+            >
+                        <i
+                                    className="User-dropdown__items__links__icons material-icons"
+                        >
+                                    notifications
+                        </i>
+                        <span
+                                    className="User-dropdown__items__links__text"
+                        >
+                                    Notifications
+                        </span>
+                        <span
+                                    className="notification-badge"
+                        >
+                                    N
+                        </span>
+            </NavLink>
+</li>,
+          <li
+            className="User-dropdown__items"
+>
+            <NavLink
+                        activeClassName="active"
+                        ariaCurrent="true"
+                        className="User-dropdown__items__links"
+                        to="/user/dashboard"
+            >
+                        <i
+                                    className="User-dropdown__items__links__icons material-icons"
+                        >
+                                    dashboard
+                        </i>
+                        <span
+                                    className="User-dropdown__items__links__text"
+                        >
+                                    My Board
+                        </span>
+            </NavLink>
+</li>,
+          <li
+            className="User-dropdown__items"
+>
+            <NavLink
+                        activeClassName="active"
+                        ariaCurrent="true"
+                        className="User-dropdown__items__links"
+                        to="/user/settings"
+            >
+                        <i
+                                    className="User-dropdown__items__links__icons material-icons"
+                        >
+                                    settings
+                        </i>
+                        <span
+                                    className="User-dropdown__items__links__text"
+                        >
+                                    My Account
+                        </span>
+            </NavLink>
+</li>,
+          <li
+            className="User-dropdown__items"
+>
+            <a
+                        className="User-dropdown__items__links"
+                        onClick={[Function]}
+                        onKeyDown={[Function]}
+                        role="button"
+                        tabIndex={0}
+            >
+                        <i
+                                    className="User-dropdown__items__links__icons material-icons"
+                        >
+                                    power_settings_new
+                        </i>
+                        <span
+                                    className="User-dropdown__items__links__text"
+                        >
+                                    Log out
+                        </span>
+            </a>
+</li>,
+        ],
+        "className": "User-dropdown main-menu active",
+        "onClick": [Function],
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <NavLink
+              activeClassName="active"
+              ariaCurrent="true"
+              className="User-dropdown__items__links"
+              to="/user/notifications"
+>
+              <i
+                            className="User-dropdown__items__links__icons material-icons"
+              >
+                            notifications
+              </i>
+              <span
+                            className="User-dropdown__items__links__text"
+              >
+                            Notifications
+              </span>
+              <span
+                            className="notification-badge"
+              >
+                            N
+              </span>
+</NavLink>,
+            "className": "User-dropdown__items",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "activeClassName": "active",
+              "ariaCurrent": "true",
+              "children": Array [
+                <i
+                  className="User-dropdown__items__links__icons material-icons"
+>
+                  notifications
+</i>,
+                <span
+                  className="User-dropdown__items__links__text"
+>
+                  Notifications
+</span>,
+                <span
+                  className="notification-badge"
+>
+                  N
+</span>,
+              ],
+              "className": "User-dropdown__items__links",
+              "to": "/user/notifications",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "notifications",
+                  "className": "User-dropdown__items__links__icons material-icons",
+                },
+                "ref": null,
+                "rendered": "notifications",
+                "type": "i",
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "Notifications",
+                  "className": "User-dropdown__items__links__text",
+                },
+                "ref": null,
+                "rendered": "Notifications",
+                "type": "span",
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "N",
+                  "className": "notification-badge",
+                },
+                "ref": null,
+                "rendered": "N",
+                "type": "span",
+              },
+            ],
+            "type": [Function],
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <NavLink
+              activeClassName="active"
+              ariaCurrent="true"
+              className="User-dropdown__items__links"
+              to="/user/dashboard"
+>
+              <i
+                            className="User-dropdown__items__links__icons material-icons"
+              >
+                            dashboard
+              </i>
+              <span
+                            className="User-dropdown__items__links__text"
+              >
+                            My Board
+              </span>
+</NavLink>,
+            "className": "User-dropdown__items",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "activeClassName": "active",
+              "ariaCurrent": "true",
+              "children": Array [
+                <i
+                  className="User-dropdown__items__links__icons material-icons"
+>
+                  dashboard
+</i>,
+                <span
+                  className="User-dropdown__items__links__text"
+>
+                  My Board
+</span>,
+              ],
+              "className": "User-dropdown__items__links",
+              "to": "/user/dashboard",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "dashboard",
+                  "className": "User-dropdown__items__links__icons material-icons",
+                },
+                "ref": null,
+                "rendered": "dashboard",
+                "type": "i",
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "My Board",
+                  "className": "User-dropdown__items__links__text",
+                },
+                "ref": null,
+                "rendered": "My Board",
+                "type": "span",
+              },
+            ],
+            "type": [Function],
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <NavLink
+              activeClassName="active"
+              ariaCurrent="true"
+              className="User-dropdown__items__links"
+              to="/user/settings"
+>
+              <i
+                            className="User-dropdown__items__links__icons material-icons"
+              >
+                            settings
+              </i>
+              <span
+                            className="User-dropdown__items__links__text"
+              >
+                            My Account
+              </span>
+</NavLink>,
+            "className": "User-dropdown__items",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "activeClassName": "active",
+              "ariaCurrent": "true",
+              "children": Array [
+                <i
+                  className="User-dropdown__items__links__icons material-icons"
+>
+                  settings
+</i>,
+                <span
+                  className="User-dropdown__items__links__text"
+>
+                  My Account
+</span>,
+              ],
+              "className": "User-dropdown__items__links",
+              "to": "/user/settings",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "settings",
+                  "className": "User-dropdown__items__links__icons material-icons",
+                },
+                "ref": null,
+                "rendered": "settings",
+                "type": "i",
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "My Account",
+                  "className": "User-dropdown__items__links__text",
+                },
+                "ref": null,
+                "rendered": "My Account",
+                "type": "span",
+              },
+            ],
+            "type": [Function],
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <a
+              className="User-dropdown__items__links"
+              onClick={[Function]}
+              onKeyDown={[Function]}
+              role="button"
+              tabIndex={0}
+>
+              <i
+                            className="User-dropdown__items__links__icons material-icons"
+              >
+                            power_settings_new
+              </i>
+              <span
+                            className="User-dropdown__items__links__text"
+              >
+                            Log out
+              </span>
+</a>,
+            "className": "User-dropdown__items",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <i
+                  className="User-dropdown__items__links__icons material-icons"
+>
+                  power_settings_new
+</i>,
+                <span
+                  className="User-dropdown__items__links__text"
+>
+                  Log out
+</span>,
+              ],
+              "className": "User-dropdown__items__links",
+              "onClick": [Function],
+              "onKeyDown": [Function],
+              "role": "button",
+              "tabIndex": 0,
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "power_settings_new",
+                  "className": "User-dropdown__items__links__icons material-icons",
+                },
+                "ref": null,
+                "rendered": "power_settings_new",
+                "type": "i",
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "Log out",
+                  "className": "User-dropdown__items__links__text",
+                },
+                "ref": null,
+                "rendered": "Log out",
+                "type": "span",
+              },
+            ],
+            "type": "a",
+          },
+          "type": "li",
+        },
+      ],
+      "type": "ul",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;

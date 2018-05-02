@@ -2,8 +2,7 @@
     @include rectanglify($top-nav-size);
     background-color: transparent;
     border: none;
-    color: #fff;
-    padding: 0;
+    color: palette(Grey, 100);
     &:focus {
         outline: none;
     }

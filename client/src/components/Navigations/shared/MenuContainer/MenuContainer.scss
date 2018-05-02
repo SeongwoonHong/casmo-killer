@@ -1,6 +1,5 @@
 .Menu-container {
-    @include abs-elem(0, auto, auto, auto, fixed);
-    height: 100%;
+    @include abs-elem(0, auto, 0, auto, fixed);
     transition: all .3s;
     width: $main-menu-width;
     z-index: 88;
@@ -12,6 +11,9 @@
         background-color: palette(Grey, 800);
         border-bottom: 1px solid palette(Grey, 900);
         height: $top-nav-size;
+        .App-title__link {
+            margin-left: 25px;
+        }
     }
     &__body {
         background-color: palette(Grey, 300);
@@ -19,18 +21,14 @@
         ul {
             > li {
                 > a {
-                    /* TODO: refactor this for BEM */
                     @include flex-box();
-                    color: palette(Grey, 800);
                     height: $top-nav-size;
-                    overflow: hidden;
                     text-decoration: none;
                 }
             }
         }
     }
     @media screen and (min-width: 992px) {
-        height: auto;
         width: 100%;
         position: sticky;
         transition: none;
@@ -41,18 +39,10 @@
         &__body {
             background-color: palette(Grey, 800);
             width: 100%;
-            ul {
-                > li {
-                    a {
-                        color: palette(Grey, 200);
-                    }
-                }
-            }
         }
         &__body {
             @include flex-box(flex-start);
             margin: 0 auto;
-            max-width: 960px;
         }
     }
 }

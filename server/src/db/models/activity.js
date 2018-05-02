@@ -80,5 +80,4 @@ Activity.statics.createDisLikeActivity = function (userId, postId, commentId) {
 
 };
 
-
 module.exports = mongoose.model('activity', Activity);

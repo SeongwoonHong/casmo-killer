@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch, Redirect } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+
 import * as actions from '@actions';
 import breakPoint from '@sharedUtils/breakPoint';
 import LoadingOverlay from '@sharedComponents/LoadingOverlay';
-import { ToastContainer } from 'react-toastify';
 
 import { MainMenuRoutes } from './routers';
+
 import UserRoute from './routers/user';
 
-import TopNavigation from './components/Navigations/TopNavigation';
-import AppNavigation from './components/Navigations/AppNavigation';
+import { TopNavigation, AppNavigation } from './components/Navigations';
+
 import ErrorPage from './components/ErrorPage';
 import UserInfoModal from './components/UserInfoModal';
 import AuthLoader from './components/AuthLoader';
@@ -39,11 +41,16 @@ class App extends Component {
 
     return (
       <div className="root-container">
+
         <LoadingOverlay isVisible={ layout.isAppLoading } />
+
         <TopNavigation />
+
         <div className="app-container">
-          <Route exact path="/" render={() => <Redirect to="/community" />} />
+
+          <Route exact path="/" render={ () => <Redirect to="/community" /> } />
           <Route path="/" component={ AppNavigation } />
+
           <div className="component-row">
             <Switch>
               {
@@ -65,8 +72,11 @@ class App extends Component {
             }
           </div>
         </div>
+
         <AuthLoader />
+
         <ToastContainer autoClose={3000} />
+
       </div>
     );
 

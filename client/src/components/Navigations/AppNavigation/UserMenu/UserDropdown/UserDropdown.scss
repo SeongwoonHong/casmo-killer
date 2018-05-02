@@ -3,19 +3,18 @@
         &__links {
             border-bottom: 1px solid transparent;
             border-top: 1px solid transparent;
+            color: palette(Grey, 800);
             cursor: pointer;
             padding: 0 24px;
+            position: relative;
             &.active {
                 background-color: #fff;
                 border-color: $main-menu-border-color;
                 color: palette(Grey, 900);
                 font-weight: 700;
-                > .User-dropdown__items__links__icons {
-                    color: inherit;
-                }
             }
             &__icons {
-                color: #888888;
+                color: inherit;
                 font-size: 20px;
                 height: $top-nav-size;
                 line-height: $top-nav-size;
@@ -25,50 +24,35 @@
                 line-height: $top-nav-size;
             }
         }
-        &:first-child {
-            .User-dropdown__items__links {
-                &.active {
-                    border-top: none;
-                }
-            }
-        }
     }
     @media screen and (min-width: 992px) {
-        @include abs-elem($top-nav-size + 6px, 0, auto, auto);
+        @include abs-elem($top-nav-size + 2px, 0, auto, auto);
         background-color: #F5F5F5;
-        border-bottom: 1px solid $main-menu-border-color;
-        border-left: 1px solid $main-menu-border-color;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         display: none !important;
         width: $user-dropdown-width;
         &:before {
             @include rectanglify(0);
-            @include abs-elem(-5px, 20px, auto, auto);
+            @include abs-elem(-5px, 18px, auto, auto);
             content: '';
             display: block;
             border-left: 5px solid transparent;
             border-right: 5px solid transparent;
             border-bottom: 5px solid #F5F5F5;
         }
-        &__items {
-            &__links {
-                @include flex-box(flex-start);
-                width: 100%;
-                > * {
-                    color: palette(Grey, 800);
-                }
-                &.active {
-                    background-color: #fff;
-                    border-top: 1px solid $main-menu-border-color;
-                    > .User-dropdown__items__links__icons,
-                    > .User-dropdown__items__links__text {
-                        color: palette(Grey, 800);
-                    }
-                }
-            }
-        }
         &.active {
             display: block !important;
         }
     }
+}
+.notification-badge {
+    @include abs-elem(5px, auto, auto, 15px);
+    @include rectanglify(13px);
+    background-color: palette(Red, 500);
+    border-radius: 50%;
+    color: #fff;
+    font-size: 8px;
+    font-weight: 700;
+    line-height: 13px;
+    padding: 0 3.5px;
 }

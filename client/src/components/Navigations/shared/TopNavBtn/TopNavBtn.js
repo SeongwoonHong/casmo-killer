@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import './TopNavBtn.scss';
 
@@ -20,6 +21,22 @@ const TopNavBtn = ({
     </button>
   );
 
+};
+
+TopNavBtn.propTypes = {
+  className: PropTypes.string,
+  classPrefix: PropTypes.string,
+  icon: PropTypes.string,
+  onClick: PropTypes.func,
+  children: PropTypes.any,
+};
+
+TopNavBtn.defaultProps = {
+  className: '',
+  classPrefix: '',
+  icon: '',
+  onClick: () => {},
+  children: '',
 };
 
 export default TopNavBtn;

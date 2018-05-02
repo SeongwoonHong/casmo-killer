@@ -2,7 +2,10 @@
 import React, { Component } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-// import RequireAuthentication from '@sharedComponents/RequireAuthentication';
+
+import * as actions from '@actions';
+import PrivateRoute from '@sharedComponents/PrivateRoute/PrivateRoute';
+
 import CommunityAll from '../containers/CommunityAll';
 // import Articles from '../containers/Articles';
 // import PostNew from './PostNew';
@@ -13,18 +16,25 @@ import CommunityLanding from '../containers/CommunityLanding';
 class Community extends Component {
 
   render() {
-    const loginCheckAndLoading = (props, type) => {
-      if (this.props.user.isLoggedIn) {
-        return (<CommunityAll type={ type } { ...props } />);
-      }
-      return (<Redirect to="/community/communityAll" />);
-    };
+
+    const { user, registerRedirectMessage } = this.props;
+
     return (
       <div className="community">
         <Switch>
           <Route path="/community/communityAll" component={ CommunityAll } />
-          <Route path="/community/favourites" render={ props => loginCheckAndLoading(props, 'bookmark') } />
-          <Route path="/community/myCommunity" render={ props => loginCheckAndLoading(props, 'my') } />
+          <PrivateRoute
+            path="/community/myCommunity"
+            isLoggedIn={ user.isLoggedIn }
+            component={ CommunityAll }
+            componentProps={ { type: 'bookmark' } }
+            onEnter={ msg => registerRedirectMessage(msg) } />
+          <PrivateRoute
+            path="/community/myCommunity"
+            isLoggedIn={ user.isLoggedIn }
+            component={ CommunityAll }
+            componentProps={ { type: 'my' } }
+            onEnter={ msg => registerRedirectMessage(msg) } />
           <Route path="/community/new" component={ ArticlesNew } />
           <Route path="/community/free" render={ () => <Redirect to="/articles/free" /> } />
           <Route path="/community" component={ CommunityLanding } />
@@ -36,13 +46,16 @@ class Community extends Component {
         </Switch>
       </div>
     );
+
   }
+
 }
 
-function mapStateToProps(state) {
-  return {
+export default connect(
+  state => ({
     user: state.user.user
-  };
-}
-
-export default connect(mapStateToProps)(Community);
+  }),
+  dispatch => ({
+    registerRedirectMessage: msg => dispatch(actions.registerRedirectMessage(msg))
+  })
+)(Community);

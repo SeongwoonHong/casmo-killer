@@ -13,9 +13,7 @@
     }
     @media screen and (min-width: 992px) {
         background-color: palette(Grey, 800);
-        margin-bottom: 15px;
         position: sticky;
-        top: 0;
         z-index: 99;
         &__row {
             @include flex-box(space-between);

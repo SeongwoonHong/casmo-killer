@@ -16,8 +16,8 @@ class MainMenu extends Component {
         if (route.name && route.icon) {
           return (
             <li
-              className="Main-menu__list__items"
-              key={ route.name }>
+              key={ route.name }
+              className="Main-menu__list__items">
               <NavLink
                 className="Main-menu__list__items__links"
                 to={ route.path }>
@@ -33,8 +33,8 @@ class MainMenu extends Component {
                   route.children
                     ? route.children.map(child => (
                       <li
-                        className="Main-menu__list__items__sub__items"
-                        key={ child.name }>
+                        key={ child.name }
+                        className="Main-menu__list__items__sub__items">
                         <NavLink
                           className="Main-menu__list__items__sub__items__links"
                           exact

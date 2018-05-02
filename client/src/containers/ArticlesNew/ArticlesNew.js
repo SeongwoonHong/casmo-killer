@@ -10,7 +10,7 @@ class ArticlesNew extends Component {
 
   validateAndCreateBoard = (values) => {
 
-    return this.props.createBoardRequest(values).then(() => {
+    this.props.createBoardRequest(values).then(() => {
 
       if (this.props.newBoard.status === 'SUCCESS') {
 

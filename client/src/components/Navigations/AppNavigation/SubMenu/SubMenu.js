@@ -28,7 +28,7 @@ class SubMenu extends Component {
 
     return (
       <div className="Sub-menu">
-        <ul className="Sub-menu__list">
+        <ul className="Sub-menu__list component-row">
           { MenuLinks(items) }
         </ul>
       </div>

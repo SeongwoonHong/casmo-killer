@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 
 import LoadingOverlay from '@sharedComponents/LoadingOverlay';
 
+import './UserPageContainer.scss';
+
 const UserPageContainer = (props) => {
+
   return (
     <div className={ props.className }>
       {
@@ -61,6 +64,7 @@ const UserPageContainer = (props) => {
       </div>
     </div>
   );
+
 };
 
 UserPageContainer.propTypes = {

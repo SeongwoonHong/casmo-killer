@@ -16,8 +16,7 @@ class CommunityAll extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    const update = JSON.stringify(this.props) !== JSON.stringify(nextProps);
-    return update;
+    return JSON.stringify(this.props) !== JSON.stringify(nextProps);
   }
 
   componentDidUpdate(prevProps) {
@@ -38,7 +37,7 @@ class CommunityAll extends Component {
     // const { sortInfo } = this.state;
 
     // this.props.searchPostsRequest(searchWord, boardId, page, sortInfo.listEng[sortInfo.selected]);
-  }
+  };
 
   render() {
     const { data, status, error } = this.props.boardList;
@@ -66,8 +65,7 @@ class CommunityAll extends Component {
             this.props.user.isLoggedIn &&
             <Link
               to="/community/new"
-              className="btn newBoard"
-            >
+              className="btn newBoard">
               <TextButton>
                 새 게시판
               </TextButton>
@@ -75,13 +73,11 @@ class CommunityAll extends Component {
           }
           <Search
             className="community-searchbar"
-            onSearch={this.handleSearchBoards}
-          />
+            onSearch={this.handleSearchBoards} />
         </AlignHorizontal>
         <BoardList
           className="boardList"
-          boardListData={data}
-        />
+          boardListData={data} />
       </AlignVertical>
     );
   }

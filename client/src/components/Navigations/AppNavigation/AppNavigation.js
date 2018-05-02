@@ -62,7 +62,6 @@ class AppNavigation extends Component {
         onClick={ closeAllMenu }
         onKeyDown={ () => {} }
       />,
-
       <nav
         key={ 1 }
         className="App-navigation">

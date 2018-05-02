@@ -1,21 +1,3 @@
-/*.top-nav-btn {
-    @include rectanglify($top-nav-size);
-    background-color: transparent;
-    border: none;
-    color: #fff;
-    padding: 0;
-    > .material-icons {
-        font-size: 24px;
-        height: 100%;
-        line-height: $top-nav-size;
-    }
-    &:focus {
-        outline: none;
-    }
-}
-a.top-nav-btn {
-    text-align: center;
-}*/
 .Top-navigation {
     background-color: palette(Grey, 800);
     border-bottom: 1px solid palette(Grey, 900);
@@ -33,7 +15,7 @@ a.top-nav-btn {
         background-size: cover;
         height: 75px;
         &__row {
-            padding: 0 10px;
+            padding: 0 15px;
         }
         &__btn {
             display: none;

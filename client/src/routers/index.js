@@ -36,58 +36,58 @@ export const MainMenuRoutes = [
       }
     ]
   },
-  // {
-  //   name: '맛집',
-  //   path: '/restaurants',
-  //   icon: 'free_breakfast',
-  //   // main: Restaurants,
-  //   children: [
-  //     {
-  //       name: '오늘의 맛집',
-  //       path: '/trending'
-  //     },
-  //     {
-  //       name: '랭킹',
-  //       path: '/rank'
-  //     }
-  //   ]
-  // },
-  // {
-  //   name: 'Q&A',
-  //   path: '/qna',
-  //   icon: 'forum',
-  //   // main: QnA,
-  //   children: [
-  //     {
-  //       name: '최신질문',
-  //       path: '/recent'
-  //     },
-  //     {
-  //       name: '내 질문',
-  //       path: '/myquestions'
-  //     },
-  //     {
-  //       name: '내 답변',
-  //       path: '/myanswers'
-  //     }
-  //   ]
-  // },
-  // {
-  //   name: '정보',
-  //   path: '/info',
-  //   icon: 'event',
-  //   // main: Info,
-  //   children: [
-  //     {
-  //       name: '인기상승',
-  //       path: '/whatever'
-  //     },
-  //     {
-  //       name: '아무거나',
-  //       path: '/whatevery'
-  //     }
-  //   ]
-  // },
+  {
+    name: '맛집',
+    path: '/restaurants',
+    icon: 'free_breakfast',
+    // main: Restaurants,
+    children: [
+      {
+        name: '오늘의 맛집',
+        path: '/trending'
+      },
+      {
+        name: '랭킹',
+        path: '/rank'
+      }
+    ]
+  },
+  {
+    name: 'Q&A',
+    path: '/qna',
+    icon: 'forum',
+    // main: QnA,
+    children: [
+      {
+        name: '최신질문',
+        path: '/recent'
+      },
+      {
+        name: '내 질문',
+        path: '/myquestions'
+      },
+      {
+        name: '내 답변',
+        path: '/myanswers'
+      }
+    ]
+  },
+  {
+    name: '정보',
+    path: '/info',
+    icon: 'event',
+    // main: Info,
+    children: [
+      {
+        name: '인기상승',
+        path: '/whatever'
+      },
+      {
+        name: '아무거나',
+        path: '/whatevery'
+      }
+    ]
+  },
   {
     name: '게시글 목록',
     path: '/articles',

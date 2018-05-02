@@ -8,10 +8,13 @@ import './Board.scss';
 const formatter = buildFormatter(krStrings);
 
 class Board extends Component {
+
   render() {
+
     const {
       title, description, managerInfo, date, statsFirst, statsSecond, toURL, boardIcon, page, selected, id, mobile
     } = this.props;
+
     const boardIconView = (
       <div className="dataItem__icon">
         <span className="board__iconBackground">
@@ -19,6 +22,7 @@ class Board extends Component {
         </span>
       </div>
     );
+
     const closeAndRedirect = (
       <span
         onClick={async () => {
@@ -32,6 +36,7 @@ class Board extends Component {
         {title}
       </span>
     );
+
     return (
       <div className="dataItem">
         { boardIcon === 'true' && !mobile ? boardIconView : ''}

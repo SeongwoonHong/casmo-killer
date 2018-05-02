@@ -219,7 +219,7 @@ describe('DELETE /api/user/delete/account', () => {
         User
           .findUserByEmail(users[0].email)
           .then(user => {
-            expect(user).to.be.null;
+            expect(user.deleted).to.equal(true);
             done();
           });
 

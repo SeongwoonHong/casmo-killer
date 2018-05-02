@@ -7,37 +7,46 @@ import UserInfoHeader from '../../components/UserInfoHeader/UserInfoHeader';
 import './UserInfo.scss';
 
 class UserInfo extends Component {
+
   constructor(props) {
+
     super(props);
 
     this.state = {
       loadingState: false
     };
+
     this.scrollFunc = this.scrollEvent.bind(this);
+
   }
 
   componentDidMount() {
 
-    this.props.fetchActivityRequest(true, undefined, undefined, this.props.match.params.userId).then(
-      () => {
-        this.loadUntilScrollable();
-      }
-    );
+    this.props.fetchActivityRequest(true, undefined, undefined, this.props.match.params.userId).then(() => {
+      this.loadUntilScrollable();
+    });
 
-    (window.innerWidth <= 991 && document.querySelector('.app-container').addEventListener('scroll', this.scrollFunc))
-    || (window.innerWidth > 991 && document.querySelector('.root-container').addEventListener('scroll', this.scrollFunc));
+    document
+      .querySelector(
+        window.innerWidth <= 991
+          ? '.app-container'
+          : '.root-container'
+      )
+      .addEventListener('scroll', this.scrollFunc);
+
   }
 
   shouldComponentUpdate(nextProps) {
-    const update = JSON.stringify(this.props) !== JSON.stringify(nextProps);
-    return update;
+    return JSON.stringify(this.props) !== JSON.stringify(nextProps);
   }
 
   componentDidUpdate(prevProps) {
+
     if (this.props.match.params !== prevProps.match.params) {
       this.componentWillUnmount();
       this.componentDidMount();
     }
+
   }
 
   componentWillUnmount() {
@@ -63,6 +72,7 @@ class UserInfo extends Component {
       );
     }
   };
+
   scrollEvent() {
     if ((window.innerWidth <= 991 && (window.innerHeight + (document.querySelector('.app-container').scrollTop) > (document.querySelector('.User').scrollHeight - 50)))
       || (window.innerWidth > 991 && (window.innerHeight + (document.querySelector('.root-container').scrollTop) > (document.querySelector('.User').scrollHeight - 50)))) {
@@ -103,21 +113,24 @@ class UserInfo extends Component {
   }
 
   render() {
+
     const { data } = this.props.activityList;
+
     return (
       <AlignVertical className="User-Info">
         <AlignHorizontal className="User-Info-Header">
           <UserInfoHeader
-            userName={this.props.location.state.userName}
-            avatar={this.props.location.state.avatar}
-          />
+            userName={ this.props.location.state.userName }
+            avatar={ this.props.location.state.avatar } />
         </AlignHorizontal>
         <ActivityList
           className="User-Info-ActivityList"
-          data={data} />
+          data={ data } />
       </AlignVertical>
     );
+
   }
+
 }
 
 export default UserInfo;

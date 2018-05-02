@@ -31,9 +31,9 @@ ShallowWrapper {
         <Link
                 className="user-form-button"
                 replace={false}
-                to="/user/delete"
+                to="/user/deactivate"
         >
-                Delete Account
+                Deactivate Account
         </Link>
 </div>,
       "children": Array [
@@ -91,7 +91,7 @@ ShallowWrapper {
       ],
       "className": "Security-settings",
       "disabled": false,
-      "formMsg": "Change your password, or delete your account",
+      "formMsg": "Change your password, or deactivate your account",
       "formTitle": "Security Settings",
       "icon": "",
       "isLoading": false,
@@ -229,9 +229,9 @@ ShallowWrapper {
           <Link
                     className="user-form-button"
                     replace={false}
-                    to="/user/delete"
+                    to="/user/deactivate"
           >
-                    Delete Account
+                    Deactivate Account
           </Link>
 </div>,
         "children": Array [
@@ -289,7 +289,7 @@ ShallowWrapper {
         ],
         "className": "Security-settings",
         "disabled": false,
-        "formMsg": "Change your password, or delete your account",
+        "formMsg": "Change your password, or deactivate your account",
         "formTitle": "Security Settings",
         "icon": "",
         "isLoading": false,

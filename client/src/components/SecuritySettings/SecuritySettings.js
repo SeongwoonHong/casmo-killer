@@ -176,7 +176,7 @@ class SecuritySettings extends Component {
         className="Security-settings"
         isLoading={ isLoading }
         formTitle="Security Settings"
-        formMsg="Change your password, or delete your account"
+        formMsg="Change your password, or deactivate your account"
         onSubmit={ this.onSubmitHandler }
         button={ (
           <div className="button-group">
@@ -194,9 +194,9 @@ class SecuritySettings extends Component {
               { isEditing || isVerified ? 'Cancel' : 'Change Password' }
             </button>
             <Link
-              to="/user/delete"
+              to="/user/deactivate"
               className="user-form-button">
-              Delete Account
+              Deactivate Account
             </Link>
           </div>
         ) }>

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import TopNavBtn from '../../../shared/TopNavBtn';
 
@@ -56,6 +57,22 @@ const UserDropdownBtn = ({
     </TopNavBtn>
   );
 
+};
+
+UserDropdownBtn.propTypes = {
+  isLoggedIn: PropTypes.bool,
+  displayName: PropTypes.string,
+  avatar: PropTypes.string,
+  level: PropTypes.string,
+  toggleUserMenu: PropTypes.func
+};
+
+UserDropdownBtn.defaultProps = {
+  isLoggedIn: false,
+  displayName: '',
+  avatar: '',
+  level: '',
+  toggleUserMenu: () => {}
 };
 
 export default UserDropdownBtn;

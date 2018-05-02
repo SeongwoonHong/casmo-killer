@@ -1,0 +1,155 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<UserMenu /> renders the component consistently 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <UserMenu
+    active={true}
+    currentRoute="/"
+    logout={[Function]}
+    toggleUserMenu={[Function]}
+    user={
+        Object {
+            "isLoggedIn": false,
+          }
+    }
+/>,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "function",
+    "props": Object {
+      "active": true,
+      "children": Array [
+        <UserDropdownBtn
+          avatar=""
+          displayName=""
+          isLoggedIn={false}
+          level=""
+          toggleUserMenu={[Function]}
+/>,
+        <UserDropdown
+          active={true}
+          currentRoute="/"
+          isLoggedIn={false}
+          onLogout={[Function]}
+          toggleUserMenu={[Function]}
+/>,
+      ],
+      "className": "User-menu",
+      "onClose": [Function],
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "avatar": "",
+          "displayName": "",
+          "isLoggedIn": false,
+          "level": "",
+          "toggleUserMenu": [Function],
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "active": true,
+          "currentRoute": "/",
+          "isLoggedIn": false,
+          "onLogout": [Function],
+          "toggleUserMenu": [Function],
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+    ],
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "function",
+      "props": Object {
+        "active": true,
+        "children": Array [
+          <UserDropdownBtn
+            avatar=""
+            displayName=""
+            isLoggedIn={false}
+            level=""
+            toggleUserMenu={[Function]}
+/>,
+          <UserDropdown
+            active={true}
+            currentRoute="/"
+            isLoggedIn={false}
+            onLogout={[Function]}
+            toggleUserMenu={[Function]}
+/>,
+        ],
+        "className": "User-menu",
+        "onClose": [Function],
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "avatar": "",
+            "displayName": "",
+            "isLoggedIn": false,
+            "level": "",
+            "toggleUserMenu": [Function],
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "active": true,
+            "currentRoute": "/",
+            "isLoggedIn": false,
+            "onLogout": [Function],
+            "toggleUserMenu": [Function],
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+      ],
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;

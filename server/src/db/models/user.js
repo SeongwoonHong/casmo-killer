@@ -39,6 +39,14 @@ const UserSchema = new Schema({
   bookmarked: [{
     type: mongoose.Schema.Types.ObjectId, ref: 'board'
   }],
+  deleted: {
+    type: Boolean,
+    default: false
+  },
+  deletedAt: {
+    type: Date,
+    default: undefined
+  }
 });
 
 UserSchema.statics.findUserById = function (id) {
@@ -73,11 +81,15 @@ UserSchema.statics.registerNewUser = function (newUserInfo) {
 };
 
 UserSchema.methods.updateTokenInfo = function (tokenInfo) {
+
   return this.update({ tokenInfo });
+
 };
 
 UserSchema.methods.updateEmail = function (email) {
+
   return this.update({ email });
+
 };
 
 UserSchema.methods.verifyPassword = function (password) {
@@ -88,9 +100,16 @@ UserSchema.methods.verifyPassword = function (password) {
 
 UserSchema.methods.checkPrevPwd = function (password) {
 
-  return this.prevPasswords.find((pwd) => {
-    return bcrypt.compareSync(password, pwd);
-  }) !== undefined;
+  return this.prevPasswords.find((pwd) => bcrypt.compareSync(password, pwd)) !== undefined;
+
+};
+
+UserSchema.methods.deactivate = function () {
+
+  return this.update({
+    deleted: true,
+    deletedAt: Date.now()
+  });
 
 };
 

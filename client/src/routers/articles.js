@@ -11,9 +11,9 @@ class Articles extends Component {
     return (
       <div className="articles">
         <Switch>
-          <Route exact path="/article/:id" component={Article} />
-          <Route exact path="/articles/:id/new" component={ArticleNew} />
-          <Route path="/articles/:boardId" component={ArticlesPage} />
+          <Route exact path="/article/:id" component={ Article } />
+          <Route exact path="/articles/:id/new" component={ ArticleNew } />
+          <Route path="/articles/:boardId" component={ ArticlesPage } />
         </Switch>
       </div>
     );

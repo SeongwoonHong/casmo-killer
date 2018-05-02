@@ -14,8 +14,8 @@ router.get('/all/search/:searchWord', (req, res) => {
 
   Board.aggregate([
     {
-      "$match": {
-        "deleted": false,
+      '$match': {
+        'deleted': false,
         $or: [
           { boardId: searchCondition },
           { description: searchCondition }
@@ -23,39 +23,41 @@ router.get('/all/search/:searchWord', (req, res) => {
       }
     },
     {
-      "$lookup": {
-        "localField": "author", // 기본 키
-        "from": "users", // join 할 collection명
-        "foreignField": "_id", // 외래 키
-        "as": "author" // 결과를 배출할 alias ( 필드명 )
+      '$lookup': {
+        'localField': 'author', // 기본 키
+        'from': 'users', // join 할 collection명
+        'foreignField': '_id', // 외래 키
+        'as': 'author' // 결과를 배출할 alias ( 필드명 )
       }
     },
     {
-      "$lookup": {
-          "from": "posts", // <-- collection to join
-          "localField": "boardId",
-          "foreignField": "boardId",
-          "as": "postCount"
+      '$lookup': {
+        'from': 'posts', // <-- collection to join
+        'localField': 'boardId',
+        'foreignField': 'boardId',
+        'as': 'postCount'
       }
     },
     {
-      "$project": {
+      '$project': {
         author: 1,
         boardId: 1,
         date: 1,
         description: 1,
-        postsCount: {"$size": {
-            $filter : {
-                input: "$postCount",
-                as : "postCount_field",
-                cond : {
-                    $eq: ["$$postCount_field.deleted",false]
-                }
+        postsCount: {
+          '$size': {
+            $filter: {
+              input: '$postCount',
+              as: 'postCount_field',
+              cond: {
+                $eq: ['$$postCount_field.deleted', false]
+              }
             }
-        }}
+          }
+        }
       }
     }
-  ]).exec(function(err, Result){
+  ]).exec(function (err, Result) {
     if (err) {
       console.log(err);
       return res.status(500).json({
@@ -72,50 +74,61 @@ router.get(/\/all.*/, (req, res) => {
   // des descending
   const sortType = req.params.sortType === 'asc' ? 1 : -1;
   const limit = +req.params.limit || 10000;
+
   Board.aggregate([
     {
-      "$match": {
-        "deleted": false
+      '$match': {
+        'deleted': false
       }
     },
     {
-      "$lookup": {
-        "localField": "author", // 기본 키
-        "from": "users", // join 할 collection명
-        "foreignField": "_id", // 외래 키
-        "as": "author" // 결과를 배출할 alias ( 필드명 )
+      '$lookup': {
+        'localField': 'author', // 기본 키
+        'from': 'users', // join 할 collection명
+        'foreignField': '_id', // 외래 키
+        'as': 'author' // 결과를 배출할 alias ( 필드명 )
       }
     },
     {
-      "$lookup": {
-          "from": "posts", // <-- collection to join
-          "localField": "boardId",
-          "foreignField": "boardId",
-          "as": "postCount"
+      '$unwind': '$author'
+    },
+    {
+      '$match': {
+        '_id': mongoose.Schema.Types.ObjectId
       }
     },
     {
-      "$project": {
+      '$lookup': {
+        'from': 'posts', // <-- collection to join
+        'localField': 'boardId',
+        'foreignField': 'boardId',
+        'as': 'postCount'
+      }
+    },
+    {
+      '$project': {
         author: 1,
         boardId: 1,
         date: 1,
         description: 1,
-        postsCount: {"$size": {
-            $filter : {
-                input: "$postCount",
-                as : "postCount_field",
-                cond : {
-                    $eq: ["$$postCount_field.deleted",false]
-                }
+        postsCount: {
+          '$size': {
+            $filter: {
+              input: '$postCount',
+              as: 'postCount_field',
+              cond: {
+                $eq: ['$$postCount_field.deleted', false]
+              }
             }
-        }}
+          }
+        }
       }
     },
     {
-      "$sort" : { postsCount: sortType }
+      '$sort': { postsCount: sortType }
     },
-    { "$limit" : limit }
-  ]).exec(function(err, Result){
+    { '$limit': limit }
+  ]).exec(function (err, Result) {
     if (err) throw err;
     res.json(Result);
   });
@@ -127,45 +140,47 @@ router.get('/bookmark/:user', (req, res) => {
     (user) => {
       Board.aggregate([
         {
-          "$match": {
-            "deleted": false,
-            "_id": { "$in": user.bookmarked }
+          '$match': {
+            'deleted': false,
+            '_id': { '$in': user.bookmarked }
           }
         },
         {
-          "$lookup": {
-            "localField": "author", // 기본 키
-            "from": "users", // join 할 collection명
-            "foreignField": "_id", // 외래 키
-            "as": "author" // 결과를 배출할 alias ( 필드명 )
+          '$lookup': {
+            'localField': 'author', // 기본 키
+            'from': 'users', // join 할 collection명
+            'foreignField': '_id', // 외래 키
+            'as': 'author' // 결과를 배출할 alias ( 필드명 )
           }
         },
         {
-          "$lookup": {
-              "from": "posts", // <-- collection to join
-              "localField": "boardId",
-              "foreignField": "boardId",
-              "as": "postCount"
+          '$lookup': {
+            'from': 'posts', // <-- collection to join
+            'localField': 'boardId',
+            'foreignField': 'boardId',
+            'as': 'postCount'
           }
         },
         {
-          "$project": {
+          '$project': {
             author: 1,
             boardId: 1,
             date: 1,
             description: 1,
-            postsCount: {"$size": {
-                $filter : {
-                    input: "$postCount",
-                    as : "postCount_field",
-                    cond : {
-                        $eq: ["$$postCount_field.deleted",false]
-                    }
+            postsCount: {
+              '$size': {
+                $filter: {
+                  input: '$postCount',
+                  as: 'postCount_field',
+                  cond: {
+                    $eq: ['$$postCount_field.deleted', false]
+                  }
                 }
-            }}
+              }
+            }
           }
         }
-      ]).exec(function(err, Result){
+      ]).exec(function (err, Result) {
         if (err) throw err;
         res.json(Result);
       });
@@ -175,47 +190,49 @@ router.get('/bookmark/:user', (req, res) => {
 
 /* GET MY BOARD LIST */
 router.get('/my/:user', (req, res) => {
-  
+
   Board.aggregate([
     {
-      "$match": {
-        "deleted": false , "author": ObjectId(req.params.user)
+      '$match': {
+        'deleted': false, 'author': ObjectId(req.params.user)
       }
     },
     {
-      "$lookup": {
-        "localField": "author", // 기본 키
-        "from": "users", // join 할 collection명
-        "foreignField": "_id", // 외래 키
-        "as": "author" // 결과를 배출할 alias ( 필드명 )
+      '$lookup': {
+        'localField': 'author', // 기본 키
+        'from': 'users', // join 할 collection명
+        'foreignField': '_id', // 외래 키
+        'as': 'author' // 결과를 배출할 alias ( 필드명 )
       }
     },
     {
-      "$lookup": {
-          "from": "posts", // <-- collection to join
-          "localField": "boardId",
-          "foreignField": "boardId",
-          "as": "postCount"
+      '$lookup': {
+        'from': 'posts', // <-- collection to join
+        'localField': 'boardId',
+        'foreignField': 'boardId',
+        'as': 'postCount'
       }
     },
     {
-      "$project": {
+      '$project': {
         author: 1,
         boardId: 1,
         date: 1,
         description: 1,
-        postsCount: {"$size": {
-            $filter : {
-                input: "$postCount",
-                as : "postCount_field",
-                cond : {
-                    $eq: ["$$postCount_field.deleted",false]
-                }
+        postsCount: {
+          '$size': {
+            $filter: {
+              input: '$postCount',
+              as: 'postCount_field',
+              cond: {
+                $eq: ['$$postCount_field.deleted', false]
+              }
             }
-        }}
+          }
+        }
       }
     }
-  ]).exec(function(err, Result){
+  ]).exec(function (err, Result) {
     if (err) throw err;
     res.json(Result);
   });

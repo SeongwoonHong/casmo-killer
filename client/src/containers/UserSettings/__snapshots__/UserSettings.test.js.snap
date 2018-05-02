@@ -36,11 +36,11 @@ ShallowWrapper {
           overlayColor="rgba(0,0,0,.75)"
 />,
         <h2
-          className="user-page-title"
+          className="User__page__title"
 >
           My Account
           <i
-                    className="material-icons"
+                    className="User__page__title__icons material-icons"
           >
                     person
           </i>
@@ -87,12 +87,12 @@ ShallowWrapper {
           "children": Array [
             "My Account",
             <i
-              className="material-icons"
+              className="User__page__title__icons material-icons"
 >
               person
 </i>,
           ],
-          "className": "user-page-title",
+          "className": "User__page__title",
         },
         "ref": null,
         "rendered": Array [
@@ -103,7 +103,7 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": "person",
-              "className": "material-icons",
+              "className": "User__page__title__icons material-icons",
             },
             "ref": null,
             "rendered": "person",
@@ -166,11 +166,11 @@ ShallowWrapper {
             overlayColor="rgba(0,0,0,.75)"
 />,
           <h2
-            className="user-page-title"
+            className="User__page__title"
 >
             My Account
             <i
-                        className="material-icons"
+                        className="User__page__title__icons material-icons"
             >
                         person
             </i>
@@ -217,12 +217,12 @@ ShallowWrapper {
             "children": Array [
               "My Account",
               <i
-                className="material-icons"
+                className="User__page__title__icons material-icons"
 >
                 person
 </i>,
             ],
-            "className": "user-page-title",
+            "className": "User__page__title",
           },
           "ref": null,
           "rendered": Array [
@@ -233,7 +233,7 @@ ShallowWrapper {
               "nodeType": "host",
               "props": Object {
                 "children": "person",
-                "className": "material-icons",
+                "className": "User__page__title__icons material-icons",
               },
               "ref": null,
               "rendered": "person",

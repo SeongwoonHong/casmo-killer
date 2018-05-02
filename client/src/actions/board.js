@@ -78,8 +78,11 @@ export function fetchHotBoardsFailure(error) {
 }
 
 export const fetchBoardsRequestWithSort = (sortType = 'asc', limit = 10000) => {
+
   return async (dispatch) => {
+
     dispatch(fetchHotBoards());
+
     const apiURL = `/api/board/all/${sortType}/${limit}`;
 
     try {
@@ -88,7 +91,9 @@ export const fetchBoardsRequestWithSort = (sortType = 'asc', limit = 10000) => {
     } catch (err) {
       dispatch(fetchHotBoardsFailure(err));
     }
+
   };
+
 };
 
 // CREATE BOARD

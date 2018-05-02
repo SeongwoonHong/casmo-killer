@@ -3,6 +3,7 @@
 /* eslint jsx-a11y/click-events-have-key-events: 0 */
 /* eslint jsx-a11y/no-noninteractive-element-interactions: 0 */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { NavLink } from 'react-router-dom';
 
@@ -13,7 +14,7 @@ class UserDropdown extends Component {
   render() {
 
     const {
-      active, isLoggedIn, currentRoute, onLogout
+      active, isLoggedIn, currentRoute, onLogout, toggleUserMenu
     } = this.props;
 
     if (isLoggedIn) {
@@ -24,10 +25,10 @@ class UserDropdown extends Component {
           }) }
           onClick={ () => {
             setTimeout(() => {
-              this.props.toggleUserMenu(false);
+              toggleUserMenu(false);
             });
           } }>
-          <li className="User-dropdown__items--notification">
+          <li className="User-dropdown__items">
             <NavLink
               className="User-dropdown__items__links"
               to="/user/notifications">
@@ -133,5 +134,12 @@ class UserDropdown extends Component {
   }
 
 }
+
+UserDropdown.propTypes = {
+  active: PropTypes.bool.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
+  currentRoute: PropTypes.string.isRequired,
+  onLogout: PropTypes.func.isRequired
+};
 
 export default UserDropdown;

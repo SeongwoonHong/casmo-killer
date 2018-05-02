@@ -1,5 +1,6 @@
 /* eslint no-unused-vars: 0 */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import onClickOutside from 'react-onclickoutside';
 
 import './UserMenu.scss';
@@ -9,11 +10,14 @@ import MenuContainer from '../../shared/MenuContainer';
 import UserDropdownBtn from './UserDropdownBtn';
 import UserDropdown from './UserDropdown';
 
-class UserMenu extends Component {
+export class UserMenu extends Component {
 
   constructor(props) {
+
     super(props);
+
     this.handleClickOutside = this.handleClickOutside.bind(this);
+
   }
 
   handleClickOutside(e) {
@@ -51,5 +55,13 @@ class UserMenu extends Component {
   }
 
 }
+
+UserMenu.propTypes = {
+  active: PropTypes.bool.isRequired,
+  user: PropTypes.any.isRequired,
+  currentRoute: PropTypes.string.isRequired,
+  toggleUserMenu: PropTypes.func.isRequired,
+  logout: PropTypes.func.isRequired
+};
 
 export default onClickOutside(UserMenu);

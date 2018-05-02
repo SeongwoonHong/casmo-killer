@@ -9,12 +9,13 @@ const AppTitle = () => {
 
   return (
     <h1 className="App-title">
-      <Link to="/" className="App-title__link">
+      <Link
+        to="/"
+        className="App-title__link">
         <img
           src={ logo }
           alt="Damso Logo"
-          className="App-title__img"
-        />
+          className="App-title__img" />
       </Link>
     </h1>
   );

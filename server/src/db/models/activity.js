@@ -4,18 +4,34 @@ const { Schema } = mongoose;
 const type = 'POST_WRITE POST_LIKE POST_DISLIKE COMMENT_WRITE COMMENT_LIKE COMMENT_DISLIKE'.split(' ');
 
 const Activity = new Schema({
-  type: { type: String, enum: type },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  type: {
+    type: String,
+    enum: type
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   payload: {
     post: {
-      postId: { type: mongoose.Schema.Types.ObjectId, ref: 'post' },
-      commentId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+      postId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'post'
+      },
+      commentId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      }
     }
   },
-  date: { type: Date, default: Date.now },
+  date: {
+    type: Date,
+    default: Date.now
+  },
 });
 
 Activity.statics.createWritetActivity = function (userId, postId, writeType) {
+
   const activity = new this({
     type: writeType === 'comment' ? 'COMMENT_WRITE' : 'POST_WRITE',
     userId,
@@ -25,10 +41,13 @@ Activity.statics.createWritetActivity = function (userId, postId, writeType) {
       }
     }
   });
+
   return activity.save();
+
 };
 
 Activity.statics.createLikeActivity = function (userId, postId, commentId) {
+
   const activity = new this({
     type: commentId ? 'COMMENT_LIKE' : 'POST_LIKE',
     userId,
@@ -39,10 +58,13 @@ Activity.statics.createLikeActivity = function (userId, postId, commentId) {
       }
     }
   });
+
   return activity.save();
+
 };
 
 Activity.statics.createDisLikeActivity = function (userId, postId, commentId) {
+
   const activity = new this({
     type: commentId ? 'COMMENT_DISLIKE' : 'POST_DISLIKE',
     userId,
@@ -53,8 +75,9 @@ Activity.statics.createDisLikeActivity = function (userId, postId, commentId) {
       }
     }
   });
-  return activity.save();
-};
 
+  return activity.save();
+
+};
 
 module.exports = mongoose.model('activity', Activity);

@@ -26,13 +26,13 @@ export function fetchActivityFailure(error) {
   };
 }
 
-/*
-    Parameter:
-        - isInitial: whether it is for initial loading
-        - listType:  OPTIONAL; loading 'old' memo or 'new' memo
-        - id:        OPTIONAL; activity id (one at the bottom or one at the top)
-        - userId:  OPTIONAL; find activity of following user
-*/
+/**
+ * @param {boolean} isInitial - whether it is for initial loading
+ * @param {string=} listType - loading 'old' memo or 'new' memo
+ * @param {string=} id - activity id (one at the bottom or one at the top)
+ * @param {string} userId - find activity of following user
+ * @return {function}
+ */
 export function fetchActivityRequest(isInitial, listType, id, userId) {
   return (dispatch) => {
     // Inform Login API is starting

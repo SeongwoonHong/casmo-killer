@@ -1,5 +1,5 @@
 .Form-message {
-    margin: 0 auto 5px;
+    margin: $user-box-padding $user-box-padding 0;
     padding: 5px 8px;
     &--error {
         background-color: #ffe6e6;

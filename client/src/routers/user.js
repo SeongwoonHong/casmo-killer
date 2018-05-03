@@ -14,7 +14,7 @@ import Delete from '../containers/UserDelete';
 import ErrorPage from '../components/ErrorPage';
 import UserInfo from '../containers/UserInfo';
 
-import '../components/User/User.scss';
+// import '../components/User/User.scss';
 
 class User extends Component {
 

@@ -106,7 +106,7 @@ class Delete extends Component {
         return (
           <Link
             to="/"
-            className="user-form-button"
+            className="User__form__btn Delete__form__btn"
             onClick={ onClick }>
             Ck-Board Home
           </Link>
@@ -115,7 +115,7 @@ class Delete extends Component {
       return (
         <button
           type="submit"
-          className="user-form-button">
+          className="User__form__btn Delete__form__btn">
           { agree ? 'Delete My Account' : 'Agree' }
         </button>
       );

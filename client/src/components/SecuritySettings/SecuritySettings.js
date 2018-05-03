@@ -179,11 +179,11 @@ class SecuritySettings extends Component {
         formMsg="Change your password, or deactivate your account"
         onSubmit={ this.onSubmitHandler }
         button={ (
-          <div className="button-group">
+          <div className="Security-settings__button-group">
             <button
               type="button"
               disabled={ strategy !== 'local' }
-              className="user-form-button"
+              className="User__form__btn Security-settings__form__btn"
               onClick={ () => {
                 if (isVerified) {
                   this.setState(this.initialState);
@@ -195,7 +195,7 @@ class SecuritySettings extends Component {
             </button>
             <Link
               to="/user/deactivate"
-              className="user-form-button">
+              className="User__form__btn Security-settings__form__btn">
               Deactivate Account
             </Link>
           </div>
@@ -215,7 +215,7 @@ class SecuritySettings extends Component {
           message="Please enter your current password to proceed.">
           <button
             type="submit"
-            className="user-form-button">
+            className="User__form__btn Security-settings__field__btn">
             Submit
           </button>
         </UserInputField>
@@ -238,7 +238,7 @@ class SecuritySettings extends Component {
           message="Confirm your password">
           <button
             type="submit"
-            className="user-form-button">
+            className="User__form__btn Security-settings__field__btn">
             Submit
           </button>
         </UserInputField>

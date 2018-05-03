@@ -59,7 +59,7 @@ ShallowWrapper {
                               testing
                     </p>
                     <button
-                              className="User__form__btn user-form-button"
+                              className="User__form__btn test__form__btn"
                               disabled={false}
                               type="submit"
                     >
@@ -103,7 +103,7 @@ ShallowWrapper {
                             testing
               </p>
               <button
-                            className="User__form__btn user-form-button"
+                            className="User__form__btn test__form__btn"
                             disabled={false}
                             type="submit"
               >
@@ -172,7 +172,7 @@ ShallowWrapper {
                   testing
 </p>,
                 <button
-                  className="User__form__btn user-form-button"
+                  className="User__form__btn test__form__btn"
                   disabled={false}
                   type="submit"
 >
@@ -202,7 +202,7 @@ ShallowWrapper {
                 "nodeType": "host",
                 "props": Object {
                   "children": "Submit",
-                  "className": "User__form__btn user-form-button",
+                  "className": "User__form__btn test__form__btn",
                   "disabled": false,
                   "type": "submit",
                 },
@@ -254,7 +254,7 @@ ShallowWrapper {
                                     testing
                         </p>
                         <button
-                                    className="User__form__btn user-form-button"
+                                    className="User__form__btn test__form__btn"
                                     disabled={false}
                                     type="submit"
                         >
@@ -298,7 +298,7 @@ ShallowWrapper {
                                 testing
                 </p>
                 <button
-                                className="User__form__btn user-form-button"
+                                className="User__form__btn test__form__btn"
                                 disabled={false}
                                 type="submit"
                 >
@@ -367,7 +367,7 @@ ShallowWrapper {
                     testing
 </p>,
                   <button
-                    className="User__form__btn user-form-button"
+                    className="User__form__btn test__form__btn"
                     disabled={false}
                     type="submit"
 >
@@ -397,7 +397,7 @@ ShallowWrapper {
                   "nodeType": "host",
                   "props": Object {
                     "children": "Submit",
-                    "className": "User__form__btn user-form-button",
+                    "className": "User__form__btn test__form__btn",
                     "disabled": false,
                     "type": "submit",
                   },

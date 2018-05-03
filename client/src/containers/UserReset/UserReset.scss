@@ -1,9 +1,0 @@
-.Reset {
-    > .user-form-box {
-    }
-    &__form {
-        > a.user-form-button {
-            width: calc(100% - #{$user-box-padding * 2})
-        }
-    }
-}

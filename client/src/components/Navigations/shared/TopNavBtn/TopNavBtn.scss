@@ -1,7 +1,6 @@
 .Top-nav-btn {
     @include rectanglify($top-nav-size);
     background-color: transparent;
-    border: none;
     color: palette(Grey, 100);
     &:focus {
         outline: none;

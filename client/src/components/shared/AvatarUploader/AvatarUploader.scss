@@ -1,0 +1,33 @@
+.Avatar-uploader {
+    &__preview {
+        @include flex-box(flex-start, flex-end);
+        margin-top: $user-box-padding;
+    }
+    &__wrapper {
+        @include flex-box(center);
+        @include rectanglify(100px);
+        background-color: palette(Pink, 50);
+        border: 1px solid palette(Pink, 100);
+        border-radius: 50%;
+        color: palette(Pink, 100);
+    }
+    &__img {
+        @include rectanglify(100px);
+        border-radius: 50%;
+    }
+    &__input {
+        position: absolute;
+        z-index: -88;
+    }
+    &__label {
+        margin-left: $user-box-padding;
+        text-align: center;
+    }
+    &__btn {
+        color: palette(Grey, 50);
+        margin-bottom: $user-box-padding - 10px;
+    }
+    &__text {
+        color: palette(Grey, 600);
+    }
+}

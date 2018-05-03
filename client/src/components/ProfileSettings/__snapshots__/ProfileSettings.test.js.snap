@@ -31,14 +31,17 @@ ShallowWrapper {
           when={false}
 />,
         <FormMessage
+          className=""
           message=""
           type="error "
 />,
         <FormMessage
+          className=""
           message=""
           type="warning"
 />,
         <FormMessage
+          className=""
           message=""
           type="error"
 />,
@@ -54,6 +57,7 @@ ShallowWrapper {
           value="ckboard@gmail.com"
 />,
         <FormMessage
+          className=""
           message=""
           type="error"
 />,
@@ -69,47 +73,20 @@ ShallowWrapper {
           value="ckboard"
 />,
         <FormMessage
+          className=""
           message=""
           type="error"
 />,
-        <div
-          className="user-form-fields last-field"
->
-          <label>
-                    Profile Picture
-          </label>
-          <div
-                    className="avatar-preview"
-          >
-                    <div
-                              className="avatar-wrapper"
-                    >
-                              <img
-                                        alt="user-avatar"
-                                        className="circle avatar-img"
-                                        src="http://i1.kym-cdn.com/photos/images/newsfeed/000/250/007/672.jpg"
-                              />
-                    </div>
-                    <input
-                              accept="image/*"
-                              id="profilePicture"
-                              onChange={[Function]}
-                              type="file"
-                    />
-                    <label
-                              htmlFor="profilePicture"
-                    >
-                              <span
-                                        className="user-form-button"
-                              >
-                                        Upload New Picture
-                              </span>
-                              <span>
-                                        Max 5mb, JPG, or PNG
-                              </span>
-                    </label>
-          </div>
-</div>,
+        <AvatarUploader
+          avatar={
+                    Object {
+                              "message": "",
+                              "value": "http://i1.kym-cdn.com/photos/images/newsfeed/000/250/007/672.jpg",
+                            }
+          }
+          className="User__form__fields"
+          onChange={[Function]}
+/>,
       ],
       "className": "Profile-settings",
       "disabled": true,
@@ -139,6 +116,7 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "function",
         "props": Object {
+          "className": "",
           "message": "",
           "type": "error ",
         },
@@ -151,6 +129,7 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "function",
         "props": Object {
+          "className": "",
           "message": "",
           "type": "warning",
         },
@@ -163,6 +142,7 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "function",
         "props": Object {
+          "className": "",
           "message": "",
           "type": "error",
         },
@@ -195,6 +175,7 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "function",
         "props": Object {
+          "className": "",
           "message": "",
           "type": "error",
         },
@@ -227,6 +208,7 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "function",
         "props": Object {
+          "className": "",
           "message": "",
           "type": "error",
         },
@@ -237,189 +219,18 @@ ShallowWrapper {
       Object {
         "instance": null,
         "key": undefined,
-        "nodeType": "host",
+        "nodeType": "class",
         "props": Object {
-          "children": Array [
-            <label>
-              Profile Picture
-</label>,
-            <div
-              className="avatar-preview"
->
-              <div
-                            className="avatar-wrapper"
-              >
-                            <img
-                                          alt="user-avatar"
-                                          className="circle avatar-img"
-                                          src="http://i1.kym-cdn.com/photos/images/newsfeed/000/250/007/672.jpg"
-                            />
-              </div>
-              <input
-                            accept="image/*"
-                            id="profilePicture"
-                            onChange={[Function]}
-                            type="file"
-              />
-              <label
-                            htmlFor="profilePicture"
-              >
-                            <span
-                                          className="user-form-button"
-                            >
-                                          Upload New Picture
-                            </span>
-                            <span>
-                                          Max 5mb, JPG, or PNG
-                            </span>
-              </label>
-</div>,
-          ],
-          "className": "user-form-fields last-field",
+          "avatar": Object {
+            "message": "",
+            "value": "http://i1.kym-cdn.com/photos/images/newsfeed/000/250/007/672.jpg",
+          },
+          "className": "User__form__fields",
+          "onChange": [Function],
         },
         "ref": null,
-        "rendered": Array [
-          Object {
-            "instance": null,
-            "key": undefined,
-            "nodeType": "host",
-            "props": Object {
-              "children": "Profile Picture",
-            },
-            "ref": null,
-            "rendered": "Profile Picture",
-            "type": "label",
-          },
-          Object {
-            "instance": null,
-            "key": undefined,
-            "nodeType": "host",
-            "props": Object {
-              "children": Array [
-                <div
-                  className="avatar-wrapper"
->
-                  <img
-                                    alt="user-avatar"
-                                    className="circle avatar-img"
-                                    src="http://i1.kym-cdn.com/photos/images/newsfeed/000/250/007/672.jpg"
-                  />
-</div>,
-                <input
-                  accept="image/*"
-                  id="profilePicture"
-                  onChange={[Function]}
-                  type="file"
-/>,
-                <label
-                  htmlFor="profilePicture"
->
-                  <span
-                                    className="user-form-button"
-                  >
-                                    Upload New Picture
-                  </span>
-                  <span>
-                                    Max 5mb, JPG, or PNG
-                  </span>
-</label>,
-              ],
-              "className": "avatar-preview",
-            },
-            "ref": null,
-            "rendered": Array [
-              Object {
-                "instance": null,
-                "key": undefined,
-                "nodeType": "host",
-                "props": Object {
-                  "children": <img
-                    alt="user-avatar"
-                    className="circle avatar-img"
-                    src="http://i1.kym-cdn.com/photos/images/newsfeed/000/250/007/672.jpg"
-/>,
-                  "className": "avatar-wrapper",
-                },
-                "ref": null,
-                "rendered": Object {
-                  "instance": null,
-                  "key": undefined,
-                  "nodeType": "host",
-                  "props": Object {
-                    "alt": "user-avatar",
-                    "className": "circle avatar-img",
-                    "src": "http://i1.kym-cdn.com/photos/images/newsfeed/000/250/007/672.jpg",
-                  },
-                  "ref": null,
-                  "rendered": null,
-                  "type": "img",
-                },
-                "type": "div",
-              },
-              Object {
-                "instance": null,
-                "key": undefined,
-                "nodeType": "host",
-                "props": Object {
-                  "accept": "image/*",
-                  "id": "profilePicture",
-                  "onChange": [Function],
-                  "type": "file",
-                },
-                "ref": null,
-                "rendered": null,
-                "type": "input",
-              },
-              Object {
-                "instance": null,
-                "key": undefined,
-                "nodeType": "host",
-                "props": Object {
-                  "children": Array [
-                    <span
-                      className="user-form-button"
->
-                      Upload New Picture
-</span>,
-                    <span>
-                      Max 5mb, JPG, or PNG
-</span>,
-                  ],
-                  "htmlFor": "profilePicture",
-                },
-                "ref": null,
-                "rendered": Array [
-                  Object {
-                    "instance": null,
-                    "key": undefined,
-                    "nodeType": "host",
-                    "props": Object {
-                      "children": "Upload New Picture",
-                      "className": "user-form-button",
-                    },
-                    "ref": null,
-                    "rendered": "Upload New Picture",
-                    "type": "span",
-                  },
-                  Object {
-                    "instance": null,
-                    "key": undefined,
-                    "nodeType": "host",
-                    "props": Object {
-                      "children": "Max 5mb, JPG, or PNG",
-                    },
-                    "ref": null,
-                    "rendered": "Max 5mb, JPG, or PNG",
-                    "type": "span",
-                  },
-                ],
-                "type": "label",
-              },
-            ],
-            "type": "div",
-          },
-        ],
-        "type": "div",
+        "rendered": null,
+        "type": [Function],
       },
     ],
     "type": [Function],
@@ -436,14 +247,17 @@ ShallowWrapper {
             when={false}
 />,
           <FormMessage
+            className=""
             message=""
             type="error "
 />,
           <FormMessage
+            className=""
             message=""
             type="warning"
 />,
           <FormMessage
+            className=""
             message=""
             type="error"
 />,
@@ -459,6 +273,7 @@ ShallowWrapper {
             value="ckboard@gmail.com"
 />,
           <FormMessage
+            className=""
             message=""
             type="error"
 />,
@@ -474,47 +289,20 @@ ShallowWrapper {
             value="ckboard"
 />,
           <FormMessage
+            className=""
             message=""
             type="error"
 />,
-          <div
-            className="user-form-fields last-field"
->
-            <label>
-                        Profile Picture
-            </label>
-            <div
-                        className="avatar-preview"
-            >
-                        <div
-                                    className="avatar-wrapper"
-                        >
-                                    <img
-                                                alt="user-avatar"
-                                                className="circle avatar-img"
-                                                src="http://i1.kym-cdn.com/photos/images/newsfeed/000/250/007/672.jpg"
-                                    />
-                        </div>
-                        <input
-                                    accept="image/*"
-                                    id="profilePicture"
-                                    onChange={[Function]}
-                                    type="file"
-                        />
-                        <label
-                                    htmlFor="profilePicture"
-                        >
-                                    <span
-                                                className="user-form-button"
-                                    >
-                                                Upload New Picture
-                                    </span>
-                                    <span>
-                                                Max 5mb, JPG, or PNG
-                                    </span>
-                        </label>
-            </div>
-</div>,
+          <AvatarUploader
+            avatar={
+                        Object {
+                                    "message": "",
+                                    "value": "http://i1.kym-cdn.com/photos/images/newsfeed/000/250/007/672.jpg",
+                                  }
+            }
+            className="User__form__fields"
+            onChange={[Function]}
+/>,
         ],
         "className": "Profile-settings",
         "disabled": true,
@@ -544,6 +332,7 @@ ShallowWrapper {
           "key": undefined,
           "nodeType": "function",
           "props": Object {
+            "className": "",
             "message": "",
             "type": "error ",
           },
@@ -556,6 +345,7 @@ ShallowWrapper {
           "key": undefined,
           "nodeType": "function",
           "props": Object {
+            "className": "",
             "message": "",
             "type": "warning",
           },
@@ -568,6 +358,7 @@ ShallowWrapper {
           "key": undefined,
           "nodeType": "function",
           "props": Object {
+            "className": "",
             "message": "",
             "type": "error",
           },
@@ -600,6 +391,7 @@ ShallowWrapper {
           "key": undefined,
           "nodeType": "function",
           "props": Object {
+            "className": "",
             "message": "",
             "type": "error",
           },
@@ -632,6 +424,7 @@ ShallowWrapper {
           "key": undefined,
           "nodeType": "function",
           "props": Object {
+            "className": "",
             "message": "",
             "type": "error",
           },
@@ -642,189 +435,18 @@ ShallowWrapper {
         Object {
           "instance": null,
           "key": undefined,
-          "nodeType": "host",
+          "nodeType": "class",
           "props": Object {
-            "children": Array [
-              <label>
-                Profile Picture
-</label>,
-              <div
-                className="avatar-preview"
->
-                <div
-                                className="avatar-wrapper"
-                >
-                                <img
-                                                alt="user-avatar"
-                                                className="circle avatar-img"
-                                                src="http://i1.kym-cdn.com/photos/images/newsfeed/000/250/007/672.jpg"
-                                />
-                </div>
-                <input
-                                accept="image/*"
-                                id="profilePicture"
-                                onChange={[Function]}
-                                type="file"
-                />
-                <label
-                                htmlFor="profilePicture"
-                >
-                                <span
-                                                className="user-form-button"
-                                >
-                                                Upload New Picture
-                                </span>
-                                <span>
-                                                Max 5mb, JPG, or PNG
-                                </span>
-                </label>
-</div>,
-            ],
-            "className": "user-form-fields last-field",
+            "avatar": Object {
+              "message": "",
+              "value": "http://i1.kym-cdn.com/photos/images/newsfeed/000/250/007/672.jpg",
+            },
+            "className": "User__form__fields",
+            "onChange": [Function],
           },
           "ref": null,
-          "rendered": Array [
-            Object {
-              "instance": null,
-              "key": undefined,
-              "nodeType": "host",
-              "props": Object {
-                "children": "Profile Picture",
-              },
-              "ref": null,
-              "rendered": "Profile Picture",
-              "type": "label",
-            },
-            Object {
-              "instance": null,
-              "key": undefined,
-              "nodeType": "host",
-              "props": Object {
-                "children": Array [
-                  <div
-                    className="avatar-wrapper"
->
-                    <img
-                                        alt="user-avatar"
-                                        className="circle avatar-img"
-                                        src="http://i1.kym-cdn.com/photos/images/newsfeed/000/250/007/672.jpg"
-                    />
-</div>,
-                  <input
-                    accept="image/*"
-                    id="profilePicture"
-                    onChange={[Function]}
-                    type="file"
-/>,
-                  <label
-                    htmlFor="profilePicture"
->
-                    <span
-                                        className="user-form-button"
-                    >
-                                        Upload New Picture
-                    </span>
-                    <span>
-                                        Max 5mb, JPG, or PNG
-                    </span>
-</label>,
-                ],
-                "className": "avatar-preview",
-              },
-              "ref": null,
-              "rendered": Array [
-                Object {
-                  "instance": null,
-                  "key": undefined,
-                  "nodeType": "host",
-                  "props": Object {
-                    "children": <img
-                      alt="user-avatar"
-                      className="circle avatar-img"
-                      src="http://i1.kym-cdn.com/photos/images/newsfeed/000/250/007/672.jpg"
-/>,
-                    "className": "avatar-wrapper",
-                  },
-                  "ref": null,
-                  "rendered": Object {
-                    "instance": null,
-                    "key": undefined,
-                    "nodeType": "host",
-                    "props": Object {
-                      "alt": "user-avatar",
-                      "className": "circle avatar-img",
-                      "src": "http://i1.kym-cdn.com/photos/images/newsfeed/000/250/007/672.jpg",
-                    },
-                    "ref": null,
-                    "rendered": null,
-                    "type": "img",
-                  },
-                  "type": "div",
-                },
-                Object {
-                  "instance": null,
-                  "key": undefined,
-                  "nodeType": "host",
-                  "props": Object {
-                    "accept": "image/*",
-                    "id": "profilePicture",
-                    "onChange": [Function],
-                    "type": "file",
-                  },
-                  "ref": null,
-                  "rendered": null,
-                  "type": "input",
-                },
-                Object {
-                  "instance": null,
-                  "key": undefined,
-                  "nodeType": "host",
-                  "props": Object {
-                    "children": Array [
-                      <span
-                        className="user-form-button"
->
-                        Upload New Picture
-</span>,
-                      <span>
-                        Max 5mb, JPG, or PNG
-</span>,
-                    ],
-                    "htmlFor": "profilePicture",
-                  },
-                  "ref": null,
-                  "rendered": Array [
-                    Object {
-                      "instance": null,
-                      "key": undefined,
-                      "nodeType": "host",
-                      "props": Object {
-                        "children": "Upload New Picture",
-                        "className": "user-form-button",
-                      },
-                      "ref": null,
-                      "rendered": "Upload New Picture",
-                      "type": "span",
-                    },
-                    Object {
-                      "instance": null,
-                      "key": undefined,
-                      "nodeType": "host",
-                      "props": Object {
-                        "children": "Max 5mb, JPG, or PNG",
-                      },
-                      "ref": null,
-                      "rendered": "Max 5mb, JPG, or PNG",
-                      "type": "span",
-                    },
-                  ],
-                  "type": "label",
-                },
-              ],
-              "type": "div",
-            },
-          ],
-          "type": "div",
+          "rendered": null,
+          "type": [Function],
         },
       ],
       "type": [Function],

@@ -1,8 +1,6 @@
 .Local-login {
     &__form {
-        &__btn:last-child {
-            margin: $user-box-padding;
-            padding: 10px 0;
+        &__btn {
             width: calc(100% - #{$user-box-padding * 2});
         }
     }
@@ -10,8 +8,10 @@
         @include flex-box(space-between);
         padding: 0 $user-box-padding;
         &__links {
-            color: $teal-1000;
+            border-bottom: 1px solid palette(Grey, 900);
+            color: palette(Grey, 900);
             font-size: 12px;
+            text-decoration: none;
         }
     }
 }

@@ -4,12 +4,12 @@ import axios from 'axios';
 
 import * as storage from '@sharedUtils/storage';
 import {
-  validateImg,
   validateEmail,
   validateDisplayName
 } from '@sharedUtils/inputValidators';
 
 import FormMessage from '@sharedComponents/FormMessage';
+import AvatarUploader from '@sharedComponents/AvatarUploader';
 
 import UserPageContainer from '../UserPageContainer';
 import UserInputField from '../UserInputField';
@@ -41,6 +41,10 @@ class ProfileSettings extends Component {
       emailSuccessMsg: ''
     };
 
+    this.onChangeHandler = this.onChangeHandler.bind(this);
+    this.onImageUpload = this.onImageUpload.bind(this);
+    this.onSubmitHandler = this.onSubmitHandler.bind(this);
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -64,54 +68,28 @@ class ProfileSettings extends Component {
 
   }
 
-  onChangeHandler = (e) => {
+  onChangeHandler(e) {
     this.setState({
       [e.name]: {
         ...this.state[e.name],
         value: e.value
       }
     });
-  };
+  }
 
-  onImageUpload = (e) => {
+  onImageUpload(img) {
 
     this.setState({
       avatar: {
-        ...this.state.avatar,
-        isLoading: true
-      }
+        value: img.value,
+        message: img.message
+      },
+      isLoading: false
     });
 
-    const reader = new FileReader();
-    const image = e.target.files[0];
+  }
 
-    let message = '';
-
-    reader.onloadend = () => {
-
-      if (image.size > 5000000) {
-        message = 'File is too big.';
-      } else if (!validateImg(reader.result)) {
-        message = 'File format is not supported.';
-      }
-
-      this.setState({
-        avatar: {
-          value: message.length > 0
-            ? this.state.avatar.value
-            : reader.result,
-          message
-        },
-        isLoading: false
-      });
-
-    };
-
-    reader.readAsDataURL(image);
-
-  };
-
-  onSubmitHandler = async () => {
+  async onSubmitHandler() {
 
     this.setState({
       isLoading: true,
@@ -193,7 +171,7 @@ class ProfileSettings extends Component {
 
     this.setState({ isLoading: false });
 
-  };
+  }
 
   render() {
 
@@ -213,19 +191,6 @@ class ProfileSettings extends Component {
       && displayName.value === user.displayName
       && avatar.value === user.avatar;
 
-    const avatarPreview = (avatarState) => {
-      if (avatarState.value) {
-        return (
-          <img
-            className="circle avatar-img"
-            alt="user-avatar"
-            src={ avatarState.value }
-          />
-        );
-      }
-      return <span>No Image</span>;
-    };
-
     return (
       <UserPageContainer
         className="Profile-settings"
@@ -242,7 +207,9 @@ class ProfileSettings extends Component {
         <FormMessage
           message={ message }
           type={ isSuccess ? 'success' : 'error '} />
-        <FormMessage message={ emailSuccessMsg } type="warning" />
+        <FormMessage
+          message={ emailSuccessMsg }
+          type="warning" />
 
         <FormMessage message={ email.message } />
         <UserInputField
@@ -251,33 +218,20 @@ class ProfileSettings extends Component {
           value={ email.value || '' }
           disabled={ user.strategy !== 'local' } />
 
-        <FormMessage message={ displayName.message } />
+        <FormMessage
+          message={ displayName.message } />
         <UserInputField
           name="displayName"
           title="Display Name"
           onChange={ this.onChangeHandler }
           value={ displayName.value || '' } />
 
-        <FormMessage message={ avatar.message } />
-        <div className="user-form-fields last-field">
-          <label>Profile Picture</label>
-          <div className="avatar-preview">
-            <div className="avatar-wrapper">
-              { avatarPreview(avatar) }
-            </div>
-            <input
-              type="file"
-              accept="image/*"
-              id="profilePicture"
-              onChange={ this.onImageUpload } />
-            <label htmlFor="profilePicture">
-              <span className="user-form-button">
-                Upload New Picture
-              </span>
-              <span>Max 5mb, JPG, or PNG</span>
-            </label>
-          </div>
-        </div>
+        <FormMessage
+          message={ avatar.message } />
+        <AvatarUploader
+          className="User__form__fields"
+          avatar={ avatar }
+          onChange={ this.onImageUpload } />
 
       </UserPageContainer>
     );

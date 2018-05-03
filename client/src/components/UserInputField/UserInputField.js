@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import { trim } from '@sharedUtils/inputValidators';
 
+import './UserInputField.scss';
+
 const inputType = (name) => {
 
   switch (name) {
@@ -61,7 +63,7 @@ const messages = (type) => {
 const UserInputField = (props) => {
   if (props.isVisible) {
     return (
-      <div className="User__form__fields user-form-fields">
+      <div className="User__form__fields">
         <label
           htmlFor={ props.name }
           className="User__form__fields__label">

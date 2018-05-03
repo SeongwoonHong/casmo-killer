@@ -18,10 +18,10 @@ ShallowWrapper {
     "nodeType": "function",
     "props": Object {
       "button": <div
-        className="button-group"
+        className="Security-settings__button-group"
 >
         <button
-                className="user-form-button"
+                className="User__form__btn Security-settings__form__btn"
                 disabled={true}
                 onClick={[Function]}
                 type="button"
@@ -29,7 +29,7 @@ ShallowWrapper {
                 Change Password
         </button>
         <Link
-                className="user-form-button"
+                className="User__form__btn Security-settings__form__btn"
                 replace={false}
                 to="/user/deactivate"
         >
@@ -38,6 +38,7 @@ ShallowWrapper {
 </div>,
       "children": Array [
         <FormMessage
+          className=""
           message=""
           type="error"
 />,
@@ -53,7 +54,7 @@ ShallowWrapper {
           value=""
 >
           <button
-                    className="user-form-button"
+                    className="User__form__btn Security-settings__field__btn"
                     type="submit"
           >
                     Submit
@@ -82,7 +83,7 @@ ShallowWrapper {
           value=""
 >
           <button
-                    className="user-form-button"
+                    className="User__form__btn Security-settings__field__btn"
                     type="submit"
           >
                     Submit
@@ -105,6 +106,7 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "function",
         "props": Object {
+          "className": "",
           "message": "",
           "type": "error",
         },
@@ -118,7 +120,7 @@ ShallowWrapper {
         "nodeType": "function",
         "props": Object {
           "children": <button
-            className="user-form-button"
+            className="User__form__btn Security-settings__field__btn"
             type="submit"
 >
             Submit
@@ -140,7 +142,7 @@ ShallowWrapper {
           "nodeType": "host",
           "props": Object {
             "children": "Submit",
-            "className": "user-form-button",
+            "className": "User__form__btn Security-settings__field__btn",
             "type": "submit",
           },
           "ref": null,
@@ -175,7 +177,7 @@ ShallowWrapper {
         "nodeType": "function",
         "props": Object {
           "children": <button
-            className="user-form-button"
+            className="User__form__btn Security-settings__field__btn"
             type="submit"
 >
             Submit
@@ -197,7 +199,7 @@ ShallowWrapper {
           "nodeType": "host",
           "props": Object {
             "children": "Submit",
-            "className": "user-form-button",
+            "className": "User__form__btn Security-settings__field__btn",
             "type": "submit",
           },
           "ref": null,
@@ -216,10 +218,10 @@ ShallowWrapper {
       "nodeType": "function",
       "props": Object {
         "button": <div
-          className="button-group"
+          className="Security-settings__button-group"
 >
           <button
-                    className="user-form-button"
+                    className="User__form__btn Security-settings__form__btn"
                     disabled={true}
                     onClick={[Function]}
                     type="button"
@@ -227,7 +229,7 @@ ShallowWrapper {
                     Change Password
           </button>
           <Link
-                    className="user-form-button"
+                    className="User__form__btn Security-settings__form__btn"
                     replace={false}
                     to="/user/deactivate"
           >
@@ -236,6 +238,7 @@ ShallowWrapper {
 </div>,
         "children": Array [
           <FormMessage
+            className=""
             message=""
             type="error"
 />,
@@ -251,7 +254,7 @@ ShallowWrapper {
             value=""
 >
             <button
-                        className="user-form-button"
+                        className="User__form__btn Security-settings__field__btn"
                         type="submit"
             >
                         Submit
@@ -280,7 +283,7 @@ ShallowWrapper {
             value=""
 >
             <button
-                        className="user-form-button"
+                        className="User__form__btn Security-settings__field__btn"
                         type="submit"
             >
                         Submit
@@ -303,6 +306,7 @@ ShallowWrapper {
           "key": undefined,
           "nodeType": "function",
           "props": Object {
+            "className": "",
             "message": "",
             "type": "error",
           },
@@ -316,7 +320,7 @@ ShallowWrapper {
           "nodeType": "function",
           "props": Object {
             "children": <button
-              className="user-form-button"
+              className="User__form__btn Security-settings__field__btn"
               type="submit"
 >
               Submit
@@ -338,7 +342,7 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": "Submit",
-              "className": "user-form-button",
+              "className": "User__form__btn Security-settings__field__btn",
               "type": "submit",
             },
             "ref": null,
@@ -373,7 +377,7 @@ ShallowWrapper {
           "nodeType": "function",
           "props": Object {
             "children": <button
-              className="user-form-button"
+              className="User__form__btn Security-settings__field__btn"
               type="submit"
 >
               Submit
@@ -395,7 +399,7 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": "Submit",
-              "className": "user-form-button",
+              "className": "User__form__btn Security-settings__field__btn",
               "type": "submit",
             },
             "ref": null,

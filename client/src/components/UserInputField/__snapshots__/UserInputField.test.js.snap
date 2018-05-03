@@ -51,7 +51,7 @@ ShallowWrapper {
 </p>,
         null,
       ],
-      "className": "User__form__fields user-form-fields",
+      "className": "User__form__fields",
     },
     "ref": null,
     "rendered": Array [
@@ -132,7 +132,7 @@ ShallowWrapper {
 </p>,
           null,
         ],
-        "className": "User__form__fields user-form-fields",
+        "className": "User__form__fields",
       },
       "ref": null,
       "rendered": Array [

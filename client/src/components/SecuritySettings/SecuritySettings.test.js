@@ -50,7 +50,7 @@ describe('<SecuritySettings />', () => {
 
   it('should set the editing state to true when the button is clicked', () => {
 
-    const initialBtn = wrapper.find('.user-form-button').first();
+    const initialBtn = wrapper.find('.User__form__btn').first();
 
     initialBtn.simulate('click');
 
@@ -72,7 +72,7 @@ describe('<SecuritySettings />', () => {
         isVerified: true
       });
 
-    wrapper.find('.user-form-button').first().simulate('click');
+    wrapper.find('.User__form__btn').first().simulate('click');
 
     expect(setStateSpy.calledWith(initialState)).toEqual(true);
 

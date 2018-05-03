@@ -72,6 +72,7 @@ class Reset extends Component {
     if (message.length > 0) {
       return this.setState({
         isSuccess: false,
+        isLoading: false,
         message
       });
     }
@@ -170,14 +171,14 @@ class Reset extends Component {
             ? (
               <button
                 type="submit"
-                className="user-form-button">
+                className="User__form__btn">
                 Submit
               </button>
             )
             : (
               <Link
                 to="/user/auth/login"
-                className="user-form-button">
+                className="User__form__btn">
                 Go to Log In
               </Link>
             )

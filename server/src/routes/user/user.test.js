@@ -202,7 +202,22 @@ describe('PUT /api/user/update/profile', () => {
 });
 
 // TODO: this may not be possible because email can only be updated after 24 hrs
-describe('PUT /api/user/update/email', () => {});
+describe('PUT /api/user/update/email', () => {
+
+  it('should not update the email when token is expired', (done) => {
+
+    agent
+      .put('/api/user/update/email')
+      .send({ token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNzaW5zb29AZ21haWwuY29tIiwiaWF0IjoxNTI1MTk0MTkxLCJleHAiOjE1MjUyODA1OTEsImlzcyI6ImNrSXNzdWVyIiwic3ViIjoiZW1haWwifQ.NIu_kWMXYz8z7F8x_SLFpSfi9Uk984Eg80_CiHRlovk' })
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body).to.deep.equal({ 'message': 'This verification link has expired.' });
+        done();
+      });
+
+  });
+
+});
 
 describe('DELETE /api/user/delete/account', () => {
 

@@ -11,11 +11,13 @@ import registerServiceWorker from './registerServiceWorker';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
-const store = createStore(
+const configureStore = () => createStore(
   reducers,
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
   applyMiddleware(reduxThunk)
 );
+
+const store = configureStore();
 
 let TestRoutes;
 if (isDevelopment) {

@@ -7,7 +7,9 @@ const {
 
 const errorUtils = require('../../utils/errorUtils');
 const jwt = require('../../utils/jwtUtils');
-const mailer = require('../../utils/mailer');
+
+const { sendEmail, generateMessage } = require('../../utils/mailUtils');
+
 const imgCloud = require('../../utils/imgCloud');
 
 module.exports.logout = (req, res) => {
@@ -178,11 +180,16 @@ module.exports.updateProfile = async (req, res) => {
     try {
 
       const token = await jwt.sign({ email }, 'email', '24hrs');
-      const { envelope } = await mailer.verifyEmailUpdate(token, email);
+
+      const to = await sendEmail(token, email, 'Confirm Your New Email Address', generateMessage({
+        action: 'Confirm',
+        target: 'new email address',
+        url: `user/setting/${token}`
+      }));
 
       if (envelope) {
 
-        emailSuccessMsg = `Verification email has been sent to ${envelope.to}. Please click the link in the email to confirm and start using your new email address.`;
+        emailSuccessMsg = `Verification email has been sent to ${to}. Please click the link in the email to confirm and start using your new email address.`;
 
         user.tokenInfo = {
           forField: 'email',

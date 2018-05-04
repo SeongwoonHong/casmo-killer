@@ -8,7 +8,9 @@ const {
 
 const errorUtils = require('../../utils/errorUtils');
 const jwt = require('../../utils/jwtUtils');
-const mailer = require('../../utils/mailer');
+
+const { sendEmail, generateMessage } = require('../../utils/mailUtils');
+
 const imgCloud = require('../../utils/imgCloud');
 const socialAuth = require('../../utils/socialAuth');
 
@@ -34,10 +36,14 @@ module.exports.requestVerification = async (req, res) => {
 
   try {
 
-    const { envelope } = await mailer.verifyNewEmail(token, email);
+    const to = await sendEmail(token, email, 'Welcome to Damso! Confirm Your Email Address', generateMessage({
+      action: 'Confirm',
+      target: 'email address',
+      url: `user/register/${token}`
+    }));
 
     return res.send({
-      message: `Verification email has been sent to ${envelope.to}. Please click the link in the email to complete your registration.`
+      message: `Verification email has been sent to ${to}. Please click the link in the email to complete your registration.`
     });
 
   } catch (error) {
@@ -74,9 +80,13 @@ module.exports.requestPwdReset = async (req, res) => {
 
     const token = await jwt.sign({ email }, 'email', '24hrs');
 
-    const { envelope } = await mailer.requestPwdReset(token, email);
+    const to = await sendEmail(token, email, 'Reset Your Damso Password', generateMessage({
+      action: 'Reset',
+      target: 'password',
+      url: `user/reset/${token}`
+    }));
 
-    if (envelope && envelope.to) {
+    if (to) {
 
       const tokenUpdated = await user.updateTokenInfo({
         forField: 'password',
@@ -85,7 +95,7 @@ module.exports.requestPwdReset = async (req, res) => {
 
       if (tokenUpdated.ok === 1) {
         return res.send({
-          message: `The email has been sent to ${envelope.to}. Please click the link in the email to reset your password.`
+          message: `The email has been sent to ${to}. Please click the link in the email to reset your password.`
         });
       }
 

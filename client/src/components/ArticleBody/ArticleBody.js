@@ -7,10 +7,10 @@ import krStrings from 'react-timeago/lib/language-strings/ko';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import animate from 'gsap-promise';
 import { toast } from 'react-toastify';
+import ReactHtmlParser from 'react-html-parser';
 
 import LikeDislike from '../LikeDislike/LikeDislike';
 import TextButton from '../Button/TextButton/TextButton';
-import Iframe from '../Iframe/Iframe';
 import ArticleForm from '../ArticleForm/ArticleForm';
 import './ArticleBody.scss';
 
@@ -113,9 +113,7 @@ class ArticleBody extends Component {
           <span className="card-title">{activePost.title}</span>
         </div>
         <div className="contents" ref={el => this.component[2] = el}>
-          <Iframe
-            content={activePost.contents}
-          />
+          <div className="contents-body">{ ReactHtmlParser(activePost.contents) }</div>
           <div className="like-dislike-wrapper">
             <LikeDislike
               onLikesHandler={this.props.giveLikesRequest}

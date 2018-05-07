@@ -14,7 +14,8 @@ class ArticleNew extends Component {
   }
   validateAndCreatePost= (values) => {
     const title = values.title.trim();
-    const contents = values.contents.split('<span data-text="true">')[1].split('</span>')[0].trim();
+    const contents = values.contents.trim();
+
     if (!title || !contents) {
       return (
         toast.error('Title and Content cannot be empty', {

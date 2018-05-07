@@ -62,6 +62,18 @@
     margin-top: 10px;
     word-wrap: break-word;
     margin-bottom: 10px;
+    .contents-body {
+      font-size: 16px;
+      p {
+        margin-bottom: 5px;
+      }
+      blockquote {
+        border-left: 5px solid #b6c49f;
+        background-color: #f0f4e9;
+        padding: 1rem;
+        margin: 1rem 0;
+      }
+    }
     .preferences {
       margin-top: 20px;
     }

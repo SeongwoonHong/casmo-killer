@@ -126,12 +126,16 @@ class Articles extends Component {
            : ''
         }
         <AlignHorizontal className="board-header-first">
-          <DisplayManager
-            className="board-header-manager"
-            authorId={this.props.boardAuthor.author._id}
-            authorDisplayName={this.props.boardAuthor.author.displayName}
-            authorAvatar={this.props.boardAuthor.author.avatar}
-          />
+          {
+            !this.props.match.url.includes('/articles/free')
+            &&
+            <DisplayManager
+              className="board-header-manager"
+              authorId={this.props.boardAuthor.author._id}
+              authorDisplayName={this.props.boardAuthor.author.displayName}
+              authorAvatar={this.props.boardAuthor.author.avatar}
+            />
+          }
           {
             this.props.user.isLoggedIn &&
             <Link

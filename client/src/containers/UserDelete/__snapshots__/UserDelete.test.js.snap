@@ -24,13 +24,14 @@ ShallowWrapper {
     "nodeType": "function",
     "props": Object {
       "button": <button
-        className="user-form-button"
+        className="User__form__btn Delete__form__btn"
         type="submit"
 >
         Agree
 </button>,
       "children": Array [
         <FormMessage
+          className=""
           message=""
           type="error"
 />,
@@ -62,6 +63,7 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "function",
         "props": Object {
+          "className": "",
           "message": "",
           "type": "error",
         },
@@ -99,13 +101,14 @@ ShallowWrapper {
       "nodeType": "function",
       "props": Object {
         "button": <button
-          className="user-form-button"
+          className="User__form__btn Delete__form__btn"
           type="submit"
 >
           Agree
 </button>,
         "children": Array [
           <FormMessage
+            className=""
             message=""
             type="error"
 />,
@@ -137,6 +140,7 @@ ShallowWrapper {
           "key": undefined,
           "nodeType": "function",
           "props": Object {
+            "className": "",
             "message": "",
             "type": "error",
           },

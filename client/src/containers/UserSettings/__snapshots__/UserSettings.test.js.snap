@@ -46,6 +46,7 @@ ShallowWrapper {
           </i>
 </h2>,
         <FormMessage
+          className=""
           message=""
           type="error"
 />,
@@ -117,6 +118,7 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "function",
         "props": Object {
+          "className": "",
           "message": "",
           "type": "error",
         },
@@ -176,6 +178,7 @@ ShallowWrapper {
             </i>
 </h2>,
           <FormMessage
+            className=""
             message=""
             type="error"
 />,
@@ -247,6 +250,7 @@ ShallowWrapper {
           "key": undefined,
           "nodeType": "function",
           "props": Object {
+            "className": "",
             "message": "",
             "type": "error",
           },

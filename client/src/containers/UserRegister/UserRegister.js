@@ -4,12 +4,12 @@ import { Prompt } from 'react-router-dom';
 
 import * as storage from '@sharedUtils/storage';
 import {
-  validateImg,
   validateDisplayName,
   validatePassword
 } from '@sharedUtils/inputValidators';
 
 import FormMessage from '@sharedComponents/FormMessage';
+import AvatarUploader from '@sharedComponents/AvatarUploader';
 
 import UserPageContainer from '../../components/UserPageContainer';
 import UserInputField from '../../components/UserInputField';
@@ -138,37 +138,15 @@ class Register extends Component {
 
   }
 
-  // TODO: move image upload to its own component
-  onImageUpload(e) {
+  onImageUpload(img) {
 
-    this.setState({ isLoading: true });
-
-    const reader = new FileReader();
-    const image = e.target.files[0];
-
-    let message = '';
-
-    reader.onloadend = () => {
-
-      if (image.size > 5000000) {
-        message = 'File is too big.';
-      } else if (!validateImg(reader.result)) {
-        message = 'File format is not supported.';
-      }
-
-      this.setState({
-        avatar: {
-          value: message.length > 0
-            ? this.state.avatar.value
-            : reader.result,
-          message
-        },
-        isLoading: false
-      });
-
-    };
-
-    reader.readAsDataURL(image);
+    this.setState({
+      avatar: {
+        value: img.value,
+        message: img.message
+      },
+      isLoading: false
+    });
 
   }
 
@@ -297,19 +275,6 @@ class Register extends Component {
 
     const { auth } = this.props;
 
-    const avatarPreview = (avatarState) => {
-      if (avatarState.value) {
-        return (
-          <img
-            className="circle avatar-img"
-            alt="user-avatar"
-            src={ avatarState.value }
-          />
-        );
-      }
-      return <span>No Image</span>;
-    };
-
     return (
       <UserPageContainer
         className="Register"
@@ -346,25 +311,10 @@ class Register extends Component {
           value={ password.value } />
 
         <FormMessage message={ avatar.message } />
-        <div className="User__form__fields user-form-fields">
-          <label>Profile Picture</label>
-          <div className="avatar-preview">
-            <div className="avatar-wrapper">
-              { avatarPreview(avatar) }
-            </div>
-            <input
-              type="file"
-              accept="image/*"
-              id="profilePicture"
-              onChange={ this.onImageUpload } />
-            <label htmlFor="profilePicture">
-              <span className="user-form-button">
-                Upload New Picture
-              </span>
-              <span>Max 5mb, JPG, or PNG</span>
-            </label>
-          </div>
-        </div>
+        <AvatarUploader
+          className="User__form__fields"
+          avatar={ avatar }
+          onChange={ this.onImageUpload } />
 
       </UserPageContainer>
     );

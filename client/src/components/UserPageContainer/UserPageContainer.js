@@ -54,7 +54,7 @@ const UserPageContainer = (props) => {
               : (
                 <button
                   type="submit"
-                  className="User__form__btn user-form-button"
+                  className={ `User__form__btn ${props.className}__form__btn` }
                   disabled={ props.disabled }>
                   Submit
                 </button>

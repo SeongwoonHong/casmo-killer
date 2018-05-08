@@ -32,6 +32,7 @@ ShallowWrapper {
       title=""
 >
       <FormMessage
+            className=""
             message=""
             type="error"
       />
@@ -47,6 +48,7 @@ ShallowWrapper {
             value=""
       />
       <FormMessage
+            className=""
             message=""
             type="success"
       />
@@ -102,6 +104,7 @@ ShallowWrapper {
         title=""
 >
         <FormMessage
+                className=""
                 message=""
                 type="error"
         />
@@ -117,6 +120,7 @@ ShallowWrapper {
                 value=""
         />
         <FormMessage
+                className=""
                 message=""
                 type="success"
         />

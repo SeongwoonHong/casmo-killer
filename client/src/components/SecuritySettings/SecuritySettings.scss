@@ -1,31 +1,21 @@
 .Security-settings {
-    &__form {
-        > .user-form-fields {
-            > .user-form-button {
-                &:last-child {
-                    margin: $user-box-padding 0 0 auto;
-                }
-            }
+    &__button-group {
+        @include flex-box(space-between);
+        padding: $user-box-padding;
+    }
+    &__form__btn {
+        padding: 0 5px;
+        width: 100%;
+        &:first-child {
+            margin-right: $user-box-padding / 2;
         }
-        > .button-group {
-            @include flex-box(space-between);
-            padding: $user-box-padding;
-            > .user-form-button {
-                cursor: pointer;
-                width: 100%;
-                &:first-child {
-                    margin-right: $user-box-padding / 2;
-                    &:disabled {
-                        background-color: #cdcdcd;
-                        cursor: not-allowed;
-                        pointer-events: none;
-                    }
-                }
-                &:last-child {
-                    margin-left: $user-box-padding / 2;
-                    text-decoration: none;
-                }
-            }
+        &:last-child {
+            margin: 0 0 0 $user-box-padding / 2;
+            text-align: center;
+            text-decoration: none;
         }
+    }
+    &__field__btn:last-child {
+        margin: $user-box-padding 0 0 auto;
     }
 }

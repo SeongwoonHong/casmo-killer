@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/SeongwoonHong/ck-board#readme",
   "dependencies": {
+    "@sendgrid/mail": "^6.2.1",
     "axios": "^0.17.1",
     "bcryptjs": "^2.4.3",
     "chalk": "^2.3.2",

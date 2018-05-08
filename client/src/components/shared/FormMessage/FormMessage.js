@@ -21,11 +21,13 @@ const FormMessage = ({
 };
 
 FormMessage.propTypes = {
+  className: PropTypes.string,
   message: PropTypes.string,
   type: PropTypes.string
 };
 
 FormMessage.defaultProps = {
+  className: '',
   message: '',
   type: 'error'
 };

@@ -147,6 +147,19 @@ describe('GET /api/auth/verify/token', () => {
 
   });
 
+  it('should not decode the token if the token was issued more 24 hrs ago', (done) => {
+
+    chai
+      .request(app)
+      .get('/api/auth/verify/token/register/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNzaW5zb29AZ21haWwuY29tIiwiaWF0IjoxNTI1MTk0MTkxLCJleHAiOjE1MjUyODA1OTEsImlzcyI6ImNrSXNzdWVyIiwic3ViIjoiZW1haWwifQ.NIu_kWMXYz8z7F8x_SLFpSfi9Uk984Eg80_CiHRlovk')
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body).to.deep.equal({ 'message': 'This verification link has expired.' });
+        done();
+      });
+
+  });
+
   it('should verify the given token return the decoded email for registration', (done) => {
 
     jwtUtils

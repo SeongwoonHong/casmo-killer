@@ -18,6 +18,7 @@ const store = createStore(
 );
 
 let TestRoutes;
+
 if (isDevelopment) {
   TestRoutes = require('./test/routes').default;
 }

@@ -9,11 +9,19 @@ import { toggleAppLoading } from '../layout';
 
 export const loginSuccess = (payload, shouldReset = false) => {
 
-  return (dispatch) => {
+  return async (dispatch) => {
+
+    let newUser = payload;
+
+    try {
+      newUser = await storage.set('ckUser', payload);
+    } catch (err) {
+      console.error(err);
+    }
 
     dispatch({
       type: types.LOGIN_SUCCESS,
-      payload
+      payload: newUser
     });
 
     if (shouldReset) {

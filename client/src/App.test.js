@@ -10,12 +10,15 @@ const mockStore = configureStore();
 let store = null;
 let container = null;
 
-beforeEach(() => {
-  store = mockStore(initialState);
-  container = shallow(<App store={ store } />);
-});
+describe('<SocialLogin />', () => {
 
-it('renders App component consistently', () => {
-  expect(true).toEqual(true);
-  // expect(container).toMatchSnapshot();
+  beforeEach(() => {
+    store = mockStore(initialState);
+    container = shallow(<App store={ store } />);
+  });
+
+  it('should render App component consistently', () => {
+    expect(container).toMatchSnapshot();
+  });
+
 });

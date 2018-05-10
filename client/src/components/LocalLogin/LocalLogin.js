@@ -180,14 +180,14 @@ class LocalLogin extends Component {
             ? (
               <Link
                 to={ redirectUrl }
-                className="user-form-button">
+                className="User__form__btn Local-login__form__btn">
                 Go Back
               </Link>
             )
             : (
               <button
                 type="submit"
-                className="user-form-button">
+                className="User__form__btn Local-login__form__btn">
                 { formText }
               </button>
             )
@@ -209,15 +209,19 @@ class LocalLogin extends Component {
       </UserPageContainer>,
       <div
         key={ 1 }
-        className="other-options">
-        <Link to={ `/user/auth/${isLogin ? 'signup' : 'login'}` }>
+        className="Local-login__options">
+        <Link
+          className="Local-login__options__links"
+          to={ `/user/auth/${isLogin ? 'signup' : 'login'}` }>
           {
             isLogin
               ? 'Sign Up For Free'
               : 'Log In With Email'
           }
         </Link>
-        <Link to="/user/recover">
+        <Link
+          className="Local-login__options__links"
+          to="/user/recover">
           Forgot Your Password?
         </Link>
       </div>

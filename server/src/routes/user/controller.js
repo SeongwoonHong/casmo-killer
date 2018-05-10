@@ -1,7 +1,5 @@
 const Joi = require('joi');
-const mongoose = require('mongoose');
 const User = require('../../db/models/user');
-const Activity = require('../../db/models/activity');
 
 const {
   cookieKeyName: cookieKeyName
@@ -9,10 +7,10 @@ const {
 
 const errorUtils = require('../../utils/errorUtils');
 const jwt = require('../../utils/jwtUtils');
-const mailer = require('../../utils/mailer');
-const imgCloud = require('../../utils/imgCloud');
 
-const PER_PAGE = 6;
+const { sendEmail, generateMessage } = require('../../utils/mailUtils');
+
+const imgCloud = require('../../utils/imgCloud');
 
 module.exports.logout = (req, res) => {
 
@@ -182,11 +180,16 @@ module.exports.updateProfile = async (req, res) => {
     try {
 
       const token = await jwt.sign({ email }, 'email', '24hrs');
-      const { envelope } = await mailer.verifyEmailUpdate(token, email);
+
+      const to = await sendEmail(token, email, 'Confirm Your New Email Address', generateMessage({
+        action: 'Confirm',
+        target: 'new email address',
+        url: `user/setting/${token}`
+      }));
 
       if (envelope) {
 
-        emailSuccessMsg = `Verification email has been sent to ${envelope.to}. Please click the link in the email to confirm and start using your new email address.`;
+        emailSuccessMsg = `Verification email has been sent to ${to}. Please click the link in the email to confirm and start using your new email address.`;
 
         user.tokenInfo = {
           forField: 'email',
@@ -222,6 +225,7 @@ module.exports.updateProfile = async (req, res) => {
     return res
       .cookie(cookieKeyName, accessToken, {
         httpOnly: true,
+        signed: true,
         maxAge: 1000 * 60 * 60 * 24 * 7
       })
       .send({
@@ -304,6 +308,7 @@ module.exports.updateEmail = async (req, res) => {
         return res
           .cookie(cookieKeyName, accessToken, {
             httpOnly: true,
+            signed: true,
             maxAge: 1000 * 60 * 60 * 24 * 7
           })
           .send({
@@ -369,9 +374,9 @@ module.exports.deleteAccount = async (req, res) => {
 
     }
 
-    const deletedUser = await user.remove();
+    const deletedUser = await user.deactivate();
 
-    if (deletedUser.email !== user.email) {
+    if (deletedUser.ok !== 1) {
       return res.send({
         message: `Failed to delete the account associated with ${user.email}.`
       });
@@ -385,62 +390,4 @@ module.exports.deleteAccount = async (req, res) => {
     return errorUtils.server(res, error);
   }
 
-};
-
-module.exports.getUserActivity = async (req, res) => {
-
-  Activity
-    .find({ userId: req.params.userId })
-    .populate('payload.post.postId')
-    .populate('payload.post.commentId')
-    .sort({
-      _id: -1
-    })
-    .limit(PER_PAGE)
-    .exec((error, activities) => {
-      if (error) {
-        console.log(error);
-        return res.status(500).json({
-          message: 'Could not retrieve activity'
-        });
-      }
-
-      res.json(activities);
-    });
-};
-
-/*
-    READ ADDITIONAL (OLD/NEW) ACTIVITY OF A USER
-*/
-module.exports.getUserOldActivity = async (req, res) => {
-  const { listType } = req.params;
-  const { id } = req.params;
-
-  // CHECK LIST TYPE VALIDITY
-  if (listType !== 'old') {
-    return res.status(400).json({
-      error: 'INVALID LISTTYPE',
-      code: 1
-    });
-  }
-
-  // CHECK MEMO ID VALIDITY
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({
-      error: 'INVALID ID',
-      code: 2
-    });
-  }
-
-  const objId = new mongoose.Types.ObjectId(req.params.id);
-  // GET OLDER MEMO
-  Activity.find({ writer: req.params.username, _id: { $lt: objId } })
-    .populate('payload.post.postId')
-    .populate('payload.post.commentId')
-    .sort({ _id: -1 })
-    .limit(PER_PAGE)
-    .exec((err, activities) => {
-      if (err) throw err;
-      return res.json(activities);
-    });
 };

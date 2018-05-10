@@ -1,5 +1,5 @@
 import update from 'react-addons-update';
-import * as types from '../actions/types';
+import * as types from '@actions/types';
 
 const initialState = {
   newBoard: {
@@ -11,7 +11,12 @@ const initialState = {
     status: 'INIT',
     data: [],
     error: null
-  }
+  },
+  hotBoardList: {
+    status: 'INIT',
+    data: [],
+    error: null,
+  },
 };
 
 export default function board(state = initialState, action) {
@@ -40,6 +45,29 @@ export default function board(state = initialState, action) {
         }
       });
 
+    // FETCH HOT BOARDS
+    case types.FETCH_HOT_BOARDS:
+      return update(state, {
+        hotBoardList: {
+          status: { $set: 'WAITING' },
+        }
+      });
+    // FETCH SUCCEESS
+    case types.FETCH_HOT_BOARDS_SUCCESS:
+      return update(state, {
+        hotBoardList: {
+          status: { $set: 'SUCCESS' },
+          data: { $set: action.payload }
+        }
+      });
+    // FETCH FAILURE
+    case types.FETCH_HOT_BOARDS_FAILURE:
+      return update(state, {
+        hotBoardList: {
+          status: { $set: 'FAILURE' },
+          error: { $set: action.payload.response.data }
+        }
+      });
     // CREATE BOARD
     case types.CREATE_BOARD:
       return update(state, {

@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import RichTextEditor from '../RichTextEditor/RichTextEditor';
 
 const ReduxFormField = ({
-  input, label, type, mode, fieldClass, meta: {
+  style, input, label, type, mode, fieldClass, meta: {
     error
   }
 }) => (
   <div className="input-field">
     {
       mode === 'field' &&
-      <input {...input} className="validate field" type={type} id={input.name} required />
+      <input {...input} className="validate field" type={type} id={input.name} placeholder={input.name} required />
     }
     {
       mode === 'rte' &&
@@ -23,6 +23,7 @@ const ReduxFormField = ({
         className="textarea validate field-textarea"
         type={type}
         id={input.name}
+        style={style}
       />
     }
     <label htmlFor={input.name} data-error={error} className={fieldClass}>

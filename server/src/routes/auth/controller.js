@@ -8,7 +8,9 @@ const {
 
 const errorUtils = require('../../utils/errorUtils');
 const jwt = require('../../utils/jwtUtils');
-const mailer = require('../../utils/mailer');
+
+const { sendEmail, generateMessage } = require('../../utils/mailUtils');
+
 const imgCloud = require('../../utils/imgCloud');
 const socialAuth = require('../../utils/socialAuth');
 
@@ -34,10 +36,14 @@ module.exports.requestVerification = async (req, res) => {
 
   try {
 
-    const { envelope } = await mailer.verifyNewEmail(token, email);
+    const to = await sendEmail(token, email, 'Welcome to Damso! Confirm Your Email Address', generateMessage({
+      action: 'Confirm',
+      target: 'email address',
+      url: `user/register/${token}`
+    }));
 
     return res.send({
-      message: `Verification email has been sent to ${envelope.to}. Please click the link in the email to complete your registration.`
+      message: `Verification email has been sent to ${to}. Please click the link in the email to complete your registration.`
     });
 
   } catch (error) {
@@ -74,9 +80,13 @@ module.exports.requestPwdReset = async (req, res) => {
 
     const token = await jwt.sign({ email }, 'email', '24hrs');
 
-    const { envelope } = await mailer.requestPwdReset(token, email);
+    const to = await sendEmail(token, email, 'Reset Your Damso Password', generateMessage({
+      action: 'Reset',
+      target: 'password',
+      url: `user/reset/${token}`
+    }));
 
-    if (envelope && envelope.to) {
+    if (to) {
 
       const tokenUpdated = await user.updateTokenInfo({
         forField: 'password',
@@ -85,7 +95,7 @@ module.exports.requestPwdReset = async (req, res) => {
 
       if (tokenUpdated.ok === 1) {
         return res.send({
-          message: `The email has been sent to ${envelope.to}. Please click the link in the email to reset your password.`
+          message: `The email has been sent to ${to}. Please click the link in the email to reset your password.`
         });
       }
 
@@ -233,7 +243,7 @@ module.exports.localLogin = async (req, res) => {
     }
 
     const {
-      strategy, _id, displayName, avatar
+      strategy, _id, displayName, avatar, bookmarked
     } = user;
 
     // if the email is registered with a social authentication
@@ -257,7 +267,8 @@ module.exports.localLogin = async (req, res) => {
     return res
       .cookie(cookieKeyName, accessToken, {
         httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 7
+        signed: true,
+        maxAge: 1000 * 60 * 60 * 24 * 7,
       })
       .send({
         user: {
@@ -266,6 +277,7 @@ module.exports.localLogin = async (req, res) => {
           email,
           displayName,
           avatar,
+          bookmarked
         }
       });
 
@@ -310,6 +322,7 @@ module.exports.localRegister = async (req, res) => {
     return res
       .cookie(cookieKeyName, accessToken, {
         httpOnly: true,
+        signed: true,
         maxAge: 1000 * 60 * 60 * 24 * 7
       })
       .send({
@@ -318,7 +331,8 @@ module.exports.localRegister = async (req, res) => {
           _id: user._id,
           email: user.email,
           displayName: user.displayName,
-          avatar: user.avatar
+          avatar: user.avatar,
+          bookmarked: user.bookmarked
         }
       });
 
@@ -375,6 +389,7 @@ module.exports.socialLogin = async (req, res) => {
         return res
           .cookie(cookieKeyName, accessToken, {
             httpOnly: true,
+            signed: true,
             maxAge: 1000 * 60 * 60 * 24 * 7
           })
           .send({
@@ -383,13 +398,15 @@ module.exports.socialLogin = async (req, res) => {
               _id: emailDup._id,
               email: emailDup.email,
               displayName: emailDup.displayName,
-              avatar: emailDup.avatar
+              avatar: emailDup.avatar,
+              bookmarked: emailDup.bookmarked
             }
           });
       }
     }
 
   } catch (error) {
+    console.log(error);
     return errorUtils.server(res, error);
   }
 
@@ -409,7 +426,8 @@ module.exports.socialLogin = async (req, res) => {
           displayName: socialProfile.displayName,
           avatar: socialProfile.avatar,
           socialId: socialProfile.socialId,
-          socialToken: socialProfile.socialToken
+          socialToken: socialProfile.socialToken,
+          bookmarked: socialProfile.bookmarked
         }
       });
     }
@@ -424,6 +442,7 @@ module.exports.socialLogin = async (req, res) => {
     return res
       .cookie(cookieKeyName, accessToken, {
         httpOnly: true,
+        signed: true,
         maxAge: 1000 * 60 * 60 * 24 * 7
       })
       .send({
@@ -432,7 +451,8 @@ module.exports.socialLogin = async (req, res) => {
           _id: socialUser._id,
           email: socialUser.email,
           displayName: socialUser.displayName,
-          avatar: socialUser.avatar
+          avatar: socialUser.avatar,
+          bookmarked: socialUser.bookmarked
         }
       });
 
@@ -498,6 +518,7 @@ module.exports.socialRegister = async (req, res) => {
     return res
       .cookie(cookieKeyName, accessToken, {
         httpOnly: true,
+        signed: true,
         maxAge: 1000 * 60 * 60 * 24 * 7
       })
       .send({
@@ -506,7 +527,8 @@ module.exports.socialRegister = async (req, res) => {
           _id: user._id,
           email: user.email,
           displayName: user.displayName,
-          avatar: user.avatar
+          avatar: user.avatar,
+          bookmarked: user.bookmarked
         }
       });
 

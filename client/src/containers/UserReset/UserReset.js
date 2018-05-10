@@ -26,6 +26,10 @@ class Reset extends Component {
       message: ''
     };
 
+    this.onChangeHandler = this.onChangeHandler.bind(this);
+    this.onSubmitHandler = this.onSubmitHandler.bind(this);
+    this.verifyToken = this.verifyToken.bind(this);
+
   }
 
   componentDidMount() {
@@ -34,6 +38,7 @@ class Reset extends Component {
 
     if (match.params.token) {
 
+      // TODO: components that needs token verification can take advantage of HOC that's responsible for token verification
       this.verifyToken(match.params.token);
 
     } else {
@@ -49,11 +54,11 @@ class Reset extends Component {
 
   }
 
-  onChangeHandler = (e) => {
+  onChangeHandler(e) {
     this.setState({ [e.name]: e.value });
-  };
+  }
 
-  onSubmitHandler = async () => {
+  async onSubmitHandler() {
 
     const { newPassword, confirmPassword } = this.state;
 
@@ -67,6 +72,7 @@ class Reset extends Component {
     if (message.length > 0) {
       return this.setState({
         isSuccess: false,
+        isLoading: false,
         message
       });
     }
@@ -101,9 +107,9 @@ class Reset extends Component {
 
     this.setState({ isLoading: false });
 
-  };
+  }
 
-  verifyToken = async (token) => {
+  async verifyToken(token) {
 
     const { history, setErrorState } = this.props;
 
@@ -137,14 +143,14 @@ class Reset extends Component {
 
       setErrorState({
         errorTitle: 'This link is invalid.',
-        errorMsg: error.response.data.message
+        errorMsg: error.response && error.response.data.message
       });
 
       history.push('/error');
 
     }
 
-  };
+  }
 
   render() {
 
@@ -165,14 +171,14 @@ class Reset extends Component {
             ? (
               <button
                 type="submit"
-                className="user-form-button">
+                className="User__form__btn">
                 Submit
               </button>
             )
             : (
               <Link
                 to="/user/auth/login"
-                className="user-form-button">
+                className="User__form__btn">
                 Go to Log In
               </Link>
             )

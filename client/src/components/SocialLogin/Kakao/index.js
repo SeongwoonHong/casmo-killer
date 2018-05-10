@@ -17,19 +17,52 @@ class KakaoAuth extends Component {
 
   componentDidMount() {
 
+    this._isMounted = true;
+
+    if (document.getElementById('kakao-sdk')) {
+      this.sdkLoaded();
+      return;
+    }
+
     this.loadSdkLibrary();
+
+  }
+
+  componentWillUnmount() {
+
+    this._isMounted = false;
+
+  }
+
+  setStateIfMounted(state) {
+
+    if (this._isMounted) {
+      this.setState(state);
+    }
 
   }
 
   async loadSdkLibrary() {
 
-    const { clientId } = this.props;
+    if (this._isMounted) {
 
-    const shouldInit = await loadSdk('kakao');
+      const { clientId } = this.props;
 
-    if (shouldInit) {
-      window.Kakao.init(clientId);
+      const shouldInit = await loadSdk('kakao');
+
+      if (shouldInit) {
+        window.Kakao.init(clientId);
+      }
+
+      this.setStateIfMounted({
+        isSdkLoaded: true
+      });
+
     }
+
+  }
+
+  sdkLoaded() {
 
     this.setState({
       isSdkLoaded: true
@@ -48,13 +81,6 @@ class KakaoAuth extends Component {
           provider: 'kakao',
           accessToken: response.access_token
         });
-        // window.Kakao.API.request({
-        //   url: '/v1/user/me',
-        //   success: (profile) => {
-        //     console.log(profile);
-        //   },
-        //   fail: onFailure
-        // });
       },
       fail: onFailure
     });
@@ -63,17 +89,18 @@ class KakaoAuth extends Component {
 
   render() {
 
-    const { children } = this.props;
+    const { className, children } = this.props;
 
     return (
       <button
         type="button"
+        className={ className }
         disabled={ !this.state.isSdkLoaded }
         onClick={ this.click }>
         {
           this.state.isSdkLoaded
             ? children
-            : <LoadingCircle color="#515151" />
+            : <LoadingCircle className={ `${className}__circle`} />
         }
       </button>
     );
@@ -83,6 +110,7 @@ class KakaoAuth extends Component {
 }
 
 KakaoAuth.propTypes = {
+  className: PropTypes.string.isRequired,
   clientId: PropTypes.string.isRequired,
   onSuccess: PropTypes.func.isRequired,
   onFailure: PropTypes.func,

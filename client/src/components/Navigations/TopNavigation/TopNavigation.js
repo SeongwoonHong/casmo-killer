@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+
+import AppTitle from '../shared/AppTitle';
+import TopNavBtn from '../shared/TopNavBtn';
 
 import './TopNavigation.scss';
-
-import SearchForm from '../SearchForm/SearchForm';
 
 class TopNavigation extends Component {
 
@@ -12,30 +12,17 @@ class TopNavigation extends Component {
     const { toggleMenu, toggleUserMenu } = this.props;
 
     return (
-      <header className="Top-navigation nav-headers">
-        <div className="component-row">
-          <button
-            type="button"
-            className="top-nav-btn"
-            onClick={ toggleMenu }>
-            <i className="material-icons">
-              dehaze
-            </i>
-          </button>
-          <h1>
-            <Link to="/">
-              CK BOARD
-            </Link>
-          </h1>
-          <SearchForm styleClass="dt" />
-          <button
-            type="button"
-            className="top-nav-btn"
-            onClick={ toggleUserMenu }>
-            <i className="material-icons">
-              person_outline
-            </i>
-          </button>
+      <header className="Top-navigation">
+        <div className="Top-navigation__row component-row">
+          <TopNavBtn
+            icon="dehaze"
+            classPrefix="Top-navigation"
+            onClick={ toggleMenu } />
+          <AppTitle />
+          <TopNavBtn
+            icon="person_outline"
+            classPrefix="Top-navigation"
+            onClick={ toggleUserMenu } />
         </div>
       </header>
     );

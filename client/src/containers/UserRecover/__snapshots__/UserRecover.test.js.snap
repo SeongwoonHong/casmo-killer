@@ -1,0 +1,177 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<UserRecover /> should render the component consistently 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <Recover />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "function",
+    "props": Object {
+      "button": <button
+        className="User__form__btn"
+        type="submit"
+>
+        Submit
+</button>,
+      "children": Array [
+        <FormMessage
+          className=""
+          message=""
+          type="error"
+/>,
+        <UserInputField
+          disabled={false}
+          isVisible={true}
+          message="The instruction email will be sent to this email."
+          name="email"
+          onChange={[Function]}
+          placeholder=""
+          title=""
+          type=""
+          value=""
+/>,
+      ],
+      "className": "Recover",
+      "disabled": false,
+      "formMsg": "Enter your email address below, and we will send you a link where you can reset your password.",
+      "formTitle": "Please enter your email",
+      "icon": "refresh",
+      "isLoading": false,
+      "onSubmit": [Function],
+      "title": "Reset Your Password",
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "className": "",
+          "message": "",
+          "type": "error",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": null,
+          "disabled": false,
+          "isVisible": true,
+          "message": "The instruction email will be sent to this email.",
+          "name": "email",
+          "onChange": [Function],
+          "placeholder": "",
+          "title": "",
+          "type": "",
+          "value": "",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+    ],
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "function",
+      "props": Object {
+        "button": <button
+          className="User__form__btn"
+          type="submit"
+>
+          Submit
+</button>,
+        "children": Array [
+          <FormMessage
+            className=""
+            message=""
+            type="error"
+/>,
+          <UserInputField
+            disabled={false}
+            isVisible={true}
+            message="The instruction email will be sent to this email."
+            name="email"
+            onChange={[Function]}
+            placeholder=""
+            title=""
+            type=""
+            value=""
+/>,
+        ],
+        "className": "Recover",
+        "disabled": false,
+        "formMsg": "Enter your email address below, and we will send you a link where you can reset your password.",
+        "formTitle": "Please enter your email",
+        "icon": "refresh",
+        "isLoading": false,
+        "onSubmit": [Function],
+        "title": "Reset Your Password",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "className": "",
+            "message": "",
+            "type": "error",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": null,
+            "disabled": false,
+            "isVisible": true,
+            "message": "The instruction email will be sent to this email.",
+            "name": "email",
+            "onChange": [Function],
+            "placeholder": "",
+            "title": "",
+            "type": "",
+            "value": "",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+      ],
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;

@@ -2,26 +2,58 @@
   border-radius: 5px;
   border: 1px solid transparent;
   padding: 7px 12px;
-  font-size: 22px;
+  font-size: 12px;
   text-decoration: none;
   color: #fff;
   position: relative;
   display: inline-block;
   cursor: pointer;
+	padding: 4px 12px;
+	font-weight: 100;
+  letter-spacing: 2px;
+  margin-right: 10px;
+	transition: 600ms cubic-bezier(0, 1.36, 0.31, 1.45);
+	&:hover {
+		color: black;
+		letter-spacing: 3px;
+    font-weight: 400;
+  }
   &.blue {
     background-color: #55acee;
-    box-shadow: 0px 0px 3px 1px #3C93D5;
   }
-  .loader {
-    border: 5px solid #f3f3f3; /* Light grey */
-    border-top: 5px solid #555; /* Blue */
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    animation: spin 1s linear infinite;
+  &.outline {
+    position: relative;
+    z-index: 3;
+    background: transparent;
+    color: #1172c4;
+    font-size: 12px;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 22px;
+    padding: 10px 30px;
+    text-transform: uppercase;
+    transition: all 0.2s linear;
   }
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  &.outline:hover {
+    color: white;
+    background: #1172c4;
+    transition: all 0.2s linear;
+  }
+  &.white-purple {
+    font-weight: 700;
+    color: #fff;
+    background: slategray;
+  }
+  &.white-purple:hover {
+    color: black;
+    background: slategray;
+  }
+}
+@media screen and (max-width: 700px) {
+  .btn {
+    letter-spacing: 0px;
+    &:last-child {
+      margin-top: 5px;
+    }
   }
 }

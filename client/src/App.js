@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 import * as actions from '@actions';
-
 import breakPoint from '@sharedUtils/breakPoint';
 import LoadingOverlay from '@sharedComponents/LoadingOverlay';
 
 import { MainMenuRoutes } from './routers';
+
 import UserRoute from './routers/user';
 
-import TopNavigation from './components/Navigations/TopNavigation';
-import AppNavigation from './components/Navigations/AppNavigation';
+import { TopNavigation, AppNavigation } from './components/Navigations';
+
 import ErrorPage from './components/ErrorPage';
 import UserInfoModal from './components/UserInfoModal';
 import AuthLoader from './components/AuthLoader';
@@ -34,22 +35,22 @@ class App extends Component {
 
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.location.pathname.indexOf('/user') > -1) {
-      this.props.registerRedirectUrl(this.props.location.pathname);
-    }
-  }
-
   render() {
 
-    const { layout } = this.props;
+    const { layout, user } = this.props;
 
     return (
       <div className="root-container">
+
         <LoadingOverlay isVisible={ layout.isAppLoading } />
+
         <TopNavigation />
+
         <div className="app-container">
+
+          <Route exact path="/" render={ () => <Redirect to="/community" /> } />
           <Route path="/" component={ AppNavigation } />
+
           <div className="component-row">
             <Switch>
               {
@@ -67,11 +68,15 @@ class App extends Component {
               <Route component={ ErrorPage } />
             </Switch>
             {
-              this.props.user.isModalOpened && <UserInfoModal />
+              user.isModalOpened && <UserInfoModal />
             }
           </div>
         </div>
+
         <AuthLoader />
+
+        <ToastContainer autoClose={3000} />
+
       </div>
     );
 
@@ -88,9 +93,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    toggleMenu: () => dispatch(actions.toggleMenu()),
-    updateBreakpoint: size => dispatch(actions.updateBreakpoint(size)),
-    registerRedirectUrl: url => dispatch(actions.registerRedirectUrl(url))
+    updateBreakpoint: size => dispatch(actions.updateBreakpoint(size))
   };
 };
 

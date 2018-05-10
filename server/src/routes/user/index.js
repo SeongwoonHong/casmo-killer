@@ -24,14 +24,14 @@ router.get('/verify/status', controller.verifyLoginStatus);
 router.post('/verify/password', controller.verifyPassword);
 
 /**
- * update user's profile information, (excluding password)
- */
-router.put('/update/profile', upload.any(), controller.updateProfile);
-
-/**
  * update user's password
  */
 router.put('/update/password', controller.updatePassword);
+
+/**
+ * update user's profile information, (excluding password)
+ */
+router.put('/update/profile', upload.any(), controller.updateProfile);
 
 /**
  * update user's email
@@ -42,11 +42,5 @@ router.put('/update/email', controller.updateEmail);
  * permanently delete user's account
  */
 router.delete('/delete/account', controller.deleteAccount);
-
-/**
- * fetch user activity
- */
-router.get('/activity/:userId', controller.getUserActivity);
-router.get('/activity/:userId/:listType/:id', controller.getUserOldActivity);
 
 module.exports = router;

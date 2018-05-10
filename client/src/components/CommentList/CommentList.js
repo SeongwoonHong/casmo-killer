@@ -7,9 +7,6 @@ import './CommentList.scss';
 
 class CommentList extends Component {
   render() {
-    // console.log(this.props.activePost);
-    // const { data } = this.props.activePost;
-    // const { comments } = data;
     const {
       giveLikesRequest, giveDisLikesRequest, deleteCommentRequest, updateCommentRequest, replyCommentRequest
     } = this.props;
@@ -22,8 +19,7 @@ class CommentList extends Component {
                 !comment.deleted &&
                 <Comment
                   commentAuthor={comment.author.displayName}
-                  commentAuthorId={comment.author.$oid}
-                  // postAuthor={this.props.activePost.author}
+                  commentAuthorId={comment.author._id}
                   updateComment={this.props.updateComment} // from article container
                   user={this.props.user} // from article container
                   avatar={comment.avatar}
@@ -31,7 +27,6 @@ class CommentList extends Component {
                   date={comment.date}
                   key={comment._id}
                   postId={this.props.postId}
-                  // postId={this.props.activePost._id}
                   isEdited={comment.isEdited}
                   likes={comment.likes}
                   disLikes={comment.disLikes}
@@ -46,7 +41,6 @@ class CommentList extends Component {
                   deleteCommentRequest={deleteCommentRequest}
                   updateCommentRequest={updateCommentRequest}
                   replyCommentRequest={replyCommentRequest}
-                  // openUserInfoModal={this.props.openUserInfoModal}
                 />
               );
             })

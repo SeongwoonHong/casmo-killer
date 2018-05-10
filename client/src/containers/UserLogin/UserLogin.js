@@ -12,15 +12,14 @@ class Login extends Component {
 
   componentWillReceiveProps(nextProps) {
 
-    const {
-      history, auth, user, clearRedirectUrl
-    } = nextProps;
+    const { history, user } = nextProps;
 
     if (user.isLoggedIn) {
 
-      const { redirectUrl } = auth;
-      clearRedirectUrl();
-      history.replace(redirectUrl);
+      history.replace(this.props.location && this.props.location.state
+        ? this.props.location.state.from
+        : '/'
+      );
 
     }
 
@@ -55,26 +54,37 @@ class Login extends Component {
 
   render() {
 
-    const { match, auth } = this.props;
+    const { location, match, auth } = this.props;
 
     const isLogin = match.params.type === 'login';
+    const redirectUrl = location && location.state ? location.state.from : '/';
 
     return (
       <div className="Login">
-        <h2 className="user-page-title">
-          { isLogin ? 'Login to your account' : 'Sign up for free' }
-          <i className="material-icons">
-            { isLogin ? 'lock' : 'mode_edit' }
+        <h2 className="User__page__title">
+          {
+            isLogin
+            ? 'Login to your account'
+            : 'Sign up for free'
+          }
+          <i className="User__page__title__icons material-icons">
+            {
+              isLogin
+              ? 'lock'
+              : 'mode_edit'
+            }
           </i>
         </h2>
-        <FormMessage message={ auth.message } />
+        <FormMessage
+          className="Login__message"
+          message={ auth.message } />
         <SocialLogin
           isLogin={ isLogin }
           onRegister={ this.onSocialRegister }
           onSuccess={ this.onLoginSuccess } />
         <LocalLogin
           isLogin={ isLogin }
-          redirectUrl={ auth.redirectUrl }
+          redirectUrl={ redirectUrl }
           onSuccess={ this.onLoginSuccess } />
       </div>
     );

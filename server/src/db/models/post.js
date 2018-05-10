@@ -5,33 +5,81 @@ const timestamps = require('mongoose-timestamp');
 const { Schema } = mongoose;
 
 const Post = new Schema({
-  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  // password: { type: String, select: false },
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  // password: {
+  //   type: String,
+  //   select: false
+  // },
   title: String,
   contents: String,
   boardId: String,
-  comments: [{
-    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    memo: String,
-    date: { type: Date, default: Date.now },
-    likes: [String],
-    disLikes: [String],
-    deleted: { type: Boolean, default: false },
-    avatar: String,
-    isEdited: { type: Boolean, default: false },
-    parentAuthor: String,
-    parentCommentId: String,
-    parentContent: String
-  }],
+  comments: [
+    {
+      author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+      },
+      memo: String,
+      date: {
+        type: Date,
+        default: Date.now
+      },
+      likes: [String],
+      disLikes: [String],
+      deleted: {
+        type: Boolean,
+        default: false
+      },
+      avatar: String,
+      isEdited: {
+        type: Boolean,
+        default: false
+      },
+      parentAuthor: String,
+      parentCommentId: String,
+      parentContent: String
+    }
+  ],
   tags: String,
-  commentsCount: { type: Number, default: 0 },
-  count: { type: Number, default: 0 }, // View
-  date: { type: Date, default: Date.now },
-  updated: [{ title: String, contents: String, date: { type: Date, default: Date.now } }],
-  deleted: { type: Boolean, default: false }, // true => deleted
+  commentsCount: {
+    type: Number,
+    default: 0
+  },
+  // View
+  count: {
+    type: Number,
+    default: 0
+  },
+  date: {
+    type: Date,
+    default: Date.now
+  },
+  updated: [
+    {
+      title: String,
+      contents: String,
+      date: {
+        type: Date,
+        default: Date.now
+      }
+    }
+  ],
+  // true => deleted
+  deleted: {
+    type: Boolean,
+    default: false
+  },
   likes: [String],
   disLikes: [String],
-  isOwner: { type: Boolean, default: false },
+  isOwner: {
+    type: Boolean,
+    default: false
+  },
   avatar: String
 });
 

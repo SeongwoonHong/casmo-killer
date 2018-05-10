@@ -1,8 +1,10 @@
 .article-body {
   box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
   border: 1px solid lightgrey;
+  background-color: #fff;
   border-radius: 4px;
   padding: 10px 20px;
+  margin-top: 20px;
   .header {
     width: 100%;
     display: flex;
@@ -15,6 +17,8 @@
     }
     .circle {
       border-radius: 50%;
+      width: 50px;
+      height: 50px;
     }
     .header-info {
       line-height: normal;
@@ -32,8 +36,6 @@
   }
   .title {
     margin-top: 5px;
-    border-bottom: 1px solid lightgrey;
-    padding-bottom: 15px;
     .info {
       color: #bbb;
       font-size: 14px;
@@ -52,19 +54,37 @@
       }
     }
     .card-title {
-      font-size: 2rem;
+      font-size: 25px;
       font-weight: 400;
     }
   }
   .contents {
     margin-top: 10px;
     word-wrap: break-word;
+    margin-bottom: 10px;
+    .contents-body {
+      font-size: 16px;
+      p {
+        margin-bottom: 5px;
+      }
+      blockquote {
+        border-left: 5px solid #b6c49f;
+        background-color: #f0f4e9;
+        padding: 1rem;
+        margin: 1rem 0;
+      }
+    }
     .preferences {
       margin-top: 20px;
     }
     .like-dislike-wrapper {
       border-top: 1px solid lightgrey;
-      padding-top: 10px
+      padding-top: 10px;
+      padding-left: 10px;
+      margin-bottom: 15px;
     }
+  }
+  .article-footer {
+    padding: 0px 0px 20px 0px;
   }
 }

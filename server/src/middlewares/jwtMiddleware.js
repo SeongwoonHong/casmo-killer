@@ -1,9 +1,8 @@
 const jwtUtils = require('../utils/jwtUtils');
-const { extractCookie } = require('../utils/cookieUtils');
 
 const jwtMiddleware = async (req, res, next) => {
 
-  const token = extractCookie(req.headers.cookie).ckToken;
+  const { ckToken: token } = req.signedCookies;
 
   if (!token) {
     req.user = null;
@@ -26,6 +25,7 @@ const jwtMiddleware = async (req, res, next) => {
 
         res.cookie('ckToken', freshToken, {
           httpOnly: true,
+          signed: true,
           maxAge: 1000 * 60 * 60 * 24 * 7
         });
 

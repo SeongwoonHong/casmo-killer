@@ -1,0 +1,48 @@
+.Menu-container {
+    @include abs-elem(0, auto, 0, auto, fixed);
+    transition: all .3s;
+    width: $main-menu-width;
+    z-index: 88;
+    &.active {
+        transform: translateX(0);
+    }
+    &__header {
+        @include flex-box();
+        background-color: palette(Grey, 800);
+        border-bottom: 1px solid palette(Grey, 900);
+        height: $top-nav-size;
+        .App-title__link {
+            margin-left: 25px;
+        }
+    }
+    &__body {
+        background-color: palette(Grey, 300);
+        height: 100%;
+        ul {
+            > li {
+                > a {
+                    @include flex-box();
+                    height: $top-nav-size;
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+    @media screen and (min-width: 992px) {
+        width: 100%;
+        position: sticky;
+        transition: none;
+        transform: translateX(0) !important;
+        &__header {
+            display: none;
+        }
+        &__body {
+            background-color: palette(Grey, 800);
+            width: 100%;
+        }
+        &__body {
+            @include flex-box(flex-start);
+            margin: 0 auto;
+        }
+    }
+}

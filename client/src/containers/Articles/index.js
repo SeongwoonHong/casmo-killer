@@ -7,7 +7,8 @@ const mapStateToProps = (state) => {
     postsList: state.posts.list,
     pagination: state.posts.pagination,
     user: state.user.user,
-    boardAuthor: state.posts.boardAuthor
+    boardAuthor: state.posts.boardAuthor,
+    boardInfo: state.posts.boardInfo
   };
 };
 
@@ -19,7 +20,7 @@ const mapDispatchToProps = (dispatch) => {
       } else {
         page += 1;
       }
-      dispatch(actions.fetchPostsRequest(boardId, page, sort));
+      return dispatch(actions.fetchPostsRequest(boardId, page, sort));
     },
     searchPostsRequest: (searchWord, boardId, page, sort) => {
       if (page === null || page === undefined) {
@@ -37,7 +38,10 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(actions.openUserInfoModal(userInfo));
     },
     bookmarkRequest: (boardId, user) => {
-      dispatch(actions.bookmarkRequest(boardId, user));
+      return dispatch(actions.bookmarkRequest(boardId, user));
+    },
+    resetPostProps: () => {
+      return dispatch(actions.resetPostProps());
     }
   };
 };

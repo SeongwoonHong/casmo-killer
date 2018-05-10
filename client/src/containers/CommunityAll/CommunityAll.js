@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
-// import Materialize from 'materialize-css';
+import { toast } from 'react-toastify';
 import { Link, withRouter } from 'react-router-dom';
+import LoadingCircle from '@sharedComponents/LoadingCircle';
 import BoardList from '../../components/BoardList/BoardList';
 import Search from '../../components/Search/Search';
+import AlignHorizontal from '../../components/AlignHorizontal/AlignHorizontal';
+import AlignVertical from '../../components/AlignVertical/AlignVertical';
+import TextButton from '../../components/Button/TextButton/TextButton';
 import './CommunityAll.scss';
 
 class CommunityAll extends Component {
@@ -12,8 +16,7 @@ class CommunityAll extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    const update = JSON.stringify(this.props) !== JSON.stringify(nextProps);
-    return update;
+    return JSON.stringify(this.props) !== JSON.stringify(nextProps);
   }
 
   componentDidUpdate(prevProps) {
@@ -34,41 +37,21 @@ class CommunityAll extends Component {
     // const { sortInfo } = this.state;
 
     // this.props.searchPostsRequest(searchWord, boardId, page, sortInfo.listEng[sortInfo.selected]);
-  }
+  };
 
   render() {
     const { data, status, error } = this.props.boardList;
 
-    // const mapToComponents = (boardData) => {
-    //   return boardData.map((board) => {
-    //     return (
-    //       <div className="col s12 m6 l4" key={board.boardId}>
-    //         <div className="card teal darken-3">
-    //           <div className="card-content white-text board-card">
-    //             <span className="card-title">{board.boardId}</span>
-    //             <p>{board.description}</p>
-    //           </div>
-    //           <div className="card-action">
-    //             <Link to={{
-    //               pathname: `/articles/${board.boardId}`,
-    //               state: { page: 0, selected: 0, boardOId: board._id }
-    //               }}>들어가기
-    //             </Link>
-    //           </div>
-    //         </div>
-    //       </div>
-    //     );
-    //   });
-    // };
-
     if (status === 'WAITING' || status === 'INIT') {
       return (
         <div className="community">
-          Loading
+          <LoadingCircle />
         </div>
       );
     } else if (error) {
-      // Materialize.toast($(`<span style="color: #00c853">Error: ${error.message}</span>`), 3000);
+      toast.error(`${error.message}`, {
+        position: toast.POSITION_TOP_RIGHT
+      });
       return (
         <div className="community">
           {error.message}
@@ -76,29 +59,26 @@ class CommunityAll extends Component {
       );
     }
     return (
-      <div className="community">
-        {
-          // this.props.user.isLoggedIn &&
-          <Link
-            className="btn waves-effect teal waves-light newBoard"
-            name="action"
-            to={`${this.props.location.pathname}/newBoard`}
-            text="New Board"
-            style={{ display: 'inline-block', width: '40%' }}
-          >
-            <img className="btn-newboard" src="/new.svg" alt="new board button" />
-          </Link>
-        }
-        <div className="community-searchbar">
+      <AlignVertical className="community">
+        <AlignHorizontal className="community-horizontal-block">
+          {
+            this.props.user.isLoggedIn &&
+            <Link
+              to="/community/new"
+              className="btn newBoard">
+              <TextButton>
+                새 게시판
+              </TextButton>
+            </Link>
+          }
           <Search
-            onSearch={this.handleSearchBoards}
-          />
-        </div>
-        <div className="row">
-          {/* {mapToComponents(data)} */}
-          <BoardList boardListData={data} />
-        </div>
-      </div>
+            className="community-searchbar"
+            onSearch={this.handleSearchBoards} />
+        </AlignHorizontal>
+        <BoardList
+          className="boardList"
+          boardListData={data} />
+      </AlignVertical>
     );
   }
 }

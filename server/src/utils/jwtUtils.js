@@ -1,7 +1,9 @@
 const jwt = require('jsonwebtoken');
 
 const {
-  jwtSecretKey: jwtSecret
+  jwtSecretKey: jwtSecret,
+  jwtIssuer: issuer,
+  jwtAlgorithm: algorithm
 } = process.env;
 
 const jwtUtils = {
@@ -9,7 +11,8 @@ const jwtUtils = {
   sign: (payload, subject, expiresIn = '7d') => {
     return new Promise((resolve, reject) => {
       jwt.sign(payload, jwtSecret, {
-        issuer: 'ckboard.com',
+        algorithm,
+        issuer,
         expiresIn,
         subject
       }, (error, token) => {
@@ -23,7 +26,7 @@ const jwtUtils = {
 
   verify: (token) => {
     return new Promise((resolve, reject) => {
-      jwt.verify(token, jwtSecret, (error, decoded) => {
+      jwt.verify(token, jwtSecret, { algorithm }, (error, decoded) => {
         if (error) {
           reject(error);
         }

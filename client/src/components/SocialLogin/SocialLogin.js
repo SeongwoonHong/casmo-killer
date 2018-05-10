@@ -82,12 +82,12 @@ class SocialLogin extends Component {
     const { isLoading, message } = this.state;
 
     return (
-      <div className="Social-login user-form-box">
+      <div className="Social-login User__form__row">
         <LoadingOverlay
           isVisible={ isLoading }
           overlayColor="rgba(256,256,256,.75)"
           circleColor="#1F4B40" />
-        <div className="user-form-header">
+        <div className="User__form__header">
           <h3>Social Login</h3>
           {
             isLogin
@@ -96,30 +96,48 @@ class SocialLogin extends Component {
           }
         </div>
         <FormMessage message={ message } />
-        <div className="social-btn-wrapper">
-          <div className="facebook">
+        <div className="Social-login__row">
+          <div className="Social-login__wrapper Social-login__wrapper--facebook">
             <FacebookAuth
+              className="Social-login__btn"
               clientId={ facebookId }
               fields="name,email,picture"
               onSuccess={ this.onSuccess }>
-              <img src={ facebookImg } alt="facebook-login" />
-              <span className="center-align">Facebook</span>
+              <img
+                className="Social-login__btn__img"
+                src={ facebookImg }
+                alt="facebook-login" />
+              <span className="Social-login__btn__text">
+                Facebook
+              </span>
             </FacebookAuth>
           </div>
-          <div className="google">
+          <div className="Social-login__wrapper Social-login__wrapper--google">
             <GoogleAuth
+              className="Social-login__btn"
               clientId={ googleId }
               onSuccess={ this.onSuccess }>
-              <img src={ googleImg } alt="google-login" />
-              <span className="center-align">Google</span>
+              <img
+                className="Social-login__btn__img"
+                src={ googleImg }
+                alt="google-login" />
+              <span className="Social-login__btn__text">
+                Google
+              </span>
             </GoogleAuth>
           </div>
-          <div className="kakao">
+          <div className="Social-login__wrapper Social-login__wrapper--kakao">
             <KakaoAuth
+              className="Social-login__btn"
               clientId={ kakaoId }
               onSuccess={ this.onSuccess }>
-              <img src={ kakaoImg } alt="kakao-login" />
-              <span className="center-align">Kakao</span>
+              <img
+                className="Social-login__btn__img"
+                src={ kakaoImg }
+                alt="kakao-login" />
+              <span className="Social-login__btn__text">
+                Kakao
+              </span>
             </KakaoAuth>
           </div>
         </div>

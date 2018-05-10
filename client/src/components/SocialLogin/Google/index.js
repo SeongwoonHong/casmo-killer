@@ -17,7 +17,28 @@ class GoogleAuth extends Component {
 
   componentDidMount() {
 
+    this._isMounted = true;
+
+    if (document.getElementById('google-login')) {
+      this.sdkLoaded();
+      return;
+    }
+
     this.loadSdkLibrary();
+
+  }
+
+  componentWillUnmount() {
+
+    this._isMounted = false;
+
+  }
+
+  setStateIfMounted(state) {
+
+    if (this._isMounted) {
+      this.setState(state);
+    }
 
   }
 
@@ -50,9 +71,7 @@ class GoogleAuth extends Component {
         if (!window.gapi.auth2.getAuthInstance()) {
           window.gapi.auth2
             .init(params)
-            .then((response) => {
-              console.log(response);
-            })
+            .then(() => {})
             .catch((error) => {
               onFailure(error);
             });
@@ -61,35 +80,16 @@ class GoogleAuth extends Component {
       });
     }
 
-    this.setState({
+    this.setStateIfMounted({
       isSdkLoaded: true
     });
 
   }
 
-  _handleSigninSuccess(res) {
+  sdkLoaded() {
 
-    const { onSuccess } = this.props;
-
-    const basicProfile = res.getBasicProfile();
-    const authResponse = res.getAuthResponse();
-
-    res.googleId = basicProfile.getId();
-    res.tokenObj = authResponse;
-    res.tokenId = authResponse.id_token;
-    res.accessToken = authResponse.access_token;
-    res.profileObj = {
-      googleId: basicProfile.getId(),
-      imageUrl: basicProfile.getImageUrl(),
-      email: basicProfile.getEmail(),
-      name: basicProfile.getName(),
-      givenName: basicProfile.getGivenName(),
-      familyName: basicProfile.getFamilyName()
-    };
-
-    onSuccess({
-      provider: 'kakao',
-      accessToken: res.accessToken
+    this.setState({
+      isSdkLoaded: true
     });
 
   }
@@ -113,8 +113,6 @@ class GoogleAuth extends Component {
           accessToken: response.getAuthResponse().access_token
         });
 
-        // this._handleSigninSuccess(response);
-
       } catch (error) {
 
         onFailure(error);
@@ -126,17 +124,18 @@ class GoogleAuth extends Component {
 
   render() {
 
-    const { children } = this.props;
+    const { className, children } = this.props;
 
     return (
       <button
         type="button"
+        className={ className }
         disabled={ !this.state.isSdkLoaded }
         onClick={ this.click }>
         {
           this.state.isSdkLoaded
             ? children
-            : <LoadingCircle color="#515151" />
+            : <LoadingCircle className={ `${className}__circle`} />
         }
       </button>
     );
@@ -146,6 +145,7 @@ class GoogleAuth extends Component {
 }
 
 GoogleAuth.propTypes = {
+  className: PropTypes.string.isRequired,
   clientId: PropTypes.string.isRequired,
   onSuccess: PropTypes.func.isRequired,
   onFailure: PropTypes.func,

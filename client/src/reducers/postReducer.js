@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import update from 'react-addons-update';
-import * as types from '../actions/types';
+import * as types from '@actions/types';
 
 const initialState = {
   newPost: {
@@ -26,6 +26,9 @@ const initialState = {
   },
   boardAuthor: {
     author: null
+  },
+  boardInfo: {
+    board: null
   },
   activePost: {
     status: 'INIT',
@@ -62,7 +65,12 @@ const initialState = {
     parentAuthor: null,
     parentContent: null,
     error: null
-  }
+  },
+  hotPostList: {
+    status: 'INIT',
+    data: [],
+    error: null,
+  },
 };
 
 export default function post(state = initialState, action) {
@@ -86,6 +94,9 @@ export default function post(state = initialState, action) {
         },
         boardAuthor: {
           author: { $set: action.payload.meta.author }
+        },
+        boardInfo: {
+          board: { $set: action.payload.board }
         }
       });
     case types.FETCH_POSTS_FAILURE:
@@ -96,7 +107,27 @@ export default function post(state = initialState, action) {
         }
       });
 
-
+      // FETCH HOT POSTS
+    case types.FETCH_HOT_POSTS:
+      return update(state, {
+        hotPostList: {
+          status: { $set: 'WAITING' },
+        },
+      });
+    case types.FETCH_HOT_POSTS_SUCCESS:
+      return update(state, {
+        hotPostList: {
+          status: { $set: 'SUCCESS' },
+          data: { $set: action.payload }
+        },
+      });
+    case types.FETCH_HOT_POSTS_FAILURE:
+      return update(state, {
+        hotPostList: {
+          status: { $set: 'FAILURE' },
+          error: { $set: action.payload.response.data }
+        },
+      });
       // SEARCH POSTS
     case types.SEARCH_POSTS:
       return update(state, {
@@ -297,6 +328,11 @@ export default function post(state = initialState, action) {
         },
         deletePost: {
           status: { $set: 'INIT' },
+          error: { $set: null }
+        },
+        list: {
+          status: { $set: 'INIT' },
+          data: { $set: [] },
           error: { $set: null }
         }
       });

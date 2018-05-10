@@ -1,11 +1,7 @@
-.dataList {
-  width: 97%;
-  display: table;
-  table-layout: auto;
-  position: relative;
-  border-collapse: separate;
-  border-spacing: 0;
-  list-style: none;
-  padding: 0;
-  margin: 30px 20px;
+.boardList {
+    display: flex;
+    flex-direction: column;
+    border-collapse: separate;
+    border-spacing: 0;
+    list-style: none;
 }

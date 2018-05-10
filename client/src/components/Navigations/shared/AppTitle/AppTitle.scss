@@ -1,0 +1,17 @@
+.App-title {
+    width: $main-menu-width - $top-nav-size;
+    &__link {
+        display: block;
+        margin: 0 auto;
+        width: 60%;
+    }
+    &__img {
+        vertical-align: middle;
+    }
+    @media screen and (min-width: 992px) {
+        &__link {
+            margin-left: 0;
+            width: 75%;
+        }
+    }
+}

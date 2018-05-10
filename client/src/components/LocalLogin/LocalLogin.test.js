@@ -11,15 +11,20 @@ import LocalLogin from './LocalLogin';
 
 describe('<LocalLogin />', () => {
 
-  let component = null;
+  let component;
+  let mockObj;
 
   beforeEach(() => {
     component = shallow(<LocalLogin />);
+    mockObj = sinon.stub(axios, 'post');
   });
 
-  it('renders the component consistently', () => {
-    expect(true).toEqual(true);
-    // expect(component).toMatchSnapshot();
+  afterEach(() => {
+    mockObj.restore();
+  });
+
+  it('should render the component consistently', () => {
+    expect(component).toMatchSnapshot();
   });
 
   it('should hide password field when it\'s register page', () => {
@@ -34,35 +39,7 @@ describe('<LocalLogin />', () => {
 
   });
 
-  it('should call onSubmitHandler when values are entered in the input fields', () => {
-
-    const email = { name: 'email', value: 'email@address.com' };
-    const password = { name: 'password', value: '123456' };
-
-    const onChangeHandler = sinon.spy(LocalLogin.prototype, 'onChangeHandler');
-
-    const item = mount(
-      <MemoryRouter>
-        <LocalLogin
-          isLogin={ true }
-          redirectUrl="/" />
-      </MemoryRouter>
-    ).find(LocalLogin);
-
-    const UserInputField = item.find('UserInputField');
-
-    UserInputField.first().find('input').simulate('change', { target: email });
-    UserInputField.last().find('input').simulate('change', { target: password });
-
-    expect(onChangeHandler.calledWith(email)).toEqual(true);
-    expect(onChangeHandler.calledWith(password)).toEqual(true);
-
-    expect(item.instance().state.email).toEqual(email.value);
-    expect(item.instance().state.password).toEqual(password.value);
-
-  });
-
-  it('reset the component state when isLogin prop changes', () => {
+  it('should reset the component state when isLogin prop changes', () => {
 
     const spy = sinon.spy(LocalLogin.prototype, 'componentWillReceiveProps');
     const setState = sinon.spy(LocalLogin.prototype, 'setState');
@@ -76,7 +53,7 @@ describe('<LocalLogin />', () => {
 
   });
 
-  it('call onLogin method on login form submit', () => {
+  it('should call onLogin method on login form submit', () => {
 
     const spy = sinon.spy(LocalLogin.prototype, 'onLogin');
 
@@ -87,7 +64,7 @@ describe('<LocalLogin />', () => {
 
   });
 
-  it('call onRegister method on register form submit', () => {
+  it('should call onRegister method on register form submit', () => {
 
     const spy = sinon.spy(LocalLogin.prototype, 'onRegister');
 
@@ -126,14 +103,14 @@ describe('<LocalLogin />', () => {
 
   });
 
-  it('should resolve the response from the server to the state', async () => {
+  it('should resolve the response from the server to the state when logging-in', async () => {
 
     const spy = sinon.spy();
 
-    const userData = { data: { user: { isLoggedIn: true } } };
+    const userData = { data: { user: { isLoggedIn: false } } };
     const promise = Promise.resolve(userData);
 
-    sinon.stub(axios, 'post').callsFake(() => promise);
+    mockObj.callsFake(() => promise);
 
     const components = shallow(
       <LocalLogin

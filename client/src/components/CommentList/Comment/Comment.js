@@ -6,6 +6,7 @@ import { Field } from 'redux-form';
 import krStrings from 'react-timeago/lib/language-strings/ko';
 import animate from 'gsap-promise';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
+import { toast } from 'react-toastify';
 import ReduxFormField from '../../../components/ReduxFormField/ReduxFormField';
 import Quote from '../../Quote/Quote';
 import './Comment.scss';
@@ -16,7 +17,8 @@ class Comment extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      edit: false
+      edit: false,
+      height: null
     };
   }
   componentWillMount() {
@@ -32,10 +34,10 @@ class Comment extends Component {
     TweenMax.killTweensOf(this.disLike);
   }
   onDeleteHandler = () => {
-    this.props.deleteCommentRequest(this.props.postId, this.props.commentId, this.props.index);
-    // .then(() => {
-    //   Materialize.toast('The comment is deleted', 2000, 'round');
-    // }).catch(() => Materialize.toast('Something went wrong', 2000, 'round'));
+    this.props.deleteCommentRequest(this.props.postId, this.props.commentId, this.props.index)
+      .then(() => {
+        toast.info('The comment is deleted', { position: toast.POSITION_TOP_RIGHT });
+      }).catch(() => toast.info('Something went wrong', { position: toast.POSITION_TOP_RIGHT }));
   }
   likesHandler = (postId, type, commentId) => {
     if (this.props.user.isLoggedIn && (this.props.commentAuthor !== this.props.user.displayName)) {
@@ -73,14 +75,14 @@ class Comment extends Component {
     const { postId, commentId } = this.props;
     const contents = values[`comment${this.props.commentId}`].trim();
     if (typeof contents !== 'string' || !contents) {
-      // Materialize.toast($('<span style="color: red">Content cannot be empty</span>'), 3000, 'rounded');
+      toast.error('Content cannot be empty!', { position: toast.POSITION_TOP_RIGHT });
       return;
     }
     return this.props.updateCommentRequest(postId, commentId, contents).then(() => {
       if (this.props.updateComment.status === 'SUCCESS') {
-        // Materialize.toast('<span style="color: teal">Your comment is updated!</span>', 2000, 'rounded');
+        toast.info('Your comment is updated', { position: toast.POSITION_TOP_RIGHT });
       } else {
-        // Materialize.toast($('<span style="color: red">Content cannot be empty</span>'), 3000, 'rounded');
+        toast.error('Something went wrong', { position: toast.POSITION_TOP_RIGHT });
       }
       this.setState({ edit: false });
     });
@@ -90,7 +92,11 @@ class Comment extends Component {
       comment, commentId, commentAuthor, postId
     } = this.props;
     const offset = document.querySelector('.articles').offsetHeight;
-    TweenMax.to(document.querySelector('.app-container'), 1, { scrollTo: { y: offset, autoKill: true }, ease: Bounce.easeOut });
+    if (window.outerWidth < 990) {
+      TweenMax.to(document.querySelector('.app-container'), 1, { scrollTo: { y: offset, autoKill: true }, ease: Bounce.easeOut });
+    } else {
+      TweenMax.to(document.querySelector('.root-container'), 1, { scrollTo: { y: offset, autoKill: true }, ease: Bounce.easeOut });
+    }
     this.state.edit && this.toggleEdit();
     this.props.replyCommentRequest({
       comment, commentId, commentAuthor, postId
@@ -99,6 +105,11 @@ class Comment extends Component {
   toggleEdit = () => {
     this.setState({
       edit: !this.state.edit
+    });
+  }
+  resizeHandler = () => {
+    this.setState({
+      height: document.getElementById(`comment${this.props.commentId}`).scrollHeight
     });
   }
   render() {
@@ -145,6 +156,8 @@ class Comment extends Component {
         type="text"
         component={ReduxFormField}
         mode="textarea"
+        style={{ height: `${this.state.height}px` }}
+        onChange={this.resizeHandler}
       />
     );
     return (
@@ -153,8 +166,11 @@ class Comment extends Component {
           <img src={avatar} alt={avatar} className="comment-avatar" />
           <span>
             <Link
-              to={`/user/info/${commentAuthorId}`}
-              >
+              to={{
+                pathname: `/user/info/${commentAuthorId}`,
+                state: { userName: commentAuthor, avatar }
+                }}
+            >
               {commentAuthor}
             </Link>
             <div className="created">Created : <TimeAgo date={date} formatter={formatter} />{ isEdited && <span> (edited)</span>}</div>

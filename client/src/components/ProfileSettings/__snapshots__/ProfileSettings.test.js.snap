@@ -1,0 +1,463 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ProfileSettings /> should render the component consistently 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <ProfileSettings
+    user={
+        Object {
+            "avatar": "http://i1.kym-cdn.com/photos/images/newsfeed/000/250/007/672.jpg",
+            "displayName": "ckboard",
+            "email": "ckboard@gmail.com",
+          }
+    }
+/>,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "function",
+    "props": Object {
+      "children": Array [
+        <Prompt
+          message="Are you fucking sure? Your information will be lost."
+          when={false}
+/>,
+        <FormMessage
+          className=""
+          message=""
+          type="error "
+/>,
+        <FormMessage
+          className=""
+          message=""
+          type="warning"
+/>,
+        <FormMessage
+          className=""
+          message=""
+          type="error"
+/>,
+        <UserInputField
+          disabled={true}
+          isVisible={true}
+          message=""
+          name="email"
+          onChange={[Function]}
+          placeholder=""
+          title=""
+          type=""
+          value="ckboard@gmail.com"
+/>,
+        <FormMessage
+          className=""
+          message=""
+          type="error"
+/>,
+        <UserInputField
+          disabled={false}
+          isVisible={true}
+          message=""
+          name="displayName"
+          onChange={[Function]}
+          placeholder=""
+          title="Display Name"
+          type=""
+          value="ckboard"
+/>,
+        <FormMessage
+          className=""
+          message=""
+          type="error"
+/>,
+        <AvatarUploader
+          avatar={
+                    Object {
+                              "message": "",
+                              "value": "http://i1.kym-cdn.com/photos/images/newsfeed/000/250/007/672.jpg",
+                            }
+          }
+          className="User__form__fields"
+          onChange={[Function]}
+/>,
+      ],
+      "className": "Profile-settings",
+      "disabled": true,
+      "formMsg": "Update your email, display name, and profile picture.",
+      "formTitle": "Profile Settings",
+      "icon": "",
+      "isLoading": false,
+      "onSubmit": [Function],
+      "title": "",
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "message": "Are you fucking sure? Your information will be lost.",
+          "when": false,
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "className": "",
+          "message": "",
+          "type": "error ",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "className": "",
+          "message": "",
+          "type": "warning",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "className": "",
+          "message": "",
+          "type": "error",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": null,
+          "disabled": true,
+          "isVisible": true,
+          "message": "",
+          "name": "email",
+          "onChange": [Function],
+          "placeholder": "",
+          "title": "",
+          "type": "",
+          "value": "ckboard@gmail.com",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "className": "",
+          "message": "",
+          "type": "error",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": null,
+          "disabled": false,
+          "isVisible": true,
+          "message": "",
+          "name": "displayName",
+          "onChange": [Function],
+          "placeholder": "",
+          "title": "Display Name",
+          "type": "",
+          "value": "ckboard",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "className": "",
+          "message": "",
+          "type": "error",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "avatar": Object {
+            "message": "",
+            "value": "http://i1.kym-cdn.com/photos/images/newsfeed/000/250/007/672.jpg",
+          },
+          "className": "User__form__fields",
+          "onChange": [Function],
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+    ],
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "function",
+      "props": Object {
+        "children": Array [
+          <Prompt
+            message="Are you fucking sure? Your information will be lost."
+            when={false}
+/>,
+          <FormMessage
+            className=""
+            message=""
+            type="error "
+/>,
+          <FormMessage
+            className=""
+            message=""
+            type="warning"
+/>,
+          <FormMessage
+            className=""
+            message=""
+            type="error"
+/>,
+          <UserInputField
+            disabled={true}
+            isVisible={true}
+            message=""
+            name="email"
+            onChange={[Function]}
+            placeholder=""
+            title=""
+            type=""
+            value="ckboard@gmail.com"
+/>,
+          <FormMessage
+            className=""
+            message=""
+            type="error"
+/>,
+          <UserInputField
+            disabled={false}
+            isVisible={true}
+            message=""
+            name="displayName"
+            onChange={[Function]}
+            placeholder=""
+            title="Display Name"
+            type=""
+            value="ckboard"
+/>,
+          <FormMessage
+            className=""
+            message=""
+            type="error"
+/>,
+          <AvatarUploader
+            avatar={
+                        Object {
+                                    "message": "",
+                                    "value": "http://i1.kym-cdn.com/photos/images/newsfeed/000/250/007/672.jpg",
+                                  }
+            }
+            className="User__form__fields"
+            onChange={[Function]}
+/>,
+        ],
+        "className": "Profile-settings",
+        "disabled": true,
+        "formMsg": "Update your email, display name, and profile picture.",
+        "formTitle": "Profile Settings",
+        "icon": "",
+        "isLoading": false,
+        "onSubmit": [Function],
+        "title": "",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "message": "Are you fucking sure? Your information will be lost.",
+            "when": false,
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "className": "",
+            "message": "",
+            "type": "error ",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "className": "",
+            "message": "",
+            "type": "warning",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "className": "",
+            "message": "",
+            "type": "error",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": null,
+            "disabled": true,
+            "isVisible": true,
+            "message": "",
+            "name": "email",
+            "onChange": [Function],
+            "placeholder": "",
+            "title": "",
+            "type": "",
+            "value": "ckboard@gmail.com",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "className": "",
+            "message": "",
+            "type": "error",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": null,
+            "disabled": false,
+            "isVisible": true,
+            "message": "",
+            "name": "displayName",
+            "onChange": [Function],
+            "placeholder": "",
+            "title": "Display Name",
+            "type": "",
+            "value": "ckboard",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "className": "",
+            "message": "",
+            "type": "error",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "avatar": Object {
+              "message": "",
+              "value": "http://i1.kym-cdn.com/photos/images/newsfeed/000/250/007/672.jpg",
+            },
+            "className": "User__form__fields",
+            "onChange": [Function],
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+      ],
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;

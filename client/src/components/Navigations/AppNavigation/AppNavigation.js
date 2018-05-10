@@ -18,10 +18,7 @@ class AppNavigation extends Component {
       location, layout, closeAllMenu
     } = this.props;
 
-    if (
-      location !== prevProps.location &&
-      layout.breakPoint !== 'xl'
-    ) {
+    if (location !== prevProps.location && layout.breakPoint !== 'xl') {
       closeAllMenu();
     }
 
@@ -30,7 +27,7 @@ class AppNavigation extends Component {
   render() {
 
     const {
-      user, layout, closeAllMenu, toggleMenu, toggleUserMenu, logout
+      location, user, layout, closeAllMenu, toggleMenu, toggleUserMenu, logout
     } = this.props;
 
     const SubMenus = (routes) => {
@@ -59,17 +56,16 @@ class AppNavigation extends Component {
         key={ 0 }
         role="button"
         tabIndex={ 0 }
-        className={ classnames('App-navigation-overlay', {
+        className={ classnames('App-navigation__overlay', {
           active: layout.isMainMenuVisible || layout.isUserMenuVisible
         })}
         onClick={ closeAllMenu }
         onKeyDown={ () => {} }
       />,
-
       <nav
         key={ 1 }
         className="App-navigation">
-        <div className="component-row">
+        <div className="App-navigation__row component-row">
           <MainMenu
             active={ layout.isMainMenuVisible }
             menus={ MainMenuRoutes }
@@ -78,6 +74,7 @@ class AppNavigation extends Component {
             active={ layout.isUserMenuVisible }
             user={ user }
             layout={ layout }
+            currentRoute={ location.pathname }
             toggleUserMenu={ toggleUserMenu }
             logout={ logout } />
         </div>

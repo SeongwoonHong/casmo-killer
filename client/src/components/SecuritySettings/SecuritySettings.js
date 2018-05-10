@@ -11,32 +11,37 @@ import UserInputField from '../UserInputField';
 
 import './SecuritySettings.scss';
 
-const initialState = {
-  isLoading: false,
-  isEditing: false,
-  isVerified: false,
-  isSuccess: false,
-  currentPassword: '',
-  newPassword: '',
-  confirmPassword: '',
-  message: ''
-};
-
 class SecuritySettings extends Component {
 
   constructor(props) {
 
     super(props);
 
-    this.state = initialState;
+    this.initialState = {
+      isLoading: false,
+      isEditing: false,
+      isVerified: false,
+      isSuccess: false,
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: '',
+      message: ''
+    };
+
+    this.state = this.initialState;
+
+    this.onChangeHandler = this.onChangeHandler.bind(this);
+    this.onSubmitHandler = this.onSubmitHandler.bind(this);
+    this.verifyCurrentPassword = this.verifyCurrentPassword.bind(this);
+    this.submitNewPassword = this.submitNewPassword.bind(this);
 
   }
 
-  onChangeHandler = (e) => {
+  onChangeHandler(e) {
     this.setState({ [e.name]: e.value });
-  };
+  }
 
-  onSubmitHandler = () => {
+  onSubmitHandler() {
 
     this.setState({
       isLoading: true,
@@ -49,9 +54,9 @@ class SecuritySettings extends Component {
       this.submitNewPassword();
     }
 
-  };
+  }
 
-  verifyCurrentPassword = async () => {
+  async verifyCurrentPassword() {
 
     const { currentPassword } = this.state;
 
@@ -72,7 +77,7 @@ class SecuritySettings extends Component {
 
         if (status === 204) {
 
-          this.setState(Object.assign({}, initialState, {
+          this.setState(Object.assign({}, this.initialState, {
             isVerified: true
           }));
 
@@ -99,9 +104,9 @@ class SecuritySettings extends Component {
 
     this.setState({ isLoading: false });
 
-  };
+  }
 
-  submitNewPassword = async () => {
+  async submitNewPassword() {
 
     const { newPassword, confirmPassword } = this.state;
 
@@ -149,7 +154,7 @@ class SecuritySettings extends Component {
 
     this.setState({ isLoading: false });
 
-  };
+  }
 
   render() {
 
@@ -171,17 +176,17 @@ class SecuritySettings extends Component {
         className="Security-settings"
         isLoading={ isLoading }
         formTitle="Security Settings"
-        formMsg="Change your password, or delete your account"
+        formMsg="Change your password, or deactivate your account"
         onSubmit={ this.onSubmitHandler }
         button={ (
-          <div className="button-group">
+          <div className="Security-settings__button-group">
             <button
               type="button"
-              disabled={ strategy }
-              className="user-form-button"
+              disabled={ strategy !== 'local' }
+              className="User__form__btn Security-settings__form__btn"
               onClick={ () => {
                 if (isVerified) {
-                  this.setState(initialState);
+                  this.setState(this.initialState);
                 } else if (!isEditing) {
                   this.setState({ isEditing: true });
                 }
@@ -189,9 +194,9 @@ class SecuritySettings extends Component {
               { isEditing || isVerified ? 'Cancel' : 'Change Password' }
             </button>
             <Link
-              to="/user/delete"
-              className="user-form-button">
-              Delete Account
+              to="/user/deactivate"
+              className="User__form__btn Security-settings__form__btn">
+              Deactivate Account
             </Link>
           </div>
         ) }>
@@ -210,7 +215,7 @@ class SecuritySettings extends Component {
           message="Please enter your current password to proceed.">
           <button
             type="submit"
-            className="user-form-button">
+            className="User__form__btn Security-settings__field__btn">
             Submit
           </button>
         </UserInputField>
@@ -233,7 +238,7 @@ class SecuritySettings extends Component {
           message="Confirm your password">
           <button
             type="submit"
-            className="user-form-button">
+            className="User__form__btn Security-settings__field__btn">
             Submit
           </button>
         </UserInputField>

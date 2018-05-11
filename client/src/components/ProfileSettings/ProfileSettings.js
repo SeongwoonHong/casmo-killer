@@ -202,7 +202,7 @@ class ProfileSettings extends Component {
 
         <Prompt
           when={ !hasBeenEdited }
-          message="Are you fucking sure? Your information will be lost." />
+          message="Are you sure you want to leave this page? Your information will be lost." />
 
         <FormMessage
           message={ message }

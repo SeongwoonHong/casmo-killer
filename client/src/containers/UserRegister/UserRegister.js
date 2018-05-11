@@ -67,6 +67,8 @@ class Register extends Component {
 
     }
 
+    this.setMountStatus();
+
   }
 
   onChangeHandler(e) {
@@ -148,6 +150,10 @@ class Register extends Component {
       isLoading: false
     });
 
+  }
+
+  setMountStatus() {
+    this.setState({ isMounted: true });
   }
 
   async submitRegister() {
@@ -258,8 +264,6 @@ class Register extends Component {
 
     }
 
-    this.setState({ isMounted: true });
-
   }
 
   render() {
@@ -275,6 +279,7 @@ class Register extends Component {
 
     const { auth } = this.props;
 
+
     return (
       <UserPageContainer
         className="Register"
@@ -287,7 +292,7 @@ class Register extends Component {
 
         <Prompt
           when={ isMounted && !isLoading }
-          message="Are you fucking sure? Your information will be lost." />
+          message="Are you sure you want to leave this page? Your information will be lost." />
 
         <FormMessage message={ errorMsg } />
 

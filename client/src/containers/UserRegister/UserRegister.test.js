@@ -49,7 +49,7 @@ describe('<UserRegister />', () => {
 
   it('should construct the component state with correct props', () => {
     expect(component.state()).toEqual({
-      isMounted: false,
+      isMounted: true,
       isLoading: false,
       displayName: {
         value: auth.displayName,

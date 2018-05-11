@@ -41,8 +41,8 @@ ShallowWrapper {
     "props": Object {
       "children": Array [
         <Prompt
-          message="Are you fucking sure? Your information will be lost."
-          when={false}
+          message="Are you sure you want to leave this page? Your information will be lost."
+          when={true}
 />,
         <FormMessage
           className=""
@@ -124,8 +124,8 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "class",
         "props": Object {
-          "message": "Are you fucking sure? Your information will be lost.",
-          "when": false,
+          "message": "Are you sure you want to leave this page? Your information will be lost.",
+          "when": true,
         },
         "ref": null,
         "rendered": null,
@@ -270,8 +270,8 @@ ShallowWrapper {
       "props": Object {
         "children": Array [
           <Prompt
-            message="Are you fucking sure? Your information will be lost."
-            when={false}
+            message="Are you sure you want to leave this page? Your information will be lost."
+            when={true}
 />,
           <FormMessage
             className=""
@@ -353,8 +353,8 @@ ShallowWrapper {
           "key": undefined,
           "nodeType": "class",
           "props": Object {
-            "message": "Are you fucking sure? Your information will be lost.",
-            "when": false,
+            "message": "Are you sure you want to leave this page? Your information will be lost.",
+            "when": true,
           },
           "ref": null,
           "rendered": null,

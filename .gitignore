@@ -1,22 +1,49 @@
-# See https://help.github.com/ignore-files/ for more about ignoring files.
-
-.idea/
-node_modules/
-# testing
-coverage/
-
-# production
-client/build/
-server/public/
-env/
-.env.**
-
-# misc
+logs
+*.log
+pids
+*.pid
+*.seed
+lib-cov
+coverage
+coverage_js
+__snapshots__
+documentation
+.grunt
+build
+build/Release
+buildShopJSFile/Release
+node_modules
+package-lock.json
+typings
+ts-node
+.lock-wscript
+.tsdrc
+.typingsrc
+.idea
+*.iml
+.vscode
+/tools/**/*.js
+dist
+dev
+docs
+test
+tmp
+gulpfile.js
+gulpfile.js.map
 .DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+*.swp
+/coverage
+/buildShopJSFile
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+src/client/app/shared/config/env.config.js
+src/client/app/shared/config/env.config.js.map
+
+.env
+.env.development
+.env.test
+.env.production
 
 npm-debug.log*
 yarn-debug.log*

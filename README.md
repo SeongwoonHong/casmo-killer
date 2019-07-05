@@ -1,1 +1,1 @@
-# Damso &middot; [![Build Status](https://travis-ci.org/dam-so/damso.svg?branch=master)](https://travis-ci.org/dam-so/damso) [![Coverage Status](https://coveralls.io/repos/github/dam-so/damso/badge.svg?branch=master)](https://coveralls.io/github/dam-so/damso?branch=master)
+An attempt to re-build a forum application

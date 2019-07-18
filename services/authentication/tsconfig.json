@@ -15,7 +15,7 @@
     "noUnusedLocals": true,
     "outDir": "./dist",
     "paths": {
-      "~config/*": ["src/config/*"],
+      "~config": ["src/config"],
       "~lib/*": ["src/lib/*"]
     },
     "pretty": true,

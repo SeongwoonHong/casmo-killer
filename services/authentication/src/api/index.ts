@@ -1,23 +1,31 @@
 import { Router } from 'express';
 
-import PingController from './ping';
+import { AuthRoutes } from './auth';
+import { PingRoutes } from './ping';
+import { TokenRoutes } from './token';
 
-class RootRoutes {
-
+export class RootRoutes {
   public router: Router;
 
   constructor() {
     this.router = Router();
+    this.configure();
   }
 
-  public configure(): Router {
-    return this
+  private configure(): void {
+    this
       .router
       .use(
+        '/auth',
+        new AuthRoutes().router,
+      )
+      .use(
+        '/token',
+        new TokenRoutes().router,
+      )
+      .use(
         '/ping',
-        PingController,
+        new PingRoutes().router,
       );
   }
 }
-
-export default new RootRoutes().configure();

@@ -1,9 +1,8 @@
 import { Response } from 'express';
 import { ValidationError } from 'joi';
 
-import logger from './logger';
-
 import { ErrorData } from './types';
+import { logger } from './logger';
 
 export const unauthorized = (res: Response, message: string): Response => {
   return error(res, message, 401);

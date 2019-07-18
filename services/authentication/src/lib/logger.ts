@@ -6,7 +6,7 @@ import {
   transports,
 } from 'winston';
 
-import configs from '../config';
+import { configs } from '~config';
 
 import { FormatWrap } from 'logform';
 
@@ -27,7 +27,7 @@ const errorFormat: FormatWrap = format(<TransformFunction>(info) => {
   return info;
 });
 
-const logger: Logger = createLogger({
+export const logger: Logger = createLogger({
   level: configs.LOG_LEVEL,
   transports: [
     new transports.Console({
@@ -53,5 +53,3 @@ export const stream = {
     logger.info(message);
   },
 };
-
-export default logger;

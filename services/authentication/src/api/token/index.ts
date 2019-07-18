@@ -2,8 +2,8 @@ import { Router } from 'express';
 
 import { pong } from './controller';
 
-export class PingRoutes {
-  public router: Router = Router();
+export class TokenRoutes {
+  public router: Router;
 
   constructor() {
     this.router = Router();

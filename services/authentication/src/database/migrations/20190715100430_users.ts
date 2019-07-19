@@ -26,7 +26,7 @@ export async function up(knex: Knex): Promise<any> {
         .notNullable()
         .defaultTo('local');
       table.string('social_id');
-      table.enu('token_field', configs.TOKEN.TARGET_FIELDS);
+      table.enu('token_field', configs.TOKEN_TARGET_FIELDS);
       table.string('token_value');
       table
         .timestamp('created_at')

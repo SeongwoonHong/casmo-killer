@@ -30,7 +30,7 @@ export class App {
     this.express.use(bodyParser.urlencoded({
       extended: false,
     }));
-    this.express.use(cookieParser(configs.COOKIE.SECRET));
+    this.express.use(cookieParser(configs.COOKIE_SECRET));
     this.express.use(methodOverride((req) => {
       if (req.body && typeof req.body === 'object' && '_method' in req.body) {
         const method = req.body._method;

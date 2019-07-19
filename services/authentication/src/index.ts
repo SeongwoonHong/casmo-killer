@@ -13,7 +13,7 @@ logger.info(
   )}`,
 );
 
-const port: number | boolean = normalizePort(configs.PORT);
+const port: number | boolean = normalizePort(configs.API_PORT);
 
 const app = new App().express;
 app.set('port', port);

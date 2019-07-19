@@ -16,23 +16,30 @@ dotenv.config({
 
 const config = {
   all: {
+    // api settings
+    API_LOG_LEVEL: process.env.API_LOG_LEVEL || 'debug',
+    API_PORT: process.env.API_PORT || 9000,
     API_ROOT: process.env.API_ROOT || '/api',
     AUTH_STRATEGIES: process.env.AUTH_STRATEGIES
       ? process.env.AUTH_STRATEGIES.split(',')
       : ['local', 'facebook', 'google'],
     // aws configs
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
-    AWS_ACL: process.env.AWS_ACL || 'public-read',
-    AWS_BUCKET: process.env.AWS_BUCKET || 'damso-pics',
     AWS_REGION: process.env.AWS_REGION || 'us-east-1',
+    AWS_S3_ACL: process.env.AWS_S3_ACL || 'public-read',
+    AWS_S3_BUCKET: process.env.AWS_S3_BUCKET || 'damso-pics',
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
-    AWS_SIGNATURE_VERSION: process.env.AWS_SIGNATURE_VERSION,
+    AWS_SES_SENDER_EMAIL: process.env.AWS_SES_SENDER_EMAIL || 'ckboardtoronto@gmail.com',
+    // client settings
+    CLIENT_APP_NAME: process.env.CLIENT_APP_NAME || 'Damso',
+    CLIENT_LOGO_URL: process.env.CLIENT_LOGO_URL || 'https://i.imgur.com/7ClIc5h.png',
+    CLIENT_THEME_COLOR: process.env.CLIENT_THEME_COLOR || '#F06292',
+    CLIENT_URL: process.env.CLIENT_URL,
     // cookies settings
-    COOKIE: {
-      IS_SECURE: true,
-      KEY_NAME: process.env.COOKIE_KEY_NAME,
-      SECRET: process.env.COOKIE_SECRET,
-    },
+    COOKIE_IS_SECURE: true,
+    COOKIE_KEY_NAME: process.env.COOKIE_KEY_NAME,
+    COOKIE_SECRET: process.env.COOKIE_SECRET,
+    // db settings
     DB_CLIENT: process.env.DB_CLIENT || 'pg',
     DB_CONNECTION: process.env.DATABASE_URL || {
       database: process.env.DATABASE_NAME,
@@ -41,9 +48,8 @@ const config = {
       port: process.env.DATABASE_PORT || 5432,
       user: process.env.DATABASE_USER || 'postgres',
     },
-    LOG_LEVEL: process.env.LOG_LEVEL || 'debug',
     NODE_ENV: nodeEnv,
-    PORT: process.env.PORT || 9000,
+    // jwt token settings
     RSA_KEY_PAIRS: ((envData = '{}') => {
       try {
         return JSON.parse(envData);
@@ -51,21 +57,16 @@ const config = {
         return {};
       }
     })(process.env.RSA_KEY_PAIRS),
-    TOKEN: {
-      EXPIRY_FOR_ACCESS_TOKEN: process.env.EXPIRY_FOR_ACCESS_TOKEN || '1d',
-      EXPIRY_FOR_REFRESH_TOKEN: process.env.EXPIRY_FOR_REFRESH_TOKEN || '121d',
-      ISSUER: process.env.TOKEN_ISSUER || 'asdf',
-      TARGET_FIELDS: process.env.TOKEN_FIELDS
-        ? process.env.TOKEN_FIELDS.split(',')
-        : ['email', 'password'],
-    },
+    TOKEN_EXPIRY_FOR_ACCESS: process.env.TOKEN_EXPIRY_FOR_ACCESS || '1d',
+    TOKEN_EXPIRY_FOR_REFRESH: process.env.TOKEN_EXPIRY_FOR_REFRESH || '121d',
+    TOKEN_ISSUER: process.env.TOKEN_ISSUER || 'damso-authentication-service',
+    TOKEN_TARGET_FIELDS: process.env.TOKEN_TARGET_FIELDS
+      ? process.env.TOKEN_TARGET_FIELDS.split(',')
+      : ['email', 'password'],
   },
   development: {
-    COOKIE: {
-      IS_SECURE: false,
-      KEY_NAME: process.env.COOKIE_KEY_NAME,
-      SECRET: process.env.COOKIE_SECRET,
-    },
+    // cookies settings
+    COOKIE_IS_SECURE: false,
   },
   production: {},
   test: {},

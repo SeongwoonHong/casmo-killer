@@ -9,6 +9,19 @@ export interface DupeValueCheckResult {
   isTaken: boolean;
 }
 
+export interface EmailTemplateParams {
+  body: string;
+  buttonText: string;
+  buttonUrl: string;
+  clientUrl?: string;
+  footerText: string;
+  heading: string;
+  logoAlt?: string;
+  logoUrl?: string;
+  themeColor?: string;
+  title: string;
+}
+
 export interface ErrorData {
   message: string;
   success?: boolean;

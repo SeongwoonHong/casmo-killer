@@ -30,7 +30,7 @@ export const sign = (
           header: {
             kid: rsaKeyIndex,
           },
-          issuer: configs.TOKEN.ISSUER,
+          issuer: configs.TOKEN_ISSUER,
           subject,
         },
         (error: Error, token: string) => {

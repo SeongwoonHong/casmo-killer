@@ -28,7 +28,7 @@ const errorFormat: FormatWrap = format(<TransformFunction>(info) => {
 });
 
 export const logger: Logger = createLogger({
-  level: configs.LOG_LEVEL,
+  level: configs.API_LOG_LEVEL,
   transports: [
     new transports.Console({
       format: format.combine(

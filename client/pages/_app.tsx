@@ -3,6 +3,12 @@ import React from 'react';
 import { Provider } from 'mobx-react';
 import initializeStore from 'stores/index.ts';
 
+declare global {
+  interface Window {
+    _STORES_: any;
+  }
+}
+
 class MyMobxApp extends App {
   mobxStore;
 
@@ -26,6 +32,11 @@ class MyMobxApp extends App {
     this.mobxStore = isServer
       ? props.initialMobxState
       : initializeStore(props.initialMobxState);
+    
+    }
+    
+  componentDidMount() {
+    window._STORES_ = this.mobxStore;
   }
 
   public render(): JSX.Element {

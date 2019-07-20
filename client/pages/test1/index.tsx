@@ -19,7 +19,7 @@ const Test: FunctionComponent<ITest1.IProps> = (props) => {
       <div>username = {authStore.user.username}</div>
       <div>displayName = {authStore.user.displayName}</div>
       <div>thumbnail = {authStore.user.thumbnail}</div>
-      <button onClick={authStore.test}>test fuck</button>
+      <button onClick={() => authStore.test()}>test fuck</button>
     </Container>
   );
 };

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import { AuthRoutes } from './auth';
+import { UserRoutes } from './user';
 import { PingRoutes } from './ping';
 import { TokenRoutes } from './token';
 
@@ -18,6 +19,10 @@ export class RootRoutes {
       .use(
         '/auth',
         new AuthRoutes().router,
+      )
+      .use(
+        '/user',
+        new UserRoutes().router,
       )
       .use(
         '/token',

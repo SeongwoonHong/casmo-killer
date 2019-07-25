@@ -4,6 +4,7 @@ import {
   RequestHandler,
   Response,
 } from 'express';
+
 import { QueryParamsObject } from './types';
 
 export const queryStringMapper = (
@@ -22,7 +23,7 @@ export const queryStringMapper = (
       csvParser,
     );
 
-    next();
+    return next();
   };
 };
 
@@ -32,14 +33,16 @@ export const parseQs = (
 ): QueryParamsObject => {
   const {
     exclude_fields = '',
-    ids = '',
+    search_values = '',
+    search_field = 'id',
     return_fields = '',
   } = queryObject || {};
 
   return {
     exclude_fields: csvParser(exclude_fields),
-    ids: csvParser(ids),
     return_fields: csvParser(return_fields),
+    search_field,
+    search_values: csvParser(search_values),
   };
 };
 

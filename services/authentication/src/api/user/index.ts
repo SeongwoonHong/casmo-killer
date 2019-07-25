@@ -1,10 +1,10 @@
 import { Router } from 'express';
 
 import {
-  getPublicRsaKey,
+  requestUserInfo,
 } from './controller';
 
-export class TokenRoutes {
+export class UserRoutes {
   public router: Router;
 
   constructor() {
@@ -15,7 +15,6 @@ export class TokenRoutes {
   private configure(): void {
     this
       .router
-      .get('/secret/:key_id', getPublicRsaKey)
-      .post('/refresh', getPublicRsaKey);
+      .get('/', requestUserInfo);
   }
 }

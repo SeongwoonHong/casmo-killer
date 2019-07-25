@@ -1,3 +1,3 @@
 export const generateRandomNum = (from: number, to: number): number => {
-  return Math.abs(Math.random() * (to - from) + from);
+  return Math.floor(Math.random() * (to - from) + from);
 };

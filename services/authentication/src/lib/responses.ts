@@ -4,7 +4,10 @@ import { ValidationError } from 'joi';
 import { ErrorData } from './types';
 import { logger } from './logger';
 
-export const unauthorized = (res: Response, message: string): Response => {
+export const unauthorized = (
+  res: Response,
+  message: string = 'Unauthorized Access',
+): Response => {
   return error(res, message, 401);
 };
 

@@ -11,6 +11,7 @@ export interface DupeValueCheckResult {
 
 export interface EmailTemplateParams {
   body: string;
+  bodyTitle: string;
   buttonText: string;
   buttonUrl: string;
   clientUrl?: string;
@@ -33,7 +34,8 @@ export interface ErrorWithStatus extends Error {
 
 export interface QueryParamsObject {
   exclude_fields: string[];
-  ids: string[];
+  search_field: string;
+  search_values: string[];
   return_fields: string[];
 }
 

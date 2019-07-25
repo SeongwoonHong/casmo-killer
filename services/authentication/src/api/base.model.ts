@@ -12,6 +12,15 @@ Model.knex(Knex({
 }));
 
 export class BaseModel extends Model {
+  static get ALL_FIELDS(): string[] {
+    return Array.from(
+      new Set([
+        ...this.AVAILABLE_FIELDS || [],
+        ...this.BASE_FIELDS || [],
+      ]),
+    );
+  }
+
   static get AVAILABLE_FIELDS(): string[] {
     return [];
   }

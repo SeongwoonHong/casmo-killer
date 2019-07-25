@@ -5,6 +5,7 @@ import { configs } from '~config';
 export const baseTemplate = (information: EmailTemplateParams): string => {
   const {
     body,
+    bodyTitle,
     buttonText,
     buttonUrl,
     clientUrl = configs.CLIENT_URL,
@@ -13,7 +14,6 @@ export const baseTemplate = (information: EmailTemplateParams): string => {
     logoAlt = configs.CLIENT_APP_URL,
     logoUrl = configs.CLIENT_LOGO_URL,
     themeColor = configs.CLIENT_THEME_COLOR,
-    title,
   } = information;
 
   return `
@@ -71,7 +71,7 @@ export const baseTemplate = (information: EmailTemplateParams): string => {
                                                               <td style="box-sizing:border-box;padding:0;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-size:16px;vertical-align:top"
                                                                   valign="top">
                                                                   <h2 style="margin:0;margin-bottom:30px;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-weight:300;line-height:1.5;font-size:24px;color:#616161!important">
-                                                                      ${title}
+                                                                      ${bodyTitle}
                                                                   </h2>
                                                                   <p style="margin:0;margin-bottom:30px;color:#616161;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-size:16px;font-weight:300">
                                                                       ${body}
@@ -171,10 +171,23 @@ export const baseTemplate = (information: EmailTemplateParams): string => {
 export const sendSignupConfirmation = (redirectUrl: string): EmailTemplateParams => {
   return {
     body: 'Click the following link to confirm your email address.',
+    bodyTitle: 'You\'re almost done!<br>Let\'s confirm your email address.',
     buttonText: 'Confirm your email address',
     buttonUrl: redirectUrl,
     footerText: 'Place for chat on the web',
     heading: 'Let\'s confirm your email address.',
-    title: 'You\'re almost done!<br>Let\'s confirm your email address.',
+    title: `'Welcome to ${configs.CLIENT_APP_NAME}! Confirm Your Email Address'`,
+  };
+};
+
+export const sendPwdResetConfirmation = (redirectUrl: string): EmailTemplateParams => {
+  return {
+    body: 'Click the following link to reset your password.',
+    bodyTitle: 'You\'re almost done!<br>Let\'s reset your password.',
+    buttonText: 'Confirm your email address',
+    buttonUrl: redirectUrl,
+    footerText: 'Place for chat on the web',
+    heading: 'Let\'s reset your password.',
+    title: `Reset Your ${configs.CLIENT_APP_NAME} Password`,
   };
 };

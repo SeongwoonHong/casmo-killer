@@ -3,26 +3,30 @@ import * as jwt from 'jsonwebtoken';
 import { configs } from '~config';
 import { generateRandomNum } from '~lib/miscel';
 
+const {
+  RSA_KEY_PAIRS: rsaKeyPairs,
+} = configs;
+
 export const sign = (
   payload: object,
   subject: string,
   expiresIn: string = '7d',
 ): Promise<string> => {
-  const {
-    RSA_KEY_PAIRS: rsaKeyPairs,
-  } = configs;
+  const keyIds = Object.keys(rsaKeyPairs);
   const rsaKeyIndex = generateRandomNum(
     0,
-    Object.keys(rsaKeyPairs).length,
+    keyIds.length,
   );
   const {
     private: privateKey,
-  } = rsaKeyPairs[rsaKeyIndex.toString()];
+  } = rsaKeyPairs[keyIds[rsaKeyIndex]];
 
   return new Promise<string>(
     (resolve, reject) => {
       jwt.sign(
-        payload,
+        {
+          [subject]: payload,
+        },
         privateKey,
         {
           algorithm: 'RS256',
@@ -45,7 +49,6 @@ export const sign = (
 };
 
 export const verify = <T>(token: string): Promise<T> => {
-  const rsaKeyPairs = configs.RSA_KEY_PAIRS;
   const tokenHeader = extPrsHeader<{ kid: string }>(token);
 
   return new Promise((resolve, reject) => {

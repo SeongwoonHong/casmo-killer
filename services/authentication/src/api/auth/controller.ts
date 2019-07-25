@@ -10,21 +10,29 @@ import {
 } from 'express';
 
 import { UserModel } from '../user.model';
+import { QueryParamsObject } from '~lib/types';
+// import { aws } from '~lib/aws';
 import {
   badRequest,
-  error,
-  invalidRequest,
+  error, forbidden,
+  invalidRequest, notFound,
   success,
 } from '~lib/responses';
+import { configs } from '~config';
+// import { sendSignupConfirmation } from '~lib/mail';
 import {
   validDisplayName,
   validEmail,
   validNull,
   validPasswod,
 } from '~lib/validations';
-import { QueryParamsObject } from '~lib/types';
+import { logger } from '~lib/logger';
+import { sign } from '~lib/token-utils';
 
-export const requestSignup = async (req: Request, res: Response): Promise<Response> => {
+export const requestSignup = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
   const validations: ValidationResult<any> = JoiValidate(
     req.body,
     JoiObject({
@@ -55,19 +63,36 @@ export const requestSignup = async (req: Request, res: Response): Promise<Respon
       );
     }
 
+    const token = await sign(
+      {
+        email,
+      },
+      'email',
+    );
+
+    logger.info(token);
+    // await aws.sendEmail(
+    //   email,
+    //   sendSignupConfirmation(''),
+    // );
+
+    return success(
+      res,
+      {
+        // tslint:disable-next-line:max-line-length
+        message: `Verification email has been sent to ${email}. Please click the link in the email to sign up.`,
+      },
+    );
+
   } catch (err) {
     return error(res, err);
   }
-
-  return success(
-    res,
-    {
-      message: 'pong',
-    },
-  );
 };
 
-export const localRegister = async (req: Request, res: Response): Promise<Response> => {
+export const localRegister = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
   const validations: ValidationResult<any> = JoiValidate(
     req.body,
     JoiObject({
@@ -87,6 +112,7 @@ export const localRegister = async (req: Request, res: Response): Promise<Respon
       display_name,
       email,
     } = req.body;
+
     const {
       field,
       isTaken,
@@ -102,9 +128,11 @@ export const localRegister = async (req: Request, res: Response): Promise<Respon
     ]);
 
     if (isTaken) {
+      const takenField = field.replace(/_/, ' ');
+
       return badRequest(
         res,
-        `The value for ${field} is already taken.`,
+        `The value for ${takenField} is already taken.`,
       );
     }
 
@@ -112,12 +140,12 @@ export const localRegister = async (req: Request, res: Response): Promise<Respon
       exclude_fields = [],
       return_fields = [],
     } = req.query as QueryParamsObject;
+
     const returnFields = Array.from(
       new Set([
         ...UserModel.BASE_FIELDS,
         ...return_fields.filter((return_field) => {
-          return UserModel.AVAILABLE_FIELDS.includes(return_field)
-            && !UserModel.PRIVATE_FIELDS.includes(return_field)
+          return UserModel.ALL_FIELDS.includes(return_field)
             && !exclude_fields.includes(return_field);
         }),
       ]),
@@ -131,13 +159,35 @@ export const localRegister = async (req: Request, res: Response): Promise<Respon
       .pick(returnFields)
       .first();
 
-    return success(res, newUser);
+    const {
+      access_token,
+      refresh_token,
+    } = await newUser.generateTokens();
+
+    res
+      .cookie(
+        configs.COOKIE_AUTH_KEY_NAME,
+        refresh_token,
+        configs.COOKIE_OPTIONS,
+      )
+      .setHeader(
+        configs.COOKIE_AUTH_HEADER_NAME,
+        access_token,
+      );
+
+    return success(
+      res,
+      newUser,
+    );
   } catch (err) {
     return error(res, err);
   }
 };
 
-export const localLogin = async (req: Request, res: Response): Promise<Response> => {
+export const localLogin = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
   const validations: ValidationResult<any> = JoiValidate(
     req.body,
     JoiObject({
@@ -153,14 +203,30 @@ export const localLogin = async (req: Request, res: Response): Promise<Response>
   try {
     const {
       email,
-      // password,
+      password,
     } = req.body;
 
-    // const user = await UserModel.findByEmail(email);
-    const user = await UserModel.isValueTaken({
-      field: 'email',
-      value: email,
-    });
+    const user: UserModel = await UserModel.findByEmail(
+      email,
+      ['password'],
+    );
+
+    if (!user) {
+      return notFound(
+        res,
+        'User not found,',
+      );
+    }
+
+    const isPwdCorrect = await user.verifyPassword(password);
+
+    if (!isPwdCorrect) {
+      return forbidden(
+        res,
+        'Password is incorrect.',
+      );
+    }
+
     return success(res, {
       user,
     });

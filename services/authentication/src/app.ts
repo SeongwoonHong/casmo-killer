@@ -9,6 +9,7 @@ import * as morgan from 'morgan';
 import { ErrorWithStatus } from '~lib/types';
 import { RootRoutes } from './api';
 import { configs } from '~config';
+import { csurfify } from '~lib/seesurf';
 import { queryStringMapper } from '~lib/qs-utils';
 import { stream } from '~lib/logger';
 
@@ -31,6 +32,7 @@ export class App {
       extended: false,
     }));
     this.express.use(cookieParser(configs.COOKIE_SECRET));
+    this.express.use(csurfify());
     this.express.use(methodOverride((req) => {
       if (req.body && typeof req.body === 'object' && '_method' in req.body) {
         const method = req.body._method;

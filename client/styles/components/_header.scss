@@ -1,0 +1,34 @@
+.Header {
+  .top-header {
+    @include flex-space-between-row;
+    align-items: center;
+    height: 53px;
+    background-color: $headerBackground;
+    padding: 0 10px;
+  
+    .main-text {
+      color: $white;
+      font-size: 16px;
+      background-color: $headerMainTextBackground;
+      border-radius: 5px;
+      padding: 8px;
+      font-weight: bold;
+    }
+  }
+
+  .sub-header {
+    @include flex-row;
+    
+    .sub-header-section {
+      padding: 10px;
+      color: #9e9e9e;
+      font-weight: bold;
+      width: 100%;
+      text-align: center;
+
+      &.active {
+        border-bottom: 3px solid #fa7f3c;
+      }
+    }
+  }
+}

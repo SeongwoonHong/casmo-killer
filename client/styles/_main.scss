@@ -1,4 +1,8 @@
-@import './components/test.scss';
-@import './pages/index.scss';
+@import './components/test';
+@import './components/hamburgerMenu';
+@import './components/header';
+@import './pages/index';
 
-$test: 30px;
+body {
+  margin: 0;
+}

@@ -1,0 +1,12 @@
+.HamburgerMenu {
+ .bar {
+   width: 30px;
+   height: 3px;
+   background-color: $hamburgerMenuColor;
+   margin: 4px 0px;
+
+   &:first-child {
+     margin: 0px 0px 4px 0px;
+   }
+ } 
+}

@@ -7,10 +7,7 @@ import { IPageIndex } from 'interfaces';
 
 const Index: FunctionComponent<IPageIndex.IProps> = (props) => (
   <Container title="seong">
-    <div className="Landing">test class</div>
-    <Link href="/test1">
-      <a>go to test</a>
-    </Link>
+    <div>HELLO WORLD</div>
   </Container>
 );
 

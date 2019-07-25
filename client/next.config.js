@@ -6,15 +6,28 @@ const withConfig = nextRuntimeDotenv({
 	public: ['API_URL'],
 });
 
+const aliases = ['components', 'models', 'repositories', 'stores', 'styles', 'interfaces'];
+
 module.exports = withConfig(withSass({
   webpack(config, options) {
-    config.resolve.alias['components'] = path.join(__dirname, 'components');
-    config.resolve.alias['models'] = path.join(__dirname, 'models');
-    config.resolve.alias['repositories'] = path.join(__dirname, 'repositories');
-    config.resolve.alias['stores'] = path.join(__dirname, 'stores');
-    config.resolve.alias['styles'] = path.join(__dirname, 'styles');
-    config.resolve.alias['interfaces'] = path.join(__dirname, 'interfaces');
-    
+    aliases.forEach((alias) => {
+      config.resolve.alias[alias] = path.join(__dirname, alias);
+    });
+
+    config.module.rules.forEach((rule) => {
+      if (String(rule.test) === String(/\.sass$/)) {
+        rule.use.push({
+          loader: 'sass-resources-loader',
+          options: {
+            resources: [
+              './styles/global/_mixin.scss',
+              './styles/global/_variables.scss',
+            ],
+          },
+        });
+      }
+    });
+
     return config;
   },
   cssModules: false,

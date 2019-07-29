@@ -1,0 +1,79 @@
+{
+  "name": "nodejs-typescript-rest-api-boilerplate",
+  "version": "1.0.0",
+  "main": "src",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.4",
+    "cors": "^2.8.5",
+    "dotenv": "^8.0.0",
+    "dotenv-safe": "^6.1.0",
+    "express": "^4.17.1",
+    "joi": "^14.3.1",
+    "method-override": "^3.0.0",
+    "morgan": "^1.9.1",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@ef-carbon/tspm": "^2.2.5",
+    "@types/body-parser": "^1.17.0",
+    "@types/compression": "0.0.36",
+    "@types/cookie-parser": "^1.4.1",
+    "@types/cors": "^2.8.5",
+    "@types/dotenv": "^6.1.1",
+    "@types/dotenv-safe": "^5.0.3",
+    "@types/express": "^4.17.0",
+    "@types/jest": "^24.0.15",
+    "@types/joi": "^14.3.3",
+    "@types/method-override": "0.0.31",
+    "@types/morgan": "^1.7.35",
+    "@types/node": "^12.6.2",
+    "@types/supertest": "^2.0.8",
+    "@types/winston": "^2.4.4",
+    "husky": "^3.0.0",
+    "jest": "^24.8.0",
+    "logform": "^2.1.2",
+    "nodemon": "^1.19.1",
+    "supertest": "^4.0.2",
+    "ts-jest": "^24.0.2",
+    "ts-node": "^8.3.0",
+    "tsconfig-paths": "^3.8.0",
+    "tslib": "^1.10.0",
+    "tslint": "^5.18.0",
+    "tslint-config-airbnb": "^5.11.1",
+    "typescript": "^3.5.3"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json && npm run postbuild",
+    "lint": "tslint -c tslint.json 'src/**/*.ts' --project tsconfig.json",
+    "lint:fix": "npm run lint -- --fix",
+    "postbuild": "cp -f .env dist/.env && ef-tspm",
+    "start": "node dist",
+    "start:dev": "NODE_ENV=development nodemon --config './nodemon.ts.json' src/index.ts",
+    "test": "NODE_ENV=test jest",
+    "test:watch": "NODE_ENV=test jest --watch"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "^~config/(.*)$": "<rootDir>/src/config/$1",
+      "^~lib/(.*)$": "<rootDir>/src/lib/$1"
+    },
+    "preset": "ts-jest",
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "setupTestFrameworkScriptFile": "<rootDir>/src/test/setup.js",
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/?(*.)(spec|test).ts"
+    ]
+  },
+  "author": "Lyndon Ohhyung Chun <lyndonoc@gmail.com>",
+  "license": "MIT"
+}

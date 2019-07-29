@@ -3,7 +3,7 @@
     @include flex-space-between-row;
     align-items: center;
     height: 53px;
-    background-color: $headerBackground;
+    background-color: $topHeaderBackground;
     padding: 0 10px;
   
     .main-text {
@@ -17,8 +17,10 @@
   }
 
   .sub-header {
-    @include flex-row;
-    
+    @include flex-center-row;
+    background-color: $white;
+    height: 45px;
+
     .sub-header-section {
       padding: 10px;
       color: #9e9e9e;

@@ -1,14 +1,14 @@
 import React from 'react';
 import { Container, AuthFormContainer } from 'components';
 
-const login = props => {
+const signup = props => {
   return (
-    <Container title="Damso Login">
+    <Container title="Damso signup">
       <AuthFormContainer
-        mode="login"
+        mode="signup"
       />
     </Container>
   );
 };
 
-export default login;
+export default signup;

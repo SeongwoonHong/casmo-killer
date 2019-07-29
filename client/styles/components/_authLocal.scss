@@ -1,0 +1,19 @@
+.AuthLocal {
+  padding: 10px;
+
+  .authlocal-input {
+    @include flex-column;
+
+    .email-input {
+      padding: 10px;
+      background-color: #f5f5f5;
+      border: 0;
+    }
+
+    .authlocal-label {
+      margin: 5px 0px;
+      font-size: 10px;
+      text-align: right;
+    }
+  }
+}

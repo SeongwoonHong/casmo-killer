@@ -1,0 +1,20 @@
+.AuthFormContainer {
+  margin: 20px;
+
+  .authform-mode {
+    @include flex-row;
+    
+    .authform-mode-text {
+      color: #b3b3b3;
+      margin-right: 10px;
+
+      &.active {
+        text-decoration: underline;
+      }
+    }
+  }
+  
+  .AuthForm-Wrapper {
+    margin-top: 10px;
+  }
+}

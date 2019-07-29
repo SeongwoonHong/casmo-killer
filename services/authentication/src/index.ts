@@ -1,10 +1,9 @@
 import * as http from 'http';
-
-import App from './app';
-import configs from './config';
-import logger from './lib/logger';
-
 import { AddressInfo } from 'net';
+
+import { App } from './app';
+import { configs } from '~config';
+import { logger } from '~lib/logger';
 
 logger.info(
   `CONFIGS ${JSON.stringify(
@@ -14,11 +13,12 @@ logger.info(
   )}`,
 );
 
-const port: number | boolean = normalizePort(configs.PORT);
+const port: number | boolean = normalizePort(configs.API_PORT);
 
-App.set('port', port);
+const app = new App().express;
+app.set('port', port);
 
-const server: http.Server = http.createServer(App);
+export const server: http.Server = http.createServer(app);
 
 server.listen(port, () => {
   logger.info(`Server is running on port ${port}`);
@@ -67,5 +67,3 @@ function onListening(): void {
 
   logger.debug(`Listening on ${bind}`);
 }
-
-export default server;

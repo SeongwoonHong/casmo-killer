@@ -21,6 +21,7 @@
             "~config",
             "~lib"
         ],
+        "object-shorthand-properties-first": false,
         "ordered-imports": false,
         "variable-name": false
     },

@@ -7,7 +7,7 @@
     "src/**/test.spec.ts"
   ],
   "execMap": {
-    "ts": "ts-node -r tsconfig-paths/register"
+    "ts": "ts-node -r tsconfig-paths/register --project tsconfig.json"
   },
   "ext": "ts",
   "watch": [

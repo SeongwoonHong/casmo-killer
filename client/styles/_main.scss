@@ -1,0 +1,18 @@
+@import './components/test';
+@import './components/hamburgerMenu';
+@import './components/header';
+@import './components/authFormContainer';
+@import './components/authForm';
+@import './components/authSocial';
+@import './components/authLocal';
+@import './pages/index';
+
+body {
+  margin: 0;
+  background-color: $defaultBackground;
+  font-size: 12px;
+}
+
+input {
+  outline: none;
+}

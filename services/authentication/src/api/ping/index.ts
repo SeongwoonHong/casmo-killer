@@ -1,23 +1,16 @@
 import { Router } from 'express';
 
-import * as controllers from './controller';
+import { pong } from './controller';
 
-class AuthController {
-  public router: Router;
+export class PingRoutes {
+  public router: Router = Router();
 
   constructor() {
     this.router = Router();
     this.configure();
   }
 
-  private configure() {
-    this
-      .router
-      .get(
-        '/',
-        controllers.pong,
-      );
+  private configure(): void {
+    this.router.get('/', pong);
   }
 }
-
-export default new AuthController().router;

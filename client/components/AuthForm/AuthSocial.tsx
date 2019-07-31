@@ -20,7 +20,7 @@ const socials = [
   },
 ]
 
-const AuthSocial: FunctionComponent<IAuthSocial.IProps> = props => {
+const AuthSocial: FunctionComponent<IAuthSocial.IProps> = () => {
   return (
     <div className="AuthSocial">
       {

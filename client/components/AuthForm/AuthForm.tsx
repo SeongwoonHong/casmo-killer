@@ -4,47 +4,14 @@ import { AuthSocial, AuthLocal } from 'components';
 import cx from 'classnames';
 
 
-const AuthForm:FunctionComponent<IAuthForm.IProps> = ({ mode }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const loginInputs = [
-    {
-      id: 'email',
-      placeholder: '이메일 주소',
-      type: 'text',
-      label: '로그인에 사용될 이메일입니다.',
-      value: email,
-      onChange: (e) => setEmail(e.target.value),
-    },
-    {
-      id: 'password',
-      placeholder: '비밀번호',
-      type: 'password',
-      label: '로그인에 사용될 이메일입니다.',
-      value: password,
-      onChange: (e) => setPassword(e.target.value),
-    },
-  ];
-  const signupInputs = [
-    {
-      id: 'email',
-      placeholder: '이메일 주소',
-      label: '로그인에 사용될 이메일입니다.',
-      value: email,
-      onChange: (e) => setEmail(e.target.value)
-    },
-  ];
-
-  function authOnClick(e) {
-    e.preventDefault();
-
-    if (mode === 'login') {
-      console.log('login email, password ', email, password);
-    } else {
-      console.log('signup email ', email);
-    }
-  }
-
+const AuthForm:FunctionComponent<IAuthForm.IProps> = ({
+  mode,
+  loginInputs,
+  signupInputs,
+  setEmail,
+  setPassword,
+  authOnClick,
+}) => {
   return (
     <form className="AuthForm" onSubmit={authOnClick}>
       <div className="auth-social-text">

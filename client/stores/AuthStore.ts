@@ -1,5 +1,6 @@
 import { observable, computed, action } from 'mobx';
 import AuthRepository from 'repositories/AuthRepository';
+import Router from 'next/router';
 
 class AuthStore {
   rootStore;
@@ -20,11 +21,6 @@ class AuthStore {
   }
 
   @action
-  test = () => {
-    this.user = {}
-  }
-
-  @action
   getUser = async () => {
     this.isLoading = true;
     const { data } = await AuthRepository.test();
@@ -32,6 +28,25 @@ class AuthStore {
     this.user = data.user;
 
     return data.user;
+  }
+
+  @action
+  login = (email: string, password: string) => {
+    try {
+      AuthRepository.login(email, password);
+      Router.push('/signup')
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  @action
+  signup = (email: string) => {
+    try {
+      AuthRepository.signup(email);
+    } catch (e) {
+      throw new Error(e);
+    }
   }
 }
 

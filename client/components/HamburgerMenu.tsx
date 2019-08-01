@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
+import cx from 'classnames';
+import { IHamburgerMenu } from 'interfaces';
 
-const HamburgerMenu = props => {
+const HamburgerMenu:FunctionComponent<IHamburgerMenu.IProps> = ({ onClick, isOpened }) => {
   return (
-    <div className="HamburgerMenu">
+    <div
+      className={cx('HamburgerMenu',  { isOpened })}
+      onClick={onClick}
+    >
+      <div className="bar" />
+      <div className="bar" />
+      <div className="bar" />
       <div className="bar" />
       <div className="bar" />
       <div className="bar" />

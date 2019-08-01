@@ -12,3 +12,5 @@ export { IAuthForm } from './components/AuthForm';
 export { IAuthSocial } from './components/AuthSocial';
 // @ts-ignore
 export { IAuthLocal } from './components/AuthLocal';
+// @ts-ignore
+export { IHamburgerMenu } from './components/HamburgerMenu';

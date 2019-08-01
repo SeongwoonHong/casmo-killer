@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import cx from 'classnames';
 import Link from 'next/link';
 import { withRouter } from 'next/router'
@@ -20,11 +20,20 @@ const sections = [
 ]
 
 const Header = props => {
+  const [isMenuOpened, setIsMenuOpened] = useState(false);
+
+  function hamburgerMenuOnClick() {
+    setIsMenuOpened(!isMenuOpened);
+  }
+
   return (
     <div className="Header">
       <div className="top-header">
+        <HamburgerMenu
+          onClick={hamburgerMenuOnClick}
+          isOpened={isMenuOpened}
+        />
         <div className="main-text">DASMO</div>
-        <HamburgerMenu />
       </div>
       <div className="sub-header">
         {
@@ -41,6 +50,31 @@ const Header = props => {
             );
           })
         }
+      </div>
+      <div className={cx('header-side-menu-wrapper', { isOpened: isMenuOpened })}>
+        <div className="header-side-menu">
+          <div className="side-menu-content">
+            <Link href="/login">
+              <div className="side-menu-item">
+                LOGIN
+              </div>
+            </Link>
+            <Link href="/settings">
+              <div className="side-menu-item">
+                SETTINGS
+              </div>
+            </Link>
+            <Link href="/contact">
+              <div className="side-menu-item">
+                CONTACT
+              </div>
+            </Link>
+          </div>
+        </div>
+        <div
+          className="background-overlay"
+          onClick={() => setIsMenuOpened(false)}
+        />
       </div>
     </div>
   );

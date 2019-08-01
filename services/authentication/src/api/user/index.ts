@@ -1,7 +1,11 @@
 import { Router } from 'express';
 
+import { isAuthorized } from '~lib/middlewares/authorized';
+import { csurfify } from '~lib/seesurf';
 import {
   requestUserInfo,
+  logout,
+  verify,
 } from './controller';
 
 export class UserRoutes {
@@ -15,6 +19,19 @@ export class UserRoutes {
   private configure(): void {
     this
       .router
-      .get('/', requestUserInfo);
+      .get(
+        '/',
+        requestUserInfo,
+      )
+      .post(
+        '/verify',
+        verify,
+      )
+      .post(
+        '/logout',
+        csurfify(),
+        isAuthorized(),
+        logout,
+      );
   }
 }

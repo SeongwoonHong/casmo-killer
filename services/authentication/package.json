@@ -65,16 +65,16 @@
   "scripts": {
     "build": "tsc --project tsconfig.json && npm run postbuild",
     "clean": "rm -rf node_modules && rm -rf package-lock.json && npm i",
+    "setupdb": "npm run migrate && npm run seed",
     "lint": "tslint -c tslint.json 'src/**/*.ts' --project tsconfig.json",
     "lint:fix": "npm run lint -- --fix",
     "migrate": "knex migrate:latest",
-    "migrate:dev": "NODE_ENV=development npm run migrate",
-    "migrate:test": "NODE_ENV=test npm run migrate",
     "postbuild": "cp -f .env dist/.env && ef-tspm",
-    "start": "node dist",
-    "start:dev": "NODE_ENV=development nodemon --config './nodemon.ts.json' src/index.ts",
-    "test": "NODE_ENV=test jest",
-    "test:watch": "NODE_ENV=test jest --watch"
+    "seed": "knex seed:run",
+    "start": "NODE_ENV=production node dist",
+    "start:dev": "NODE_ENV=development npm run setupdb && nodemon --config './nodemon.ts.json' src/index.ts",
+    "test": "NODE_ENV=test npm run setupdb && jest",
+    "test:watch": "npm run test -- --watch"
   },
   "husky": {
     "hooks": {
@@ -83,14 +83,13 @@
   },
   "jest": {
     "moduleNameMapper": {
-      "^~config/(.*)$": "<rootDir>/src/config/$1",
+      "^~config": "<rootDir>/src/config",
       "^~lib/(.*)$": "<rootDir>/src/lib/$1"
     },
     "preset": "ts-jest",
     "roots": [
       "<rootDir>/src"
     ],
-    "setupTestFrameworkScriptFile": "<rootDir>/src/test/setup.js",
     "testEnvironment": "node",
     "testMatch": [
       "**/?(*.)(spec|test).ts"

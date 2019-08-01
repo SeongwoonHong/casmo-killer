@@ -5,10 +5,9 @@ import {
   Logger,
   transports,
 } from 'winston';
+import { FormatWrap } from 'logform';
 
 import { configs } from '~config';
-
-import { FormatWrap } from 'logform';
 
 const errorFormat: FormatWrap = format(<TransformFunction>(info) => {
   const splat = (info && info[Symbol.for('splat')]) || [];
@@ -29,6 +28,7 @@ const errorFormat: FormatWrap = format(<TransformFunction>(info) => {
 
 export const logger: Logger = createLogger({
   level: configs.API_LOG_LEVEL,
+  silent: configs.NODE_ENV === 'test',
   transports: [
     new transports.Console({
       format: format.combine(

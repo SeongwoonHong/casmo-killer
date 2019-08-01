@@ -11,6 +11,11 @@ export class PingRoutes {
   }
 
   private configure(): void {
-    this.router.get('/', pong);
+    this
+      .router
+      .get(
+        '/',
+        pong,
+      );
   }
 }

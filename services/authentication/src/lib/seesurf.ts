@@ -13,7 +13,7 @@ import { configs } from '~config';
 const {
   COOKIE_CSRF_KEY_NAME: keyName,
   COOKIE_CSRF_HEADER_NAME: headerName,
-  COOKIE_IS_SECURE: isSecure,
+  COOKIE_OPTIONS: cookieOptions,
 } = configs;
 
 export const csurfify = (): RequestHandler => {
@@ -26,13 +26,22 @@ export const csurfify = (): RequestHandler => {
     const secret = Token.secretSync();
     const token = Token.create(secret);
 
-    res
-      .cookie(keyName, secret, {
-        httpOnly: true,
-        secure: isSecure,
-        signed: true,
-      })
-      .setHeader(headerName, token);
+    if (
+      !req.signedCookies ||
+      !req.signedCookies[keyName] ||
+      !req.get(headerName)
+    ) {
+      res
+        .cookie(
+          keyName,
+          secret,
+          cookieOptions,
+        )
+        .setHeader(
+          headerName,
+          token,
+        );
+    }
 
     next();
   };
@@ -44,26 +53,31 @@ export const csurferify = (): RequestHandler => {
     res: Response,
     next: NextFunction,
   ) => {
-    const errorResponse = badRequest(
-      res,
-      'Malformed Request',
-    );
+    if (req.method !== 'GET') {
+      const errorResponse = (response) => {
+        response.clearCookie(keyName);
+        return badRequest(
+          res,
+          'Malformed Request',
+        );
+      };
 
-    if (
-      !req.signedCookies ||
-      !req.signedCookies[keyName] ||
-      !req.get(headerName)
-    ) {
-      return errorResponse;
-    }
+      if (
+        !req.signedCookies ||
+        !req.signedCookies[keyName] ||
+        !req.get(headerName)
+      ) {
+        return errorResponse(res);
+      }
 
-    const Token = new Csrf();
-    const secret = req.signedCookies[keyName];
-    const token = req.get(headerName);
+      const Token = new Csrf();
+      const secret = req.signedCookies[keyName];
+      const token = req.get(headerName);
 
-    // @ts-ignore
-    if (!Token.verify(secret, token)) {
-      return errorResponse;
+      // @ts-ignore
+      if (!Token.verify(secret, token)) {
+        return errorResponse(res);
+      }
     }
 
     return next();

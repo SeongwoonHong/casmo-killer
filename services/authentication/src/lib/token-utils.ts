@@ -8,18 +8,19 @@ const {
 } = configs;
 
 export const sign = (
-  payload: object,
+  payload: object | string,
   subject: string,
-  expiresIn: string = '7d',
+  expiresIn: number | string = '7d',
 ): Promise<string> => {
   const keyIds = Object.keys(rsaKeyPairs);
   const rsaKeyIndex = generateRandomNum(
     0,
     keyIds.length,
   );
+  const kid = keyIds[rsaKeyIndex];
   const {
     private: privateKey,
-  } = rsaKeyPairs[keyIds[rsaKeyIndex]];
+  } = rsaKeyPairs[kid];
 
   return new Promise<string>(
     (resolve, reject) => {
@@ -32,7 +33,7 @@ export const sign = (
           algorithm: 'RS256',
           expiresIn,
           header: {
-            kid: rsaKeyIndex,
+            kid,
           },
           issuer: configs.TOKEN_ISSUER,
           subject,
@@ -52,9 +53,19 @@ export const verify = <T>(token: string): Promise<T> => {
   const tokenHeader = extPrsHeader<{ kid: string }>(token);
 
   return new Promise((resolve, reject) => {
+    if (
+      !tokenHeader.kid ||
+      !rsaKeyPairs[tokenHeader.kid] ||
+      !rsaKeyPairs[tokenHeader.kid].public
+    ) {
+      return reject({
+        message: 'Malformed token',
+      });
+    }
+
     jwt.verify(
       token,
-      rsaKeyPairs[tokenHeader.kid || 0].publicKey,
+      rsaKeyPairs[tokenHeader.kid].public,
       (error: jwt.JsonWebTokenError, decoded) => {
         if (error) {
           reject(error);
@@ -67,11 +78,11 @@ export const verify = <T>(token: string): Promise<T> => {
 };
 
 export const extPrsHeader = <T>(token: string): T => {
-  const buffHeader = new Buffer(
+  const buffHeader = Buffer.from(
     token.split('.')[0],
     'base64',
   );
-  const strHeader = buffHeader.toString();
+  const strHeader = buffHeader.toString('ascii');
 
   try {
     return JSON.parse(strHeader);

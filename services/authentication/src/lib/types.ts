@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 export interface DupeValueCheckOption {
   field: string;
   value: string;
@@ -42,4 +44,9 @@ export interface QueryParamsObject {
 export interface RsaKeyPair {
   privateKey: string;
   publicKey: string;
+}
+
+export interface UserInfoRequest<T> extends Request {
+  user?: T;
+  refresh_token?: string;
 }

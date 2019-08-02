@@ -56,10 +56,7 @@ export const csurferify = (): RequestHandler => {
     if (req.method !== 'GET') {
       const errorResponse = (response) => {
         response.clearCookie(keyName);
-        return badRequest(
-          res,
-          'Malformed Request',
-        );
+        return badRequest(res);
       };
 
       if (

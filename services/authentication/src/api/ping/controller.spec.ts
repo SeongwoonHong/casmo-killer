@@ -12,7 +12,6 @@ describe('/ping routes', () => {
   const endpoint = `${API_ROOT}/ping`;
 
   it('ping pongs', (done) => {
-
     request(app)
       .get(endpoint)
       .end((err, res) => {

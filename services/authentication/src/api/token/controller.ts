@@ -9,9 +9,9 @@ import {
   Response,
 } from 'express';
 
+import { TokenModel } from './model';
 import { UserInfoRequest } from '~lib/types';
 import { UserModel } from '../user.model';
-import { TokenModel } from './model';
 import {
   badRequest,
   error,
@@ -21,7 +21,6 @@ import {
 } from '~lib/responses';
 import { configs } from '~config';
 import { verify } from '~lib/token-utils';
-import { logger } from '~lib/logger';
 
 const {
   RSA_KEY_PAIRS: rsaKeyPairs,
@@ -51,10 +50,7 @@ export const getPublicRsaKey = (
   } = req.params;
 
   if (!rsaKeyPairs[key_id] || !rsaKeyPairs[key_id].public) {
-    return badRequest(
-      res,
-      'Malformed request',
-    );
+    return badRequest(res);
   }
 
   return success(
@@ -69,35 +65,50 @@ export const refreshTokens = async (
   req: UserInfoRequest<UserModel>,
   res: Response,
 ): Promise<Response> => {
-  const refresh_token = req.refresh_token;
+  const {
+    refresh_token,
+    user: {
+      id: userId,
+    },
+  } = req;
 
   if (!refresh_token) {
-    return badRequest(
-      res,
-      'Malformed request',
-    );
+    return badRequest(res);
   }
 
-  const tokenData = await TokenModel
-    .query()
-    .findOne('refresh_token', refresh_token);
+  try {
+    const user = await UserModel
+      .query()
+      .findById(userId);
 
-  if (!tokenData) {
-    return notFound(
+    if (!user) {
+      return notFound(
+        res,
+        'User not found',
+      );
+    }
+
+    const tokenData = await user
+      .$relatedQuery<TokenModel>('refresh_tokens')
+      .where('refresh_token', refresh_token)
+      .first();
+
+    if (!tokenData) {
+      return notFound(
+        res,
+        'User not found',
+      );
+    }
+
+    const tokens = await tokenData.refreshToken(user);
+
+    return user.logIn(
       res,
-      'User not found',
+      tokens,
     );
+  } catch (err) {
+    return error(res, err);
   }
-
-  const shit = await tokenData.refreshToken();
-  logger.info(shit);
-
-  return success(
-    res,
-    {
-      public_key: 'rsaKeyPairs[key_id]',
-    },
-  );
 };
 
 export const verifyToken = async (
@@ -107,6 +118,7 @@ export const verifyToken = async (
   const validations: ValidationResult<any> = JoiValidate(
     req.body,
     JoiObject({
+      subject: JoiString().required(),
       token: JoiString().required(),
     }),
   );
@@ -117,21 +129,23 @@ export const verifyToken = async (
 
   try {
     const {
+      subject,
       token,
     } = req.body;
 
     const payload = await verify<object>(token);
 
-    return success(res, payload);
+    if (!payload.hasOwnProperty(subject)) {
+      return badRequest(res);
+    }
+
+    return success(res, payload[subject]);
   } catch (err) {
     if (
       err.name === 'JsonWebTokenError' ||
       err.name === 'TokenExpiredError'
     ) {
-      return badRequest(
-        res,
-        'Malformed request',
-      );
+      return badRequest(res);
     }
 
     return error(res, err);

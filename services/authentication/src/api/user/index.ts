@@ -1,12 +1,13 @@
 import { Router } from 'express';
 
-import { isAuthorized } from '~lib/middlewares/authorized';
-import { csurfify } from '~lib/seesurf';
 import {
   requestUserInfo,
   logout,
-  verify,
 } from './controller';
+
+import { csurferify } from '~lib/seesurf';
+import { isAuthorized } from '~lib/middlewares/authorized';
+import { refreshTokenParser } from '~lib/middlewares/auth-token-parser';
 
 export class UserRoutes {
   public router: Router;
@@ -24,13 +25,10 @@ export class UserRoutes {
         requestUserInfo,
       )
       .post(
-        '/verify',
-        verify,
-      )
-      .post(
         '/logout',
-        csurfify(),
+        csurferify(),
         isAuthorized(),
+        refreshTokenParser(),
         logout,
       );
   }

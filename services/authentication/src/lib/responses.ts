@@ -11,7 +11,10 @@ export const unauthorized = (
   return error(res, message, 401);
 };
 
-export const badRequest = (res: Response, message: string): Response => {
+export const badRequest = (
+  res: Response,
+  message: string = 'Malformed request',
+): Response => {
   return error(res, message, 400);
 };
 

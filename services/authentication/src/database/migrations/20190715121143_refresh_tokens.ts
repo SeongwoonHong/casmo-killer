@@ -16,6 +16,8 @@ export async function up(knex: Knex): Promise<any> {
       table
         .timestamp('created_at')
         .notNullable();
+      table
+        .timestamp('updated_at');
     });
 }
 

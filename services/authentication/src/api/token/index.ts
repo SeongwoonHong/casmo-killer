@@ -5,8 +5,9 @@ import {
   refreshTokens,
   verifyToken,
 } from './controller';
-import { refreshTokenParser } from '~lib/middlewares/auth-token-parser';
+import { csurferify } from '~lib/seesurf';
 import { isAuthorized } from '~lib/middlewares/authorized';
+import { refreshTokenParser } from '~lib/middlewares/auth-token-parser';
 
 export class TokenRoutes {
   public router: Router;
@@ -26,12 +27,14 @@ export class TokenRoutes {
       )
       .post(
         '/refresh',
+        csurferify(),
         isAuthorized(),
         refreshTokenParser(),
         refreshTokens,
       )
       .post(
         '/verify',
+        csurferify(),
         verifyToken,
       );
   }

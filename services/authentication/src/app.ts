@@ -10,7 +10,6 @@ import { ErrorWithStatus } from '~lib/types';
 import { RootRoutes } from './api';
 import { authTokenParser } from '~lib/middlewares/auth-token-parser';
 import { configs } from '~config';
-// import { csurferify } from '~lib/seesurf';
 import { queryStringMapper } from '~lib/qs-utils';
 import { stream } from '~lib/logger';
 
@@ -36,7 +35,6 @@ export class App {
       extended: false,
     }));
     this.express.use(cookieParser(configs.COOKIE_SECRET));
-    // this.express.use(csurferify());
     this.express.use(authTokenParser('user'));
     this.express.use(methodOverride((req) => {
       if (

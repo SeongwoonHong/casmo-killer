@@ -94,7 +94,10 @@ export class UserModel extends BaseModel {
 
   public static generateRefreshToken(user_id: string): Promise<string> {
     return sign(
-      user_id,
+      {
+        user_id,
+        uuid: uuid.v4(),
+      },
       'user_id',
       '90d',
     );
@@ -150,7 +153,7 @@ export class UserModel extends BaseModel {
         refresh_token,
         cookieOptions,
       )
-      .header(
+      .setHeader(
         headerName,
         access_token,
       );

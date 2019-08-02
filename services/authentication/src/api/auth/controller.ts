@@ -26,8 +26,7 @@ import {
   validNull,
   validPasswod,
 } from '~lib/validations';
-import { logger } from '~lib/logger';
-import { sign } from '~lib/token-utils';
+// import { sign } from '~lib/token-utils';
 
 export const initialize = async (
   req: UserInfoRequest<UserModel>,
@@ -70,14 +69,14 @@ export const requestSignup = async (
       );
     }
 
-    const token = await sign(
-      {
-        email,
-      },
-      'email',
-    );
-
-    logger.info(token);
+    // const token = await sign(
+    //   {
+    //     email,
+    //   },
+    //   'email',
+    // );
+    //
+    // console.log(token);
     // await aws.sendEmail(
     //   email,
     //   sendSignupConfirmation(''),

@@ -81,7 +81,13 @@ const config = {
     },
   },
   production: {},
-  test: {},
+  test: {
+    COOKIE_OPTIONS: {
+      httpOnly: true,
+      secure: false,
+      signed: true,
+    },
+  },
 };
 
 export const configs = {

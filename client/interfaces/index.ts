@@ -14,3 +14,5 @@ export { IAuthSocial } from './components/AuthSocial';
 export { IAuthLocal } from './components/AuthLocal';
 // @ts-ignore
 export { IHamburgerMenu } from './components/HamburgerMenu';
+// @ts-ignore
+export { IPostCard } from './components/PostCard';

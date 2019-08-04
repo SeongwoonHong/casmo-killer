@@ -1,3 +1,47 @@
 .PostCard {
-  
+  @include flex-space-around-row;
+  padding: 10px;
+  border-top: 1px solid lightgrey;
+
+  .postcard-left {
+    width: 25%;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .postcard-right {
+    width: 65%;
+
+    .postcard-title {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .postcard-author {
+      color: $headerMainTextBackground;
+    }
+
+    .postcard-footer {
+      color: grey;
+      font-size: 10px;
+
+      span {
+        margin-right: 10px;
+      }
+    }
+  }
+
+  &.noImg {
+    .postcard-left {
+      display: none;
+    }
+
+    .postcard-right {
+      width: 95%;
+    }
+  }
 }

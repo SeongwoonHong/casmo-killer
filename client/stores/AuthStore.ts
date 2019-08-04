@@ -33,9 +33,12 @@ class AuthStore {
   @action
   login = (email: string, password: string) => {
     try {
+      this.isLoading = true;
       AuthRepository.login(email, password);
-      Router.push('/signup')
+      this.isLoading = false;
+      Router.push('/trending')
     } catch (e) {
+      this.isLoading = false;
       throw new Error(e);
     }
   }

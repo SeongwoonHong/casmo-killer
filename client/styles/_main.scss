@@ -6,7 +6,10 @@
 @import './components/authSocial';
 @import './components/authLocal';
 @import './components/postCard';
+@import './components/postCardList';
+@import './components/loader';
 @import './pages/index';
+@import './pages/trending';
 
 body {
   margin: 0;

@@ -30,7 +30,7 @@ const login = ({ authStore }) => {
   }
 
   return (
-    <Container title="Damso Login">
+    <Container title="Damso Login" id="login">
       <AuthFormContainer
         mode="login"
         loginInputs={loginInputs}

@@ -10,8 +10,20 @@ const Container: FunctionComponent<IContainer.IProps> = props => (
       <meta charSet="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1"/>
       <title>{props.title}</title>
+      <style>
+        {`
+          @font-face {
+            font-family: 'Quicksand';
+            src: url('./static/fonts/Quicksand-SemiBold.ttf');
+          }
+
+          body {
+            font-family: 'Quicksand';
+          }
+        `}
+      </style>
     </Head>
-    <div>
+    <div id={props.id}>
       <Header />
       {props.children}
     </div>

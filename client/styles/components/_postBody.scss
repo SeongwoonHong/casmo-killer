@@ -1,0 +1,25 @@
+.PostBody {
+  padding: 10px;
+
+  .postbody-row {
+    margin-bottom: 10px;
+
+    .title-input,
+    .content-textarea {
+      width: 100%;
+      background-color: transparent;
+      outline: none;
+      border: none;
+      font-size: 16px;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    .content-textarea {
+      min-height: 100px;
+      resize: none;
+    }
+  }
+}

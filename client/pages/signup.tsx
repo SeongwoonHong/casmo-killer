@@ -21,7 +21,7 @@ const signup = ({ authStore }) => {
   }
 
   return (
-    <Container title="Damso signup" id="signup">
+    <Container title="Damso - signup" id="signup">
       <AuthFormContainer
         mode="signup"
         setEmail={setEmail}

@@ -1,9 +1,18 @@
 #trending {
-  .trending-header {
-    margin: 10px 20px;
-    font-size: 20px;
-    font-weight: bold;
-    color: black;
-    opacity: 0.7;
+  .heading {
+    @include flex-space-between-row;
+    align-items: center;
+    
+    .trending-header {
+      margin: 10px 20px;
+      font-size: 20px;
+      font-weight: bold;
+      color: black;
+      opacity: 0.7;
+    }
+
+    .trending-new-post-button {
+      margin-right: 10px;
+    }
   }
 }

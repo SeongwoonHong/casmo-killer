@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import cx from 'classnames';
+import { Button } from 'components';
 import Link from 'next/link';
-import { withRouter } from 'next/router'
+import Router, { withRouter } from 'next/router'
 import HamburgerMenu from './HamburgerMenu';
 
 const sections = [
@@ -26,6 +27,10 @@ const Header = props => {
     setIsMenuOpened(!isMenuOpened);
   }
 
+  function gotoTrending() {
+    Router.push('/trending');
+  }
+
   return (
     <div className="Header">
       <div className="top-header">
@@ -33,7 +38,12 @@ const Header = props => {
           onClick={hamburgerMenuOnClick}
           isOpened={isMenuOpened}
         />
-        <div className="main-text">DASMO</div>
+        <Button
+          className="bg-transparent"
+          onClick={gotoTrending}
+        >
+          DAMSO
+        </Button>
       </div>
       <div className="sub-header">
         {

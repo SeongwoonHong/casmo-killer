@@ -1,15 +1,7 @@
-@import './components/test';
-@import './components/hamburgerMenu';
-@import './components/header';
-@import './components/authFormContainer';
-@import './components/authForm';
-@import './components/authSocial';
-@import './components/authLocal';
-@import './components/postCard';
-@import './components/postCardList';
-@import './components/loader';
+@import './components/index';
 @import './pages/index';
 @import './pages/trending';
+@import './pages/postWrite';
 
 body {
   margin: 0;

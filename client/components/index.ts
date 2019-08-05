@@ -6,3 +6,6 @@ export { AuthSocial } from './AuthForm/AuthSocial';
 export { AuthLocal } from './AuthForm/AuthLocal';
 export { PostCardList } from './PostCard/PostCardList';
 export { Loader } from './Loader';
+export { PostBody } from './PostBody';
+export { Button } from './Button';
+export { CloseButton } from './CloseButton';

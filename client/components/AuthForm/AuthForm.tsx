@@ -1,7 +1,6 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent } from 'react';
 import { IAuthForm } from 'interfaces';
 import { AuthSocial, AuthLocal } from 'components';
-import cx from 'classnames';
 
 
 const AuthForm:FunctionComponent<IAuthForm.IProps> = ({

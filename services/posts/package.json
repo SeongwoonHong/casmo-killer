@@ -13,6 +13,7 @@
     "joi": "^14.3.1",
     "method-override": "^3.0.0",
     "morgan": "^1.9.1",
+    "pg": "^7.12.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
@@ -33,6 +34,7 @@
     "@types/winston": "^2.4.4",
     "husky": "^3.0.0",
     "jest": "^24.8.0",
+    "knex": "^0.19.1",
     "logform": "^2.1.2",
     "nodemon": "^1.19.1",
     "supertest": "^4.0.2",
@@ -53,6 +55,14 @@
     "start:dev": "NODE_ENV=development nodemon --config './nodemon.ts.json' src/index.ts",
     "test": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watch"
+  },
+  "paths": {
+    "~config": [
+      "src/config"
+    ],
+    "~lib/*": [
+      "src/lib/*"
+    ]
   },
   "husky": {
     "hooks": {

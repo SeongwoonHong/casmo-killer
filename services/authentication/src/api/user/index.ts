@@ -3,9 +3,10 @@ import { Router } from 'express';
 import {
   requestUserInfo,
   logout,
+  updateUserInfo,
 } from './controller';
 
-import { csurferify } from '~lib/seesurf';
+import { csurferify } from '~lib/middlewares/seesurf';
 import { isAuthorized } from '~lib/middlewares/authorized';
 import { refreshTokenParser } from '~lib/middlewares/auth-token-parser';
 
@@ -24,11 +25,17 @@ export class UserRoutes {
         '/',
         requestUserInfo,
       )
+      .patch(
+        '/:user_id',
+        csurferify(),
+        isAuthorized(),
+        updateUserInfo,
+      )
       .post(
         '/logout',
         csurferify(),
-        isAuthorized(),
         refreshTokenParser(),
+        isAuthorized(),
         logout,
       );
   }

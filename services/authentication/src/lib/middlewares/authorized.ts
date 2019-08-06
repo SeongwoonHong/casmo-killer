@@ -5,16 +5,24 @@ import {
 } from 'express';
 
 import { UserInfoRequest } from '~lib/types';
-import { UserModel } from '../../api/user.model';
+import { configs } from '~config';
 import { unauthorized } from '~lib/responses';
 
-export const isAuthorized = (): RequestHandler => {
+const {
+  COOKIE_AUTH_KEY_NAME: keyName,
+} = configs;
+
+export const isAuthorized = (shouldRevoke = false): RequestHandler => {
   return async (
-    req: UserInfoRequest<UserModel>,
+    req: UserInfoRequest,
     res: Response,
     next: NextFunction,
   ) => {
     if (!req.user) {
+      if (shouldRevoke) {
+        res.clearCookie(keyName);
+      }
+
       return unauthorized(res);
     }
 

@@ -16,6 +16,8 @@ const {
   COOKIE_AUTH_HEADER_NAME: headerName,
   COOKIE_AUTH_KEY_NAME : keyName,
   COOKIE_OPTIONS: cookieOptions,
+  TOKEN_EXPIRY_FOR_ACCESS: accessTokenExpiry,
+  TOKEN_EXPIRY_FOR_REFRESH: refreshTokenExpiry,
 } = configs;
 
 export class UserModel extends BaseModel {
@@ -88,7 +90,7 @@ export class UserModel extends BaseModel {
     return sign(
       tokenPayload,
       'user',
-      120,
+      accessTokenExpiry,
     );
   }
 
@@ -99,8 +101,38 @@ export class UserModel extends BaseModel {
         uuid: uuid.v4(),
       },
       'user_id',
-      '90d',
+      refreshTokenExpiry,
     );
+  }
+
+  public static async refreshTokens(userId: string, oldToken: string) {
+    const user = await UserModel
+      .query()
+      .findById(userId);
+
+    if (!user) {
+      throw new UserNotFoundError();
+    }
+
+    const tokenData = await user
+      .$relatedQuery<TokenModel>('refresh_tokens')
+      .where('refresh_token', oldToken)
+      .first();
+
+    if (!tokenData) {
+      throw new UserNotFoundError();
+    }
+
+    const tokens = await tokenData.refreshToken(user);
+
+    if (!tokens) {
+      throw new Error();
+    }
+
+    return {
+      tokens,
+      user,
+    };
   }
 
   public avatar?: string;
@@ -178,5 +210,11 @@ export class UserModel extends BaseModel {
 
   public async verifyPassword(password: string): Promise<boolean> {
     return compare(password, this.password);
+  }
+}
+
+export class UserNotFoundError extends Error {
+  constructor(message = 'User not found') {
+    super(message);
   }
 }

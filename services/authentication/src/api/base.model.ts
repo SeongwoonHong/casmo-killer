@@ -62,7 +62,7 @@ export class BaseModel extends Model {
     const {
       field,
       value,
-      exclude = '',
+      excludeId = '',
     } = option;
 
     if (field && value) {
@@ -70,8 +70,8 @@ export class BaseModel extends Model {
         .query()
         .where(field, value);
 
-      if (exclude) {
-        query = query.whereNot(field, exclude);
+      if (excludeId) {
+        query = query.whereNot('id', excludeId);
       }
 
       return query

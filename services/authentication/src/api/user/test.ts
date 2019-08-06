@@ -149,4 +149,39 @@ describe('/token routes', () => {
           });
       });
   });
+
+  it('updates user information', (done) => {
+    const agent = request.agent(app);
+
+    agent
+      .post(`${API_ROOT}/auth/initialize`)
+      .end((err, res: request.Response) => {
+        const csrfSecret = res.header[COOKIE_CSRF_HEADER_NAME];
+
+        agent
+          .post(`${API_ROOT}/auth/local/login`)
+          .send({
+            email: testUsers[2].email,
+            password: testUsers[2].password,
+          })
+          .end((errTwo, resTwo: request.Response) => {
+            const accessToken = resTwo.header[COOKIE_AUTH_HEADER_NAME];
+
+            agent
+              .patch(`${endpoint}/${resTwo.body.id}`)
+              .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
+              .set(COOKIE_AUTH_HEADER_NAME, accessToken)
+              .send({
+                display_name: testUsers[0].display_name,
+                email: testUsers[0].email,
+                id: resTwo.body.id,
+              })
+              .end((errThree, resThree: request.Response) => {
+                // console.log(resThree.body);
+
+                done();
+              });
+          });
+      });
+  });
 });

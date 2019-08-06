@@ -11,7 +11,10 @@ import {
 
 import { TokenModel } from '../token/model';
 import { UserModel } from '../user.model';
-import { QueryParamsObject, UserInfoRequest } from '~lib/types';
+import {
+  QueryParamsObject,
+  UserInfoRequest,
+} from '~lib/types';
 // import { aws } from '~lib/aws';
 import {
   badRequest,
@@ -24,15 +27,38 @@ import {
   validDisplayName,
   validEmail,
   validNull,
-  validPasswod,
+  validPassword,
 } from '~lib/validations';
 // import { sign } from '~lib/token-utils';
 
 export const initialize = async (
-  req: UserInfoRequest<UserModel>,
+  req: UserInfoRequest,
   res: Response,
-) => {
-  res.status(200).send();
+): Promise<Response> => {
+  const {
+    refresh_token,
+    user: {
+      id: userId,
+    },
+  } = req;
+
+  if (!refresh_token) {
+    return badRequest(res);
+  }
+
+  try {
+    const {
+      user,
+      tokens,
+    } = await UserModel.refreshTokens(
+      userId,
+      refresh_token,
+    );
+
+    return user.logIn(res, tokens);
+  } catch (err) {
+    return error(res, err);
+  }
 };
 
 export const requestSignup = async (
@@ -76,7 +102,6 @@ export const requestSignup = async (
     //   'email',
     // );
     //
-    // console.log(token);
     // await aws.sendEmail(
     //   email,
     //   sendSignupConfirmation(''),
@@ -105,7 +130,7 @@ export const localRegister = async (
       avatar: validNull,
       display_name: validDisplayName,
       email: validEmail,
-      password: validPasswod,
+      password: validPassword,
     }),
   );
 

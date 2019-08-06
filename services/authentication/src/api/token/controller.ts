@@ -9,14 +9,12 @@ import {
   Response,
 } from 'express';
 
-import { TokenModel } from './model';
 import { UserInfoRequest } from '~lib/types';
 import { UserModel } from '../user.model';
 import {
   badRequest,
   error,
   invalidRequest,
-  notFound,
   success,
 } from '~lib/responses';
 import { configs } from '~config';
@@ -62,7 +60,7 @@ export const getPublicRsaKey = (
 };
 
 export const refreshTokens = async (
-  req: UserInfoRequest<UserModel>,
+  req: UserInfoRequest,
   res: Response,
 ): Promise<Response> => {
   const {
@@ -77,42 +75,22 @@ export const refreshTokens = async (
   }
 
   try {
-    const user = await UserModel
-      .query()
-      .findById(userId);
-
-    if (!user) {
-      return notFound(
-        res,
-        'User not found',
-      );
-    }
-
-    const tokenData = await user
-      .$relatedQuery<TokenModel>('refresh_tokens')
-      .where('refresh_token', refresh_token)
-      .first();
-
-    if (!tokenData) {
-      return notFound(
-        res,
-        'User not found',
-      );
-    }
-
-    const tokens = await tokenData.refreshToken(user);
-
-    return user.logIn(
-      res,
+    const {
+      user,
       tokens,
+    } = await UserModel.refreshTokens(
+      userId,
+      refresh_token,
     );
+
+    return user.logIn(res, tokens);
   } catch (err) {
     return error(res, err);
   }
 };
 
 export const verifyToken = async (
-  req: UserInfoRequest<UserModel>,
+  req: UserInfoRequest,
   res: Response,
 ): Promise<Response> => {
   const validations: ValidationResult<any> = JoiValidate(

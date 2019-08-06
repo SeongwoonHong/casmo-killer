@@ -48,7 +48,7 @@ const config = {
     COOKIE_SECRET: process.env.COOKIE_SECRET,
     // db settings
     DB_CLIENT: process.env.DB_CLIENT || 'pg',
-    DB_CONNECTION: process.env.DATABASE_URL || {
+    DB_CONNECTION: {
       database: process.env.DATABASE_NAME,
       host: process.env.DATABASE_HOST || 'localhost',
       password: process.env.DATABASE_PASSWORD,
@@ -64,9 +64,8 @@ const config = {
         return {};
       }
     })(process.env.RSA_KEY_PAIRS),
-    RSA_KEY_UUID_VERSION: process.env.RSA_KEY_UUID_VERSION || 'uuidv4',
-    TOKEN_EXPIRY_FOR_ACCESS: process.env.TOKEN_EXPIRY_FOR_ACCESS || '1d',
-    TOKEN_EXPIRY_FOR_REFRESH: process.env.TOKEN_EXPIRY_FOR_REFRESH || '121d',
+    TOKEN_EXPIRY_FOR_ACCESS: process.env.TOKEN_EXPIRY_FOR_ACCESS || 60,
+    TOKEN_EXPIRY_FOR_REFRESH: process.env.TOKEN_EXPIRY_FOR_REFRESH || '90d',
     TOKEN_ISSUER: process.env.TOKEN_ISSUER || 'damso-authentication-service',
     TOKEN_TARGET_FIELDS: process.env.TOKEN_TARGET_FIELDS
       ? process.env.TOKEN_TARGET_FIELDS.split(',')
@@ -80,7 +79,6 @@ const config = {
       signed: true,
     },
   },
-  production: {},
   test: {
     COOKIE_OPTIONS: {
       httpOnly: true,

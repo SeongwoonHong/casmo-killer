@@ -32,7 +32,8 @@ export class TokenModel extends BaseModel {
       access_token,
       refresh_token,
     } = await user.generateTokens();
-    const newToken = await this
+
+    await this
       .$query<TokenModel>()
       .patchAndFetch({
         refresh_token,
@@ -40,7 +41,7 @@ export class TokenModel extends BaseModel {
 
     return {
       access_token,
-      refresh_token: newToken.refresh_token,
+      refresh_token,
     };
   }
 }

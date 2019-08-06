@@ -104,30 +104,12 @@ describe('/token routes', () => {
       });
   });
 
-  it('blocks token refresh request for uncsrfed request', (done) => {
-    agent
-      .post(`${endpoint}/refresh`)
-      .set(COOKIE_AUTH_HEADER_NAME, accessToken)
-      .end((err, res: request.Response) => {
-        expect(res.body.message).toEqual('Malformed request');
-        expect(res.body.success).toBe(false);
-
-        agent
-          .post(`${API_ROOT}/auth/initialize`)
-          .end((errTwo, resTwo: request.Response) => {
-            csrfSecret = resTwo.header[COOKIE_CSRF_HEADER_NAME];
-
-            done();
-          });
-      });
-  });
-
   it('blocks token refresh request for unauthorized request', (done) => {
-    agent
+    request(app)
       .post(`${endpoint}/refresh`)
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
       .end((err, res: request.Response) => {
-        expect(res.body.message).toEqual('Unauthorized Access');
+        expect(res.body.message).toEqual('Malformed request');
         expect(res.body.success).toBe(false);
 
         agent

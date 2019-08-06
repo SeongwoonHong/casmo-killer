@@ -78,6 +78,11 @@ export const verify = <T>(token: string): Promise<T> => {
 };
 
 export const extPrsHeader = <T>(token: string): T => {
+  if (!token) {
+    // tslint:disable-next-line:no-object-literal-type-assertion
+    return {} as T;
+  }
+
   const buffHeader = Buffer.from(
     token.split('.')[0],
     'base64',

@@ -1,11 +1,18 @@
 import {
+  JsonWebTokenError,
+  TokenExpiredError,
+} from 'jsonwebtoken';
+import {
   NextFunction,
   RequestHandler,
   Response,
 } from 'express';
 
 import { TokenModel } from '../../api/token/model';
-import { UserInfoRequest } from '~lib/types';
+import {
+  RefreshTokenPayload,
+  UserInfoRequest,
+} from '~lib/types';
 import { UserModel } from '../../api/user.model';
 import { configs } from '~config';
 import {
@@ -21,7 +28,7 @@ const {
 
 export const authTokenParser = (subject: string = 'user'): RequestHandler => {
   return async (
-    req: UserInfoRequest<UserModel>,
+    req: UserInfoRequest,
     res: Response,
     next: NextFunction,
   ) => {
@@ -47,15 +54,22 @@ export const authTokenParser = (subject: string = 'user'): RequestHandler => {
   };
 };
 
-export const refreshTokenParser = (subject: string = 'user_id'): RequestHandler => {
+export const refreshTokenParser = (
+  subject: string = 'user_id',
+  shouldRevoke: boolean = true,
+): RequestHandler => {
   return async (
-    req: UserInfoRequest<UserModel>,
+    req: UserInfoRequest,
     res: Response,
     next: NextFunction,
   ) => {
     const failedResponse = (response) => {
-      response.clearCookie(keyName);
-      return unauthorized(response);
+      if (shouldRevoke) {
+        response.clearCookie(keyName);
+        return unauthorized(response);
+      }
+
+      return next();
     };
 
     if (
@@ -65,12 +79,11 @@ export const refreshTokenParser = (subject: string = 'user_id'): RequestHandler 
       return failedResponse(res);
     }
 
-    const token = req.signedCookies[keyName];
-
     try {
-      const payload = await verify<{ [key: string]: string }>(token);
+      const token = req.signedCookies[keyName];
+      const payload = await verify<{ [key: string]: RefreshTokenPayload }>(token);
 
-      if (!payload[subject]) {
+      if (!payload || !payload[subject]) {
         return failedResponse(res);
       }
 
@@ -83,13 +96,21 @@ export const refreshTokenParser = (subject: string = 'user_id'): RequestHandler 
         return failedResponse(res);
       }
 
+      const _payload = payload[subject];
+      // @ts-ignore
+      req.user = {
+        ...(req.user || {}),
+        ...(_payload.user_id && {
+          id: _payload.user_id,
+        }),
+      };
       req.refresh_token = refresh_token.refresh_token;
 
       return next();
     } catch (err) {
       if (
-        err.name === 'JsonWebTokenError' ||
-        err.name === 'TokenExpiredError'
+        err instanceof JsonWebTokenError ||
+        err instanceof TokenExpiredError
       ) {
         return failedResponse(res);
       }

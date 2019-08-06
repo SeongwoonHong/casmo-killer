@@ -5,7 +5,7 @@ export const validEmail = Joi
   .email()
   .required();
 
-export const validPasswod = Joi
+export const validPassword = Joi
   .string()
   .min(6)
   .max(20)

@@ -1,9 +1,10 @@
 import { Request } from 'express';
+import { UserModel } from '../api/user.model';
 
 export interface DupeValueCheckOption {
   field: string;
   value: string;
-  exclude?: string;
+  excludeId?: string;
 }
 
 export interface DupeValueCheckResult {
@@ -34,6 +35,11 @@ export interface ErrorWithStatus extends Error {
   status?: number;
 }
 
+export interface RefreshTokenPayload {
+  user_id: string;
+  uuid: string;
+}
+
 export interface QueryParamsObject {
   exclude_fields: string[];
   search_field: string;
@@ -41,12 +47,7 @@ export interface QueryParamsObject {
   return_fields: string[];
 }
 
-export interface RsaKeyPair {
-  privateKey: string;
-  publicKey: string;
-}
-
-export interface UserInfoRequest<T> extends Request {
+export interface UserInfoRequest<T = UserModel> extends Request {
   user?: T;
   refresh_token?: string;
 }

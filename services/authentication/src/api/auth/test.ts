@@ -2,7 +2,7 @@ import * as request from 'supertest';
 
 import { App } from '../../app';
 import { configs } from '~config';
-import { testUsers } from '~lib/test-utils';
+import { resCookieParser, testUsers } from '~lib/test-utils';
 import { UserModel } from '../user.model';
 
 const {
@@ -16,6 +16,8 @@ const {
 describe('/auth routes', () => {
   const app = new App().express;
   const agent = request.agent(app);
+  let csrfSecret;
+  let refreshToken;
   const endpoint = `${API_ROOT}/auth`;
   let newUser = {
     display_name: 'newuser',
@@ -36,12 +38,12 @@ describe('/auth routes', () => {
     agent
       .post(`${endpoint}/initialize`)
       .end(async (err, res) => {
-        const cookies = res.header['set-cookie'].map((cookie) => {
-          return cookie.indexOf(COOKIE_CSRF_KEY_NAME) > -1;
-        });
+        const cookies = resCookieParser(res.header['set-cookie']);
 
-        expect(cookies).toBeTruthy();
+        expect(cookies).toHaveProperty(COOKIE_CSRF_KEY_NAME);
         expect(res.header).toHaveProperty(COOKIE_CSRF_HEADER_NAME);
+
+        csrfSecret = res.header[COOKIE_CSRF_HEADER_NAME];
 
         done();
       });
@@ -50,6 +52,7 @@ describe('/auth routes', () => {
   it('sends out a confirmation email before registering', (done) => {
     agent
       .post(`${endpoint}/local/request`)
+      .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
       .send({
         email: newUser.email,
       })
@@ -63,6 +66,7 @@ describe('/auth routes', () => {
   it('blocks signup request for an existing user email address', (done) => {
     agent
       .post(`${endpoint}/local/request`)
+      .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
       .send({
         email: testUsers[0].email,
       })
@@ -79,17 +83,16 @@ describe('/auth routes', () => {
     ];
     agent
       .post(`${endpoint}/local/register?return_fields=${returnFields.join(',')}`)
+      .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
       .send({
         display_name: newUser.display_name,
         email: newUser.email,
         password: newUser.password,
       })
       .end((err, res: request.Response) => {
-        const cookies = res.header['set-cookie'].map((cookie) => {
-          return cookie.indexOf(COOKIE_AUTH_KEY_NAME) > -1;
-        });
+        const cookies = resCookieParser(res.header['set-cookie']);
 
-        expect(cookies).toBeTruthy();
+        expect(cookies).toHaveProperty(COOKIE_AUTH_KEY_NAME);
         expect(res.header).toHaveProperty(COOKIE_AUTH_HEADER_NAME);
 
         const allFields = Object.keys(res.body);
@@ -112,6 +115,7 @@ describe('/auth routes', () => {
   it('blocks a registration if email is already taken', (done) => {
     agent
       .post(`${endpoint}/local/register`)
+      .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
       .send({
         ...testUsers[0],
         display_name: 'randomdisplay',
@@ -127,6 +131,7 @@ describe('/auth routes', () => {
   it('blocks a registration if display name is already taken', (done) => {
     agent
       .post(`${endpoint}/local/register`)
+      .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
       .send({
         ...testUsers[0],
         email: 'random@email.com',
@@ -147,12 +152,29 @@ describe('/auth routes', () => {
         password: testUsers[0].password,
       })
       .end((err, res: request.Response) => {
-        const cookies = res.header['set-cookie'].map((cookie) => {
-          return cookie.indexOf(COOKIE_AUTH_KEY_NAME) > -1;
-        });
+        const cookies = resCookieParser(res.header['set-cookie']);
 
-        expect(cookies).toBeTruthy();
+        expect(cookies).toHaveProperty(COOKIE_AUTH_KEY_NAME);
         expect(res.header).toHaveProperty(COOKIE_AUTH_HEADER_NAME);
+        expect(res.body).toHaveProperty('id');
+        expect(res.body.email).toEqual(testUsers[0].email);
+        expect(res.body.display_name).toEqual(testUsers[0].display_name);
+
+        refreshToken = cookies[COOKIE_AUTH_KEY_NAME];
+
+        done();
+      });
+  });
+
+  it('initializes authorization', (done) => {
+    agent
+      .post(`${endpoint}/initialize`)
+      .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
+      .end(async (err, res) => {
+        const cookies = resCookieParser(res.header['set-cookie']);
+
+        expect(cookies).toHaveProperty(COOKIE_AUTH_KEY_NAME);
+        expect(cookies[COOKIE_AUTH_KEY_NAME] === refreshToken).toBe(false);
         expect(res.body).toHaveProperty('id');
         expect(res.body.email).toEqual(testUsers[0].email);
         expect(res.body.display_name).toEqual(testUsers[0].display_name);

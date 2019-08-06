@@ -27,6 +27,25 @@ class AuthRepository {
       }
     }
   }
+
+  login(email: string, password: string) {
+    try {
+      console.log('email = ', email);
+      console.log('password = ', password);
+      return;
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  signup(email: string) {
+    try {
+      console.log('email = ', email);
+      return;
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
 }
 
 export default new AuthRepository();

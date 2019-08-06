@@ -3,16 +3,22 @@ import { RelationMappings } from 'objection';
 import { Response } from 'express';
 
 import { BaseModel } from './base.model';
-import {
-  DupeValueCheckOption,
-  DupeValueCheckResult,
-} from '~lib/types';
 import { TokenModel } from './token/model';
 import {
   compare,
   hash,
 } from '~lib/bcrypt';
+import { configs } from '~config';
 import { sign } from '~lib/token-utils';
+import { success } from '~lib/responses';
+
+const {
+  COOKIE_AUTH_HEADER_NAME: headerName,
+  COOKIE_AUTH_KEY_NAME : keyName,
+  COOKIE_OPTIONS: cookieOptions,
+  TOKEN_EXPIRY_FOR_ACCESS: accessTokenExpiry,
+  TOKEN_EXPIRY_FOR_REFRESH: refreshTokenExpiry,
+} = configs;
 
 export class UserModel extends BaseModel {
   static get AVAILABLE_FIELDS(): string[] {
@@ -61,7 +67,10 @@ export class UserModel extends BaseModel {
     };
   }
 
-  public static findByEmail(email: string, fields: string[] = []): Promise<UserModel> {
+  public static findByEmail(
+    email: string,
+    fields: string[] = [],
+  ): Promise<UserModel> {
     const return_fields = Array.from(
       new Set([
         ...UserModel.BASE_FIELDS,
@@ -77,66 +86,56 @@ export class UserModel extends BaseModel {
       .column(return_fields);
   }
 
-  public static async isValueTaken(
-    options: DupeValueCheckOption | DupeValueCheckOption[],
-  ): Promise<DupeValueCheckResult> {
-    if (Array.isArray(options)) {
-      for (const option of options) {
-        const {
-          field,
-          isTaken,
-        } = await UserModel.checkDupeValue(option);
-
-        if (isTaken) {
-          return {
-            field,
-            isTaken,
-          };
-        }
-      }
-
-      return {
-        isTaken: false,
-      };
-    }
-
-    return UserModel.checkDupeValue(options);
+  public static generateAccessToken(tokenPayload: object): Promise<string> {
+    return sign(
+      tokenPayload,
+      'user',
+      accessTokenExpiry,
+    );
   }
 
-  private static checkDupeValue(option: DupeValueCheckOption): Promise<DupeValueCheckResult> {
-    const {
-      field,
-      value,
-      exclude = '',
-    } = option;
+  public static generateRefreshToken(user_id: string): Promise<string> {
+    return sign(
+      {
+        user_id,
+        uuid: uuid.v4(),
+      },
+      'user_id',
+      refreshTokenExpiry,
+    );
+  }
 
-    if (field && value) {
-      let query = UserModel
-        .query<UserModel>()
-        .where(field, value);
+  public static async refreshTokens(userId: string, oldToken: string) {
+    const user = await UserModel
+      .query()
+      .findById(userId);
 
-      if (exclude) {
-        query = query.whereNot(field, exclude);
-      }
-
-      return query
-        .count()
-        .first()
-        .then(({ count = 0 }) => {
-          return {
-            field,
-            isTaken: count > 0,
-          };
-        });
+    if (!user) {
+      throw new UserNotFoundError();
     }
 
-    return Promise.resolve({
-      isTaken: false,
-    });
+    const tokenData = await user
+      .$relatedQuery<TokenModel>('refresh_tokens')
+      .where('refresh_token', oldToken)
+      .first();
+
+    if (!tokenData) {
+      throw new UserNotFoundError();
+    }
+
+    const tokens = await tokenData.refreshToken(user);
+
+    if (!tokens) {
+      throw new Error();
+    }
+
+    return {
+      tokens,
+      user,
+    };
   }
 
   public avatar?: string;
-  public count?: number;
   public display_name: string;
   public email: string;
   public id: string;
@@ -162,28 +161,60 @@ export class UserModel extends BaseModel {
     };
 
     return {
-      access_token: await sign(
-        tokenPayload,
-        'user',
-        '1h',
-      ),
-      refresh_token: await sign(
-        tokenPayload,
-        'user',
-        '180d',
-      ),
+      access_token: await UserModel.generateAccessToken(tokenPayload),
+      refresh_token: await UserModel.generateRefreshToken(this.id),
     };
   }
 
-  // public login(res) {
-  //
-  // }
+  public logIn(
+    res: Response,
+    tokens: {
+      access_token: string,
+      refresh_token: string,
+    },
+    handler = success,
+  ): Response {
+    const {
+      access_token,
+      refresh_token,
+    } = tokens;
+
+    res
+      .cookie(
+        keyName,
+        refresh_token,
+        cookieOptions,
+      )
+      .setHeader(
+        headerName,
+        access_token,
+      );
+
+    const user = Object
+      .keys(this)
+      .reduce(
+        (acc, key) => ({
+          ...acc,
+          ...(!UserModel.PRIVATE_FIELDS.includes(key) && {
+            [key]: this[key],
+          }),
+        }),
+        {},
+      );
+
+    return handler(
+      res,
+      user,
+    );
+  }
 
   public async verifyPassword(password: string): Promise<boolean> {
     return compare(password, this.password);
   }
+}
 
-  public logIn(res: Response) {
-    // console.log('asdfasdfasdfasdfasdf', this);
+export class UserNotFoundError extends Error {
+  constructor(message = 'User not found') {
+    super(message);
   }
 }

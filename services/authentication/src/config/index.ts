@@ -9,7 +9,7 @@ dotenv.config({
   path: path.resolve(
     __dirname,
     !isProd
-      ? `../../.env.${process.env.NODE_ENV}`
+      ? `../../.env.${nodeEnv}`
       : '../../.env',
   ),
 });
@@ -34,13 +34,12 @@ const config = {
     CLIENT_APP_NAME: process.env.CLIENT_APP_NAME || 'Damso',
     CLIENT_LOGO_URL: process.env.CLIENT_LOGO_URL || 'https://i.imgur.com/7ClIc5h.png',
     CLIENT_THEME_COLOR: process.env.CLIENT_THEME_COLOR || '#F06292',
-    CLIENT_URL: process.env.CLIENT_URL,
+    CLIENT_URL: process.env.CLIENT_URL || 'https://localhost:3000',
     // cookies settings
     COOKIE_AUTH_HEADER_NAME: process.env.COOKIE_AUTH_HEADER_NAME || 'x-auth-token',
     COOKIE_AUTH_KEY_NAME: process.env.COOKIE_AUTH_KEY_NAME,
     COOKIE_CSRF_HEADER_NAME: process.env.COOKIE_CSRF_HEADER_NAME || 'x-csrf-token',
     COOKIE_CSRF_KEY_NAME: process.env.COOKIE_CSRF_KEY_NAME,
-    COOKIE_IS_SECURE: true,
     COOKIE_OPTIONS: {
       httpOnly: true,
       secure: true,
@@ -49,7 +48,7 @@ const config = {
     COOKIE_SECRET: process.env.COOKIE_SECRET,
     // db settings
     DB_CLIENT: process.env.DB_CLIENT || 'pg',
-    DB_CONNECTION: process.env.DATABASE_URL || {
+    DB_CONNECTION: {
       database: process.env.DATABASE_NAME,
       host: process.env.DATABASE_HOST || 'localhost',
       password: process.env.DATABASE_PASSWORD,
@@ -65,9 +64,8 @@ const config = {
         return {};
       }
     })(process.env.RSA_KEY_PAIRS),
-    RSA_KEY_UUID_VERSION: process.env.RSA_KEY_UUID_VERSION || 'uuidv4',
-    TOKEN_EXPIRY_FOR_ACCESS: process.env.TOKEN_EXPIRY_FOR_ACCESS || '1d',
-    TOKEN_EXPIRY_FOR_REFRESH: process.env.TOKEN_EXPIRY_FOR_REFRESH || '121d',
+    TOKEN_EXPIRY_FOR_ACCESS: process.env.TOKEN_EXPIRY_FOR_ACCESS || 60,
+    TOKEN_EXPIRY_FOR_REFRESH: process.env.TOKEN_EXPIRY_FOR_REFRESH || '90d',
     TOKEN_ISSUER: process.env.TOKEN_ISSUER || 'damso-authentication-service',
     TOKEN_TARGET_FIELDS: process.env.TOKEN_TARGET_FIELDS
       ? process.env.TOKEN_TARGET_FIELDS.split(',')
@@ -75,15 +73,19 @@ const config = {
   },
   development: {
     // cookies settings
-    COOKIE_IS_SECURE: false,
     COOKIE_OPTIONS: {
       httpOnly: true,
       secure: false,
       signed: true,
     },
   },
-  production: {},
-  test: {},
+  test: {
+    COOKIE_OPTIONS: {
+      httpOnly: true,
+      secure: false,
+      signed: true,
+    },
+  },
 };
 
 export const configs = {

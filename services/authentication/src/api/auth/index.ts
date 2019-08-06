@@ -1,10 +1,18 @@
 import { Router } from 'express';
 
 import {
+  csurferify,
+  csurfify,
+} from '~lib/middlewares/seesurf';
+
+import {
+  initialize,
   requestSignup,
   localRegister,
   localLogin,
 } from './controller';
+import { refreshTokenParser } from '~lib/middlewares/auth-token-parser';
+import { isAuthorized } from '~lib/middlewares/authorized';
 
 export class AuthRoutes {
   public router: Router;
@@ -17,8 +25,26 @@ export class AuthRoutes {
   private configure(): void {
     this
       .router
-      .post('/local/request', requestSignup)
-      .post('/local/register', localRegister)
-      .post('/local/login', localLogin);
+      .post(
+        '/initialize',
+        csurfify(),
+        refreshTokenParser(),
+        isAuthorized(),
+        initialize,
+      )
+      .post(
+        '/local/request',
+        csurferify(),
+        requestSignup,
+      )
+      .post(
+        '/local/register',
+        csurferify(),
+        localRegister,
+      )
+      .post(
+        '/local/login',
+        localLogin,
+      );
   }
 }

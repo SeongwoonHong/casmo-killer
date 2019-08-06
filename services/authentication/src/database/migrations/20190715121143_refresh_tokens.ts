@@ -11,11 +11,13 @@ export async function up(knex: Knex): Promise<any> {
         .references('users.id')
         .onDelete('cascade');
       table
-        .string('refresh_token')
+        .text('refresh_token')
         .notNullable();
       table
         .timestamp('created_at')
         .notNullable();
+      table
+        .timestamp('updated_at');
     });
 }
 

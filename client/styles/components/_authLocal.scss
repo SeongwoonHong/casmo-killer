@@ -1,6 +1,10 @@
 .AuthLocal {
   padding: 10px;
 
+  .authlocal-header {
+    margin-bottom: 10px;
+  }
+
   .authlocal-input {
     @include flex-column;
 

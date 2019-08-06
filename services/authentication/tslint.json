@@ -8,6 +8,7 @@
     "rules": {
         "import-name": false,
         "interface-name": false,
+        "max-classes-per-file": false,
         "no-implicit-dependencies": [
             true,
             "dev",

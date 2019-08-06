@@ -9,8 +9,12 @@ import {
   Response,
 } from 'express';
 
+import { TokenModel } from '../token/model';
 import { UserModel } from '../user.model';
-import { QueryParamsObject } from '~lib/types';
+import {
+  QueryParamsObject,
+  UserInfoRequest,
+} from '~lib/types';
 // import { aws } from '~lib/aws';
 import {
   badRequest,
@@ -18,16 +22,44 @@ import {
   invalidRequest, notFound,
   success,
 } from '~lib/responses';
-import { configs } from '~config';
 // import { sendSignupConfirmation } from '~lib/mail';
 import {
   validDisplayName,
   validEmail,
   validNull,
-  validPasswod,
+  validPassword,
 } from '~lib/validations';
-import { logger } from '~lib/logger';
-import { sign } from '~lib/token-utils';
+// import { sign } from '~lib/token-utils';
+
+export const initialize = async (
+  req: UserInfoRequest,
+  res: Response,
+): Promise<Response> => {
+  const {
+    refresh_token,
+    user: {
+      id: userId,
+    },
+  } = req;
+
+  if (!refresh_token) {
+    return badRequest(res);
+  }
+
+  try {
+    const {
+      user,
+      tokens,
+    } = await UserModel.refreshTokens(
+      userId,
+      refresh_token,
+    );
+
+    return user.logIn(res, tokens);
+  } catch (err) {
+    return error(res, err);
+  }
+};
 
 export const requestSignup = async (
   req: Request,
@@ -63,14 +95,13 @@ export const requestSignup = async (
       );
     }
 
-    const token = await sign(
-      {
-        email,
-      },
-      'email',
-    );
-
-    logger.info(token);
+    // const token = await sign(
+    //   {
+    //     email,
+    //   },
+    //   'email',
+    // );
+    //
     // await aws.sendEmail(
     //   email,
     //   sendSignupConfirmation(''),
@@ -99,7 +130,7 @@ export const localRegister = async (
       avatar: validNull,
       display_name: validDisplayName,
       email: validEmail,
-      password: validPasswod,
+      password: validPassword,
     }),
   );
 
@@ -159,25 +190,18 @@ export const localRegister = async (
       .pick(returnFields)
       .first();
 
-    const {
-      access_token,
-      refresh_token,
-    } = await newUser.generateTokens();
+    const tokens = await newUser.generateTokens();
 
-    res
-      .cookie(
-        configs.COOKIE_AUTH_KEY_NAME,
-        refresh_token,
-        configs.COOKIE_OPTIONS,
-      )
-      .setHeader(
-        configs.COOKIE_AUTH_HEADER_NAME,
-        access_token,
-      );
+    await TokenModel
+      .query()
+      .insert({
+        refresh_token: tokens.refresh_token,
+        user_id: newUser.id,
+      });
 
-    return success(
+    return newUser.logIn(
       res,
-      newUser,
+      tokens,
     );
   } catch (err) {
     return error(res, err);
@@ -214,7 +238,7 @@ export const localLogin = async (
     if (!user) {
       return notFound(
         res,
-        'User not found,',
+        'User not found.',
       );
     }
 
@@ -227,9 +251,19 @@ export const localLogin = async (
       );
     }
 
-    return success(res, {
-      user,
-    });
+    const tokens = await user.generateTokens();
+
+    await TokenModel
+      .query()
+      .insert({
+        refresh_token: tokens.refresh_token,
+        user_id: user.id,
+      });
+
+    return user.logIn(
+      res,
+      tokens,
+    );
   } catch (err) {
     return error(res, err);
   }

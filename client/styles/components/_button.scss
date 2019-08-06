@@ -1,0 +1,14 @@
+.button {
+  color: $white;
+  font-size: 16px;
+  background-color: $headerMainTextBackground;
+  border-radius: 5px;
+  padding: 8px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  
+  &.bg-transparent {
+    background-color: transparent;
+  }
+}

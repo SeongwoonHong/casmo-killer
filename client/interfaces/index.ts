@@ -12,3 +12,9 @@ export { IAuthForm } from './components/AuthForm';
 export { IAuthSocial } from './components/AuthSocial';
 // @ts-ignore
 export { IAuthLocal } from './components/AuthLocal';
+// @ts-ignore
+export { IHamburgerMenu } from './components/HamburgerMenu';
+// @ts-ignore
+export { IPostCard } from './components/PostCard';
+// @ts-ignore
+export { IButton } from './components/Button';

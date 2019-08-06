@@ -1,19 +1,28 @@
 import {
+  ValidationResult,
+  object as JoiObject,
+  validate as JoiValidate,
+  string as JoiString,
+} from 'joi';
+import {
   Request,
   Response,
 } from 'express';
 
-import { configs } from '~config';
+import { UserInfoRequest } from '~lib/types';
+import { UserModel } from '../user.model';
 import {
+  badRequest,
+  error,
   invalidRequest,
   success,
 } from '~lib/responses';
-import {
-  object as JoiObject,
-  validate as JoiValidate,
-  string as JoiString,
-  ValidationResult,
-} from 'joi';
+import { configs } from '~config';
+import { verify } from '~lib/token-utils';
+
+const {
+  RSA_KEY_PAIRS: rsaKeyPairs,
+} = configs;
 
 export const getPublicRsaKey = (
   req: Request,
@@ -34,30 +43,61 @@ export const getPublicRsaKey = (
     return invalidRequest(res, validations.error);
   }
 
-  const public_key = configs.RSA_KEY_PAIRS[req.params.key_id]
-    ? configs.RSA_KEY_PAIRS[req.params.key_id].public || ''
-    : '';
+  const {
+    key_id,
+  } = req.params;
+
+  if (!rsaKeyPairs[key_id] || !rsaKeyPairs[key_id].public) {
+    return badRequest(res);
+  }
 
   return success(
     res,
     {
-      public_key,
+      public_key: rsaKeyPairs[key_id].public,
     },
   );
 };
 
-export const refreshTokens = (
-  req: Request,
+export const refreshTokens = async (
+  req: UserInfoRequest,
   res: Response,
-): Response => {
+): Promise<Response> => {
+  const {
+    refresh_token,
+    user: {
+      id: userId,
+    },
+  } = req;
+
+  if (!refresh_token) {
+    return badRequest(res);
+  }
+
+  try {
+    const {
+      user,
+      tokens,
+    } = await UserModel.refreshTokens(
+      userId,
+      refresh_token,
+    );
+
+    return user.logIn(res, tokens);
+  } catch (err) {
+    return error(res, err);
+  }
+};
+
+export const verifyToken = async (
+  req: UserInfoRequest,
+  res: Response,
+): Promise<Response> => {
   const validations: ValidationResult<any> = JoiValidate(
-    req.params,
+    req.body,
     JoiObject({
-      key_id: JoiString().guid({
-        version: [
-          'uuidv4',
-        ],
-      }),
+      subject: JoiString().required(),
+      token: JoiString().required(),
     }),
   );
 
@@ -65,14 +105,27 @@ export const refreshTokens = (
     return invalidRequest(res, validations.error);
   }
 
-  const public_key = configs.RSA_KEY_PAIRS[req.params.key_id]
-    ? configs.RSA_KEY_PAIRS[req.params.key_id].public || ''
-    : '';
+  try {
+    const {
+      subject,
+      token,
+    } = req.body;
 
-  return success(
-    res,
-    {
-      public_key,
-    },
-  );
+    const payload = await verify<object>(token);
+
+    if (!payload.hasOwnProperty(subject)) {
+      return badRequest(res);
+    }
+
+    return success(res, payload[subject]);
+  } catch (err) {
+    if (
+      err.name === 'JsonWebTokenError' ||
+      err.name === 'TokenExpiredError'
+    ) {
+      return badRequest(res);
+    }
+
+    return error(res, err);
+  }
 };

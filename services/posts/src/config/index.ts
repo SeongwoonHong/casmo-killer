@@ -8,7 +8,7 @@ dotenv.config({
   allowEmptyValues: true,
   path: path.resolve(
     __dirname,
-    !isProd ? `../../.env.${process.env.NODE_ENV}` : '../../.env',
+    !isProd ? `../../.env.${nodeEnv}` : '../../.env',
   ),
 });
 

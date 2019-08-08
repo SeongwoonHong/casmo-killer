@@ -54,7 +54,10 @@
     "start": "node dist",
     "start:dev": "NODE_ENV=development nodemon --config './nodemon.ts.json' src/index.ts",
     "test": "NODE_ENV=test jest",
-    "test:watch": "NODE_ENV=test jest --watch"
+    "test:watch": "NODE_ENV=test jest --watch",
+    "setupdb": "npm run migrate && npm run seed",
+    "migrate": "knex migrate:latest",
+    "seed": "knex seed:run"
   },
   "paths": {
     "~config": [

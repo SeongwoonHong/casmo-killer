@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { axios } from 'utils';
 import UserModel from 'models/UserModel';
 
 const fakeUser = {
@@ -28,20 +28,37 @@ class AuthRepository {
     }
   }
 
-  login(email: string, password: string) {
+  async login(email: string, password: string) {
     try {
-      console.log('email = ', email);
-      console.log('password = ', password);
+      const res = await axios.post('/auth/local/login', {
+        email,
+        password
+      });
+      console.log('res = ', res);
+      // console.log('data = ', data);
       return;
     } catch (e) {
       throw new Error(e);
     }
   }
 
-  signup(email: string) {
+  async requestSignup(email: string) {
     try {
-      console.log('email = ', email);
+      // const res = await axios.post('/auth/local/register', {})
       return;
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  async initialize() {
+    try {
+      // const res = await axios.post('/auth/initialize');
+
+      const res = {
+        data: 'testTesttestTestTest1234123',
+      }
+      return res;
     } catch (e) {
       throw new Error(e);
     }

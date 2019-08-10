@@ -1,32 +1,43 @@
 import React, { useState } from 'react';
 import { Container, AuthFormContainer } from 'components';
 import { inject, observer } from 'mobx-react';
+import { useForm, formValidate } from 'utils';
 
 const login = ({ authStore }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  // const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('');
+  const { values, errors, handleChange, handleSubmit } = useForm({
+    email: '',
+    password: '',
+  }, formValidate, login);
   const loginInputs = [
     {
       id: 'email',
       placeholder: '이메일 주소',
       type: 'text',
       label: '로그인에 사용될 이메일입니다.',
-      value: email,
-      onChange: (e) => setEmail(e.target.value),
+      value: values.email,
+      name: 'email',
+      onChange: handleChange,
     },
     {
       id: 'password',
       placeholder: '비밀번호',
       type: 'password',
       label: '로그인에 사용될 이메일입니다.',
-      value: password,
-      onChange: (e) => setPassword(e.target.value),
+      value: values.password,
+      name: 'password',
+      onChange: handleChange
     },
   ];
 
-  function login(e) {
-    e.preventDefault();
-    authStore.login(email, password);
+  function login() {
+    const { email, password } = values;
+
+    authStore.login({
+      email,
+      password,
+    });
   }
 
   return (
@@ -34,9 +45,8 @@ const login = ({ authStore }) => {
       <AuthFormContainer
         mode="login"
         loginInputs={loginInputs}
-        setEmail={setEmail}
-        setPassword={setPassword}
-        authOnClick={login}
+        authOnClick={handleSubmit}
+        errors={errors}
       />
     </Container>
   );

@@ -31,12 +31,12 @@ class AuthStore {
   }
 
   @action
-  login = (email: string, password: string) => {
+  login = ({ email, password } : { email: string, password: string}) => {
     try {
       this.isLoading = true;
       AuthRepository.login(email, password);
       this.isLoading = false;
-      Router.push('/trending')
+      // Router.push('/trending')
     } catch (e) {
       this.isLoading = false;
       throw new Error(e);
@@ -46,7 +46,18 @@ class AuthStore {
   @action
   signup = (email: string) => {
     try {
-      AuthRepository.signup(email);
+      // AuthRepository.signup(email);
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  initialize = async () => {
+    try {
+      this.isLoading = true;
+      const { data } = await AuthRepository.initialize();
+      console.log('data = ', data);
+      this.isLoading = false;
     } catch (e) {
       throw new Error(e);
     }

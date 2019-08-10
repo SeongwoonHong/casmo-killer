@@ -6,5 +6,6 @@ declare namespace IPostCard {
     title: string,
     author: string,
     comments: number,
+    username: string,
   }
 }

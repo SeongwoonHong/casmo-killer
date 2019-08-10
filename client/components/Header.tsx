@@ -7,15 +7,15 @@ import HamburgerMenu from './HamburgerMenu';
 
 const sections = [
   {
-    id: 'trending',
+    id: '/trending',
     label: 'Trending',
   },
   {
-    id: 'latest',
+    id: '/latest',
     label: 'Latest',
   },
   {
-    id: 'tags',
+    id: '/tags',
     label: 'Tags',
   }
 ]
@@ -53,7 +53,7 @@ const Header = props => {
                 href={section.id}
                 key={section.id}
               >
-                <div className={cx('sub-header-section', { active: section.id === props.router.pathname.split('/')[1] })}>
+                <div className={cx('sub-header-section', { active: section.id === `/${props.router.pathname.split('/')[1]}` })}>
                   {section.label}
                 </div>
               </Link>

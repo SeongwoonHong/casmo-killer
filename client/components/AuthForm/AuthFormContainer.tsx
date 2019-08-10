@@ -8,28 +8,30 @@ const AuthFormContainer: FunctionComponent<IAuthFormContainer.IProps> = ({
   mode,
   loginInputs,
   signupInputs,
-  setEmail,
-  setPassword,
-  authOnClick
+  authOnClick,
+  errors,
 }) => {
   return (
     <div className="AuthFormContainer">
-      <div className="authform-mode">
-        <Link href="/login">
-          <div className={cx('authform-mode-text', { active: mode === 'login' })}>Login</div>
-        </Link>
-        <Link href="/signup">
-          <div className={cx('authform-mode-text', { active: mode === 'signup' })}>Signup</div>
-        </Link>
-      </div>
+      {
+        mode !== 'signup' && (
+          <div className="authform-mode">
+            <Link href="/login">
+              <div className={cx('authform-mode-text', { active: mode === 'login' })}>Login</div>
+            </Link>
+            <Link href="/signup">
+              <div className={cx('authform-mode-text', { active: mode === 'signupRequest' })}>Signup</div>
+            </Link>
+          </div>
+        )
+      }
       <div className="AuthForm-Wrapper">
         <AuthForm
           mode={mode}
           loginInputs={loginInputs}
           signupInputs={signupInputs}
-          setEmail={setEmail}
-          setPassword={setPassword}
           authOnClick={authOnClick}
+          errors={errors}
         />
       </div>
     </div>

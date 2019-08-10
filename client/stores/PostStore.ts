@@ -1,5 +1,5 @@
 import { observable, action, toJS } from 'mobx';
-import PostCardRepository from 'repositories/PostCardRepository';
+import PostRepository from 'repositories/PostRepository';
 import PostCards from 'models/PostCard';
 
 class PostCardStore {
@@ -18,8 +18,11 @@ class PostCardStore {
   @action
   getPostCards = async () => {
     try {
+      if (this.postCards) {
+        return;
+      }
       this.isLoading = true;
-      this.postCards = await PostCardRepository.getPostCards();
+      this.postCards = await PostRepository.getPostCards();
       this.isLoading = false;
     } catch (e) {
       console.log(e.message)

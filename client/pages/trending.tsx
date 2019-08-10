@@ -4,19 +4,19 @@ import { toJS } from 'mobx';
 import Router from 'next/router';
 import { Container, PostCardList, Loader, Button } from 'components';
 
-const trending = ({ postCardStore }) => {
+const trending = ({ postStore }) => {
   useEffect(() => {
-    postCardStore.getPostCards();
+    postStore.getPostCards();
   }, []);
 
   function renderPostCardList() {
-    if (postCardStore.isLoading) {
+    if (postStore.isLoading) {
       return <Loader />
     }
 
     return (
       <PostCardList
-        data={toJS(postCardStore.postCards)}
+        data={toJS(postStore.postCards)}
       />
     )
   }
@@ -41,4 +41,4 @@ const trending = ({ postCardStore }) => {
   );
 };
 
-export default inject('postCardStore')(observer(trending));
+export default inject('postStore')(observer(trending));

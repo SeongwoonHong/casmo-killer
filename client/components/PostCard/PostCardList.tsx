@@ -15,6 +15,7 @@ const PostCardList = ({ data }) => {
               title={item.title}
               author={item.author}
               comments={item.comments}
+              username={item.username}
             />
           );
         })

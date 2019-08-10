@@ -14,10 +14,12 @@
       border: 0;
     }
 
-    .authlocal-label {
+    .authlocal-error {
       margin: 5px 0px;
       font-size: 10px;
       text-align: right;
+      min-height: 13px;
+      color: red;
     }
   }
 }

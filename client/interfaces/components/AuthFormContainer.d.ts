@@ -6,7 +6,6 @@ declare namespace IAuthFormContainer {
     loginInputs?: Array<object>,
     signupInputs?: Array<object>,
     authOnClick: function,
-    setEmail: function,
-    setPassword?: function,
+    errors: object,
   }
 }

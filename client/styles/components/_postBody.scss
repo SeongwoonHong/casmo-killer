@@ -4,14 +4,15 @@
   .postbody-row {
     margin-bottom: 10px;
 
-    .title-input,
+    .title-textarea,
     .content-textarea {
       width: 100%;
       background-color: transparent;
       outline: none;
       border: none;
       font-size: 16px;
-
+      padding: 5px;
+      
       &:focus {
         outline: none;
       }
@@ -20,6 +21,40 @@
     .content-textarea {
       min-height: 100px;
       resize: none;
+    }
+  }
+
+  .title-textarea {
+    color: $white;
+  }
+
+  .main-picture-row {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+
+    .main-picture {
+      width: 100%;
+      max-height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      opacity: 0.8;
+      z-index: -1;
+    }
+
+    .title-textarea {
+      height: 100%;
+      font-size: 24px;
+      font-weight: bold;
+    }
+  }
+
+  &.viewMode {
+    .main-picture-input {
+      display: none;
     }
   }
 }

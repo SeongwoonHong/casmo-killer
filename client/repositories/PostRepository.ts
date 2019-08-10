@@ -7,6 +7,7 @@ const mockData = [
     img: 'static/images/mock-image1.jpg',
     title: 'Sed ut perspiciatis unde omnis iste natus error sit',
     author: 'Seongwoon Hong',
+    username: 'shong91',
     comments: 15,
   },
   {
@@ -14,6 +15,7 @@ const mockData = [
     img: 'static/images/mock-image2.jpg',
     title: 'Pudding Dessert Jelly Fruitcake Tart Wfer Candy Chocolate',
     author: 'Seongwoon Hong',
+    username: 'shong91',
     comments: 5,
   },
   {
@@ -21,6 +23,7 @@ const mockData = [
     img: null,
     title: 'adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem',
     author: 'Seongwoon Hong',
+    username: 'shong91',
     comments: 5,
   },
   {
@@ -28,6 +31,7 @@ const mockData = [
     img: null,
     title: 'Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur?',
     author: 'Seongwoon Hong',
+    username: 'shong91',
     comments: 6,
   },
   {
@@ -35,6 +39,7 @@ const mockData = [
     img: 'static/images/mock-image2.jpg',
     title: 'Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur',
     author: 'Seongwoon Hong',
+    username: 'shong91',
     comments: 0,
   },
   {
@@ -42,6 +47,7 @@ const mockData = [
     img: 'static/images/mock-image3.jpg',
     title: 'Sed ut perspiciatis unde omnis iste natus error sit',
     author: 'Seongwoon Hong',
+    username: 'shong91',
     comments: 7,
   },
   {
@@ -49,6 +55,7 @@ const mockData = [
     img: 'static/images/mock-image5.jpg',
     title: 'Sed ut perspiciatis unde omnis iste natus error sit',
     author: 'Seongwoon Hong',
+    username: 'shong91',
     comments: 21,
   },
   {
@@ -56,6 +63,7 @@ const mockData = [
     img: 'static/images/mock-image2.jpg',
     title: 'Sed ut perspiciatis unde omnis iste natus error sit',
     author: 'Seongwoon Hong',
+    username: 'shong91',
     comments: 2,
   },
   {
@@ -63,6 +71,7 @@ const mockData = [
     img: 'static/images/mock-image5.jpg',
     title: 'Sed ut perspiciatis unde omnis iste natus error sit',
     author: 'Seongwoon Hong',
+    username: 'shong91',
     comments: 1,
   },
   {
@@ -70,6 +79,7 @@ const mockData = [
     img: 'static/images/mock-image4.jpg',
     title: 'Sed ut perspiciatis unde omnis iste natus error sit',
     author: 'Seongwoon Hong',
+    username: 'shong91',
     comments: 2,
   }
 ];
@@ -78,7 +88,7 @@ const sleep = (milliseconds) => {
   return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
 
-class PostCardRepository {
+class PostRepository {
   URL: string = 'api/something/something';
   
   async getPostCards() {
@@ -88,4 +98,4 @@ class PostCardRepository {
   }
 }
 
-export default new PostCardRepository();
+export default new PostRepository();

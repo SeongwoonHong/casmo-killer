@@ -6,7 +6,7 @@ const withConfig = nextRuntimeDotenv({
 	public: ['API_URL'],
 });
 
-const aliases = ['components', 'models', 'repositories', 'stores', 'styles', 'interfaces', 'static'];
+const aliases = ['components', 'models', 'repositories', 'stores', 'styles', 'interfaces', 'static', 'utils'];
 
 module.exports = withConfig(withSass({
   webpack(config, options) {

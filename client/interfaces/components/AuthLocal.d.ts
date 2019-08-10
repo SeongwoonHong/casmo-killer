@@ -4,7 +4,6 @@ declare namespace IAuthLocal {
   export interface IProps extends Props<{}> {
     mode: string,
     inputs: array,
-    setEmail: function,
-    setPassword: function,
+    errors: object,
   }
 }

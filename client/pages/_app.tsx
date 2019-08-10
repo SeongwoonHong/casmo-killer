@@ -1,6 +1,7 @@
 import App, { Container } from 'next/app';
 import React from 'react';
 import { Provider } from 'mobx-react';
+import { CookiesProvider, Cookies } from 'react-cookie';
 import initializeStore from 'stores/index.ts';
 
 declare global {
@@ -37,6 +38,7 @@ class MyMobxApp extends App {
     
   componentDidMount() {
     window._STORES_ = this.mobxStore;
+    const csrfToken = this.mobxStore.authStore.initialize();
   }
 
   public render(): JSX.Element {
@@ -45,7 +47,9 @@ class MyMobxApp extends App {
     return (
       <Container>
         <Provider {...this.mobxStore}>
-          <Component {...pageProps} />
+          <CookiesProvider>
+            <Component {...pageProps} />
+          </CookiesProvider>
         </Provider>
       </Container>
     )

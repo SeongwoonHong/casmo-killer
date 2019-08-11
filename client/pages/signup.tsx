@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Container, AuthFormContainer, Loader } from 'components';
-import { inject, observer } from 'mobx-react';
-import { useForm, formValidate } from 'utils';
+import { connect } from 'react-redux';
 import { withRouter } from 'next/router';
+import { useForm, formValidate } from 'utils';
 
 const signup = ({ authStore, router }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,12 +15,21 @@ const signup = ({ authStore, router }) => {
     }
   }, [router.query]);
 
-  const { values, errors, handleChange, handleSubmit } = useForm({
+  const signupRequestErrorInitialValues = {
+    email: '',
+  };
+
+  const signupErrorInitialValues = {
     email: '',
     password: '',
     displayName: '',
     avatar: '',
-  }, formValidate, Object.keys(router.query).length ? signup : signupRequest); 
+  };
+
+  const { values, errors, handleChange, handleSubmit } = useForm(
+    Object.keys(router.query).length ? signupErrorInitialValues : signupRequestErrorInitialValues, 
+    formValidate,
+    Object.keys(router.query).length ? signup : signupRequest); 
   
   async function verifyToken() {
     setIsLoading(true);
@@ -86,24 +95,17 @@ const signup = ({ authStore, router }) => {
   ];
 
   function signup() {
-    if (Object.keys(errors).filter(x => errors[x]).length) {
-      return;
-    }
-
+    console.log('signup ')
     const { email, password, displayName } = values;
 
-    return authStore.signup({
-      email,
-      password,
-      displayName
-    });
+    // return authStore.signup({
+    //   email,
+    //   password,
+    //   displayName
+    // });
   }
 
   function signupRequest() {
-    if (errors.email) {
-      return;
-    }
-
     setIsRequested(true);
   }
 
@@ -133,7 +135,8 @@ const signup = ({ authStore, router }) => {
   );
 };
 
-const withRouterSignup = withRouter(signup);
-const withObserverSignup = observer(withRouterSignup);
+const mapDispatchToProps = {
 
-export default inject('authStore')(withObserverSignup);
+};
+
+export default connect(null, mapDispatchToProps)(withRouter(signup));

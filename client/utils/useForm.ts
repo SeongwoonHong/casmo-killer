@@ -12,7 +12,14 @@ const useForm = (initialValues, validate, callback) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (Object.keys(errors).filter(x => errors[x]).length === 0 && isSubmitting) {
+    let shouldCallback = true;
+
+    Object.keys(values).forEach((valueKey) => {
+      if (errors[valueKey]) {
+        shouldCallback = false;
+      };
+    });
+    if (shouldCallback && isSubmitting) {
       callback();
     }
 

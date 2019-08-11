@@ -38,11 +38,8 @@
       "models/*": [
         "./models/*"
       ],
-      "repositories/*": [
-        "./repositories/*"
-      ],
-      "stores/*": [
-        "./stores/*"
+      "store/*": [
+        "./store/*"
       ],
       "styles/*": [
         "./styles/*"
@@ -65,6 +62,6 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "app/server.js"
+    "app/server.js", "utils/withReduxStore.js"
   ]
 }

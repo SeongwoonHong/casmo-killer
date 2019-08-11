@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
+import { login as loginAction } from 'store/modules/auth';
 import { Container, AuthFormContainer } from 'components';
-import { inject, observer } from 'mobx-react';
 import { useForm, formValidate } from 'utils';
 
-const login = ({ authStore }) => {
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
+const login = ({ reduxStore, loginAction }) => {
   const { values, errors, handleChange, handleSubmit } = useForm({
     email: '',
     password: '',
@@ -34,10 +33,7 @@ const login = ({ authStore }) => {
   function login() {
     const { email, password } = values;
 
-    authStore.login({
-      email,
-      password,
-    });
+    loginAction(email, password);
   }
 
   return (
@@ -52,4 +48,7 @@ const login = ({ authStore }) => {
   );
 };
 
-export default inject('authStore')(observer(login));
+const mapDispatchToProps = {
+  loginAction,
+}
+export default connect(null, mapDispatchToProps)(login);

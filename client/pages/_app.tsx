@@ -1,52 +1,17 @@
 import App, { Container } from 'next/app';
 import React from 'react';
-import { Provider } from 'mobx-react';
 import { CookiesProvider, Cookies } from 'react-cookie';
-import initializeStore from 'stores/index.ts';
+import { withReduxStore } from 'utils';
+import { Provider } from 'react-redux';
 
-declare global {
-  interface Window {
-    _STORES_: any;
-  }
-}
-
-class MyMobxApp extends App {
-  mobxStore;
-
-  static async getInitialProps(appContext) {
-    const mobxStore = initializeStore();
-
-    appContext.ctx.mobxStore = mobxStore;
-
-    let appProps = await App.getInitialProps(appContext);
-
-    return {
-      ...appProps,
-      initialMobxState: mobxStore,
-    }
-  }
-
-  constructor(props) {
-    super(props);
-    const isServer = typeof window === 'undefined';
-
-    this.mobxStore = isServer
-      ? props.initialMobxState
-      : initializeStore(props.initialMobxState);
-    
-    }
-    
-  componentDidMount() {
-    window._STORES_ = this.mobxStore;
-    const csrfToken = this.mobxStore.authStore.initialize();
-  }
-
+class MyApp extends App {
   public render(): JSX.Element {
-    const { Component, pageProps } = this.props;
+    // @ts-ignore
+    const { Component, pageProps, reduxStore } = this.props;
 
     return (
       <Container>
-        <Provider {...this.mobxStore}>
+        <Provider store={reduxStore}>
           <CookiesProvider>
             <Component {...pageProps} />
           </CookiesProvider>
@@ -56,4 +21,4 @@ class MyMobxApp extends App {
   }
 }
 
-export default MyMobxApp;
+export default withReduxStore(MyApp);

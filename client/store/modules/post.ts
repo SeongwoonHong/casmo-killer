@@ -1,5 +1,12 @@
-import axios from 'axios';
-import PostCardModel from 'models/PostCard';
+/* ACTION TYPES */
+const GET_POSTS = 'GET_POSTS';
+const GET_POSTS_SUCCESS = 'GET_POSTS_SUCCESS';
+const GET_POSTS_FAIL = 'GET_POSTS_FAIL';
+
+/* ACTION CREATORS */
+const sleep = (milliseconds) => {
+  return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
 
 const mockData = [
   {
@@ -84,18 +91,50 @@ const mockData = [
   }
 ];
 
-const sleep = (milliseconds) => {
-  return new Promise(resolve => setTimeout(resolve, milliseconds))
-}
+export const getPosts = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: GET_POSTS });
+      await sleep(4000);
 
-class PostRepository {
-  URL: string = 'api/something/something';
-  
-  async getPostCards() {
-    await sleep(4000); 
-
-    return mockData;
+      return dispatch({
+        type: GET_POSTS_SUCCESS,
+        payload: mockData,
+      })
+    } catch (e) {
+      dispatch({
+        type: GET_POSTS_FAIL
+      })
+      console.log(e);
+      throw new Error(e);
+    }
   }
-}
+};
 
-export default new PostRepository();
+const initialState = {
+  isLoading: false,
+  posts: [],
+}
+/* REDUCER */
+export default (state = initialState, action) => {
+  switch (action.type) {
+    case GET_POSTS:
+      return {
+        ...state,
+        isLoading: true,
+      }
+    case GET_POSTS_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        posts: action.payload,
+      }
+    case GET_POSTS_FAIL:
+      return {
+        ...state,
+        isLoading: false,
+      }
+    default:
+      return state;
+  }
+};

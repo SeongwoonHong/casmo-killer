@@ -1,22 +1,22 @@
 import React, { useEffect } from 'react';
-import { inject, observer } from 'mobx-react';
-import { toJS } from 'mobx';
+import { connect } from 'react-redux';
+import { getPosts } from 'store/modules/post';
 import Router from 'next/router';
 import { Container, PostCardList, Loader, Button } from 'components';
 
-const trending = ({ postStore }) => {
+const trending = ({ post, getPosts }) => {
   useEffect(() => {
-    postStore.getPostCards();
+    getPosts();
   }, []);
 
   function renderPostCardList() {
-    if (postStore.isLoading) {
+    if (post.isLoading) {
       return <Loader />
     }
-
+    
     return (
       <PostCardList
-        data={toJS(postStore.postCards)}
+        data={post.posts}
       />
     )
   }
@@ -41,4 +41,14 @@ const trending = ({ postStore }) => {
   );
 };
 
-export default inject('postStore')(observer(trending));
+const mapStateToProps = (state) => {
+  return {
+    post: state.post,
+  };
+};
+
+const mapDispatchToProps = {
+  getPosts,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(trending);

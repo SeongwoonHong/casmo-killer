@@ -3,7 +3,8 @@ const path = require('path')
 const nextRuntimeDotenv = require('next-runtime-dotenv');
 
 const withConfig = nextRuntimeDotenv({
-	public: ['API_URL'],
+  public: ['API_URL', 'FACEBOOK_CLIENT_ID', 'GOOGLE_CLIENT_ID', 'KAKAOTALK_CLIENT_ID'],
+  server: ['API_URL', 'FACEBOOK_CLIENT_ID', 'GOOGLE_CLIENT_ID', 'KAKAOTALK_CLIENT_ID'],
 });
 
 const aliases = ['components', 'models', 'store', 'styles', 'interfaces', 'static', 'utils'];

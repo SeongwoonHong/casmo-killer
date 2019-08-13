@@ -106,7 +106,6 @@ export const getPosts = () => {
         type: GET_POSTS_FAIL
       })
       console.log(e);
-      throw new Error(e);
     }
   }
 };

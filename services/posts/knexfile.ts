@@ -9,6 +9,11 @@ const baseConfig = (env = process.env.NODE_ENV) => {
     client: process.env.DB_CLIENT || 'pg',
     connection: configs.DB_CONNECTION,
     debug: true,
+    pool: {
+      min: 2,
+      max: 20,
+    },
+    propagateCreateError: false,
     migrations: {
       directory: `${__dirname}/src/database/migrations`,
     },

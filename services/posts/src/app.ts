@@ -6,7 +6,7 @@ import * as express from 'express';
 import * as methodOverride from 'method-override';
 import * as morgan from 'morgan';
 
-import configs from './config';
+import { configs } from './config';
 import rootRoutes from './api';
 
 import { ErrorWithStatus } from '~lib/types';
@@ -22,24 +22,30 @@ class App {
   }
 
   public configure(): express.Express {
-    this.express.use(morgan('combined', {
-      stream,
-    }));
+    this.express.use(
+      morgan('combined', {
+        stream,
+      }),
+    );
     this.express.use(cors());
     this.express.use(compression());
     this.express.use(bodyParser.json());
-    this.express.use(bodyParser.urlencoded({
-      extended: false,
-    }));
+    this.express.use(
+      bodyParser.urlencoded({
+        extended: false,
+      }),
+    );
     this.express.use(cookieParser());
-    this.express.use(methodOverride((req) => {
-      if (req.body && typeof req.body === 'object' && '_method' in req.body) {
-        const method = req.body._method;
-        delete req.body._method;
+    this.express.use(
+      methodOverride((req) => {
+        if (req.body && typeof req.body === 'object' && '_method' in req.body) {
+          const method = req.body._method;
+          delete req.body._method;
 
-        return method;
-      }
-    }));
+          return method;
+        }
+      }),
+    );
     this.express.get('/favicon.ico', (req, res) => {
       res.sendStatus(204);
     });
@@ -52,7 +58,6 @@ class App {
 
     return this.express;
   }
-
 }
 
 export default new App().configure();

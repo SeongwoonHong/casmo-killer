@@ -1,18 +1,12 @@
 import * as http from 'http';
 
 import App from './app';
-import configs from './config';
+import { configs } from './config';
 import logger from './lib/logger';
 
 import { AddressInfo } from 'net';
 
-logger.info(
-  `CONFIGS ${JSON.stringify(
-    configs,
-    null,
-    2,
-  )}`,
-);
+logger.info(`CONFIGS ${JSON.stringify(configs, null, 2)}`);
 
 const port: number | boolean = normalizePort(configs.PORT);
 
@@ -45,9 +39,8 @@ function onError(error: NodeJS.ErrnoException): void {
     throw error;
   }
 
-  const bind = typeof port as string === 'string'
-    ? `Pipe ${port}`
-    : `Port ${port}`;
+  const bind =
+    (typeof port as string) === 'string' ? `Pipe ${port}` : `Port ${port}`;
 
   switch (error.code) {
     case 'EACCES':
@@ -61,9 +54,7 @@ function onError(error: NodeJS.ErrnoException): void {
 
 function onListening(): void {
   const addr: AddressInfo | string = server.address();
-  const bind = typeof addr === 'string'
-    ? `pipe ${addr}`
-    : `port ${addr.port}`;
+  const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
 
   logger.debug(`Listening on ${bind}`);
 }

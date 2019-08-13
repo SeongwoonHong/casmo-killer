@@ -1,12 +1,6 @@
-import {
-  addColors,
-  createLogger,
-  format,
-  Logger,
-  transports,
-} from 'winston';
+import { addColors, createLogger, format, Logger, transports } from 'winston';
 
-import configs from '../config';
+import { configs } from '../config';
 
 import { FormatWrap } from 'logform';
 
@@ -18,10 +12,7 @@ const errorFormat: FormatWrap = format(<TransformFunction>(info) => {
     return {
       ...(info || {}),
       stack: e.stack,
-      [Symbol.for('splat')]: splat.splice(
-        splat.length - 1,
-        1, e.message,
-      ),
+      [Symbol.for('splat')]: splat.splice(splat.length - 1, 1, e.message),
     };
   }
   return info;

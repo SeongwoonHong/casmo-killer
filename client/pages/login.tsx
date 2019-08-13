@@ -1,10 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { login as loginAction } from 'store/modules/auth';
 import { Container, AuthFormContainer } from 'components';
 import { useForm, formValidate } from 'utils';
 
-const login = ({ reduxStore, loginAction }) => {
+const login = () => {
   const { values, errors, handleChange, handleSubmit } = useForm({
     email: '',
     password: '',
@@ -29,11 +29,12 @@ const login = ({ reduxStore, loginAction }) => {
       onChange: handleChange
     },
   ];
+  const dispatch = useDispatch();
 
   function login() {
     const { email, password } = values;
 
-    loginAction(email, password);
+    dispatch(loginAction(email, password));
   }
 
   return (
@@ -48,7 +49,4 @@ const login = ({ reduxStore, loginAction }) => {
   );
 };
 
-const mapDispatchToProps = {
-  loginAction,
-}
-export default connect(null, mapDispatchToProps)(login);
+export default login;

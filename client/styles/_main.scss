@@ -13,3 +13,11 @@ body {
 input {
   outline: none;
 }
+
+button {
+  border: none;
+  
+  &::active {
+    border-style: none;
+  }
+}

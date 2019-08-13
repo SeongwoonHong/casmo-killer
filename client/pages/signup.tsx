@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Container, AuthFormContainer, Loader } from 'components';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { withRouter } from 'next/router';
+import { signup as signupAction } from 'store/modules/auth';
 import { useForm, formValidate } from 'utils';
 
-const signup = ({ authStore, router }) => {
+const signup = ({ router }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isVerifiedToken, setIsVerifiedToken] = useState(false);
   const [isRequested, setIsRequested] = useState(false);
-  
+  const dispatch = useDispatch();
+
   useEffect(() => {
     if (Object.keys(router.query).length) {
       verifyToken();
@@ -98,11 +100,7 @@ const signup = ({ authStore, router }) => {
     console.log('signup ')
     const { email, password, displayName } = values;
 
-    // return authStore.signup({
-    //   email,
-    //   password,
-    //   displayName
-    // });
+    dispatch(signupAction({ email, password, displayName }))
   }
 
   function signupRequest() {
@@ -135,8 +133,4 @@ const signup = ({ authStore, router }) => {
   );
 };
 
-const mapDispatchToProps = {
-
-};
-
-export default connect(null, mapDispatchToProps)(withRouter(signup));
+export default withRouter(signup);

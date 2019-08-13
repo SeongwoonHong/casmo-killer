@@ -9,3 +9,6 @@ export { Loader } from './Loader';
 export { PostBody } from './PostBody';
 export { Button } from './Button';
 export { CloseButton } from './CloseButton';
+export { Google } from './SocialLogin/Google';
+export { Facebook } from './SocialLogin/Facebook';
+export { Kakaotalk } from './SocialLogin/Kakaotalk';

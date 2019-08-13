@@ -18,3 +18,5 @@ export { IHamburgerMenu } from './components/HamburgerMenu';
 export { IPostCard } from './components/PostCard';
 // @ts-ignore
 export { IButton } from './components/Button';
+// @ts-ignore
+export { ISocial } from './components/ISocial';

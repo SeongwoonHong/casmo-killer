@@ -1,12 +1,15 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import { getPosts } from 'store/modules/post';
 import Router from 'next/router';
 import { Container, PostCardList, Loader, Button } from 'components';
 
-const trending = ({ post, getPosts }) => {
+const trending = () => {
+  const post = useSelector(state => state.post);
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    getPosts();
+    dispatch(getPosts());
   }, []);
 
   function renderPostCardList() {
@@ -41,14 +44,4 @@ const trending = ({ post, getPosts }) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    post: state.post,
-  };
-};
-
-const mapDispatchToProps = {
-  getPosts,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(trending);
+export default trending;

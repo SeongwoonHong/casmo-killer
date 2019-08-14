@@ -11,7 +11,9 @@ const {
   },
 } = getConfig()
 
-const AuthSocial: FunctionComponent<IAuthSocial.IProps> = () => {
+const AuthSocial: FunctionComponent<IAuthSocial.IProps> = (props) => {
+  const prefix = props.mode === 'login' ? 'Login' : 'Signup';
+
   function onSuccess(userInfo) {
     console.log(userInfo);
   }
@@ -23,14 +25,14 @@ const AuthSocial: FunctionComponent<IAuthSocial.IProps> = () => {
   return (
     <div className="AuthSocial">
       <Google
-        icon="/static/images/gmail-logo.png"
+        icon="/static/images/google-logo.png"
         id="gmail"
         clientId={GOOGLE_CLIENT_ID}
         onSuccess={onSuccess}
         onFailure={onFailure}
         className="gmail"
       >
-        <span className="social-text">Google</span>
+        <span className="social-text">{prefix} with Google</span>
       </Google>
       <Facebook
         icon="/static/images/facebook-logo.png"
@@ -40,7 +42,7 @@ const AuthSocial: FunctionComponent<IAuthSocial.IProps> = () => {
         onFailure={onFailure}
         className="facebook"
       >
-        <span className="social-text">Facebook</span>
+        <span className="social-text">{prefix} with Facebook</span>
       </Facebook>
       <Kakaotalk
         icon="/static/images/kakaotalk-logo.png"
@@ -50,7 +52,7 @@ const AuthSocial: FunctionComponent<IAuthSocial.IProps> = () => {
         onFailure={onFailure}
         className="kakaotalk"
       >
-        <span className="social-text">Kakaotalk</span>
+        <span className="social-text">{prefix} with Kakaotalk</span>
       </Kakaotalk>
     </div>
   );

@@ -13,11 +13,11 @@ const AuthForm:FunctionComponent<IAuthForm.IProps> = ({
   function getButtonLabel() {
     switch (mode) {
       case 'login':
-        return '로그인';
+        return 'LOGIN';
       case 'signup':
-        return '회원가입';
+        return 'SIGNUP';
       case 'signupRequest':
-        return '가입신청';
+        return 'SIGNUP REQUEST';
       default:
         break;
     }
@@ -28,17 +28,16 @@ const AuthForm:FunctionComponent<IAuthForm.IProps> = ({
       {
         mode !== 'signup' && (
           <>
-            <div className="auth-social-text">
-              소셜 {mode === 'login' ? '로그인' : '가입'}
-            </div>
             <hr />
             <div className="AuthSocial-wrapper">
-              <AuthSocial />
+              <AuthSocial
+                mode={mode}
+              />
             </div>
-            <hr />
           </>
         )
       }
+      { mode !== 'signup' && <div className="auth-form-or">OR</div> }
       <div className="AuthLocal-wrapper">
         <AuthLocal
           mode={mode}

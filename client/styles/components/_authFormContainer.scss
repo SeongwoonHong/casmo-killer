@@ -1,6 +1,6 @@
 .AuthFormContainer {
   margin: 20px;
-
+  
   .authform-mode {
     @include flex-row;
     
@@ -9,7 +9,7 @@
       margin-right: 20px;
 
       &.active {
-        text-decoration: underline;
+        border-bottom: 2px solid white;
       }
     }
   }

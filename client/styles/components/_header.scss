@@ -5,7 +5,7 @@
     @include flex-space-between-row;
     align-items: center;
     height: 53px;
-    background-color: $topHeaderBackground;
+    background-color: $theme;
     padding: 0 10px;
   
     .main-text {
@@ -20,7 +20,7 @@
 
   .sub-header {
     @include flex-center-row;
-    background-color: $white;
+    background-color: $theme;
     height: 45px;
 
     .sub-header-section {
@@ -29,6 +29,7 @@
       font-weight: bold;
       width: 100%;
       text-align: center;
+      border-bottom: 3px solid white;
 
       &.active {
         border-bottom: 3px solid #fa7f3c;

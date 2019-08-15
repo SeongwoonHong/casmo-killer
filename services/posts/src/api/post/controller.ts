@@ -1,8 +1,15 @@
+import {
+  ValidationResult,
+  object as JoiObject,
+  validate as JoiValidate,
+  string as JoiString,
+} from 'joi';
 import { Request, Response } from 'express';
 
 import { PostModel } from '../post.model';
-import { error, notFound, success } from '~lib/responses';
+import { error, notFound, success, invalidRequest } from '~lib/responses';
 import { QueryParamsObject } from '~lib/types';
+import { validNotNull, validNull } from '~lib/validations';
 
 export const getPosts = async (
   req: Request,
@@ -27,6 +34,24 @@ export const insertPost = async (
   req: Request,
   res: Response,
 ): Promise<Response> => {
+  const validations: ValidationResult<any> = JoiValidate(
+    {
+      ...req.params,
+      ...req.body,
+    },
+    JoiObject({
+      body: validNotNull,
+      thumnail: validNull,
+      title: validNotNull,
+      user_id: JoiString().guid({
+        version: ['uuidv4'],
+      }),
+    }),
+  );
+
+  if (validations.error) {
+    return invalidRequest(res, validations.error);
+  }
   try {
     const {
       exclude_fields = [],
@@ -54,6 +79,43 @@ export const insertPost = async (
     return success(res, {
       newPost,
     });
+  } catch (err) {
+    return error(res, err);
+  }
+};
+
+export const deletePost = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
+  try {
+    const validations: ValidationResult<any> = JoiValidate(
+      {
+        ...req.params,
+        ...req.body,
+      },
+      JoiObject({
+        id: JoiString().guid({
+          version: ['uuidv4'],
+        }),
+      }),
+    );
+
+    if (validations.error) {
+      return invalidRequest(res, validations.error);
+    }
+
+    const { id } = req.body;
+
+    const deletedPost: number = await PostModel.query().deleteById(id);
+
+    if (deletedPost === 1) {
+      return success(res, {
+        result: req.body,
+      });
+    }
+
+    throw new Error('Error');
   } catch (err) {
     return error(res, err);
   }

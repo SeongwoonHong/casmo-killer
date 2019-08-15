@@ -6,3 +6,10 @@ export interface ErrorData {
 export interface ErrorWithStatus extends Error {
   status?: number;
 }
+
+export interface QueryParamsObject {
+  exclude_fields: string[];
+  search_field: string;
+  search_values: string[];
+  return_fields: string[];
+}

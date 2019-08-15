@@ -1,4 +1,3 @@
-/* tslint:disable:max-classes-per-file */
 import * as uuid from 'uuid';
 
 import { BaseModel } from './base.model';

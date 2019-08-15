@@ -1,22 +1,30 @@
 /* tslint:disable:max-line-length */
+import * as sgMail from '@sendgrid/mail';
+
 import { EmailTemplateParams } from '~lib/types';
 import { configs } from '~config';
 
-export const baseTemplate = (information: EmailTemplateParams): string => {
-  const {
-    body,
-    bodyTitle,
-    buttonText,
-    buttonUrl,
-    clientUrl = configs.CLIENT_URL,
-    footerText,
-    heading,
-    logoAlt = configs.CLIENT_APP_URL,
-    logoUrl = configs.CLIENT_LOGO_URL,
-    themeColor = configs.CLIENT_THEME_COLOR,
-  } = information;
+const {
+  CLIENT_APP_NAME: clientAppName,
+  SENDGRID_API_KEY: apiKey,
+} = configs;
 
-  return `
+class AuthMailer {
+  public static emailTemplate(information: EmailTemplateParams): string {
+    const {
+      body,
+      bodyTitle,
+      buttonText,
+      buttonUrl,
+      clientUrl = configs.CLIENT_URL,
+      footerText,
+      heading,
+      logoAlt = configs.CLIENT_APP_URL,
+      logoUrl = configs.CLIENT_LOGO_URL,
+      themeColor = configs.CLIENT_THEME_COLOR,
+    } = information;
+
+    return `
       <div style="font-size:16px;background-color:#fdfdfd;margin:0;padding:0;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;line-height:1.5;height:100%!important;width:100%!important;">
           <table bgcolor="#fdfdfd" width="100%" style="box-sizing:border-box;border-spacing:0;width:100%;background-color:#fdfdfd;border-collapse:separate!important">
               <tbody>
@@ -166,28 +174,70 @@ export const baseTemplate = (information: EmailTemplateParams): string => {
           </table>
       </div>
   `;
-};
+  }
 
-export const sendSignupConfirmation = (redirectUrl: string): EmailTemplateParams => {
-  return {
-    body: 'Click the following link to confirm your email address.',
-    bodyTitle: 'You\'re almost done!<br>Let\'s confirm your email address.',
-    buttonText: 'Confirm your email address',
-    buttonUrl: redirectUrl,
-    footerText: 'Place for chat on the web',
-    heading: 'Let\'s confirm your email address.',
-    title: `'Welcome to ${configs.CLIENT_APP_NAME}! Confirm Your Email Address'`,
-  };
-};
+  public static registerConfirmData(options: any = {}): EmailTemplateParams {
+    return {
+      body: 'Click the following link to confirm your email address.',
+      bodyTitle: 'You\'re almost done!<br>Let\'s confirm your email address.',
+      buttonText: 'Confirm your email address',
+      footerText: 'Place for chat on the web',
+      heading: 'Let\'s confirm your email address.',
+      title: `'Welcome to ${clientAppName}! Confirm Your Email Address'`,
+      ...options,
+    };
+  }
 
-export const sendPwdResetConfirmation = (redirectUrl: string): EmailTemplateParams => {
-  return {
-    body: 'Click the following link to reset your password.',
-    bodyTitle: 'You\'re almost done!<br>Let\'s reset your password.',
-    buttonText: 'Confirm your email address',
-    buttonUrl: redirectUrl,
-    footerText: 'Place for chat on the web',
-    heading: 'Let\'s reset your password.',
-    title: `Reset Your ${configs.CLIENT_APP_NAME} Password`,
-  };
-};
+  public static pwdResetConfirmData(options: any = {}): EmailTemplateParams {
+    return {
+      body: 'Click the following link to reset your password.',
+      bodyTitle: 'You\'re almost done!<br>Let\'s reset your password.',
+      buttonText: 'Confirm your email address',
+      footerText: 'Place for chat on the web',
+      heading: 'Let\'s reset your password.',
+      title: `Reset Your ${clientAppName} Password`,
+      ...options,
+    };
+  }
+
+  private mailer;
+
+  constructor() {
+    this.mailer = sgMail;
+    this.mailer.setApiKey(apiKey);
+  }
+
+  public sendRegisterConfirmation(
+    to: string,
+    redirect_url: string,
+  ): Promise<string> {
+    const data = AuthMailer.registerConfirmData({
+      buttonUrl: redirect_url,
+    });
+
+    return this.sendMail(
+      to,
+      'Complete your Damso registration.',
+      AuthMailer.emailTemplate(data),
+    );
+  }
+
+  private async sendMail(
+    to: string,
+    subject: string,
+    html: string,
+  ): Promise<string> {
+    await this
+      .mailer
+      .send({
+        from: 'no-reply@yt-studio.com',
+        html,
+        subject,
+        to,
+      });
+
+    return to;
+  }
+}
+
+export const mailer = new AuthMailer();

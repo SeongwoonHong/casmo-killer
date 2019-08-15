@@ -1,13 +1,11 @@
 import {
   AWSError,
   S3,
-  SES,
   config as AwsConfig,
 } from 'aws-sdk';
 
-import { EmailTemplateParams } from '~lib/types';
-import { baseTemplate } from '~lib/mail';
 import { configs } from '~config';
+import { getBase64 } from '~lib/./img-utils';
 
 class Aws {
   private readonly s3bucketSettings: {
@@ -16,8 +14,6 @@ class Aws {
   };
   private readonly s3endpoint: string;
   private readonly s3Client: S3;
-  private readonly sesClient: SES;
-  private readonly sesSender: string;
 
   constructor() {
     const {
@@ -26,7 +22,6 @@ class Aws {
       AWS_S3_BUCKET: Bucket,
       AWS_REGION: region,
       AWS_SECRET_ACCESS_KEY: secretAccessKey,
-      AWS_SES_SENDER_EMAIL: sesSender,
     } = configs;
 
     AwsConfig.update({
@@ -44,55 +39,17 @@ class Aws {
       endpoint: this.s3endpoint,
       s3BucketEndpoint: true,
     });
-
-    this.sesClient = new SES();
-    this.sesSender = sesSender;
   }
 
-  public sendEmail(
-    targetEmail: string | string[],
-    templateData: EmailTemplateParams,
-    templateGenerator = baseTemplate,
-  ) {
-    const Charset = 'UTF-8';
-    const Data = templateGenerator(templateData);
-    const ToAddresses = !Array.isArray(targetEmail)
-      ? [targetEmail]
-      : targetEmail;
-
-    return this
-      .sesClient
-      .sendEmail({
-        Destination: {
-          ToAddresses,
-        },
-        Message: {
-          Body: {
-            Html: {
-              Charset,
-              Data,
-            },
-            Text: {
-              Charset,
-              Data: templateData.heading,
-            },
-          },
-          Subject: {
-            Charset,
-            Data: templateData.heading,
-          },
-        },
-        Source: this.sesSender,
-      })
-      .promise();
-  }
-
-  public uploadImage(Key: string, body: string): Promise<string> {
+  public uploadImageData(
+    Key: string,
+    body: string,
+  ): Promise<string> {
     const ContentEncoding = 'base64';
     const ContentType = body
       .split(';')[0]
       .replace(/^data:/, '');
-    const Body = new Buffer(
+    const Body = Buffer.from(
       body.replace(
         /^data:image\/\w+;base64,/,
         '',
@@ -107,6 +64,18 @@ class Aws {
         ContentEncoding,
         ContentType,
       },
+    );
+  }
+
+  public async uploadImageFromUrl(
+    Key: string,
+    uri: string,
+  ): Promise<string> {
+    const body = await getBase64(uri);
+
+    return this.uploadImageData(
+      Key,
+      body,
     );
   }
 

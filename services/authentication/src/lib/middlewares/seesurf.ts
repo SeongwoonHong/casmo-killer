@@ -11,8 +11,8 @@ import { badRequest } from '~lib/responses';
 import { configs } from '~config';
 
 const {
-  COOKIE_CSRF_KEY_NAME: keyName,
   COOKIE_CSRF_HEADER_NAME: headerName,
+  COOKIE_CSRF_KEY_NAME: keyName,
   COOKIE_OPTIONS: cookieOptions,
 } = configs;
 

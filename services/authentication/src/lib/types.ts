@@ -1,6 +1,13 @@
 import { Request } from 'express';
 import { UserModel } from '../api/user.model';
 
+export enum AuthStrategies {
+  local = 'local',
+  facebook = 'facebook',
+  google = 'google',
+  kakao = 'kakao',
+}
+
 export interface DupeValueCheckOption {
   field: string;
   value: string;
@@ -45,6 +52,21 @@ export interface QueryParamsObject {
   search_field: string;
   search_values: string[];
   return_fields: string[];
+}
+
+export enum SocialAuthProviders {
+  facebook = 'facebook',
+  google = 'google',
+  kakao = 'kakao',
+}
+
+export interface SocialAuthResponse {
+  avatar: string;
+  display_name: string;
+  email: string;
+  social_id: string;
+  social_token: string;
+  strategy: SocialAuthProviders;
 }
 
 export interface UserInfoRequest<T = UserModel> extends Request {

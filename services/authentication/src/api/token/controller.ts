@@ -40,7 +40,10 @@ export const getPublicRsaKey = (
   );
 
   if (validations.error) {
-    return invalidRequest(res, validations.error);
+    return invalidRequest(
+      res,
+      validations.error,
+    );
   }
 
   const {
@@ -66,26 +69,28 @@ export const refreshTokens = async (
   const {
     refresh_token,
     user: {
-      id: userId,
+      id,
     },
   } = req;
-
-  if (!refresh_token) {
-    return badRequest(res);
-  }
 
   try {
     const {
       user,
       tokens,
     } = await UserModel.refreshTokens(
-      userId,
+      id,
       refresh_token,
     );
 
-    return user.logIn(res, tokens);
+    return await user.logIn(
+      res,
+      tokens,
+    );
   } catch (err) {
-    return error(res, err);
+    return error(
+      res,
+      err,
+    );
   }
 };
 
@@ -102,7 +107,10 @@ export const verifyToken = async (
   );
 
   if (validations.error) {
-    return invalidRequest(res, validations.error);
+    return invalidRequest(
+      res,
+      validations.error,
+    );
   }
 
   try {
@@ -117,7 +125,10 @@ export const verifyToken = async (
       return badRequest(res);
     }
 
-    return success(res, payload[subject]);
+    return success(
+      res,
+      payload[subject],
+    );
   } catch (err) {
     if (
       err.name === 'JsonWebTokenError' ||
@@ -126,6 +137,9 @@ export const verifyToken = async (
       return badRequest(res);
     }
 
-    return error(res, err);
+    return error(
+      res,
+      err,
+    );
   }
 };

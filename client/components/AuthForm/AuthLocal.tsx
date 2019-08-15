@@ -4,9 +4,6 @@ import { IAuthLocal } from 'interfaces';
 const AuthLocal:FunctionComponent<IAuthLocal.IProps> = ({ mode, inputs, errors }) => {
   return (
     <div className="AuthLocal">
-      <div className="authlocal-header">
-        이메일 { mode === 'login' ? '로그인' : '가입'}
-      </div>
       <div className="authlocal-body">
         {
           inputs.map((input) => {

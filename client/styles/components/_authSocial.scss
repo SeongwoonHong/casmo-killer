@@ -5,6 +5,8 @@
     color: $white;
     position: relative;
     @include flex-vertical-center;
+    margin-bottom: 5px;
+    font-size: 14px;
 
     .facebook-logo,
     .gmail-logo,
@@ -19,7 +21,7 @@
     }
     
     &.gmail {
-      background-color: #5284ec;
+      background-color: #b5422e;
     }
 
     &.kakaotalk {

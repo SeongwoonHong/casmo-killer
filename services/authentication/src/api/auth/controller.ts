@@ -9,56 +9,41 @@ import {
   Response,
 } from 'express';
 
-import { TokenModel } from '../token/model';
-import { UserModel } from '../user.model';
 import {
-  QueryParamsObject,
+  SocialAuthResponse,
   UserInfoRequest,
 } from '~lib/types';
-// import { aws } from '~lib/aws';
+import { UserModel } from '../user.model';
 import {
   badRequest,
-  error, forbidden,
-  invalidRequest, notFound,
+  error,
+  forbidden,
+  invalidRequest,
+  notFound,
   success,
 } from '~lib/responses';
-// import { sendSignupConfirmation } from '~lib/mail';
+import { configs } from '~config';
+import { mailer } from '~lib/mailer';
+import { sign } from '~lib/token-utils';
+import { socialAuth } from '~lib/social-auth';
 import {
   validDisplayName,
   validEmail,
   validNull,
   validPassword,
 } from '~lib/validations';
-// import { sign } from '~lib/token-utils';
 
-export const initialize = async (
+const {
+  SOCIAL_AUTH_PROVIDERS: socialProviders,
+} = configs;
+
+export const initialize = (
   req: UserInfoRequest,
   res: Response,
-): Promise<Response> => {
-  const {
-    refresh_token,
-    user: {
-      id: userId,
-    },
-  } = req;
-
-  if (!refresh_token) {
-    return badRequest(res);
-  }
-
-  try {
-    const {
-      user,
-      tokens,
-    } = await UserModel.refreshTokens(
-      userId,
-      refresh_token,
-    );
-
-    return user.logIn(res, tokens);
-  } catch (err) {
-    return error(res, err);
-  }
+): Response => {
+  return res
+    .status(204)
+    .send();
 };
 
 export const requestSignup = async (
@@ -69,16 +54,23 @@ export const requestSignup = async (
     req.body,
     JoiObject({
       email: validEmail,
+      redirect_url: JoiString()
+        .regex(/<email>/)
+        .required(),
     }),
   );
 
   if (validations.error) {
-    return invalidRequest(res, validations.error);
+    return invalidRequest(
+      res,
+      validations.error,
+    );
   }
 
   try {
     const {
       email,
+      redirect_url,
     } = req.body;
 
     const {
@@ -95,17 +87,20 @@ export const requestSignup = async (
       );
     }
 
-    // const token = await sign(
-    //   {
-    //     email,
-    //   },
-    //   'email',
-    // );
-    //
-    // await aws.sendEmail(
-    //   email,
-    //   sendSignupConfirmation(''),
-    // );
+    const token = await sign(
+      {
+        email,
+      },
+      'email',
+    );
+
+    await mailer.sendRegisterConfirmation(
+      email,
+      redirect_url.replace(
+        /<email>/,
+        token,
+      ),
+    );
 
     return success(
       res,
@@ -116,7 +111,10 @@ export const requestSignup = async (
     );
 
   } catch (err) {
-    return error(res, err);
+    return error(
+      res,
+      err,
+    );
   }
 };
 
@@ -135,7 +133,10 @@ export const localRegister = async (
   );
 
   if (validations.error) {
-    return invalidRequest(res, validations.error);
+    return invalidRequest(
+      res,
+      validations.error,
+    );
   }
 
   try {
@@ -167,44 +168,17 @@ export const localRegister = async (
       );
     }
 
-    const {
-      exclude_fields = [],
-      return_fields = [],
-    } = req.query as QueryParamsObject;
-
-    const returnFields = Array.from(
-      new Set([
-        ...UserModel.BASE_FIELDS,
-        ...return_fields.filter((return_field) => {
-          return UserModel.ALL_FIELDS.includes(return_field)
-            && !exclude_fields.includes(return_field);
-        }),
-      ]),
+    const newUser = await UserModel.registerNewUser(
+      req.body,
+      req.query,
     );
 
-    const newUser: UserModel = await UserModel
-      .query()
-      .insert({
-        ...req.body,
-      })
-      .pick(returnFields)
-      .first();
-
-    const tokens = await newUser.generateTokens();
-
-    await TokenModel
-      .query()
-      .insert({
-        refresh_token: tokens.refresh_token,
-        user_id: newUser.id,
-      });
-
-    return newUser.logIn(
-      res,
-      tokens,
-    );
+    return await newUser.logIn(res);
   } catch (err) {
-    return error(res, err);
+    return error(
+      res,
+      err,
+    );
   }
 };
 
@@ -221,7 +195,10 @@ export const localLogin = async (
   );
 
   if (validations.error) {
-    return invalidRequest(res, validations.error);
+    return invalidRequest(
+      res,
+      validations.error,
+    );
   }
 
   try {
@@ -251,20 +228,171 @@ export const localLogin = async (
       );
     }
 
-    const tokens = await user.generateTokens();
-
-    await TokenModel
-      .query()
-      .insert({
-        refresh_token: tokens.refresh_token,
-        user_id: user.id,
-      });
-
-    return user.logIn(
+    return await user.logIn(res);
+  } catch (err) {
+    return error(
       res,
-      tokens,
+      err,
     );
+  }
+};
+
+export const socialRegister = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
+  const validations: ValidationResult<any> = JoiValidate(
+    req.body,
+    JoiObject({
+      avatar: validNull,
+      display_name: validDisplayName,
+      email: validEmail,
+      password: validNull,
+      social_id: JoiString().required(),
+      social_token: JoiString().required(),
+      strategy: JoiString().valid(socialProviders),
+    }),
+  );
+
+  if (validations.error) {
+    return invalidRequest(
+      res,
+      validations.error,
+    );
+  }
+
+  try {
+    const {
+      strategy,
+      email,
+      social_id,
+      social_token,
+    } = req.body;
+
+    const profile = await socialAuth.fetchSocialInfo(
+      strategy,
+      social_token,
+    );
+
+    if (
+      profile.social_id !== social_id ||
+      profile.email !== email
+    ) {
+      return badRequest(
+        res,
+        'Incorrect social profile information provided.',
+      );
+    }
+
+  } catch (err) {
+    return error(
+      res,
+      {
+        ...err,
+        message: 'Failed to retrieve your social profile.',
+      },
+    );
+  }
+
+  try {
+    const newUser = await UserModel.registerNewUser(
+      req.body,
+      req.query,
+    );
+
+    return await newUser.logIn(res);
   } catch (err) {
     return error(res, err);
+  }
+};
+
+export const socialLogin = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
+  const validations: ValidationResult<any> = JoiValidate(
+    req.body,
+    JoiObject({
+      accessToken: JoiString().required(),
+      provider: JoiString().valid(socialProviders),
+    }),
+  );
+
+  if (validations.error) {
+    return invalidRequest(
+      res,
+      validations.error,
+    );
+  }
+
+  let socialProfile: SocialAuthResponse;
+
+  try {
+    const {
+      accessToken,
+      provider,
+    } = req.body;
+
+    socialProfile = await socialAuth.fetchSocialInfo(
+      provider,
+      accessToken,
+    );
+  } catch (err) {
+    return error(
+      res,
+      {
+        ...err,
+        message: 'Failed to retrieve user profile',
+      },
+    );
+  }
+
+  try {
+    const {
+      email,
+      social_id,
+      strategy,
+    } = socialProfile;
+    const emailDup = await UserModel.findByEmail(email);
+
+    if (emailDup) {
+      if (
+        emailDup.strategy === strategy &&
+        emailDup.social_id === social_id
+      ) {
+        return await emailDup.logIn(res);
+      }
+
+      return forbidden(
+        res,
+        'Your email address is already registered with a different provider.',
+      );
+    }
+
+    let socialUser = await UserModel.findBySocialProfile(
+      strategy,
+      social_id,
+    );
+
+    if (!socialUser) {
+      return success(
+        res,
+        {
+          profile: socialProfile,
+          shouldRegister: true,
+        },
+      );
+    }
+
+    if (socialUser.email !== socialProfile.email) {
+      socialUser = await socialUser.updateEmail(socialProfile.email);
+    }
+
+    return await socialUser.logIn(res);
+  } catch (err) {
+    return error(
+      res,
+      err,
+    );
   }
 };

@@ -6,7 +6,7 @@
 
 body {
   margin: 0;
-  background-color: $defaultBackground;
+  background-color: $theme;
   font-size: 12px;
 }
 
@@ -17,7 +17,11 @@ input {
 button {
   border: none;
   
-  &::active {
+  &:active {
     border-style: none;
+  }
+
+  &:focus {
+    outline: none;
   }
 }

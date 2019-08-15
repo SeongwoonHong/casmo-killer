@@ -8,7 +8,7 @@ import {
 
 import { csurferify } from '~lib/middlewares/seesurf';
 import { isAuthorized } from '~lib/middlewares/authorized';
-import { refreshTokenParser } from '~lib/middlewares/auth-token-parser';
+import { refreshTokenParser } from '~lib/middlewares/token-parser';
 
 export class UserRoutes {
   public router: Router;

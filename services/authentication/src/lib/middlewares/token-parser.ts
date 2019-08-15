@@ -69,6 +69,7 @@ export const refreshTokenParser = (
         return unauthorized(response);
       }
 
+      req.refresh_token = null;
       return next();
     };
 
@@ -115,7 +116,10 @@ export const refreshTokenParser = (
         return failedResponse(res);
       }
 
-      return error(res, err);
+      return error(
+        res,
+        err,
+      );
     }
   };
 };

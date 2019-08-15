@@ -1,11 +1,4 @@
 .AuthForm {
-  border: 1px solid #9a9a9a;
-
-  .auth-social-text {
-    padding: 10px;
-    font-weight: bold;
-  }
-
   .AuthSocial-wrapper {
     padding: 10px;
   }
@@ -14,11 +7,17 @@
     margin: initial;
   }
 
+  .auth-form-or {
+    text-align: center;
+    color: $white;
+    font-size: 16px;
+  }
+
   .authform-button {
     @include flex-center;
     height: 40px;
     width: 100%;
-    background-color: #FA7F3C;
+    background-color: $royalblue;
     padding: 10px;
     color: white;
   }

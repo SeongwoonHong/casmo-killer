@@ -172,14 +172,25 @@ describe('/token routes', () => {
               .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
               .set(COOKIE_AUTH_HEADER_NAME, accessToken)
               .send({
-                display_name: testUsers[0].display_name,
-                email: testUsers[0].email,
+                display_name: 'random_display_name',
+                email: 'random@email.com',
                 id: resTwo.body.id,
               })
               .end((errThree, resThree: request.Response) => {
-                // console.log(resThree.body);
+                expect(resThree.body).toHaveProperty('user');
+                expect(resThree.body.user.display_name).toEqual('random_display_name');
+                expect(resThree.body.user.email).toEqual('random@email.com');
 
-                done();
+                agent
+                  .patch(`${endpoint}/${resTwo.body.id}`)
+                  .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
+                  .set(COOKIE_AUTH_HEADER_NAME, accessToken)
+                  .send({
+                    display_name: testUsers[2].display_name,
+                    email: testUsers[2].email,
+                    id: resTwo.body.id,
+                  })
+                  .end(done);
               });
           });
       });

@@ -22,14 +22,13 @@ const config = {
     API_ROOT: process.env.API_ROOT || '/api',
     AUTH_STRATEGIES: process.env.AUTH_STRATEGIES
       ? process.env.AUTH_STRATEGIES.split(',')
-      : ['local', 'facebook', 'google'],
+      : ['local', 'facebook', 'google', 'kakao'],
     // aws configs
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_REGION: process.env.AWS_REGION || 'us-east-1',
     AWS_S3_ACL: process.env.AWS_S3_ACL || 'public-read',
     AWS_S3_BUCKET: process.env.AWS_S3_BUCKET || 'damso-pics',
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
-    AWS_SES_SENDER_EMAIL: process.env.AWS_SES_SENDER_EMAIL || 'ckboardtoronto@gmail.com',
     // client settings
     CLIENT_APP_NAME: process.env.CLIENT_APP_NAME || 'Damso',
     CLIENT_LOGO_URL: process.env.CLIENT_LOGO_URL || 'https://i.imgur.com/7ClIc5h.png',
@@ -64,6 +63,11 @@ const config = {
         return {};
       }
     })(process.env.RSA_KEY_PAIRS),
+    SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
+    SENDGRID_SENDER: process.env.SENDGRID_SENDER || 'no-reply@damso.com',
+    SOCIAL_AUTH_PROVIDERS: process.env.SOCIAL_AUTH_PROVIDERS
+      ? process.env.SOCIAL_AUTH_PROVIDERS.split(',')
+      : ['facebook', 'google', 'kakao'],
     TOKEN_EXPIRY_FOR_ACCESS: process.env.TOKEN_EXPIRY_FOR_ACCESS || 60,
     TOKEN_EXPIRY_FOR_REFRESH: process.env.TOKEN_EXPIRY_FOR_REFRESH || '90d',
     TOKEN_ISSUER: process.env.TOKEN_ISSUER || 'damso-authentication-service',

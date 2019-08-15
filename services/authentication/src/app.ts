@@ -8,7 +8,7 @@ import * as morgan from 'morgan';
 
 import { ErrorWithStatus } from '~lib/types';
 import { RootRoutes } from './api';
-import { authTokenParser } from '~lib/middlewares/auth-token-parser';
+import { authTokenParser } from '~lib/middlewares/token-parser';
 import { configs } from '~config';
 import { queryStringMapper } from '~lib/qs-utils';
 import { stream } from '~lib/logger';

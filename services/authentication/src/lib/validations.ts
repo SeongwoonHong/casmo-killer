@@ -1,5 +1,9 @@
 import * as Joi from 'joi';
 
+export const isUrl = (url: string): boolean => {
+  return /^https?:\/\//.test(url);
+};
+
 export const validEmail = Joi
   .string()
   .email()

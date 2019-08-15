@@ -78,7 +78,10 @@ export const requestUserInfo = async (
     );
 
   } catch (err) {
-    return error(res, err);
+    return error(
+      res,
+      err,
+    );
   }
 };
 
@@ -109,7 +112,10 @@ export const updateUserInfo = async (
   );
 
   if (validations.error) {
-    return invalidRequest(res, validations.error);
+    return invalidRequest(
+      res,
+      validations.error,
+    );
   }
 
   if (req.params.user_id !== req.body.id) {
@@ -149,7 +155,10 @@ export const updateUserInfo = async (
       },
     );
   } catch (err) {
-    return error(res, err);
+    return error(
+      res,
+      err,
+    );
   }
 };
 
@@ -165,10 +174,6 @@ export const logout = async (
       refresh_token,
     } = req;
 
-    if (!userId || !refresh_token) {
-      return badRequest(res);
-    }
-
     await TokenModel
       .query()
       .delete()
@@ -181,6 +186,9 @@ export const logout = async (
       .send();
 
   } catch (err) {
-    return error(res, err);
+    return error(
+      res,
+      err,
+    );
   }
 };

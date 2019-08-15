@@ -14,7 +14,7 @@ describe('/ping routes', () => {
   it('ping pongs', (done) => {
     request(app)
       .get(endpoint)
-      .end((err, res) => {
+      .end((err, res: request.Response) => {
         expect(res.body.message).toBe('pong');
         done();
       });

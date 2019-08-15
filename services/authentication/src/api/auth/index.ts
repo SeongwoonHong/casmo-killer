@@ -10,9 +10,9 @@ import {
   requestSignup,
   localRegister,
   localLogin,
+  socialRegister,
+  socialLogin,
 } from './controller';
-import { refreshTokenParser } from '~lib/middlewares/auth-token-parser';
-import { isAuthorized } from '~lib/middlewares/authorized';
 
 export class AuthRoutes {
   public router: Router;
@@ -28,8 +28,6 @@ export class AuthRoutes {
       .post(
         '/initialize',
         csurfify(),
-        refreshTokenParser(),
-        isAuthorized(),
         initialize,
       )
       .post(
@@ -45,6 +43,16 @@ export class AuthRoutes {
       .post(
         '/local/login',
         localLogin,
+      )
+      .post(
+        '/social/register',
+        csurferify(),
+        socialRegister,
+      )
+      .post(
+        '/social/login',
+        csurferify(),
+        socialLogin,
       );
   }
 }

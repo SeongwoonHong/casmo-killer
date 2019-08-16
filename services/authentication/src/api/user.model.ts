@@ -95,11 +95,20 @@ export class UserModel extends BaseModel {
   public static findBySocialProfile(
     strategy: SocialAuthProviders,
     social_id: string,
+    fields: string[] = [],
   ): Promise<UserModel> {
+    const return_fields = Array.from(
+      new Set([
+        ...UserModel.BASE_FIELDS,
+        ...fields,
+      ]),
+    );
+
     return UserModel
       .query()
       .where('strategy', strategy)
       .where('social_id', social_id)
+      .column(return_fields)
       .first();
   }
 

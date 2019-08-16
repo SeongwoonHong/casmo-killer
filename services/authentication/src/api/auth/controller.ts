@@ -273,12 +273,15 @@ export const socialRegister = async (
 
   try {
     const {
-      avatar,
-      display_name,
-      social_id,
-      social_token,
-      strategy,
-    } = req.body;
+      body: {
+        avatar,
+        display_name,
+        social_id,
+        social_token,
+        strategy,
+      },
+      query,
+    } = req;
 
     const socialProfile = await socialAuth.fetchSocialInfo(
       strategy,
@@ -292,6 +295,14 @@ export const socialRegister = async (
       );
     }
 
+    const fieldOptions = {
+      ...query,
+      return_fields: query.return_fields.concat([
+        'social_id',
+        'strategy',
+      ]),
+    };
+
     const newUser = await UserModel.registerNewUser(
       {
         avatar,
@@ -299,7 +310,7 @@ export const socialRegister = async (
         social_id,
         strategy,
       },
-      req.query,
+      fieldOptions,
     );
 
     return await newUser.logIn(res);
@@ -332,18 +343,27 @@ export const socialLogin = async (
 
   try {
     const {
-      accessToken,
-      provider,
-    } = req.body;
+      body: {
+        accessToken,
+        provider,
+      },
+      query,
+    } = req;
 
     const socialProfile = await socialAuth.fetchSocialInfo(
       provider,
       accessToken,
     );
 
+    const fieldOptions = query.return_fields.concat([
+      'social_id',
+      'strategy',
+    ]);
+
     const socialUser = await UserModel.findBySocialProfile(
       socialProfile.strategy,
       socialProfile.social_id,
+      fieldOptions,
     );
 
     if (!socialUser) {

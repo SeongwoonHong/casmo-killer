@@ -9,10 +9,7 @@ import {
   Response,
 } from 'express';
 
-import {
-  SocialAuthResponse,
-  UserInfoRequest,
-} from '~lib/types';
+import { UserInfoRequest } from '~lib/types';
 import { UserModel } from '../user.model';
 import {
   badRequest,
@@ -27,6 +24,7 @@ import { mailer } from '~lib/mailer';
 import { sign } from '~lib/token-utils';
 import { socialAuth } from '~lib/social-auth';
 import {
+  isValidAvatar,
   validDisplayName,
   validEmail,
   validNull,
@@ -139,6 +137,13 @@ export const localRegister = async (
     );
   }
 
+  if (req.body.avatar && !isValidAvatar(req.body.avatar)) {
+    return badRequest(
+      res,
+      'Invalid avatar provided.',
+    );
+  }
+
   try {
     const {
       display_name,
@@ -246,8 +251,6 @@ export const socialRegister = async (
     JoiObject({
       avatar: validNull,
       display_name: validDisplayName,
-      email: validEmail,
-      password: validNull,
       social_id: JoiString().required(),
       social_token: JoiString().required(),
       strategy: JoiString().valid(socialProviders),
@@ -261,48 +264,50 @@ export const socialRegister = async (
     );
   }
 
+  if (req.body.avatar && !isValidAvatar(req.body.avatar)) {
+    return badRequest(
+      res,
+      'Invalid avatar provided.',
+    );
+  }
+
   try {
     const {
-      strategy,
-      email,
+      avatar,
+      display_name,
       social_id,
       social_token,
+      strategy,
     } = req.body;
 
-    const profile = await socialAuth.fetchSocialInfo(
+    const socialProfile = await socialAuth.fetchSocialInfo(
       strategy,
       social_token,
     );
 
-    if (
-      profile.social_id !== social_id ||
-      profile.email !== email
-    ) {
+    if (socialProfile.social_id !== social_id) {
       return badRequest(
         res,
         'Incorrect social profile information provided.',
       );
     }
 
-  } catch (err) {
-    return error(
-      res,
-      {
-        ...err,
-        message: 'Failed to retrieve your social profile.',
-      },
-    );
-  }
-
-  try {
     const newUser = await UserModel.registerNewUser(
-      req.body,
+      {
+        avatar,
+        display_name,
+        social_id,
+        strategy,
+      },
       req.query,
     );
 
     return await newUser.logIn(res);
   } catch (err) {
-    return error(res, err);
+    return error(
+      res,
+      err,
+    );
   }
 };
 
@@ -325,53 +330,20 @@ export const socialLogin = async (
     );
   }
 
-  let socialProfile: SocialAuthResponse;
-
   try {
     const {
       accessToken,
       provider,
     } = req.body;
 
-    socialProfile = await socialAuth.fetchSocialInfo(
+    const socialProfile = await socialAuth.fetchSocialInfo(
       provider,
       accessToken,
     );
-  } catch (err) {
-    return error(
-      res,
-      {
-        ...err,
-        message: 'Failed to retrieve user profile',
-      },
-    );
-  }
 
-  try {
-    const {
-      email,
-      social_id,
-      strategy,
-    } = socialProfile;
-    const emailDup = await UserModel.findByEmail(email);
-
-    if (emailDup) {
-      if (
-        emailDup.strategy === strategy &&
-        emailDup.social_id === social_id
-      ) {
-        return await emailDup.logIn(res);
-      }
-
-      return forbidden(
-        res,
-        'Your email address is already registered with a different provider.',
-      );
-    }
-
-    let socialUser = await UserModel.findBySocialProfile(
-      strategy,
-      social_id,
+    const socialUser = await UserModel.findBySocialProfile(
+      socialProfile.strategy,
+      socialProfile.social_id,
     );
 
     if (!socialUser) {
@@ -379,13 +351,9 @@ export const socialLogin = async (
         res,
         {
           profile: socialProfile,
-          shouldRegister: true,
+          should_register: true,
         },
       );
-    }
-
-    if (socialUser.email !== socialProfile.email) {
-      socialUser = await socialUser.updateEmail(socialProfile.email);
     }
 
     return await socialUser.logIn(res);

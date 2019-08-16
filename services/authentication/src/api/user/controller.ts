@@ -21,9 +21,11 @@ import {
   invalidRequest,
   notFound,
   success, unauthorized,
+
 } from '~lib/responses';
 import { configs } from '~config';
 import {
+  isValidAvatar,
   validEmail,
   validNull,
 } from '~lib/validations';
@@ -115,6 +117,13 @@ export const updateUserInfo = async (
     return invalidRequest(
       res,
       validations.error,
+    );
+  }
+
+  if (req.body.avatar && !isValidAvatar(req.body.avatar)) {
+    return badRequest(
+      res,
+      'Invalid avatar provided.',
     );
   }
 

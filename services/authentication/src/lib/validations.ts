@@ -4,6 +4,17 @@ export const isUrl = (url: string): boolean => {
   return /^https?:\/\//.test(url);
 };
 
+export const isBase64 = (encoded: string): boolean => {
+  return /^data:image\/([a-zA-Z]*);base64,([^\"]*)/.test(encoded);
+};
+
+export const isValidAvatar = (avatar: string): boolean => {
+  return avatar === '' ||
+    avatar === null ||
+    isUrl(avatar) ||
+    isBase64(avatar);
+};
+
 export const validEmail = Joi
   .string()
   .email()

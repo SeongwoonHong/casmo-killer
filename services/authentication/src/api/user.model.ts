@@ -204,7 +204,10 @@ export class UserModel extends BaseModel {
 
   public async $beforeInsert() {
     super.$beforeInsert();
-    this.password = await hash(this.password);
+
+    if (this.password) {
+      this.password = await hash(this.password);
+    }
   }
 
   public async generateTokens(

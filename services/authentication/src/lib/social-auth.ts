@@ -36,15 +36,15 @@ class SocialAuth {
       method: 'GET',
       qs: {
         access_token: accessToken,
-        fields: 'id,name,email,picture',
+        fields: 'id,name,picture',
       },
       uri: 'https://graph.facebook.com/v2.11/me',
     };
     const response = await rp(options);
 
-    if (response.email) {
+    if (response.id) {
       return Promise.reject({
-        message: 'Failed to retrieve email',
+        message: 'Failed to retrieve profile',
       });
     }
 
@@ -53,7 +53,6 @@ class SocialAuth {
         response.picture.data &&
         response.picture.data.url,
       display_name: response.name,
-      email: response.email,
       social_id: response.id,
       social_token: accessToken,
       strategy: SocialAuthProviders.facebook,
@@ -71,23 +70,15 @@ class SocialAuth {
     };
     const response = await rp(options);
 
-    const email = Array.isArray(response.emails) && response.emails.length > 0
-      ? response.emails.find((addr: {
-        value: string,
-        type: string,
-      }) => addr.type === 'account')
-      : null;
-
-    if (!email) {
+    if (response.id) {
       return Promise.reject({
-        message: 'Failed to retrieve email',
+        message: 'Failed to retrieve profile',
       });
     }
 
     return {
       avatar: response.image.url,
       display_name: response.displayName,
-      email,
       social_id: response.id,
       social_token: accessToken,
       strategy: SocialAuthProviders.google,
@@ -105,16 +96,15 @@ class SocialAuth {
     };
     const response = await rp(options);
 
-    if (!response.kaccount_email) {
+    if (response.id) {
       return Promise.reject({
-        message: 'Failed to retrieve email',
+        message: 'Failed to retrieve profile',
       });
     }
 
     return {
       avatar: response.properties && response.properties.profile_image,
       display_name: response.properties && response.properties.nickname,
-      email: response.kaccount_email,
       social_id: String(response.id),
       social_token: accessToken,
       strategy: SocialAuthProviders.kakao,

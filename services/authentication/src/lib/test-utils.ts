@@ -48,7 +48,14 @@ export const resCookieParser = (cookieString: string[]): {
     );
 };
 
-export const testSocialUsers = [];
+export const socialTestUsers = [
+  {
+    avatar: null,
+    display_name: 'social_tester_one',
+    social_id: 'ec2cd494d3c8484aaaa36e7663e42c17',
+    strategy: 'google',
+  },
+];
 
 export const testUsers = [
   {

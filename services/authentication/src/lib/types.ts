@@ -63,7 +63,6 @@ export enum SocialAuthProviders {
 export interface SocialAuthResponse {
   avatar: string;
   display_name: string;
-  email: string;
   social_id: string;
   social_token: string;
   strategy: SocialAuthProviders;

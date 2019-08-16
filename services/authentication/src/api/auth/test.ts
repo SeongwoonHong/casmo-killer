@@ -15,6 +15,7 @@ import {
   mockedToken,
   newUsers as _newUsers,
   resCookieParser,
+  socialTestUsers,
   testUsers,
 } from '~lib/test-utils';
 import { sign } from '~lib/token-utils';
@@ -254,27 +255,132 @@ describe('/auth routes', () => {
   });
 
   it('returns a social profile if not registered when logging in', (done) => {
+    const payload = {
+      accessToken: 'asdfasdfasdfasdfasdfasdfasdfasdf',
+      provider: 'google',
+    };
     const socialProfile = {
       avatar: null,
       display_name: 'social_user_one',
-      email: 'social_user@email.com',
       social_id: 'asdfasdfasdfasdf',
       social_token: 'zxcvzxcvzxcv',
       strategy: 'facebook',
     };
-    socialAuth.google = jest.fn().mockResolvedValue(socialProfile);
+    socialAuth[payload.provider] = jest.fn().mockResolvedValue(socialProfile);
 
     agent
       .post(`${endpoint}/social/login`)
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
-      .send({
-        accessToken: 'asdfasdfasdfasdfasdfasdfasdfasdf',
-        provider: 'google',
-      })
+      .send(payload)
       .end((err, res: request.Response) => {
-        // console.log(res.body);
-        // console.log((socialAuth.google as any).mock.calls);
-        expect(true).toBe(true);
+        expect(res.body).toHaveProperty('profile');
+        expect(res.body.profile).toEqual(socialProfile);
+        expect(res.body.should_register).toBe(true);
+        expect(socialAuth[payload.provider]).toHaveBeenCalledWith(payload.accessToken);
+
+        done();
+      });
+  });
+
+  it('logs in a social user', (done) => {
+    const payload = {
+      accessToken: 'asdfasdfasdfasdfasdfasdfasdfasdf',
+      provider: 'google',
+    };
+    const socialProfile = {
+      avatar: null,
+      display_name: socialTestUsers[0].display_name,
+      social_id: socialTestUsers[0].social_id,
+      social_token: payload.accessToken,
+      strategy: socialTestUsers[0].strategy,
+    };
+    socialAuth[payload.provider] = jest.fn().mockResolvedValue(socialProfile);
+
+    agent
+      .post(`${endpoint}/social/login`)
+      .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
+      .send(payload)
+      .end((err, res: request.Response) => {
+        const cookies = resCookieParser(res.header['set-cookie']);
+
+        expect(cookies).toHaveProperty(COOKIE_AUTH_KEY_NAME);
+        expect(res.header).toHaveProperty(COOKIE_AUTH_HEADER_NAME);
+
+        expect(res.body).toHaveProperty('id');
+        expect(res.body).toHaveProperty('avatar');
+        expect(res.body.display_name).toEqual(socialTestUsers[0].display_name);
+        expect(res.body.social_id).toEqual(socialTestUsers[0].social_id);
+        expect(res.body.strategy).toEqual(socialTestUsers[0].strategy);
+
+        done();
+      });
+  });
+
+  it('registers a new social user', (done) => {
+    const payload = {
+      avatar: null,
+      display_name: 'social_tester_two',
+      social_id: 'ec2cd494d3c8484aaaa36e7663e42c18',
+      social_token: 'asdfasdfasdfasdfasdfasdf',
+      strategy: 'facebook',
+    };
+    const socialProfile = {
+      avatar: null,
+      display_name: payload.display_name,
+      social_id: payload.social_id,
+      social_token: payload.social_token,
+      strategy: payload.strategy,
+    };
+    socialAuth[payload.strategy] = jest.fn().mockResolvedValue(socialProfile);
+
+    agent
+      .post(`${endpoint}/social/register`)
+      .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
+      .send(payload)
+      .end((err, res: request.Response) => {
+        const cookies = resCookieParser(res.header['set-cookie']);
+
+        expect(cookies).toHaveProperty(COOKIE_AUTH_KEY_NAME);
+        expect(res.header).toHaveProperty(COOKIE_AUTH_HEADER_NAME);
+
+        expect(res.body).toHaveProperty('id');
+        expect(res.body).toHaveProperty('avatar');
+        expect(res.body.display_name).toEqual(payload.display_name);
+
+        newUsers.push({
+          ...newUsers[0],
+          id: res.body.id,
+        });
+
+        done();
+      });
+  });
+
+  it('blocks a social user registration when a social id is incorrect', (done) => {
+    const payload = {
+      avatar: null,
+      display_name: 'social_tester_two',
+      social_id: 'ec2cd494d3c8484aaaa36e7663e42c18',
+      social_token: 'asdfasdfasdfasdfasdfasdf',
+      strategy: 'facebook',
+    };
+    const socialProfile = {
+      avatar: null,
+      display_name: payload.display_name,
+      social_id: 'ec2cd494d3c8484aaaa36e7663e42c19',
+      social_token: payload.social_token,
+      strategy: payload.strategy,
+    };
+    socialAuth[payload.strategy] = jest.fn().mockResolvedValue(socialProfile);
+
+    agent
+      .post(`${endpoint}/social/register`)
+      .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
+      .send(payload)
+      .end((err, res: request.Response) => {
+        expect(res.body.message).toEqual('Incorrect social profile information provided.');
+        expect(res.body.success).toBe(false);
+
         done();
       });
   });

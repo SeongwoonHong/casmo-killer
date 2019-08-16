@@ -17,8 +17,7 @@ export async function up(knex: Knex): Promise<any> {
         .notNullable();
       table
         .string('email')
-        .unique()
-        .notNullable();
+        .unique();
       table.string('password');
       table.specificType('prev_passwords', 'text[]');
       table

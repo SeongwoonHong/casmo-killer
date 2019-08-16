@@ -97,8 +97,8 @@ describe('/token routes', () => {
         expect(newAccessToken).toBeTruthy();
         expect(refreshToken).toBeTruthy();
         expect(newRefreshToken).toBeTruthy();
-        expect(accessToken === newAccessToken).toBe(false);
-        expect(refreshToken === newRefreshToken).toBe(false);
+        expect(accessToken).not.toEqual(newAccessToken);
+        expect(refreshToken).not.toEqual(newRefreshToken);
 
         done();
       });

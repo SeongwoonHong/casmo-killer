@@ -11,7 +11,7 @@ const {
 } = configs;
 
 class SocialAuth {
-  private strategies: SocialAuthProviders[];
+  public strategies: SocialAuthProviders[];
 
   constructor() {
     this.strategies = strategies.filter((strategy) => {
@@ -30,7 +30,7 @@ class SocialAuth {
       });
   }
 
-  private async facebook(accessToken: string): Promise<SocialAuthResponse> {
+  public async facebook(accessToken: string): Promise<SocialAuthResponse> {
     const options = {
       json: true,
       method: 'GET',
@@ -60,7 +60,7 @@ class SocialAuth {
     };
   }
 
-  private async google(accessToken: string): Promise<SocialAuthResponse> {
+  public async google(accessToken: string): Promise<SocialAuthResponse> {
     const options = {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -94,7 +94,7 @@ class SocialAuth {
     };
   }
 
-  private async kakao(accessToken: string): Promise<SocialAuthResponse> {
+  public async kakao(accessToken: string): Promise<SocialAuthResponse> {
     const options = {
       headers: {
         Authorization: `Bearer ${accessToken}`,

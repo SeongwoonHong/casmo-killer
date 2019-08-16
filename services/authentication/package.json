@@ -91,6 +91,9 @@
     "roots": [
       "<rootDir>/src"
     ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/tests/setup.ts"
+    ],
     "testEnvironment": "node",
     "testMatch": [
       "**/?(*.)(spec|test).ts"

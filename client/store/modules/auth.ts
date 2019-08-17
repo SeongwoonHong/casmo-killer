@@ -1,4 +1,5 @@
-import axios from 'axios';
+import { axios, setTokenToHeader } from 'utils';
+import { Cookies } from 'react-cookie';
 import post from './post';
 
 /* ACTION TYPES */
@@ -77,14 +78,15 @@ export const signup = ({
 }
 
 export const initialize = () => {
-  return async (dispatch) => {
+  return async () => {
     try {
       // const res = await axios.post('/auth/initialize');
+      const csrfToken = '58Eonwax-QHjb4QOv5PsP3PhXS4x4AUcwOd0';
 
-      const res = {
-        data: 'testTesttestTestTest1234123',
+      if (csrfToken) {
+        setTokenToHeader('x-csrf-token', csrfToken);
       }
-
+      // return res;
       // save this data somewhere
       // ...
     } catch (e) {
@@ -92,6 +94,25 @@ export const initialize = () => {
     }
   }
 };
+
+export const tokenRefresh = () => {
+  return async () => {
+    try {
+      const cookies = new Cookies();
+      const token = cookies.get('DAMSO_AUTH_TOKEN');
+
+      if (token) {
+        setTokenToHeader('x-auth-token', token);
+      }
+
+      const res = await axios.post('/token/refresh');
+      console.log('res = ', res);
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
 
 const initialState = {
   user: null,

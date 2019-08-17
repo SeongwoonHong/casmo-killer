@@ -4,4 +4,8 @@ const baseURL = 'http://localhost:9000';
 
 axios.defaults.baseURL = baseURL + '/api';
 
-export { axios };
+function setTokenToHeader(header, csrfToken) {
+  axios.defaults.headers.common[header] = csrfToken;
+}
+
+export { axios, setTokenToHeader };

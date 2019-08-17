@@ -8,7 +8,7 @@ const postWrite = props => {
   }
 
   return (
-    <Container title="Damso - Write a post" id="post-write">
+    <>
       <div className="post-write-footer">
         <CloseButton
           className="post-write-close-button"
@@ -21,8 +21,8 @@ const postWrite = props => {
         </Button>
       </div>
       <PostBody />
-    </Container>
+    </>
   );
 };
 
-export default postWrite;
+export default Container('Damso - Write a post', 'post-write')(postWrite);

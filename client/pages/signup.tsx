@@ -116,7 +116,7 @@ const signup = ({ router }) => {
   }
 
   return (
-    <Container title="Damso - Signup" id="signup">
+    <>
       {
         isLoading ? (
           <Loader />
@@ -124,8 +124,8 @@ const signup = ({ router }) => {
           renderAuthFormContainer()
         )
       }
-    </Container>
+    </>
   );
 };
 
-export default withRouter(signup);
+export default Container('Damso - Signup', 'signup')(withRouter(signup));

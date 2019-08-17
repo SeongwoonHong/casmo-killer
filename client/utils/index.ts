@@ -1,4 +1,4 @@
-export { axios } from './axios';
+export { axios, setTokenToHeader } from './axios';
 export { useForm } from './useForm';
 export { formValidate } from './formValidate';
 export { default as withReduxStore } from './withReduxStore';

@@ -4,7 +4,7 @@ import { login as loginAction } from 'store/modules/auth';
 import { Container, AuthFormContainer } from 'components';
 import { useForm, formValidate } from 'utils';
 
-const login = () => {
+const login = (props) => {
   const { values, errors, handleChange, handleSubmit } = useForm({
     email: '',
     password: '',
@@ -36,15 +36,13 @@ const login = () => {
   }
 
   return (
-    <Container title="Damso - Login" id="login">
-      <AuthFormContainer
-        mode="login"
-        loginInputs={loginInputs}
-        authOnClick={handleSubmit}
-        errors={errors}
-      />
-    </Container>
+    <AuthFormContainer
+      mode="login"
+      loginInputs={loginInputs}
+      authOnClick={handleSubmit}
+      errors={errors}
+    />
   );
 };
 
-export default login;
+export default Container('Damso - Login', 'login')(login);

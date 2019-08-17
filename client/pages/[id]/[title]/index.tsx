@@ -3,13 +3,11 @@ import { Container, PostBody } from 'components';
 
 const title = props => {
   return (
-    <Container title="aaa" id="blog-post">
-      <PostBody
-        mode="view"
-        title={props.title}
-        content={props.content}
-      />
-    </Container>
+    <PostBody
+      mode="view"
+      title={props.title}
+      content={props.content}
+    />
   );
 };
 
@@ -23,4 +21,4 @@ title.getInitialProps = async function(props) {
   }
 };
 
-export default title;
+export default Container('aaa', 'blog-post')(title);

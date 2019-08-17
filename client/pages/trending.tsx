@@ -29,7 +29,7 @@ const trending = () => {
   }
 
   return (
-    <Container title="Damso - Trending" id="trending">
+    <>
       <div className="heading">
         <div className="trending-header">Trending</div>
         <Button
@@ -40,8 +40,8 @@ const trending = () => {
         </Button>
       </div>
       {renderPostCardList()}
-    </Container>
+    </>
   );
 };
 
-export default trending;
+export default Container('Damso - Trending', 'trending')(trending);

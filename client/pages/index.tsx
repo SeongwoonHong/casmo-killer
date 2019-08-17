@@ -3,9 +3,7 @@ import { Container } from 'components';
 import { IPageIndex } from 'interfaces';
 
 const Index: FunctionComponent<IPageIndex.IProps> = (props) => (
-  <Container title="seong" id="landing">
-    <div>HELLO WORLD</div>
-  </Container>
+  <div>HELLO WORLD</div>
 );
 
 // Index.getInitialProps = async function(props) {
@@ -16,4 +14,4 @@ const Index: FunctionComponent<IPageIndex.IProps> = (props) => (
 //   }
 // };
 
-export default Index;
+export default Container('seong', 'landing')(Index);

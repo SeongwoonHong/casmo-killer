@@ -28,7 +28,10 @@ export class App {
         stream,
       },
     ));
-    this.express.use(cors());
+    this.express.use(cors({
+      credentials: true,
+      origin: configs.CLIENT_URL,
+    }));
     this.express.use(compression());
     this.express.use(bodyParser.json());
     this.express.use(bodyParser.urlencoded({

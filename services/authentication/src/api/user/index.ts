@@ -31,6 +31,18 @@ export class UserRoutes {
         isAuthorized(),
         updateUserInfo,
       )
+      .patch(
+        '/:user_id/email',
+        csurferify(),
+        isAuthorized(),
+        updateUserInfo,
+      )
+      .patch(
+        '/:user_id/password                                     ',
+        csurferify(),
+        isAuthorized(),
+        updateUserInfo,
+      )
       .post(
         '/logout',
         csurferify(),

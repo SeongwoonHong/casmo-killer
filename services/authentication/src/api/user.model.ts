@@ -193,9 +193,7 @@ export class UserModel extends BaseModel {
       ...data,
       id,
       ...(data.avatar && {
-        avatar: isUrl(data.avatar)
-          ? await aws.uploadImageFromUrl(id, data.avatar)
-          : await aws.uploadImageData(id, data.avatar),
+        avatar: await UserModel.uploadAvatar(id, data.avatar),
       }),
     };
 
@@ -212,6 +210,15 @@ export class UserModel extends BaseModel {
     return Promise.all(users.map((user) => {
       return UserModel.registerNewUser(user);
     }));
+  }
+
+  public static uploadAvatar(
+    id: string,
+    avatar: string,
+  ): Promise<string> {
+    return isUrl(avatar)
+      ? aws.uploadImageFromUrl(id, avatar)
+      : aws.uploadImageData(id, avatar);
   }
 
   public avatar?: string;

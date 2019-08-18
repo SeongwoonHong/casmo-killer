@@ -3,7 +3,10 @@ import * as Knex from 'knex';
 import { Model } from 'objection';
 
 import { configs } from '~config';
-import { DupeValueCheckOption, DupeValueCheckResult } from '~lib/types';
+import {
+  DupeValueCheckOption,
+  DupeValueCheckResult,
+} from '~lib/types';
 
 Model.knex(Knex({
   client: process.env.DB_CLIENT || 'pg',

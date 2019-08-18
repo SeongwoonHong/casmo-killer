@@ -1,18 +1,12 @@
 import {
-  ValidationResult,
   object as JoiObject,
-  validate as JoiValidate,
   string as JoiString,
+  validate as JoiValidate,
+  ValidationResult,
 } from 'joi';
-import {
-  Request,
-  Response,
-} from 'express';
+import { Request, Response } from 'express';
 
-import {
-  QueryParamsObject,
-  UserInfoRequest,
-} from '~lib/types';
+import { AuthStrategies, QueryParamsObject, UserInfoRequest } from '~lib/types';
 import { TokenModel } from '../token/model';
 import { UserModel } from '../user.model';
 import {
@@ -24,11 +18,9 @@ import {
   unauthorized,
 } from '~lib/responses';
 import { configs } from '~config';
-import {
-  isValidAvatar,
-  validEmail,
-  validNull,
-} from '~lib/validations';
+import { isValidAvatar, validEmail, validNull } from '~lib/validations';
+import { mailer } from '~lib/mailer';
+import { sign } from '~lib/token-utils';
 
 const {
   COOKIE_AUTH_KEY_NAME: authKeyName,
@@ -97,12 +89,15 @@ export const updateUserInfo = async (
     JoiObject({
       avatar: validNull,
       display_name: JoiString().required(),
-      email: validEmail,
+      email: validNull,
       id: JoiString().guid({
         version: [
           'uuidv4',
         ],
       }),
+      redirect_url: JoiString()
+        .regex(/<token>/)
+        .required(),
       user_id: JoiString().guid({
         version: [
           'uuidv4',
@@ -138,15 +133,18 @@ export const updateUserInfo = async (
       params: {
         user_id,
       },
-      body: new_user_info,
+      body: {
+        avatar,
+        display_name,
+        email,
+        redirect_url,
+      },
+      // body: new_user_info,
     } = req;
 
     const user = await UserModel
       .query()
-      .patchAndFetchById(
-        user_id,
-        new_user_info,
-      );
+      .findById(user_id);
 
     if (!user) {
       return notFound(
@@ -155,10 +153,83 @@ export const updateUserInfo = async (
       );
     }
 
+    if (user.strategy === AuthStrategies.local) {
+      const emailValidation: ValidationResult<any> = JoiValidate(
+        {
+          email,
+        },
+        JoiObject({
+          email: validEmail,
+        }),
+      );
+
+      if (emailValidation.error) {
+        return invalidRequest(
+          res,
+          emailValidation.error,
+        );
+      }
+    }
+
+    const shouldUpdateEmail = email &&
+      user.email !== email &&
+      user.strategy === AuthStrategies.local;
+
+    if (shouldUpdateEmail) {
+      const token = await sign(
+        {
+          email,
+        },
+        'email',
+      );
+      await mailer.sendEmailConfirmation(
+        email,
+        redirect_url.replace(
+          /<token>/,
+          token,
+        ),
+      );
+    }
+
+    const {
+      isTaken,
+    } = await UserModel.isValueTaken({
+      excludeId: user_id,
+      field: 'display_name',
+      value: display_name,
+    });
+
+    if (isTaken) {
+      return badRequest(
+        res,
+        'The display_name is already taken.',
+      );
+    }
+
+    const newPayload = {
+      avatar: avatar && user.avatar !== avatar
+        ? await UserModel.uploadAvatar(
+          user_id,
+          avatar,
+        )
+        : user.avatar,
+      display_name,
+    };
+    const updatedUser = await UserModel
+      .query()
+      .patchAndFetchById(
+        user_id,
+        newPayload,
+      );
+
     return success(
       res,
       {
-        user,
+        ...(shouldUpdateEmail && {
+          // tslint:disable-next-line:max-line-length
+          message: `Verification email has been sent to ${email}. Please click the link in the email to confirm your new email address.`,
+        }),
+        user: updatedUser,
       },
     );
   } catch (err) {

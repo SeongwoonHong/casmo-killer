@@ -16,8 +16,6 @@ import { socialAuth } from '~lib/social-auth';
 
 const {
   API_ROOT,
-  COOKIE_AUTH_HEADER_NAME,
-  COOKIE_AUTH_KEY_NAME,
   COOKIE_CSRF_HEADER_NAME,
 } = configs;
 
@@ -100,11 +98,10 @@ describe('/auth routes', () => {
         password: newUsers[0].password,
       })
       .end((err, res: Response) => {
-        const cookies = testUtils.resCookieParser(res.header['set-cookie']);
-
-        expect(cookies).toHaveProperty(COOKIE_AUTH_KEY_NAME);
-        expect(res.header).toHaveProperty(COOKIE_AUTH_HEADER_NAME);
-        expect(res.body).toHaveProperty('user');
+        testUtils.validateLoginResponse(
+          res,
+          res.header['set-cookie'],
+        );
 
         const userData = res.body.user;
         const allFields = Object.keys(userData);
@@ -144,7 +141,6 @@ describe('/auth routes', () => {
           user.id,
           imgUrl,
         );
-        newUsers[1].id = user.id;
 
         done();
       });
@@ -167,7 +163,6 @@ describe('/auth routes', () => {
         );
         expect(aws.uploadImageFromUrl).not.toHaveBeenCalled();
         expect(true).toBeTruthy();
-        newUsers[2].id = res.body.user.id;
 
         done();
       });
@@ -223,22 +218,14 @@ describe('/auth routes', () => {
         password: testUsers[0].password,
       })
       .end((err, res: Response) => {
-        const cookies = testUtils.resCookieParser(res.header['set-cookie']);
-
-        expect(cookies).toHaveProperty(COOKIE_AUTH_KEY_NAME);
-        expect(res.header).toHaveProperty(COOKIE_AUTH_HEADER_NAME);
-        expect(res.body).toHaveProperty('user');
-        expect(res.body).toHaveProperty('user');
-
-        const userData = res.body.user;
-        const baseFields = UserModel.getReturnFields();
-
-        baseFields.forEach((field) => {
-          expect(userData).toHaveProperty(field);
-        });
-
-        expect(userData.email).toEqual(testUsers[0].email);
-        expect(userData.display_name).toEqual(testUsers[0].display_name);
+        testUtils.validateLoginResponse(
+          res,
+          res.header['set-cookie'],
+        );
+        testUtils.validateLoginData(
+          res,
+          testUsers[0],
+        );
 
         done();
       });
@@ -325,20 +312,14 @@ describe('/auth routes', () => {
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
       .send(payload)
       .end((err, res: Response) => {
-        const cookies = testUtils.resCookieParser(res.header['set-cookie']);
-
-        expect(cookies).toHaveProperty(COOKIE_AUTH_KEY_NAME);
-        expect(res.header).toHaveProperty(COOKIE_AUTH_HEADER_NAME);
-        expect(res.body).toHaveProperty('user');
-
-        const userData = res.body.user;
-        const baseFields = UserModel.getReturnFields();
-
-        baseFields.forEach((field) => {
-          expect(userData).toHaveProperty(field);
-        });
-        expect(userData.display_name).toEqual(socialTestUsers[0].display_name);
-        expect(userData.strategy).toEqual(socialTestUsers[0].strategy);
+        testUtils.validateLoginResponse(
+          res,
+          res.header['set-cookie'],
+        );
+        testUtils.validateLoginData(
+          res,
+          socialTestUsers[0],
+        );
 
         done();
       });
@@ -366,26 +347,14 @@ describe('/auth routes', () => {
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
       .send(payload)
       .end((err, res: Response) => {
-        const cookies = testUtils.resCookieParser(res.header['set-cookie']);
-
-        expect(cookies).toHaveProperty(COOKIE_AUTH_KEY_NAME);
-        expect(res.header).toHaveProperty(COOKIE_AUTH_HEADER_NAME);
-        expect(res.body).toHaveProperty('user');
-
-        const userData = res.body.user;
-        const baseFields = UserModel.getReturnFields();
-
-        baseFields.forEach((field) => {
-          expect(userData).toHaveProperty(field);
-        });
-
-        expect(userData.display_name).toEqual(payload.display_name);
-
-        // tslint:disable-next-line:no-object-literal-type-assertion
-        newUsers.push({
-          ...newUsers[0],
-          id: userData.id,
-        } as UserModel);
+        testUtils.validateLoginResponse(
+          res,
+          res.header['set-cookie'],
+        );
+        testUtils.validateLoginData(
+          res,
+          payload,
+        );
 
         done();
       });
@@ -419,15 +388,4 @@ describe('/auth routes', () => {
         done();
       });
   });
-
-  // afterAll(async (done) => {
-  //   await UserModel.emptyTable();
-  //   await UserModel
-  //     .query()
-  //     .insert(testUsers as UserModel[]);
-  //
-  //   done();
-  //
-  //   done();
-  // });
 });

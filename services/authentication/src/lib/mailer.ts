@@ -176,14 +176,14 @@ class AuthMailer {
   `;
   }
 
-  public static registerConfirmData(options: any = {}): EmailTemplateParams {
+  public static newEmailConfirmData(options: any = {}): EmailTemplateParams {
     return {
       body: 'Click the following link to confirm your email address.',
       bodyTitle: 'You\'re almost done!<br>Let\'s confirm your email address.',
       buttonText: 'Confirm your email address',
       footerText: 'Place for chat on the web',
       heading: 'Let\'s confirm your email address.',
-      title: `'Welcome to ${clientAppName}! Confirm Your Email Address'`,
+      title: `Confirm Your ${clientAppName} email address`,
       ...options,
     };
   }
@@ -196,6 +196,18 @@ class AuthMailer {
       footerText: 'Place for chat on the web',
       heading: 'Let\'s reset your password.',
       title: `Reset Your ${clientAppName} Password`,
+      ...options,
+    };
+  }
+
+  public static registerConfirmData(options: any = {}): EmailTemplateParams {
+    return {
+      body: 'Click the following link to confirm your email address.',
+      bodyTitle: 'You\'re almost done!<br>Let\'s confirm your email address.',
+      buttonText: 'Confirm your email address',
+      footerText: 'Place for chat on the web',
+      heading: 'Let\'s confirm your email address.',
+      title: `'Welcome to ${clientAppName}! Confirm Your Email Address'`,
       ...options,
     };
   }
@@ -218,6 +230,21 @@ class AuthMailer {
     return this.sendMail(
       to,
       'Complete your Damso registration.',
+      AuthMailer.emailTemplate(data),
+    );
+  }
+
+  public sendEmailConfirmation(
+    to: string,
+    redirect_url: string,
+  ): Promise<string> {
+    const data = AuthMailer.newEmailConfirmData({
+      buttonUrl: redirect_url,
+    });
+
+    return this.sendMail(
+      to,
+      'Confirm your new email address for Damso.',
       AuthMailer.emailTemplate(data),
     );
   }

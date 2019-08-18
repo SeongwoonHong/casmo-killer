@@ -1,8 +1,10 @@
 import * as qs from 'querystring';
 import * as request from 'supertest';
+import { generate as idGenerator } from 'shortid';
 
 import { App } from '../../app';
 import { UserModel } from '../user.model';
+import { aws } from '~lib/aws';
 import { configs } from '~config';
 import { testUtils } from '~lib/test-utils';
 
@@ -150,8 +152,18 @@ describe('/user routes', () => {
       });
   });
 
-  /*it('updates user information', (done) => {
+  it('updates user information and send out confirmation email if email changed', (done) => {
     const agent = request.agent(app);
+    const testUser = testUtils.localTestUsers.find((user) => {
+      return user.avatar === null;
+    });
+    const newUserInfo = {
+      avatar: testUtils.imgData,
+      display_name: idGenerator(),
+      email: `${idGenerator()}@email.com`,
+      id: testUser.id,
+      redirect_url: '<token>',
+    };
 
     agent
       .get(`${API_ROOT}/token/csrf`)
@@ -161,8 +173,8 @@ describe('/user routes', () => {
         agent
           .post(`${API_ROOT}/auth/local/login`)
           .send({
-            email: testUsers[2].email,
-            password: testUsers[2].password,
+            email: testUser.email,
+            password: testUser.password,
           })
           .end((errTwo, resTwo: request.Response) => {
             const accessToken = resTwo.header[COOKIE_AUTH_HEADER_NAME];
@@ -171,28 +183,24 @@ describe('/user routes', () => {
               .patch(`${endpoint}/${resTwo.body.user.id}`)
               .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
               .set(COOKIE_AUTH_HEADER_NAME, accessToken)
-              .send({
-                display_name: 'random_display_name',
-                email: 'randomtwo@email.com',
-                id: resTwo.body.user.id,
-              })
+              .send(newUserInfo)
               .end((errThree, resThree: request.Response) => {
                 expect(resThree.body).toHaveProperty('user');
-                expect(resThree.body.user.display_name).toEqual('random_display_name');
-                expect(resThree.body.user.email).toEqual('randomtwo@email.com');
+                expect(resThree.body).toHaveProperty('message');
 
-                agent
-                  .patch(`${endpoint}/${resTwo.body.id}`)
-                  .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
-                  .set(COOKIE_AUTH_HEADER_NAME, accessToken)
-                  .send({
-                    display_name: testUsers[2].display_name,
-                    email: testUsers[2].email,
-                    id: resTwo.body.id,
-                  })
-                  .end(done);
+                expect(aws.uploadImageData).toHaveBeenCalledWith(
+                  testUser.id,
+                  newUserInfo.avatar,
+                );
+                expect(aws.uploadImageFromUrl).not.toHaveBeenCalled();
+                // tslint:disable-next-line:max-line-length
+                expect(resThree.body.message).toBe(`Verification email has been sent to ${newUserInfo.email}. Please click the link in the email to confirm your new email address.`);
+                expect(resThree.body.user.display_name).toEqual(newUserInfo.display_name);
+                expect(resThree.body.user.email).not.toEqual(newUserInfo.email);
+
+                done();
               });
           });
       });
-  });*/
+  });
 });

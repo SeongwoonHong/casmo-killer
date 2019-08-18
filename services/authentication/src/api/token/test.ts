@@ -7,10 +7,7 @@ import {
   extPrsHeader,
   sign,
 } from '~lib/token-utils';
-import {
-  resCookieParser,
-  testUsers,
-} from '~lib/test-utils';
+import { testUtils } from '~lib/test-utils';
 
 const {
   API_ROOT,
@@ -25,6 +22,7 @@ describe('/token routes', () => {
   const app = new App().express;
   const agent = request.agent(app);
   const endpoint = `${API_ROOT}/token`;
+  const testUsers = testUtils.users;
 
   let accessToken;
   let csrfSecret;
@@ -34,7 +32,7 @@ describe('/token routes', () => {
     agent
       .get(`${endpoint}/csrf`)
       .end((err, res: request.Response) => {
-        const cookies = resCookieParser(res.header['set-cookie']);
+        const cookies = testUtils.resCookieParser(res.header['set-cookie']);
 
         expect(cookies).toHaveProperty(COOKIE_CSRF_KEY_NAME);
         expect(res.header).toHaveProperty(COOKIE_CSRF_HEADER_NAME);
@@ -48,7 +46,7 @@ describe('/token routes', () => {
             password: testUsers[0].password,
           })
           .end((errTwo, resTwo: request.Response) => {
-            const cookiesTwo = resCookieParser(resTwo.header['set-cookie']);
+            const cookiesTwo = testUtils.resCookieParser(resTwo.header['set-cookie']);
 
             refreshToken = cookiesTwo[COOKIE_AUTH_KEY_NAME] || '';
             accessToken = resTwo.header[COOKIE_AUTH_HEADER_NAME];
@@ -105,7 +103,7 @@ describe('/token routes', () => {
       .post(`${endpoint}/refresh`)
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
       .end((err, res: request.Response) => {
-        const cookies = resCookieParser(res.header['set-cookie']);
+        const cookies = testUtils.resCookieParser(res.header['set-cookie']);
         const newAccessToken = res.header[COOKIE_AUTH_HEADER_NAME];
         const newRefreshToken = cookies[COOKIE_AUTH_KEY_NAME];
 

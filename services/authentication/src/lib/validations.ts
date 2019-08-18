@@ -29,7 +29,7 @@ export const validPassword = Joi
 export const validDisplayName = Joi
   .string()
   .regex(/^\S*$/)
-  .regex(/^[a-zA-Z0-9ㄱ-ㅎ가-힣]{4,20}/)
+  .regex(/^[a-zA-Z0-9ㄱ-ㅎ가-힣\-\_]{4,20}/)
   .required();
 
 export const validNull = Joi

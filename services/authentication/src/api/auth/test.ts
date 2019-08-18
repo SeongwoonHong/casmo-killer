@@ -1,7 +1,4 @@
-jest.mock('~lib/aws');
-jest.mock('~lib/mailer');
 jest.mock('~lib/token-utils');
-jest.mock('~lib/social-auth');
 
 import {
   Response,
@@ -13,13 +10,7 @@ import { UserModel } from '../user.model';
 import { aws } from '~lib/aws';
 import { configs } from '~config';
 import { mailer } from '~lib/mailer';
-import {
-  imgData,
-  mockedToken,
-  newUsers as _newUsers,
-  resCookieParser,
-  testUsers,
-} from '~lib/test-utils';
+import { testUtils } from '~lib/test-utils';
 import { sign } from '~lib/token-utils';
 import { socialAuth } from '~lib/social-auth';
 
@@ -34,10 +25,9 @@ describe('/auth routes', () => {
   const app = new App().express;
   const agent = _agent(app);
   const endpoint = `${API_ROOT}/auth`;
-  const newUsers = _newUsers.slice();
-  const socialTestUsers = testUsers.filter((user) => {
-    return user.strategy !== 'local';
-  });
+  const mockedToken = testUtils.mockedToken;
+  const newUsers = testUtils.newUsers;
+  const socialTestUsers = testUtils.socialTestUser;
 
   let csrfSecret;
 
@@ -52,6 +42,9 @@ describe('/auth routes', () => {
   });
 
   it('sends out a confirmation email before registering', (done) => {
+    // @ts-ignore
+    sign = jest.fn().mockResolvedValue(testUtils.mockedToken);
+
     agent
       .post(`${endpoint}/local/request`)
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
@@ -77,6 +70,8 @@ describe('/auth routes', () => {
   });
 
   it('blocks signup request for an existing user email address', (done) => {
+    const testUsers = testUtils.localTestUsers;
+
     agent
       .post(`${endpoint}/local/request`)
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
@@ -105,7 +100,7 @@ describe('/auth routes', () => {
         password: newUsers[0].password,
       })
       .end((err, res: Response) => {
-        const cookies = resCookieParser(res.header['set-cookie']);
+        const cookies = testUtils.resCookieParser(res.header['set-cookie']);
 
         expect(cookies).toHaveProperty(COOKIE_AUTH_KEY_NAME);
         expect(res.header).toHaveProperty(COOKIE_AUTH_HEADER_NAME);
@@ -131,22 +126,25 @@ describe('/auth routes', () => {
   });
 
   it('registers a new user with avatar url', (done) => {
+    const imgUrl = 'http://www.silverbulletlabs.com/sitebuilder/images/Remington2-469x473.jpg';
     agent
       .post(`${endpoint}/local/register`)
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
       .send({
-        avatar: 'http://www.silverbulletlabs.com/sitebuilder/images/Remington2-469x473.jpg',
+        avatar: imgUrl,
         display_name: newUsers[1].display_name,
         email: newUsers[1].email,
         password: newUsers[1].password,
       })
       .end((err, res: Response) => {
+        const { user } = res.body;
+
         expect(aws.uploadImageData).not.toHaveBeenCalled();
         expect(aws.uploadImageFromUrl).toHaveBeenCalledWith(
-          res.body.user.id,
-          'http://www.silverbulletlabs.com/sitebuilder/images/Remington2-469x473.jpg',
+          user.id,
+          imgUrl,
         );
-        newUsers[1].id = res.body.user.id;
+        newUsers[1].id = user.id;
 
         done();
       });
@@ -157,7 +155,7 @@ describe('/auth routes', () => {
       .post(`${endpoint}/local/register`)
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
       .send({
-        avatar: imgData,
+        avatar: testUtils.imgData,
         display_name: newUsers[2].display_name,
         email: newUsers[2].email,
         password: newUsers[2].password,
@@ -165,7 +163,7 @@ describe('/auth routes', () => {
       .end((err, res: Response) => {
         expect(aws.uploadImageData).toHaveBeenCalledWith(
           res.body.user.id,
-          imgData,
+          testUtils.imgData,
         );
         expect(aws.uploadImageFromUrl).not.toHaveBeenCalled();
         expect(true).toBeTruthy();
@@ -176,6 +174,8 @@ describe('/auth routes', () => {
   });
 
   it('blocks a registration if email is already taken', (done) => {
+    const testUsers = testUtils.localTestUsers;
+
     agent
       .post(`${endpoint}/local/register`)
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
@@ -194,6 +194,8 @@ describe('/auth routes', () => {
   });
 
   it('blocks a registration if display name is already taken', (done) => {
+    const testUsers = testUtils.localTestUsers;
+
     agent
       .post(`${endpoint}/local/register`)
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
@@ -212,6 +214,8 @@ describe('/auth routes', () => {
   });
 
   it('logs in a user', (done) => {
+    const testUsers = testUtils.localTestUsers;
+
     agent
       .post(`${endpoint}/local/login`)
       .send({
@@ -219,7 +223,7 @@ describe('/auth routes', () => {
         password: testUsers[0].password,
       })
       .end((err, res: Response) => {
-        const cookies = resCookieParser(res.header['set-cookie']);
+        const cookies = testUtils.resCookieParser(res.header['set-cookie']);
 
         expect(cookies).toHaveProperty(COOKIE_AUTH_KEY_NAME);
         expect(res.header).toHaveProperty(COOKIE_AUTH_HEADER_NAME);
@@ -241,6 +245,8 @@ describe('/auth routes', () => {
   });
 
   it('blocks a login with an unauthorized email', (done) => {
+    const testUsers = testUtils.localTestUsers;
+
     agent
       .post(`${endpoint}/local/login`)
       .send({
@@ -256,6 +262,8 @@ describe('/auth routes', () => {
   });
 
   it('blocks a login with an incorrect password', (done) => {
+    const testUsers = testUtils.localTestUsers;
+
     agent
       .post(`${endpoint}/local/login`)
       .send({
@@ -317,7 +325,7 @@ describe('/auth routes', () => {
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
       .send(payload)
       .end((err, res: Response) => {
-        const cookies = resCookieParser(res.header['set-cookie']);
+        const cookies = testUtils.resCookieParser(res.header['set-cookie']);
 
         expect(cookies).toHaveProperty(COOKIE_AUTH_KEY_NAME);
         expect(res.header).toHaveProperty(COOKIE_AUTH_HEADER_NAME);
@@ -358,7 +366,7 @@ describe('/auth routes', () => {
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
       .send(payload)
       .end((err, res: Response) => {
-        const cookies = resCookieParser(res.header['set-cookie']);
+        const cookies = testUtils.resCookieParser(res.header['set-cookie']);
 
         expect(cookies).toHaveProperty(COOKIE_AUTH_KEY_NAME);
         expect(res.header).toHaveProperty(COOKIE_AUTH_HEADER_NAME);
@@ -373,10 +381,11 @@ describe('/auth routes', () => {
 
         expect(userData.display_name).toEqual(payload.display_name);
 
+        // tslint:disable-next-line:no-object-literal-type-assertion
         newUsers.push({
           ...newUsers[0],
           id: userData.id,
-        });
+        } as UserModel);
 
         done();
       });
@@ -411,14 +420,14 @@ describe('/auth routes', () => {
       });
   });
 
-  afterAll(async (done) => {
-    await UserModel.emptyTable();
-    await UserModel
-      .query()
-      .insert(testUsers as UserModel[]);
-
-    done();
-
-    done();
-  });
+  // afterAll(async (done) => {
+  //   await UserModel.emptyTable();
+  //   await UserModel
+  //     .query()
+  //     .insert(testUsers as UserModel[]);
+  //
+  //   done();
+  //
+  //   done();
+  // });
 });

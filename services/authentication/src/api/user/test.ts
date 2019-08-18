@@ -4,10 +4,7 @@ import * as request from 'supertest';
 import { App } from '../../app';
 import { UserModel } from '../user.model';
 import { configs } from '~config';
-import {
-  resCookieParser,
-  testUsers,
-} from '~lib/test-utils';
+import { testUtils } from '~lib/test-utils';
 
 const {
   API_ROOT,
@@ -19,9 +16,11 @@ const {
 describe('/user routes', () => {
   const app = new App().express;
   const endpoint = `${API_ROOT}/user`;
+
   let userRecords;
 
   it('returns a list of users information using display_name', (done) => {
+    const testUsers = testUtils.users;
     const queryString = {
       search_field: 'display_name',
       search_values: testUsers
@@ -89,17 +88,16 @@ describe('/user routes', () => {
   });
 
   it('returns a single user information using email', (done) => {
-    const testUser = userRecords[1];
     const queryString = {
       search_field: 'email',
-      search_values: testUser.email,
+      search_values: testUtils.users[1].email,
     };
 
     request(app)
       .get(`${endpoint}?${qs.stringify(queryString)}`)
       .end((err, res: request.Response) => {
-        Object.keys(testUser).forEach((field) => {
-          expect(testUser[field]).toEqual(res.body.users[0][field]);
+        Object.keys(res.body.users[0]).forEach((field) => {
+          expect(res.body.users[0][field]).toEqual(testUtils.users[1][field]);
         });
 
         done();
@@ -124,6 +122,7 @@ describe('/user routes', () => {
       .get(`${API_ROOT}/token/csrf`)
       .end((err, res: request.Response) => {
         const csrfSecret = res.header[COOKIE_CSRF_HEADER_NAME];
+        const testUsers = testUtils.users;
 
         agent
           .post(`${API_ROOT}/auth/local/login`)
@@ -139,7 +138,7 @@ describe('/user routes', () => {
               .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
               .set(COOKIE_AUTH_HEADER_NAME, accessToken)
               .end((errThree, resThree: request.Response) => {
-                const cookies = resCookieParser(resThree.header['set-cookie']);
+                const cookies = testUtils.resCookieParser(resThree.header['set-cookie']);
 
                 expect(resThree.status).toEqual(204);
                 expect(resThree.header[COOKIE_AUTH_HEADER_NAME]).toBeFalsy();

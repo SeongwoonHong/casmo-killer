@@ -31,6 +31,11 @@ interface LoginResponse {
   userData: UserModel;
 }
 
+interface TokenGenOptions {
+  access_token?: boolean;
+  refresh_token?: boolean;
+}
+
 interface TokenResponse {
   access_token?: string;
   refresh_token?: string;
@@ -226,7 +231,7 @@ export class UserModel extends BaseModel {
   }
 
   public async generateTokens(
-    options: TokenResponse = {},
+    options: TokenGenOptions = {},
   ): Promise<TokenResponse> {
     const tokenPayload = {
       display_name: this.display_name,

@@ -20,8 +20,8 @@ import {
   error,
   invalidRequest,
   notFound,
-  success, unauthorized,
-
+  success,
+  unauthorized,
 } from '~lib/responses';
 import { configs } from '~config';
 import {
@@ -46,22 +46,20 @@ export const requestUserInfo = async (
       return_fields = [],
     } = req.query as QueryParamsObject;
 
-    if (!UserModel.ALL_FIELDS.includes(search_field)) {
+    if (
+      !UserModel.ALL_FIELDS.includes(search_field) ||
+      UserModel.PRIVATE_FIELDS.includes(search_field)
+    ) {
       return badRequest(
         res,
         `${search_field} is not a valid field.`,
       );
     }
 
-    const returnFields = Array.from(
-      new Set([
-        ...UserModel.BASE_FIELDS,
-        ...return_fields.filter((return_field) => {
-          return UserModel.ALL_FIELDS.includes(return_field)
-            && !exclude_fields.includes(return_field);
-        }),
-      ]),
-    );
+    const returnFields = UserModel.getReturnFields({
+      exclude_fields,
+      return_fields,
+    });
 
     const users: UserModel[] = await UserModel
       .query()

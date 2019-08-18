@@ -1,6 +1,7 @@
 import * as request from 'supertest';
 
 import { App } from '../../app';
+import { UserModel } from '../user.model';
 import { configs } from '~config';
 import {
   extPrsHeader,
@@ -16,6 +17,7 @@ const {
   COOKIE_AUTH_HEADER_NAME,
   COOKIE_AUTH_KEY_NAME,
   COOKIE_CSRF_HEADER_NAME,
+  COOKIE_CSRF_KEY_NAME,
   RSA_KEY_PAIRS,
 } = configs;
 
@@ -25,13 +27,18 @@ describe('/token routes', () => {
   const endpoint = `${API_ROOT}/token`;
 
   let accessToken;
-  let refreshToken;
   let csrfSecret;
+  let refreshToken;
 
-  beforeAll(async (done) => {
+  it('receives csrf token and secret in the response', (done) => {
     agent
-      .post(`${API_ROOT}/auth/initialize`)
+      .get(`${endpoint}/csrf`)
       .end((err, res: request.Response) => {
+        const cookies = resCookieParser(res.header['set-cookie']);
+
+        expect(cookies).toHaveProperty(COOKIE_CSRF_KEY_NAME);
+        expect(res.header).toHaveProperty(COOKIE_CSRF_HEADER_NAME);
+
         csrfSecret = res.header[COOKIE_CSRF_HEADER_NAME];
 
         agent
@@ -41,9 +48,9 @@ describe('/token routes', () => {
             password: testUsers[0].password,
           })
           .end((errTwo, resTwo: request.Response) => {
-            const cookies = resCookieParser(resTwo.header['set-cookie']);
+            const cookiesTwo = resCookieParser(resTwo.header['set-cookie']);
 
-            refreshToken = cookies[COOKIE_AUTH_KEY_NAME] || '';
+            refreshToken = cookiesTwo[COOKIE_AUTH_KEY_NAME] || '';
             accessToken = resTwo.header[COOKIE_AUTH_HEADER_NAME];
 
             done();
@@ -51,19 +58,27 @@ describe('/token routes', () => {
       });
   });
 
+  it('does not issue new csrf token and secret if already issued', (done) => {
+    agent
+      .get(`${endpoint}/csrf`)
+      .end((err, res: request.Response) => {
+        expect(res.header).not.toHaveProperty('set-cookie');
+        expect(res.header).not.toHaveProperty(COOKIE_CSRF_HEADER_NAME);
+
+        done();
+      });
+  });
+
   it('fetches public key to be used verify jwt token', (done) => {
-    const tokenHeader = extPrsHeader<{ [key: string]: string}>(accessToken);
-
-    expect(tokenHeader).toHaveProperty('kid');
-
     const {
       kid,
-    } = tokenHeader;
+    } = extPrsHeader<{ [key: string]: string}>(accessToken);
 
     agent
       .get(`${endpoint}/secret/${kid}`)
       .set(COOKIE_AUTH_HEADER_NAME, accessToken)
       .end((err, res: request.Response) => {
+        expect(res.body).toHaveProperty('public_key');
         expect(res.body.public_key).toEqual(RSA_KEY_PAIRS[kid].public);
 
         done();
@@ -71,10 +86,12 @@ describe('/token routes', () => {
   });
 
   it('blocks public key request for unauthorized request', (done) => {
-    const tokenHeader = extPrsHeader<{ [key: string]: string}>(accessToken);
+    const {
+      kid,
+    } = extPrsHeader<{ [key: string]: string}>(accessToken);
 
     request(app)
-      .get(`${endpoint}/secret/${tokenHeader.kid}`)
+      .get(`${endpoint}/secret/${kid}`)
       .end((err, res: request.Response) => {
         expect(res.body.message).toEqual('Unauthorized Access');
         expect(res.body.success).toBe(false);
@@ -87,18 +104,20 @@ describe('/token routes', () => {
     agent
       .post(`${endpoint}/refresh`)
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
-      .set(COOKIE_AUTH_HEADER_NAME, accessToken)
       .end((err, res: request.Response) => {
         const cookies = resCookieParser(res.header['set-cookie']);
         const newAccessToken = res.header[COOKIE_AUTH_HEADER_NAME];
         const newRefreshToken = cookies[COOKIE_AUTH_KEY_NAME];
 
-        expect(accessToken).toBeTruthy();
         expect(newAccessToken).toBeTruthy();
-        expect(refreshToken).toBeTruthy();
         expect(newRefreshToken).toBeTruthy();
         expect(accessToken).not.toEqual(newAccessToken);
         expect(refreshToken).not.toEqual(newRefreshToken);
+        expect(res.body).toHaveProperty('user');
+
+        UserModel.getReturnFields().forEach((field) => {
+          expect(res.body.user).toHaveProperty(field);
+        });
 
         done();
       });
@@ -112,13 +131,7 @@ describe('/token routes', () => {
         expect(res.body.message).toEqual('Malformed request');
         expect(res.body.success).toBe(false);
 
-        agent
-          .post(`${API_ROOT}/auth/initialize`)
-          .end((errTwo, resTwo: request.Response) => {
-            csrfSecret = resTwo.header[COOKIE_CSRF_HEADER_NAME];
-
-            done();
-          });
+        done();
       });
   });
 
@@ -137,7 +150,8 @@ describe('/token routes', () => {
         token,
       })
       .end((err, res: request.Response) => {
-        expect(res.body).toEqual(payload);
+        expect(res.body).toHaveProperty('data');
+        expect(res.body.data).toEqual(payload);
 
         done();
       });

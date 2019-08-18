@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import {
+  getCsrfToken,
   getPublicRsaKey,
   refreshTokens,
   verifyToken,
@@ -20,6 +21,10 @@ export class TokenRoutes {
   private configure(): void {
     this
       .router
+      .get(
+        '/csrf',
+        getCsrfToken,
+      )
       .get(
         '/secret/:key_id',
         isAuthorized(),

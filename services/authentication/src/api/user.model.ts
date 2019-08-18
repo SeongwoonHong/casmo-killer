@@ -1,9 +1,10 @@
-import * as uuid from 'uuid';
 import { RelationMappings } from 'objection';
 import { Response } from 'express';
+import { v4 } from 'uuid';
 
 import {
-  AuthStrategies, QueryParamsObject,
+  AuthStrategies,
+  QueryParamsObject,
   SocialAuthProviders,
 } from '~lib/types';
 import { BaseModel } from './base.model';
@@ -16,7 +17,6 @@ import {
 import { configs } from '~config';
 import { isUrl } from '~lib/validations';
 import { sign } from '~lib/token-utils';
-import { success } from '~lib/responses';
 
 const {
   COOKIE_AUTH_HEADER_NAME: headerName,
@@ -26,41 +26,52 @@ const {
   TOKEN_EXPIRY_FOR_REFRESH: refreshTokenExpiry,
 } = configs;
 
+interface LoginResponse {
+  response: Response;
+  userData: UserModel;
+}
+
+interface TokenResponse {
+  access_token?: string;
+  refresh_token?: string;
+}
+
 export class UserModel extends BaseModel {
-  static get AVAILABLE_FIELDS(): string[] {
+  public static get AVAILABLE_FIELDS(): string[] {
     return [
       'created_at',
       'deleted_at',
       'email_updated_at',
       'social_id',
-      'strategy',
       'updated_at',
     ];
   }
 
-  static get BASE_FIELDS(): string[] {
+  public static get BASE_FIELDS(): string[] {
     return [
       'id',
       'avatar',
       'email',
       'display_name',
+      'strategy',
     ];
   }
 
-  static get PRIVATE_FIELDS(): string[] {
+  public static get PRIVATE_FIELDS(): string[] {
     return [
       'password',
       'prev_passwords',
+      'refresh_tokens',
       'token_field',
       'token_value',
     ];
   }
 
-  static get tableName(): string {
+  public static get tableName(): string {
     return 'users';
   }
 
-  static get relationMappings(): RelationMappings {
+  public static get relationMappings(): RelationMappings {
     return {
       refresh_tokens: {
         join: {
@@ -75,40 +86,23 @@ export class UserModel extends BaseModel {
 
   public static findByEmail(
     email: string,
-    fields: string[] = [],
   ): Promise<UserModel> {
-    const return_fields = Array.from(
-      new Set([
-        ...UserModel.BASE_FIELDS,
-        ...fields,
-      ]),
-    );
-
     return UserModel
       .query()
       .findOne({
         email,
-      })
-      .column(return_fields);
+      });
   }
 
   public static findBySocialProfile(
     strategy: SocialAuthProviders,
     social_id: string,
-    fields: string[] = [],
   ): Promise<UserModel> {
-    const return_fields = Array.from(
-      new Set([
-        ...UserModel.BASE_FIELDS,
-        ...fields,
-      ]),
-    );
-
     return UserModel
       .query()
       .where('strategy', strategy)
       .where('social_id', social_id)
-      .column(return_fields)
+      .column(UserModel.ALL_FIELDS)
       .first();
   }
 
@@ -128,22 +122,21 @@ export class UserModel extends BaseModel {
     return sign(
       {
         user_id,
-        uuid: uuid.v4(),
+        uuid: v4(),
       },
       'user_id',
       refreshTokenExpiry,
     );
   }
 
-  public static async registerNewUser(
-    data,
-    fieldOptions: QueryParamsObject,
-  ): Promise<UserModel> {
+  public static getReturnFields(
+    options: QueryParamsObject = {},
+  ): string[] {
     const {
       exclude_fields = [],
       return_fields = [],
-    } = fieldOptions;
-    const returnFields = Array.from(
+    } = options;
+    return Array.from(
       new Set([
         ...UserModel.BASE_FIELDS,
         ...return_fields.filter((return_field) => {
@@ -152,22 +145,6 @@ export class UserModel extends BaseModel {
         }),
       ]),
     );
-    const id = uuid.v4();
-    const userData = {
-      ...data,
-      id,
-      ...(data.avatar && {
-        avatar: isUrl(data.avatar)
-          ? await aws.uploadImageFromUrl(id, data.avatar)
-          : await aws.uploadImageData(id, data.avatar),
-      }),
-    };
-
-    return UserModel
-      .query()
-      .insert(userData)
-      .pick(returnFields)
-      .first();
   }
 
   public static async refreshTokens(
@@ -203,6 +180,35 @@ export class UserModel extends BaseModel {
     };
   }
 
+  public static async registerNewUser(
+    data: UserModel,
+  ): Promise<UserModel> {
+    const id = v4();
+    const userData = {
+      ...data,
+      id,
+      ...(data.avatar && {
+        avatar: isUrl(data.avatar)
+          ? await aws.uploadImageFromUrl(id, data.avatar)
+          : await aws.uploadImageData(id, data.avatar),
+      }),
+    };
+
+    return UserModel
+      .query()
+      .insert(userData)
+      .returning('*')
+      .first();
+  }
+
+  public static async registerNewUsers(
+    users: UserModel[] = [],
+  ) {
+    return Promise.all(users.map((user) => {
+      return UserModel.registerNewUser(user);
+    }));
+  }
+
   public avatar?: string;
   public display_name: string;
   public email: string;
@@ -220,14 +226,8 @@ export class UserModel extends BaseModel {
   }
 
   public async generateTokens(
-    options: {
-      access_token?: boolean,
-      refresh_token?: boolean,
-    } = {},
-  ): Promise<{
-    access_token: string,
-    refresh_token: string,
-  }> {
+    options: TokenResponse = {},
+  ): Promise<TokenResponse> {
     const tokenPayload = {
       display_name: this.display_name,
       email: this.email,
@@ -251,14 +251,12 @@ export class UserModel extends BaseModel {
     };
   }
 
-  public async logIn(
-    res: Response,
-    tokens: {
-      access_token?: string,
-      refresh_token?: string,
-    } = {},
-    handler = success,
-  ): Promise<Response> {
+  public async getLogInData(
+    response: Response,
+    tokens: TokenResponse = {},
+    fieldOptions?: QueryParamsObject,
+  ): Promise<LoginResponse> {
+    const returnFields = UserModel.getReturnFields(fieldOptions);
     const {
       access_token,
       refresh_token,
@@ -266,7 +264,7 @@ export class UserModel extends BaseModel {
       ? tokens
       : await this.generateTokens();
 
-    res
+    response
       .cookie(
         keyName,
         refresh_token,
@@ -284,25 +282,27 @@ export class UserModel extends BaseModel {
         user_id: this.id,
       });
 
-    const user = Object
+    const userData = Object
       .keys(this)
       .reduce(
         (acc, key) => ({
           ...acc,
-          ...(!UserModel.PRIVATE_FIELDS.includes(key) && {
+          ...(returnFields.includes(key) && {
             [key]: this[key],
           }),
         }),
         {},
-      );
+      ) as UserModel;
 
-    return handler(
-      res,
-      user,
-    );
+    return {
+      response,
+      userData,
+    };
   }
 
-  public updateEmail(email: string): Promise<UserModel> {
+  public updateEmail(
+    email: string,
+  ): Promise<UserModel> {
     return UserModel
       .query()
       .findById(this.id)

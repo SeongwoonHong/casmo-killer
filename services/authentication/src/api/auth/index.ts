@@ -1,12 +1,8 @@
 import { Router } from 'express';
 
-import {
-  csurferify,
-  csurfify,
-} from '~lib/middlewares/seesurf';
+import { csurferify } from '~lib/middlewares/seesurf';
 
 import {
-  initialize,
   requestSignup,
   localRegister,
   localLogin,
@@ -25,11 +21,6 @@ export class AuthRoutes {
   private configure(): void {
     this
       .router
-      .post(
-        '/initialize',
-        csurfify(),
-        initialize,
-      )
       .post(
         '/local/request',
         csurferify(),

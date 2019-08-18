@@ -100,5 +100,8 @@ export const success = (
 ): Response => {
   return res
     .status(200)
-    .json(data);
+    .json({
+      ...data,
+      success: true,
+    });
 };

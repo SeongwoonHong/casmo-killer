@@ -53,6 +53,7 @@ export const parseCSV = (queryString: string = ''): string[] => {
 
   if (queryString.indexOf(',') > -1) {
     return queryString
+      .replace(/\s/g, '')
       .split(',')
       .filter(q => q.length > 0);
   }

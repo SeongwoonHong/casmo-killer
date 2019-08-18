@@ -13,39 +13,7 @@ import { configs } from '~config';
 const {
   COOKIE_CSRF_HEADER_NAME: headerName,
   COOKIE_CSRF_KEY_NAME: keyName,
-  COOKIE_OPTIONS: cookieOptions,
 } = configs;
-
-export const csurfify = (): RequestHandler => {
-  return (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    const Token = new Csrf();
-    const secret = Token.secretSync();
-    const token = Token.create(secret);
-
-    if (
-      !req.signedCookies ||
-      !req.signedCookies[keyName] ||
-      !req.get(headerName)
-    ) {
-      res
-        .cookie(
-          keyName,
-          secret,
-          cookieOptions,
-        )
-        .setHeader(
-          headerName,
-          token,
-        );
-    }
-
-    next();
-  };
-};
 
 export const csurferify = (): RequestHandler => {
   return (

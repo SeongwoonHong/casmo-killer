@@ -3,7 +3,10 @@ jest.mock('~lib/mailer');
 jest.mock('~lib/token-utils');
 jest.mock('~lib/social-auth');
 
-import * as request from 'supertest';
+import {
+  Response,
+  agent as _agent,
+} from 'supertest';
 
 import { App } from '../../app';
 import { UserModel } from '../user.model';
@@ -15,7 +18,6 @@ import {
   mockedToken,
   newUsers as _newUsers,
   resCookieParser,
-  socialTestUsers,
   testUsers,
 } from '~lib/test-utils';
 import { sign } from '~lib/token-utils';
@@ -26,26 +28,23 @@ const {
   COOKIE_AUTH_HEADER_NAME,
   COOKIE_AUTH_KEY_NAME,
   COOKIE_CSRF_HEADER_NAME,
-  COOKIE_CSRF_KEY_NAME,
 } = configs;
 
 describe('/auth routes', () => {
   const app = new App().express;
-  const agent = request.agent(app);
+  const agent = _agent(app);
   const endpoint = `${API_ROOT}/auth`;
   const newUsers = _newUsers.slice();
+  const socialTestUsers = testUsers.filter((user) => {
+    return user.strategy !== 'local';
+  });
 
   let csrfSecret;
 
-  it('receives csrf token and secret in the response', (done) => {
+  beforeAll((done) => {
     agent
-      .post(`${endpoint}/initialize`)
-      .end(async (err, res: request.Response) => {
-        const cookies = resCookieParser(res.header['set-cookie']);
-
-        expect(cookies).toHaveProperty(COOKIE_CSRF_KEY_NAME);
-        expect(res.header).toHaveProperty(COOKIE_CSRF_HEADER_NAME);
-
+      .get(`${API_ROOT}/token/csrf`)
+      .end(async (err, res: Response) => {
         csrfSecret = res.header[COOKIE_CSRF_HEADER_NAME];
 
         done();
@@ -58,9 +57,9 @@ describe('/auth routes', () => {
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
       .send({
         email: newUsers[0].email,
-        redirect_url: 'https://localhost:3000/register/<email>',
+        redirect_url: 'https://localhost:3000/register/<token>',
       })
-      .end((err, res: request.Response) => {
+      .end((err, res: Response) => {
         expect(sign).toHaveBeenCalledWith(
           {
             email: newUsers[0].email,
@@ -83,9 +82,9 @@ describe('/auth routes', () => {
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
       .send({
         email: testUsers[0].email,
-        redirect_url: '<email>',
+        redirect_url: '<token>',
       })
-      .end((err, res: request.Response) => {
+      .end((err, res: Response) => {
         expect(res.body.message).toBe('The email address is already taken.');
         done();
       });
@@ -105,21 +104,27 @@ describe('/auth routes', () => {
         email: newUsers[0].email,
         password: newUsers[0].password,
       })
-      .end((err, res: request.Response) => {
+      .end((err, res: Response) => {
         const cookies = resCookieParser(res.header['set-cookie']);
 
         expect(cookies).toHaveProperty(COOKIE_AUTH_KEY_NAME);
         expect(res.header).toHaveProperty(COOKIE_AUTH_HEADER_NAME);
+        expect(res.body).toHaveProperty('user');
 
-        const allFields = Object.keys(res.body);
+        const userData = res.body.user;
+        const allFields = Object.keys(userData);
+        const baseFields = UserModel.getReturnFields();
 
-        expect(allFields).toContain('id');
+        baseFields.forEach((field) => {
+          expect(userData).toHaveProperty(field);
+        });
+
         expect(allFields.indexOf('password')).toEqual(-1);
         expect(allFields).toContain('created_at');
-        expect(res.body.email).toBe(newUsers[0].email);
-        expect(res.body.display_name).toBe(newUsers[0].display_name);
+        expect(userData.email).toBe(newUsers[0].email);
+        expect(userData.display_name).toBe(newUsers[0].display_name);
 
-        newUsers[0].id = res.body.id;
+        newUsers[0].id = userData.id;
 
         done();
       });
@@ -135,13 +140,13 @@ describe('/auth routes', () => {
         email: newUsers[1].email,
         password: newUsers[1].password,
       })
-      .end((err, res: request.Response) => {
+      .end((err, res: Response) => {
         expect(aws.uploadImageData).not.toHaveBeenCalled();
         expect(aws.uploadImageFromUrl).toHaveBeenCalledWith(
-          res.body.id,
+          res.body.user.id,
           'http://www.silverbulletlabs.com/sitebuilder/images/Remington2-469x473.jpg',
         );
-        newUsers[1].id = res.body.id;
+        newUsers[1].id = res.body.user.id;
 
         done();
       });
@@ -157,14 +162,14 @@ describe('/auth routes', () => {
         email: newUsers[2].email,
         password: newUsers[2].password,
       })
-      .end((err, res: request.Response) => {
+      .end((err, res: Response) => {
         expect(aws.uploadImageData).toHaveBeenCalledWith(
-          res.body.id,
+          res.body.user.id,
           imgData,
         );
         expect(aws.uploadImageFromUrl).not.toHaveBeenCalled();
         expect(true).toBeTruthy();
-        newUsers[2].id = res.body.id;
+        newUsers[2].id = res.body.user.id;
 
         done();
       });
@@ -175,10 +180,12 @@ describe('/auth routes', () => {
       .post(`${endpoint}/local/register`)
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
       .send({
-        ...testUsers[0],
+        avatar: testUsers[0].avatar,
         display_name: 'randomdisplay',
+        email: testUsers[0].email,
+        password: testUsers[0].password,
       })
-      .end((err, res: request.Response) => {
+      .end((err, res: Response) => {
         expect(res.body.message).toEqual('The value for email is already taken.');
         expect(res.body.success).toBe(false);
 
@@ -196,7 +203,7 @@ describe('/auth routes', () => {
         email: 'random@email.com',
         password: testUsers[0].password,
       })
-      .end((err, res: request.Response) => {
+      .end((err, res: Response) => {
         expect(res.body.message).toEqual('The value for display name is already taken.');
         expect(res.body.success).toBe(false);
 
@@ -211,14 +218,23 @@ describe('/auth routes', () => {
         email: testUsers[0].email,
         password: testUsers[0].password,
       })
-      .end((err, res: request.Response) => {
+      .end((err, res: Response) => {
         const cookies = resCookieParser(res.header['set-cookie']);
 
         expect(cookies).toHaveProperty(COOKIE_AUTH_KEY_NAME);
         expect(res.header).toHaveProperty(COOKIE_AUTH_HEADER_NAME);
-        expect(res.body).toHaveProperty('id');
-        expect(res.body.email).toEqual(testUsers[0].email);
-        expect(res.body.display_name).toEqual(testUsers[0].display_name);
+        expect(res.body).toHaveProperty('user');
+        expect(res.body).toHaveProperty('user');
+
+        const userData = res.body.user;
+        const baseFields = UserModel.getReturnFields();
+
+        baseFields.forEach((field) => {
+          expect(userData).toHaveProperty(field);
+        });
+
+        expect(userData.email).toEqual(testUsers[0].email);
+        expect(userData.display_name).toEqual(testUsers[0].display_name);
 
         done();
       });
@@ -231,7 +247,7 @@ describe('/auth routes', () => {
         email: 'utjw823787@email.com',
         password: testUsers[1].password,
       })
-      .end((err, res: request.Response) => {
+      .end((err, res: Response) => {
         expect(res.body.success).toEqual(false);
         expect(res.body.message).toEqual('User not found.');
 
@@ -246,7 +262,7 @@ describe('/auth routes', () => {
         email: testUsers[0].email,
         password: testUsers[1].password,
       })
-      .end((err, res: request.Response) => {
+      .end((err, res: Response) => {
         expect(res.body.success).toEqual(false);
         expect(res.body.message).toEqual('Password is incorrect.');
 
@@ -272,7 +288,7 @@ describe('/auth routes', () => {
       .post(`${endpoint}/social/login`)
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
       .send(payload)
-      .end((err, res: request.Response) => {
+      .end((err, res: Response) => {
         expect(res.body).toHaveProperty('profile');
         expect(res.body.profile).toEqual(socialProfile);
         expect(res.body.should_register).toBe(true);
@@ -300,17 +316,21 @@ describe('/auth routes', () => {
       .post(`${endpoint}/social/login`)
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
       .send(payload)
-      .end((err, res: request.Response) => {
+      .end((err, res: Response) => {
         const cookies = resCookieParser(res.header['set-cookie']);
 
         expect(cookies).toHaveProperty(COOKIE_AUTH_KEY_NAME);
         expect(res.header).toHaveProperty(COOKIE_AUTH_HEADER_NAME);
+        expect(res.body).toHaveProperty('user');
 
-        expect(res.body).toHaveProperty('id');
-        expect(res.body).toHaveProperty('avatar');
-        expect(res.body.display_name).toEqual(socialTestUsers[0].display_name);
-        expect(res.body.social_id).toEqual(socialTestUsers[0].social_id);
-        expect(res.body.strategy).toEqual(socialTestUsers[0].strategy);
+        const userData = res.body.user;
+        const baseFields = UserModel.getReturnFields();
+
+        baseFields.forEach((field) => {
+          expect(userData).toHaveProperty(field);
+        });
+        expect(userData.display_name).toEqual(socialTestUsers[0].display_name);
+        expect(userData.strategy).toEqual(socialTestUsers[0].strategy);
 
         done();
       });
@@ -337,19 +357,25 @@ describe('/auth routes', () => {
       .post(`${endpoint}/social/register`)
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
       .send(payload)
-      .end((err, res: request.Response) => {
+      .end((err, res: Response) => {
         const cookies = resCookieParser(res.header['set-cookie']);
 
         expect(cookies).toHaveProperty(COOKIE_AUTH_KEY_NAME);
         expect(res.header).toHaveProperty(COOKIE_AUTH_HEADER_NAME);
+        expect(res.body).toHaveProperty('user');
 
-        expect(res.body).toHaveProperty('id');
-        expect(res.body).toHaveProperty('avatar');
-        expect(res.body.display_name).toEqual(payload.display_name);
+        const userData = res.body.user;
+        const baseFields = UserModel.getReturnFields();
+
+        baseFields.forEach((field) => {
+          expect(userData).toHaveProperty(field);
+        });
+
+        expect(userData.display_name).toEqual(payload.display_name);
 
         newUsers.push({
           ...newUsers[0],
-          id: res.body.id,
+          id: userData.id,
         });
 
         done();
@@ -377,7 +403,7 @@ describe('/auth routes', () => {
       .post(`${endpoint}/social/register`)
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
       .send(payload)
-      .end((err, res: request.Response) => {
+      .end((err, res: Response) => {
         expect(res.body.message).toEqual('Incorrect social profile information provided.');
         expect(res.body.success).toBe(false);
 
@@ -386,19 +412,12 @@ describe('/auth routes', () => {
   });
 
   afterAll(async (done) => {
-    const idsToDelete = newUsers.reduce(
-      (acc, curr) => {
-        return curr.id
-          ? acc.concat(curr.id)
-          : acc;
-      },
-      [],
-    );
-
+    await UserModel.emptyTable();
     await UserModel
       .query()
-      .delete()
-      .whereIn('id', idsToDelete);
+      .insert(testUsers as UserModel[]);
+
+    done();
 
     done();
   });

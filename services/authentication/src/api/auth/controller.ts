@@ -9,7 +9,6 @@ import {
   Response,
 } from 'express';
 
-import { UserInfoRequest } from '~lib/types';
 import { UserModel } from '../user.model';
 import {
   badRequest,
@@ -35,15 +34,6 @@ const {
   SOCIAL_AUTH_PROVIDERS: socialProviders,
 } = configs;
 
-export const initialize = (
-  req: UserInfoRequest,
-  res: Response,
-): Response => {
-  return res
-    .status(204)
-    .send();
-};
-
 export const requestSignup = async (
   req: Request,
   res: Response,
@@ -53,7 +43,7 @@ export const requestSignup = async (
     JoiObject({
       email: validEmail,
       redirect_url: JoiString()
-        .regex(/<email>/)
+        .regex(/<token>/)
         .required(),
     }),
   );
@@ -95,7 +85,7 @@ export const requestSignup = async (
     await mailer.sendRegisterConfirmation(
       email,
       redirect_url.replace(
-        /<email>/,
+        /<token>/,
         token,
       ),
     );
@@ -175,10 +165,23 @@ export const localRegister = async (
 
     const newUser = await UserModel.registerNewUser(
       req.body,
+    );
+
+    const {
+      response,
+      userData,
+    } = await newUser.getLogInData(
+      res,
+      {},
       req.query,
     );
 
-    return await newUser.logIn(res);
+    return success(
+      response,
+      {
+        user: userData,
+      },
+    );
   } catch (err) {
     return error(
       res,
@@ -212,10 +215,7 @@ export const localLogin = async (
       password,
     } = req.body;
 
-    const user: UserModel = await UserModel.findByEmail(
-      email,
-      ['password'],
-    );
+    const user: UserModel = await UserModel.findByEmail(email);
 
     if (!user) {
       return notFound(
@@ -233,7 +233,21 @@ export const localLogin = async (
       );
     }
 
-    return await user.logIn(res);
+    const {
+      response,
+      userData,
+    } = await user.getLogInData(
+      res,
+      {},
+      req.query,
+    );
+
+    return success(
+      response,
+      {
+        user: userData,
+      },
+    );
   } catch (err) {
     return error(
       res,
@@ -280,7 +294,7 @@ export const socialRegister = async (
         social_token,
         strategy,
       },
-      query,
+      // query,
     } = req;
 
     const socialProfile = await socialAuth.fetchSocialInfo(
@@ -295,25 +309,31 @@ export const socialRegister = async (
       );
     }
 
-    const fieldOptions = {
-      ...query,
-      return_fields: query.return_fields.concat([
-        'social_id',
-        'strategy',
-      ]),
-    };
-
     const newUser = await UserModel.registerNewUser(
+      // tslint:disable-next-line:no-object-literal-type-assertion
       {
         avatar,
         display_name,
         social_id,
         strategy,
-      },
-      fieldOptions,
+      } as UserModel,
     );
 
-    return await newUser.logIn(res);
+    const {
+      response,
+      userData,
+    } = await newUser.getLogInData(
+      res,
+      {},
+      req.query,
+    );
+
+    return success(
+      response,
+      {
+        user: userData,
+      },
+    );
   } catch (err) {
     return error(
       res,
@@ -343,27 +363,18 @@ export const socialLogin = async (
 
   try {
     const {
-      body: {
-        accessToken,
-        provider,
-      },
-      query,
-    } = req;
+      accessToken,
+      provider,
+    } = req.body;
 
     const socialProfile = await socialAuth.fetchSocialInfo(
       provider,
       accessToken,
     );
 
-    const fieldOptions = query.return_fields.concat([
-      'social_id',
-      'strategy',
-    ]);
-
     const socialUser = await UserModel.findBySocialProfile(
       socialProfile.strategy,
       socialProfile.social_id,
-      fieldOptions,
     );
 
     if (!socialUser) {
@@ -376,7 +387,21 @@ export const socialLogin = async (
       );
     }
 
-    return await socialUser.logIn(res);
+    const {
+      response,
+      userData,
+    } = await socialUser.getLogInData(
+      res,
+      {},
+      req.query,
+    );
+
+    return success(
+      response,
+      {
+        user: userData,
+      },
+    );
   } catch (err) {
     return error(
       res,

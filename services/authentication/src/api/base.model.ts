@@ -32,6 +32,23 @@ export class BaseModel extends Model {
     return [];
   }
 
+  public static async emptyTable(id: string = this.idColumn) {
+    return this
+      .query()
+      .delete()
+      .whereIn(
+        id,
+        await this
+          .query()
+          .select(id)
+          .map(row => row[id]),
+      );
+  }
+
+  public static get idColumn() {
+    return 'id';
+  }
+
   public static async isValueTaken(
     options: DupeValueCheckOption | DupeValueCheckOption[],
   ): Promise<DupeValueCheckResult> {
@@ -58,7 +75,9 @@ export class BaseModel extends Model {
     return this.checkDupeValue(options);
   }
 
-  private static checkDupeValue(option: DupeValueCheckOption): Promise<DupeValueCheckResult> {
+  private static checkDupeValue(
+    option: DupeValueCheckOption,
+  ): Promise<DupeValueCheckResult> {
     const {
       field,
       value,

@@ -1,3 +1,4 @@
+import * as Csrf from 'csrf';
 import {
   ValidationResult,
   object as JoiObject,
@@ -21,8 +22,40 @@ import { configs } from '~config';
 import { verify } from '~lib/token-utils';
 
 const {
+  COOKIE_CSRF_HEADER_NAME: headerName,
+  COOKIE_CSRF_KEY_NAME: keyName,
+  COOKIE_OPTIONS: cookieOptions,
   RSA_KEY_PAIRS: rsaKeyPairs,
 } = configs;
+
+export const getCsrfToken = (
+  req: UserInfoRequest,
+  res: Response,
+): Response => {
+  if (
+    !req.signedCookies ||
+    !req.signedCookies[keyName]
+  ) {
+    const Token = new Csrf();
+    const secret = Token.secretSync();
+    const token = Token.create(secret);
+
+    res
+      .cookie(
+        keyName,
+        secret,
+        cookieOptions,
+      )
+      .setHeader(
+        headerName,
+        token,
+      );
+  }
+
+  return res
+    .status(204)
+    .send();
+};
 
 export const getPublicRsaKey = (
   req: Request,
@@ -82,9 +115,20 @@ export const refreshTokens = async (
       refresh_token,
     );
 
-    return await user.logIn(
+    const {
+      response,
+      userData,
+    } = await user.getLogInData(
       res,
       tokens,
+      req.query,
+    );
+
+    return success(
+      response,
+      {
+        user: userData,
+      },
     );
   } catch (err) {
     return error(
@@ -127,7 +171,9 @@ export const verifyToken = async (
 
     return success(
       res,
-      payload[subject],
+      {
+        data: payload[subject],
+      },
     );
   } catch (err) {
     if (

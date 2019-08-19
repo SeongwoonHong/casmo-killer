@@ -7,7 +7,8 @@
     "dev": "nodemon --watch --app --watch app/server.js",
     "dev-next": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "jest"
   },
   "keywords": [],
   "author": "Seongwoon Hong",
@@ -29,14 +30,21 @@
     "sass-resources-loader": "^2.0.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.5.5",
     "@babel/plugin-proposal-class-properties": "^7.5.0",
     "@babel/plugin-proposal-decorators": "^7.4.4",
+    "@types/jest": "^24.0.17",
     "@types/node": "^12.6.2",
     "@types/react": "^16.8.23",
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-sass": "^1.0.1",
     "@zeit/next-typescript": "^1.1.1",
+    "babel-jest": "^24.9.0",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "jest": "^24.9.0",
     "nodemon": "^1.19.1",
+    "react-test-renderer": "^16.8.6",
     "tslint": "^5.18.0",
     "typescript": "^3.5.3"
   }

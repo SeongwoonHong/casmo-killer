@@ -8,20 +8,9 @@ const postWrite = props => {
   }
 
   return (
-    <>
-      <div className="post-write-footer">
-        <CloseButton
-          className="post-write-close-button"
-          onClick={closePostWrite}
-        />
-        <Button
-          className="post-write-post-button"
-        >
-          POST
-        </Button>
-      </div>
+    <div className="postWrite">
       <PostBody />
-    </>
+    </div>
   );
 };
 

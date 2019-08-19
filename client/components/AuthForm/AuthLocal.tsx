@@ -9,11 +9,11 @@ const AuthLocal:FunctionComponent<IAuthLocal.IProps> = ({ mode, inputs, errors }
           inputs.map((input) => {
             return (
               <div
-                className="authlocal-input"
+                className="authlocal-input-container"
                 key={input.id}
               >
                 <input
-                  className="email-input"
+                  className={`${input.id}-input authlocal-input`}
                   placeholder={input.placeholder}
                   onChange={input.onChange}
                   value={input.value}

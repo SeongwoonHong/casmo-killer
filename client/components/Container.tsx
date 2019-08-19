@@ -5,6 +5,16 @@ import { Header } from 'components';
 
 const Container = (title, id) => (WrappedComponent) => {
   return class withContainerClass extends React.Component {
+    static async getInitialProps(ctx) {
+      let pageProps;
+
+      if (WrappedComponent.getInitialProps) {
+        pageProps = await WrappedComponent.getInitialProps(ctx);
+      }
+
+      return {...pageProps};
+    }
+
     render() {
       return (
         <>

@@ -49,6 +49,7 @@ const Kakaotalk:FunctionComponent<ISocial.IProps> = (props) => {
       className={cx('social', props.className)}
       onClick={click}
       disabled={!isSDKLoaded}
+      id={props.id}
     >
       <img
         src={props.icon}

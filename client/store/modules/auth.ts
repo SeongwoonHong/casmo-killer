@@ -80,9 +80,9 @@ export const signup = ({
 export const initialize = () => {
   return async () => {
     try {
+      console.log('initialize')
       // const res = await axios.post('/auth/initialize');
       const csrfToken = '58Eonwax-QHjb4QOv5PsP3PhXS4x4AUcwOd0';
-
       if (csrfToken) {
         setTokenToHeader('x-csrf-token', csrfToken);
       }
@@ -98,6 +98,7 @@ export const initialize = () => {
 export const tokenRefresh = () => {
   return async () => {
     try {
+      console.log('token refresh')
       const cookies = new Cookies();
       const token = cookies.get('DAMSO_AUTH_TOKEN');
 

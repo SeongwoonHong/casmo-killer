@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { IAuthForm } from 'interfaces';
-import { AuthSocial, AuthLocal } from 'components';
+import { AuthSocial, AuthLocal, Button } from 'components';
 
 
 const AuthForm:FunctionComponent<IAuthForm.IProps> = ({
@@ -44,9 +44,9 @@ const AuthForm:FunctionComponent<IAuthForm.IProps> = ({
           inputs={mode === 'login' ? loginInputs : signupInputs}
           errors={errors}
         />
-      <button className="authform-button">
+      <Button className="authform-button">
         { getButtonLabel() }
-      </button>
+      </Button>
       </div>
     </form>
   );

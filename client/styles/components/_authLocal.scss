@@ -1,10 +1,10 @@
 .AuthLocal {
   padding: 10px;
 
-  .authlocal-input {
+  .authlocal-input-container {
     @include flex-column;
 
-    .email-input {
+    .authlocal-input {
       padding: 10px;
       background-color:$inputBackgroundColor;
       border: 0;

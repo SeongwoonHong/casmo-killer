@@ -12,13 +12,13 @@ class MyApp extends App {
 
     // Should this be triggered everytime a user refreshses or goes to other pages?
     reduxStore.dispatch(initialize());
+    reduxStore.dispatch(tokenRefresh());
   }
 
   public render(): JSX.Element {
     // @ts-ignore
     const { Component, pageProps, reduxStore } = this.props;
 
-    reduxStore.dispatch(tokenRefresh());
 
     return (
       <Container>

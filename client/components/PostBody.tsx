@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import cx from 'classnames';
+import { Button, CloseButton } from 'components';
 
 const PostBody = (props) => {
   const isViewMode = props.mode === 'view';
   const [title, setTitle] = useState(props.title || '');
   const [content, setContent] = useState(props.content || '');
-  const [mainPicture, setMainPicture] = useState();
+  const [thumbnail, setThumbnail] = useState();
 
   function onTitleChange(e) {
     return setTitle(e.target.value);
@@ -15,31 +16,58 @@ const PostBody = (props) => {
     return setContent(e.target.value);
   }
 
-  function onFileChange(e) {
-    const profilePicture = e.target.files[0];
-    const form = new FormData();
-    const reader = new FileReader();
 
-    form.append('file', profilePicture);
-    reader.readAsDataURL(profilePicture);
+  function resetThumbnail() {
+    return setThumbnail('');
+  }
 
-    return reader.onload = () => {
-      return setMainPicture(reader.result);
-    };
+  function imgUpload() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.onchange = (e) => {
+      if (!input.files) return;
+      const file = input.files[0];
+      const reader = new FileReader();
+
+      reader.readAsDataURL(file);
+
+      return reader.onload = () => {
+        return setThumbnail(reader.result);
+      };
+    }
+    input.click();
   }
 
   return (
     <div className={cx('PostBody', { viewMode: isViewMode })}>
-      <div className="postbody-row">
-        <input
-          type="file"
-          onChange={onFileChange}
-          className="main-picture-input"
-        />
-      </div>
+      {
+        !isViewMode && (
+          <div className="postbody-row postbody-header">
+            <Button
+              className="main-picture-input"
+              onClick={imgUpload}
+            >
+              Thumbnail
+            </Button>
+            <Button
+              className="post-write-post-button"
+            >
+              POST
+            </Button>
+          </div>
+        )
+      }
       <div className="postbody-row main-picture-row">
+        {
+          !isViewMode && thumbnail && (
+            <CloseButton
+              onClick={resetThumbnail}
+              className="reset-thumbnail"
+            />
+          )
+        }
         <img
-          src={mainPicture}
+          src={thumbnail}
           className="main-picture"
           alt=""
         />

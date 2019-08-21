@@ -2,6 +2,7 @@ import * as request from 'supertest';
 
 import { App } from '../../app';
 import { UserModel } from '../user.model';
+import { TokenModel } from './model';
 import { configs } from '~config';
 import {
   extPrsHeader,
@@ -22,7 +23,7 @@ describe('/token routes', () => {
   const app = new App().express;
   const agent = request.agent(app);
   const endpoint = `${API_ROOT}/token`;
-  const testUsers = testUtils.users;
+  const testUsers = testUtils.localTestUsers;
 
   let accessToken;
   let csrfSecret;
@@ -121,6 +122,23 @@ describe('/token routes', () => {
       });
   });
 
+  it('does not store expired refresh tokens in db', (done) => {
+    agent
+      .post(`${API_ROOT}/auth/local/login`)
+      .send({
+        email: testUsers[0].email,
+        password: testUsers[0].password,
+      })
+      .end(async (err, res: request.Response) => {
+        const rows = await TokenModel
+          .query()
+          .where('user_id', res.body.user.id);
+
+        expect(rows).toHaveLength(1);
+        done();
+      });
+  });
+
   it('blocks token refresh request for unauthorized request', (done) => {
     request(app)
       .post(`${endpoint}/refresh`)
@@ -144,34 +162,12 @@ describe('/token routes', () => {
       .post(`${endpoint}/verify`)
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
       .send({
-        subject,
         token,
       })
       .end((err, res: request.Response) => {
         expect(res.body).toHaveProperty('data');
-        expect(res.body.data).toEqual(payload);
-
-        done();
-      });
-  });
-
-  it('does not return token payload for a wrong subject', async (done) => {
-    const payload = {
-      test: 'payload',
-    };
-    const subject = 'payload';
-    const token = await sign(payload, subject);
-
-    agent
-      .post(`${endpoint}/verify`)
-      .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
-      .send({
-        subject: `${subject}er`,
-        token,
-      })
-      .end((err, res: request.Response) => {
-        expect(res.body.message).toEqual('Malformed request');
-        expect(res.body.success).toBe(false);
+        expect(res.body.data).toHaveProperty(subject);
+        expect(res.body.data.payload).toEqual(payload);
 
         done();
       });

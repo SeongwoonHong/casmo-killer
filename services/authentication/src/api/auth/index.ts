@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
-import { csurferify } from '~lib/middlewares/seesurf';
-
+import { csurferify } from '~middlewares/seesurf';
+import { refreshTokenParser } from '~middlewares/token-parser';
 import {
   requestSignup,
   localRegister,
@@ -33,6 +33,10 @@ export class AuthRoutes {
       )
       .post(
         '/local/login',
+        refreshTokenParser(
+          'user_id',
+          false,
+        ),
         localLogin,
       )
       .post(

@@ -121,7 +121,7 @@ export const refreshTokens = async (
     } = await user.getLogInData(
       res,
       tokens,
-      req.query,
+      req,
     );
 
     return success(
@@ -145,7 +145,6 @@ export const verifyToken = async (
   const validations: ValidationResult<any> = JoiValidate(
     req.body,
     JoiObject({
-      subject: JoiString().required(),
       token: JoiString().required(),
     }),
   );
@@ -159,20 +158,19 @@ export const verifyToken = async (
 
   try {
     const {
-      subject,
       token,
     } = req.body;
 
-    const payload = await verify<object>(token);
+    const data = await verify<object>(token);
 
-    if (!payload.hasOwnProperty(subject)) {
+    if (!data) {
       return badRequest(res);
     }
 
     return success(
       res,
       {
-        data: payload[subject],
+        data,
       },
     );
   } catch (err) {

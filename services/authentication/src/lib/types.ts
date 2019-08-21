@@ -69,6 +69,8 @@ export interface SocialAuthResponse {
 }
 
 export interface UserInfoRequest<T = UserModel> extends Request {
+  access_token?: string;
   user?: T;
+  user_agent?: string;
   refresh_token?: string;
 }

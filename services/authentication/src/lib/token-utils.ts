@@ -1,4 +1,5 @@
 import * as jwt from 'jsonwebtoken';
+import { v4 } from 'uuid';
 
 import { configs } from '~config';
 import { generateRandomNum } from '~lib/miscel';
@@ -34,6 +35,7 @@ export const sign = (
           expiresIn,
           header: {
             kid,
+            uuid: v4(),
           },
           issuer: configs.TOKEN_ISSUER,
           subject,

@@ -8,12 +8,12 @@ import {
   Response,
 } from 'express';
 
-import { TokenModel } from '../../api/token/model';
+import { TokenModel } from '../api/token/model';
 import {
   RefreshTokenPayload,
   UserInfoRequest,
 } from '~lib/types';
-import { UserModel } from '../../api/user.model';
+import { UserModel } from '../api/user.model';
 import { configs } from '~config';
 import {
   error,
@@ -45,6 +45,7 @@ export const authTokenParser = (subject: string = 'user'): RequestHandler => {
         access_token,
       );
 
+      req.access_token = access_token as unknown as string;
       req.user = payload[subject] || null;
     } catch (err) {
       req.user = null;
@@ -82,7 +83,9 @@ export const refreshTokenParser = (
 
     try {
       const token = req.signedCookies[keyName];
-      const payload = await verify<{ [key: string]: RefreshTokenPayload }>(token);
+      const payload = await verify<{
+        [key: string]: RefreshTokenPayload,
+      }>(token);
 
       if (!payload || !payload[subject]) {
         return failedResponse(res);
@@ -90,8 +93,7 @@ export const refreshTokenParser = (
 
       const refresh_token = await TokenModel
         .query()
-        .where('refresh_token', token)
-        .first();
+        .findOne('refresh_token', token);
 
       if (!refresh_token || !refresh_token.refresh_token) {
         return failedResponse(res);

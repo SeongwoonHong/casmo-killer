@@ -1,3 +1,5 @@
+import { UserJobs } from '../jobs.model';
+
 jest.mock('~lib/token-utils');
 
 import {
@@ -11,12 +13,17 @@ import { aws } from '~lib/aws';
 import { configs } from '~config';
 import { mailer } from '~lib/mailer';
 import { testUtils } from '~lib/test-utils';
-import { sign } from '~lib/token-utils';
+import {
+  sign,
+  verify,
+} from '~lib/token-utils';
 import { socialAuth } from '~lib/social-auth';
+import { constants } from '~constants';
 
 const {
   API_ROOT,
   COOKIE_CSRF_HEADER_NAME,
+  MSG_FOR_REQUEST_SIGNUP,
 } = configs;
 
 describe('/auth routes', () => {
@@ -27,7 +34,31 @@ describe('/auth routes', () => {
   const newUsers = testUtils.newUsers;
   const socialTestUsers = testUtils.socialTestUser;
 
+  const getRegistrationToken = (user): Promise<{ token: string }> => {
+    return new Promise((resolve, reject) => {
+      agent
+        .post(`${endpoint}/local/request`)
+        .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
+        .send({
+          email: user.email,
+          redirect_url: 'https://localhost:3000/register/<token>',
+        })
+        .end(async (err, res: Response) => {
+          const tokenField = await UserJobs
+            .query()
+            .findOne({
+              job_name: constants.JOB_NAME_FOR_REGISTRATION,
+              token: testUtils.mockedToken,
+              user_id: user.email,
+            });
+
+          resolve(tokenField);
+        });
+    });
+  };
+
   let csrfSecret;
+  let jobToken;
 
   beforeAll((done) => {
     agent
@@ -50,19 +81,31 @@ describe('/auth routes', () => {
         email: newUsers[0].email,
         redirect_url: 'https://localhost:3000/register/<token>',
       })
-      .end((err, res: Response) => {
+      .end(async (err, res: Response) => {
         expect(sign).toHaveBeenCalledWith(
-          {
-            email: newUsers[0].email,
-          },
+          newUsers[0].email,
           'email',
+          '24h',
         );
         expect(mailer.sendRegisterConfirmation).toHaveBeenCalledWith(
           newUsers[0].email,
           `https://localhost:3000/register/${mockedToken}`,
         );
-        // tslint:disable-next-line:max-line-length
-        expect(res.body.message).toBe(`Verification email has been sent to ${newUsers[0].email}. Please click the link in the email to sign up.`);
+        expect(res.body.message).toBe(MSG_FOR_REQUEST_SIGNUP.replace(/<email>/, newUsers[0].email));
+
+        const tokenField = await UserJobs
+          .query()
+          .findOne({
+            job_name: constants.JOB_NAME_FOR_REGISTRATION,
+            token: testUtils.mockedToken,
+            user_id: newUsers[0].email,
+          });
+
+        expect(tokenField).toBeTruthy();
+        expect(tokenField.user_id).toEqual(newUsers[0].email);
+
+        jobToken = tokenField.token;
+
         done();
       });
   });
@@ -96,8 +139,9 @@ describe('/auth routes', () => {
         display_name: newUsers[0].display_name,
         email: newUsers[0].email,
         password: newUsers[0].password,
+        token: jobToken,
       })
-      .end((err, res: Response) => {
+      .end(async (err, res: Response) => {
         testUtils.validateLoginResponse(
           res,
           res.header['set-cookie'],
@@ -116,14 +160,24 @@ describe('/auth routes', () => {
         expect(userData.email).toBe(newUsers[0].email);
         expect(userData.display_name).toBe(newUsers[0].display_name);
 
-        newUsers[0].id = userData.id;
+        const tokenField = await UserJobs
+          .query()
+          .findOne({
+            job_name: constants.JOB_NAME_FOR_REGISTRATION,
+            token: testUtils.mockedToken,
+            user_id: newUsers[0].email,
+          });
+
+        expect(tokenField).toBeFalsy();
 
         done();
       });
   });
 
-  it('registers a new user with avatar url', (done) => {
+  it('registers a new user with avatar url', async (done) => {
     const imgUrl = 'http://www.silverbulletlabs.com/sitebuilder/images/Remington2-469x473.jpg';
+    const { token } = await getRegistrationToken(newUsers[1]);
+
     agent
       .post(`${endpoint}/local/register`)
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
@@ -132,9 +186,10 @@ describe('/auth routes', () => {
         display_name: newUsers[1].display_name,
         email: newUsers[1].email,
         password: newUsers[1].password,
+        token,
       })
-      .end((err, res: Response) => {
-        const { user } = res.body;
+      .end(async (errTwo, resTwo: Response) => {
+        const { user } = resTwo.body;
 
         expect(aws.uploadImageData).not.toHaveBeenCalled();
         expect(aws.uploadImageFromUrl).toHaveBeenCalledWith(
@@ -142,11 +197,23 @@ describe('/auth routes', () => {
           imgUrl,
         );
 
+        const tokenField = await UserJobs
+          .query()
+          .findOne({
+            job_name: constants.JOB_NAME_FOR_REGISTRATION,
+            token,
+            user_id: newUsers[1].email,
+          });
+
+        expect(tokenField).toBeFalsy();
+
         done();
       });
   });
 
-  it('registers a new user with avatar data', (done) => {
+  it('registers a new user with avatar data', async (done) => {
+    const { token } = await getRegistrationToken(newUsers[2]);
+
     agent
       .post(`${endpoint}/local/register`)
       .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
@@ -155,20 +222,30 @@ describe('/auth routes', () => {
         display_name: newUsers[2].display_name,
         email: newUsers[2].email,
         password: newUsers[2].password,
+        token,
       })
-      .end((err, res: Response) => {
+      .end(async (err, res: Response) => {
         expect(aws.uploadImageData).toHaveBeenCalledWith(
           res.body.user.id,
           testUtils.imgData,
         );
         expect(aws.uploadImageFromUrl).not.toHaveBeenCalled();
-        expect(true).toBeTruthy();
+
+        const tokenField = await UserJobs
+          .query()
+          .findOne({
+            job_name: constants.JOB_NAME_FOR_REGISTRATION,
+            token,
+            user_id: newUsers[2].email,
+          });
+
+        expect(tokenField).toBeFalsy();
 
         done();
       });
   });
 
-  it('blocks a registration if email is already taken', (done) => {
+  it('blocks a registration if email is already taken', async (done) => {
     const testUsers = testUtils.localTestUsers;
 
     agent
@@ -179,6 +256,7 @@ describe('/auth routes', () => {
         display_name: 'randomdisplay',
         email: testUsers[0].email,
         password: testUsers[0].password,
+        token: 'asvasdfavasdfasdf',
       })
       .end((err, res: Response) => {
         expect(res.body.message).toEqual('The value for email is already taken.');
@@ -188,7 +266,7 @@ describe('/auth routes', () => {
       });
   });
 
-  it('blocks a registration if display name is already taken', (done) => {
+  it('blocks a registration if display name is already taken', async (done) => {
     const testUsers = testUtils.localTestUsers;
 
     agent
@@ -199,6 +277,7 @@ describe('/auth routes', () => {
         display_name: testUsers[0].display_name,
         email: 'random@email.com',
         password: testUsers[0].password,
+        token: 'asvasdfavasdfasdf',
       })
       .end((err, res: Response) => {
         expect(res.body.message).toEqual('The value for display name is already taken.');
@@ -211,6 +290,9 @@ describe('/auth routes', () => {
   it('logs in a user', (done) => {
     const testUsers = testUtils.localTestUsers;
 
+    // @ts-ignore
+    verify = jest.fn().mockResolvedValue({});
+
     agent
       .post(`${endpoint}/local/login`)
       .send({
@@ -218,6 +300,7 @@ describe('/auth routes', () => {
         password: testUsers[0].password,
       })
       .end((err, res: Response) => {
+        expect(verify).toHaveBeenCalled();
         testUtils.validateLoginResponse(
           res,
           res.header['set-cookie'],

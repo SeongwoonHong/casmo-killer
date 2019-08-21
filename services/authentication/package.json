@@ -76,8 +76,9 @@
     "seed": "knex seed:run",
     "start": "NODE_ENV=production node dist",
     "start:dev": "NODE_ENV=development npm run setupdb && nodemon --config './nodemon.ts.json' src/index.ts",
-    "test": "NODE_ENV=test npm run migrate && jest --runInBand",
-    "test:watch": "npm run test -- --watch"
+    "test": "NODE_ENV=test npm run migrate && jest --runInBand --forceExit",
+    "test:dev": "NODE_ENV=test npm run migrate && jest --runInBand",
+    "test:watch": "npm run test:dev -- --watch"
   },
   "husky": {
     "hooks": {
@@ -87,7 +88,9 @@
   "jest": {
     "moduleNameMapper": {
       "^~config": "<rootDir>/src/config",
-      "^~lib/(.*)$": "<rootDir>/src/lib/$1"
+      "^~constants": "<rootDir>/src/constants",
+      "^~lib/(.*)$": "<rootDir>/src/lib/$1",
+      "^~middlewares/(.*)$": "<rootDir>/src/middlewares/$1"
     },
     "preset": "ts-jest",
     "roots": [

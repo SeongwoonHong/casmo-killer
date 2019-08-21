@@ -14,13 +14,17 @@
             "dev",
             [
                 "~config",
-                "~lib"
+                "~constants",
+                "~lib",
+                "~middlewares"
             ]
         ],
         "no-submodule-imports": [
             true,
             "~config",
-            "~lib"
+            "~constants",
+            "~lib",
+            "~middlewares"
         ],
         "object-shorthand-properties-first": false,
         "ordered-imports": false,

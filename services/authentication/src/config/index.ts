@@ -54,6 +54,17 @@ const config = {
       port: process.env.DATABASE_PORT || 5432,
       user: process.env.DATABASE_USER || 'postgres',
     },
+    MSG_FOR_REQUEST_EMAIL_CHANGE: process.env.MSG_FOR_REQUEST_EMAIL_CHANGE &&
+    /<email>/.test(process.env.MSG_FOR_REQUEST_EMAIL_CHANGE)
+      ? process.env.MSG_FOR_REQUEST_EMAIL_CHANGE
+      // tslint:disable-next-line:max-line-length
+      : 'Verification email has been sent to <email>. Please click the link in the email to confirm your new email address.',
+    MSG_FOR_REQUEST_SIGNUP: process.env.MSG_FOR_REQUEST_SIGNUP &&
+      /<email>/.test(process.env.MSG_FOR_REQUEST_SIGNUP)
+      ? process.env.MSG_FOR_REQUEST_SIGNUP
+      // tslint:disable-next-line:max-line-length
+      : 'Verification email has been sent to <email>. Please click the link in the email to sign up.',
+    // tslint:disable-next-line:max-line-length
     NODE_ENV: nodeEnv,
     // jwt token settings
     RSA_KEY_PAIRS: ((envData = '{}') => {

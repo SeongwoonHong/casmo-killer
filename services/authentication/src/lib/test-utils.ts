@@ -1,14 +1,21 @@
-import { Response } from 'supertest';
-import { generate } from 'shortid';
+import {
+  default as request,
+  Response,
+  SuperTest,
+} from 'supertest';
+import { generate as idGenerator } from 'shortid';
 
 import { AuthStrategies } from '~lib/types';
+import { UserJobs } from '../api/jobs.model';
 import { UserModel } from '../api/user.model';
 import { TokenModel } from '../api/token/model';
 import { configs } from '~config';
 
 const {
+  API_ROOT,
   COOKIE_AUTH_HEADER_NAME,
   COOKIE_AUTH_KEY_NAME,
+  COOKIE_CSRF_HEADER_NAME,
 } = configs;
 
 class TestUtils {
@@ -33,7 +40,7 @@ class TestUtils {
   constructor() {
     // tslint:disable-next-line:max-line-length
     this.imgData = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII=';
-    this.idGenerator = generate;
+    this.idGenerator = idGenerator;
     this.mockedToken = 'kfjaahsdlkfjhavlasdjfbnalsdfa';
     this.newUsers = this.generateUsers(3);
     this.users = [
@@ -49,8 +56,11 @@ class TestUtils {
   }
 
   public async emptyTables(): Promise<any> {
-    await TokenModel.emptyTable();
-    await UserModel.emptyTable();
+    return [
+      await TokenModel.emptyTable(),
+      await UserJobs.emptyTable(),
+      await UserModel.emptyTable(),
+    ];
   }
 
   public async insertUsers(
@@ -119,6 +129,107 @@ class TestUtils {
     });
   }
 
+  public getCsrfToken(
+    agent: SuperTest<any>,
+    endpoint = `${API_ROOT}/token/csrf`,
+  ): Promise<{
+    agent: SuperTest<any>,
+    csrfToken: string,
+  }> {
+    return new Promise((resolve) => {
+      agent
+        .get(endpoint)
+        .end((err, res: Response) => {
+          resolve({
+            agent,
+            csrfToken: res.header[COOKIE_CSRF_HEADER_NAME],
+          });
+        });
+    });
+  }
+
+  public getAccessToken(
+    agent: SuperTest<any>,
+    loginCred: {
+      email: string,
+      password: string,
+    },
+    endpoint = `${API_ROOT}/auth/local/login`,
+  ): Promise<{
+    accessToken: string,
+    agent: SuperTest<any>,
+    response: Response,
+  }> {
+    return new Promise((resolve) => {
+      agent
+        .post(endpoint)
+        .send(loginCred)
+        .end((err, res: Response) => {
+          resolve({
+            accessToken: res.header[COOKIE_AUTH_HEADER_NAME],
+            agent,
+            response: res,
+          });
+        });
+    });
+  }
+
+  public async getLoggedInUser(
+    agent: SuperTest<any>,
+    loginCred: {
+      email: string,
+      password: string,
+    },
+    endpoint = `${API_ROOT}/auth/local/login`,
+  ): Promise<{
+    accessToken: string,
+    agent: SuperTest<any>,
+    csrfToken: string,
+    response: Response,
+  }> {
+    const csrfOp = await this.getCsrfToken(agent);
+    const loginOp = await this.getAccessToken(
+      csrfOp.agent,
+      loginCred,
+      endpoint,
+    );
+
+    return {
+      accessToken: loginOp.accessToken,
+      agent: loginOp.agent,
+      csrfToken: csrfOp.csrfToken,
+      response: loginOp.response,
+    };
+  }
+
+  public requestInfoUpdate(
+    agent: SuperTest<any>,
+    endpoint: string,
+    user_id: string,
+    tokens: {
+      accessToken: string,
+      csrfToken: string,
+    },
+    newInfo,
+  ): Promise<{
+    agent: SuperTest<any>,
+    response: Response,
+  }> {
+    return new Promise((resolve) => {
+      agent
+        .patch(`${endpoint}/${user_id}`)
+        .set(COOKIE_CSRF_HEADER_NAME, tokens.csrfToken)
+        .set(COOKIE_AUTH_HEADER_NAME, tokens.accessToken)
+        .send(newInfo)
+        .end((errThree, resThree: request.Response) => {
+          resolve({
+            agent,
+            response: resThree,
+          });
+        });
+    });
+  }
+
   public validateLoginResponse(
     res: Response,
     cookies: string[],
@@ -140,6 +251,7 @@ class TestUtils {
     baseFields.forEach((field) => {
       expect(userData).toHaveProperty(field);
     });
+
     expect(userData.display_name).toEqual(user.display_name);
     expect(userData.strategy).toEqual(user.strategy);
   }

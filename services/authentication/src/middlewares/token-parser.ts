@@ -8,13 +8,14 @@ import {
   Response,
 } from 'express';
 
-import { TokenModel } from '../../api/token/model';
+import { TokenModel } from '../api/token/model';
 import {
   RefreshTokenPayload,
   UserInfoRequest,
 } from '~lib/types';
-import { UserModel } from '../../api/user.model';
+import { UserModel } from '../api/user.model';
 import { configs } from '~config';
+import { constants } from '~constants';
 import {
   error,
   unauthorized,
@@ -22,9 +23,11 @@ import {
 import { verify } from '~lib/token-utils';
 
 const {
-  COOKIE_AUTH_HEADER_NAME: headerName,
   COOKIE_AUTH_KEY_NAME: keyName,
 } = configs;
+const {
+  HEADER_NAME_FOR_ACCESS_TOKEN: authHeaderName,
+} = constants;
 
 export const authTokenParser = (subject: string = 'user'): RequestHandler => {
   return async (
@@ -32,7 +35,7 @@ export const authTokenParser = (subject: string = 'user'): RequestHandler => {
     res: Response,
     next: NextFunction,
   ) => {
-    const access_token = req.get(headerName);
+    const access_token = req.get(authHeaderName);
 
     if (!access_token) {
       req.user = null;
@@ -45,6 +48,7 @@ export const authTokenParser = (subject: string = 'user'): RequestHandler => {
         access_token,
       );
 
+      req.access_token = access_token as unknown as string;
       req.user = payload[subject] || null;
     } catch (err) {
       req.user = null;
@@ -82,7 +86,9 @@ export const refreshTokenParser = (
 
     try {
       const token = req.signedCookies[keyName];
-      const payload = await verify<{ [key: string]: RefreshTokenPayload }>(token);
+      const payload = await verify<{
+        [key: string]: RefreshTokenPayload,
+      }>(token);
 
       if (!payload || !payload[subject]) {
         return failedResponse(res);
@@ -90,8 +96,7 @@ export const refreshTokenParser = (
 
       const refresh_token = await TokenModel
         .query()
-        .where('refresh_token', token)
-        .first();
+        .findOne('refresh_token', token);
 
       if (!refresh_token || !refresh_token.refresh_token) {
         return failedResponse(res);

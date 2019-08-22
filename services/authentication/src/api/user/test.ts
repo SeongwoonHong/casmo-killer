@@ -3,23 +3,74 @@ import * as request from 'supertest';
 import { generate as idGenerator } from 'shortid';
 
 import { App } from '../../app';
+import { TokenModel } from '../token/model';
+import { UserJobs } from '../jobs.model';
 import { UserModel } from '../user.model';
 import { aws } from '~lib/aws';
 import { configs } from '~config';
+import { constants } from '~constants';
 import { testUtils } from '~lib/test-utils';
 
 const {
   API_ROOT,
-  COOKIE_AUTH_HEADER_NAME,
   COOKIE_AUTH_KEY_NAME,
-  COOKIE_CSRF_HEADER_NAME,
+  MSG_FOR_REQUEST_EMAIL_CHANGE,
 } = configs;
+const {
+  HEADER_NAME_FOR_ACCESS_TOKEN: authHeaderName,
+  HEADER_NAME_FOR_CSRF_TOKEN: csrfHeaderName,
+} = constants;
 
 describe('/user routes', () => {
   const app = new App().express;
   const endpoint = `${API_ROOT}/user`;
 
-  let userRecords;
+  let jobToken;
+  let newUserInfo;
+  let userToUpdate;
+
+  const requestInfoUpdate = async (user, newInfo): Promise<any> => {
+    const csrfOp = await testUtils.getCsrfToken(request.agent(app));
+    const loginOp = await testUtils.getAccessToken(
+      csrfOp.agent,
+      {
+        email: user.email,
+        password: user.password,
+      },
+    );
+
+    const updateOp = await testUtils.requestInfoUpdate(
+      loginOp.agent,
+      endpoint,
+      user.id,
+      {
+        accessToken: loginOp.accessToken,
+        csrfToken: csrfOp.csrfToken,
+      },
+      newInfo,
+    );
+
+    return {
+      agent: updateOp.agent,
+      response: updateOp.response,
+    };
+  };
+
+  beforeAll(() => {
+    userToUpdate = testUtils
+      .localTestUsers
+      .find((localTestUser) => {
+        return localTestUser.avatar === null;
+      });
+    newUserInfo = {
+      avatar: testUtils.imgData,
+      display_name: idGenerator(),
+      email: `${idGenerator()}@email.com`,
+      id: userToUpdate.id,
+      password: idGenerator().slice(0, 7),
+      redirect_url: '<token>',
+    };
+  });
 
   it('returns a list of users information using display_name', (done) => {
     const testUsers = testUtils.users;
@@ -54,20 +105,19 @@ describe('/user routes', () => {
               if (user[key] && targetUser[key]) {
                 expect(user[key]).toEqual(targetUser[key]);
               }
-
             });
         });
 
-        userRecords = res.body.users;
         done();
       });
   });
 
   it('returns a list of users information using id and correct fields', (done) => {
+    const testUsers = testUtils.users;
     const queryString = {
       exclude_fields: 'display_name',
       return_fields: 'created_at,password,social_id',
-      search_values: userRecords.map(({ id }) => id).join(','),
+      search_values: testUsers.map(({ id }) => id).join(','),
     };
     const requiredFields = UserModel.getReturnFields({
       exclude_fields: 'display_name'.split(','),
@@ -77,7 +127,7 @@ describe('/user routes', () => {
     request(app)
       .get(`${endpoint}?${qs.stringify(queryString)}`)
       .end((err, res: request.Response) => {
-        expect(res.body.users.length).toEqual(userRecords.length);
+        expect(res.body.users.length).toEqual(testUsers.length);
 
         res.body.users.forEach((user) => {
           requiredFields.forEach((field) => {
@@ -117,90 +167,248 @@ describe('/user routes', () => {
       });
   });
 
-  it('logs out a user and removes all tokens', (done) => {
-    const agent = request.agent(app);
+  it('logs out a user and removes all tokens', async (done) => {
+    const {
+      agent,
+      accessToken,
+      csrfToken,
+      response,
+    } = await testUtils.getLoggedInUser(
+      request.agent(app),
+      {
+        email: testUtils.users[1].email,
+        password: testUtils.users[1].password,
+      },
+    );
 
     agent
-      .get(`${API_ROOT}/token/csrf`)
-      .end((err, res: request.Response) => {
-        const csrfSecret = res.header[COOKIE_CSRF_HEADER_NAME];
-        const testUsers = testUtils.users;
+      .post(`${endpoint}/logout`)
+      .set(csrfHeaderName, csrfToken)
+      .set(authHeaderName, accessToken)
+      .end(async (errThree, res: request.Response) => {
+        const cookies = testUtils.resCookieParser(res.header['set-cookie']);
 
-        agent
-          .post(`${API_ROOT}/auth/local/login`)
-          .send({
-            email: testUsers[1].email,
-            password: testUsers[1].password,
-          })
-          .end((errTwo, resTwo: request.Response) => {
-            const accessToken = resTwo.header[COOKIE_AUTH_HEADER_NAME];
+        expect(res.status).toEqual(204);
+        expect(res.header[authHeaderName]).toBeFalsy();
+        expect(cookies[COOKIE_AUTH_KEY_NAME]).toBeFalsy();
 
-            agent
-              .post(`${endpoint}/logout`)
-              .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
-              .set(COOKIE_AUTH_HEADER_NAME, accessToken)
-              .end((errThree, resThree: request.Response) => {
-                const cookies = testUtils.resCookieParser(resThree.header['set-cookie']);
+        const userTokens = await TokenModel
+          .query()
+          .where('user_id', response.body.user.id);
 
-                expect(resThree.status).toEqual(204);
-                expect(resThree.header[COOKIE_AUTH_HEADER_NAME]).toBeFalsy();
-                expect(cookies[COOKIE_AUTH_KEY_NAME]).toBeFalsy();
+        expect(userTokens).toHaveLength(0);
 
-                done();
-              });
-          });
+        done();
       });
   });
 
-  it('updates user information and send out confirmation email if email changed', (done) => {
-    const agent = request.agent(app);
-    const testUser = testUtils.localTestUsers.find((user) => {
-      return user.avatar === null;
-    });
-    const newUserInfo = {
-      avatar: testUtils.imgData,
-      display_name: idGenerator(),
-      email: `${idGenerator()}@email.com`,
-      id: testUser.id,
-      redirect_url: '<token>',
-    };
+  it('updates user info and send out an email if email changed', async (done) => {
+    const {
+      response,
+    } = await requestInfoUpdate(
+      userToUpdate,
+      newUserInfo,
+    );
+
+    testUtils.validateLoginResponse(
+      response,
+      response.header['set-cookie'],
+    );
+    testUtils.validateLoginData(
+      response,
+      {
+        ...userToUpdate,
+        avatar: newUserInfo.avatar,
+        display_name: newUserInfo.display_name,
+      },
+    );
+
+    expect(response.body).toHaveProperty('message');
+
+    const {
+      message,
+      user,
+    } = response.body;
+
+    expect(aws.uploadImageData).toHaveBeenCalledWith(
+      userToUpdate.id,
+      newUserInfo.avatar,
+    );
+    expect(aws.uploadImageFromUrl).not.toHaveBeenCalled();
+    expect(message).toBe(MSG_FOR_REQUEST_EMAIL_CHANGE.replace(
+      /<email>/,
+      newUserInfo.email,
+    ));
+    expect(user.display_name).toEqual(newUserInfo.display_name);
+    expect(user.email).not.toEqual(newUserInfo.email);
+
+    const userJobs = await UserJobs
+      .query()
+      .where({
+        user_id: userToUpdate.id,
+      });
+
+    expect(userJobs).toHaveLength(1);
+    expect(userJobs[0].job_name).toEqual(constants.JOB_NAME_FOR_EMAIL_UPDATE);
+
+    jobToken = userJobs[0].token;
+
+    done();
+  });
+
+  it('logs in with an updated password', async (done) => {
+    const {
+      response,
+    } = await testUtils.getAccessToken(
+      request(app),
+      {
+        email: userToUpdate.email,
+        password: newUserInfo.password,
+      },
+    );
+
+    testUtils.validateLoginResponse(
+      response,
+      response.header['set-cookie'],
+    );
+    testUtils.validateLoginData(
+      response,
+      {
+        ...userToUpdate,
+        avatar: newUserInfo.avatar,
+        display_name: newUserInfo.display_name,
+      },
+    );
+
+    done();
+  });
+
+  it('updates user email address', async (done) => {
+    const {
+      agent,
+      accessToken,
+      csrfToken,
+    } = await testUtils.getLoggedInUser(
+      request.agent(app),
+      {
+        email: userToUpdate.email,
+        password: newUserInfo.password,
+      },
+    );
 
     agent
-      .get(`${API_ROOT}/token/csrf`)
-      .end((err, res: request.Response) => {
-        const csrfSecret = res.header[COOKIE_CSRF_HEADER_NAME];
+      .patch(`${endpoint}/${newUserInfo.id}/email`)
+      .set(csrfHeaderName, csrfToken)
+      .set(authHeaderName, accessToken)
+      .send({
+        new_email: newUserInfo.email,
+        token: jobToken,
+      })
+      .end(async (errTwo, resTwo: request.Response) => {
+        testUtils.validateLoginResponse(
+          resTwo,
+          resTwo.header['set-cookie'],
+        );
+        testUtils.validateLoginData(
+          resTwo,
+          {
+            ...newUserInfo,
+            strategy: 'local',
+          },
+        );
 
-        agent
-          .post(`${API_ROOT}/auth/local/login`)
-          .send({
-            email: testUser.email,
-            password: testUser.password,
-          })
-          .end((errTwo, resTwo: request.Response) => {
-            const accessToken = resTwo.header[COOKIE_AUTH_HEADER_NAME];
+        const updatedUser = await UserModel
+          .query()
+          .findById(resTwo.body.user.id);
 
-            agent
-              .patch(`${endpoint}/${resTwo.body.user.id}`)
-              .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
-              .set(COOKIE_AUTH_HEADER_NAME, accessToken)
-              .send(newUserInfo)
-              .end((errThree, resThree: request.Response) => {
-                expect(resThree.body).toHaveProperty('user');
-                expect(resThree.body).toHaveProperty('message');
+        expect(updatedUser.email).toEqual(newUserInfo.email);
 
-                expect(aws.uploadImageData).toHaveBeenCalledWith(
-                  testUser.id,
-                  newUserInfo.avatar,
-                );
-                expect(aws.uploadImageFromUrl).not.toHaveBeenCalled();
-                // tslint:disable-next-line:max-line-length
-                expect(resThree.body.message).toBe(`Verification email has been sent to ${newUserInfo.email}. Please click the link in the email to confirm your new email address.`);
-                expect(resThree.body.user.display_name).toEqual(newUserInfo.display_name);
-                expect(resThree.body.user.email).not.toEqual(newUserInfo.email);
-
-                done();
-              });
+        const userJobs = await UserJobs
+          .query()
+          .findOne({
+            user_id: newUserInfo.id,
           });
+
+        expect(userJobs).toBeFalsy();
+
+        done();
       });
+  });
+
+  it('blocks email update for an already updated user', async (done) => {
+    const {
+      agent,
+      accessToken,
+      csrfToken,
+    } = await testUtils.getLoggedInUser(
+      request.agent(app),
+      {
+        email: newUserInfo.email,
+        password: newUserInfo.password,
+      },
+    );
+
+    agent
+      .patch(`${endpoint}/${newUserInfo.id}/email`)
+      .set(csrfHeaderName, csrfToken)
+      .set(authHeaderName, accessToken)
+      .send({
+        new_email: newUserInfo.email,
+        token: jobToken,
+      })
+      .end(async (errTwo, resTwo: request.Response) => {
+        expect(resTwo.body.message).toEqual('The email has already been updated.');
+
+        done();
+      });
+  });
+
+  it('blocks email update for a user who did not request it', async (done) => {
+    const {
+      agent,
+      accessToken,
+      csrfToken,
+    } = await testUtils.getLoggedInUser(
+      request.agent(app),
+      {
+        email: newUserInfo.email,
+        password: newUserInfo.password,
+      },
+    );
+
+    agent
+      .patch(`${endpoint}/${newUserInfo.id}/email`)
+      .set(csrfHeaderName, csrfToken)
+      .set(authHeaderName, accessToken)
+      .send({
+        new_email: `${idGenerator()}@email.com`,
+        token: jobToken,
+      })
+      .end(async (errTwo, resTwo: request.Response) => {
+        expect(resTwo.body.message).toEqual('The link has expired.');
+
+        done();
+      });
+  });
+
+  it('blocks a password update if it has been used', async (done) => {
+    const {
+      response,
+    } = await requestInfoUpdate(
+      {
+        email: newUserInfo.email,
+        id: newUserInfo.id,
+        password: newUserInfo.password,
+      },
+      {
+        ...newUserInfo,
+        password: userToUpdate.password,
+      },
+    );
+    expect(response.body).toHaveProperty('message');
+    const msg = 'The new password cannot be one of previously used passwords.';
+    expect(response.body.message).toEqual(msg);
+
+    done();
   });
 });

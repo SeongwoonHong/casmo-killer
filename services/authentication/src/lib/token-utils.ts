@@ -1,11 +1,16 @@
 import * as jwt from 'jsonwebtoken';
+import { v4 } from 'uuid';
 
 import { configs } from '~config';
+import { constants } from '~constants';
 import { generateRandomNum } from '~lib/miscel';
 
 const {
   RSA_KEY_PAIRS: rsaKeyPairs,
 } = configs;
+const {
+  TOKEN_ISSUER,
+} = constants;
 
 export const sign = (
   payload: object | string,
@@ -34,8 +39,9 @@ export const sign = (
           expiresIn,
           header: {
             kid,
+            uuid: v4(),
           },
-          issuer: configs.TOKEN_ISSUER,
+          issuer: TOKEN_ISSUER,
           subject,
         },
         (error: Error, token: string) => {

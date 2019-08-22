@@ -6,8 +6,10 @@ import {
   AuthStrategies,
   QueryParamsObject,
   SocialAuthProviders,
+  UserInfoRequest,
 } from '~lib/types';
 import { BaseModel } from './base.model';
+import { UserJobs } from './jobs.model';
 import { TokenModel } from './token/model';
 import { aws } from '~lib/aws';
 import {
@@ -15,16 +17,19 @@ import {
   hash,
 } from '~lib/bcrypt';
 import { configs } from '~config';
+import { constants } from '~constants';
 import { isUrl } from '~lib/validations';
 import { sign } from '~lib/token-utils';
 
 const {
-  COOKIE_AUTH_HEADER_NAME: headerName,
   COOKIE_AUTH_KEY_NAME : keyName,
-  COOKIE_OPTIONS: cookieOptions,
   TOKEN_EXPIRY_FOR_ACCESS: accessTokenExpiry,
   TOKEN_EXPIRY_FOR_REFRESH: refreshTokenExpiry,
 } = configs;
+const {
+  COOKIE_OPTIONS: cookieOptions,
+  HEADER_NAME_FOR_ACCESS_TOKEN: headerName,
+} = constants;
 
 interface LoginResponse {
   response: Response;
@@ -78,6 +83,14 @@ export class UserModel extends BaseModel {
 
   public static get relationMappings(): RelationMappings {
     return {
+      jobs: {
+        join: {
+          from: 'users.id',
+          to: 'user_jobs.user_id',
+        },
+        modelClass: UserJobs,
+        relation: BaseModel.HasManyRelation,
+      },
       refresh_tokens: {
         join: {
           from: 'users.id',
@@ -127,7 +140,6 @@ export class UserModel extends BaseModel {
     return sign(
       {
         user_id,
-        uuid: v4(),
       },
       'user_id',
       refreshTokenExpiry,
@@ -173,7 +185,7 @@ export class UserModel extends BaseModel {
       throw new UserNotFoundError();
     }
 
-    const tokens = await tokenData.refreshToken(user);
+    const tokens = await tokenData.refreshUserToken(user);
 
     if (!tokens) {
       throw new Error();
@@ -226,14 +238,16 @@ export class UserModel extends BaseModel {
   public email: string;
   public id: string;
   public password?: string;
+  public prev_passwords?: string[];
   public strategy: AuthStrategies | SocialAuthProviders;
   public social_id?: string;
 
   public async $beforeInsert() {
     super.$beforeInsert();
 
-    if (this.password) {
+    if (this.strategy === AuthStrategies.local && this.password) {
       this.password = await hash(this.password);
+      this.prev_passwords = [];
     }
   }
 
@@ -266,13 +280,15 @@ export class UserModel extends BaseModel {
   public async getLogInData(
     response: Response,
     tokens: TokenResponse = {},
-    fieldOptions?: QueryParamsObject,
+    request: UserInfoRequest,
   ): Promise<LoginResponse> {
-    const returnFields = UserModel.getReturnFields(fieldOptions);
+    const tokensProvided = tokens.hasOwnProperty('access_token') &&
+      tokens.hasOwnProperty('refresh_token');
+    const returnFields = UserModel.getReturnFields(request.query);
     const {
       access_token,
       refresh_token,
-    } = tokens.access_token && tokens.refresh_token
+    } = tokensProvided
       ? tokens
       : await this.generateTokens();
 
@@ -287,12 +303,15 @@ export class UserModel extends BaseModel {
         access_token,
       );
 
-    await TokenModel
-      .query()
-      .insert({
-        refresh_token,
-        user_id: this.id,
-      });
+    if (!request.refresh_token && !tokensProvided) {
+      await TokenModel
+        .query()
+        .insert({
+          refresh_token,
+          user_agent: request.user_agent,
+          user_id: this.id,
+        });
+    }
 
     const userData = Object
       .keys(this)
@@ -312,14 +331,43 @@ export class UserModel extends BaseModel {
     };
   }
 
+  public async hasPwdBeenUsed(
+    newPwd: string,
+  ): Promise<boolean> {
+    for (const oldPwd of [this.password].concat(this.prev_passwords)) {
+      const isSame = await compare(newPwd, oldPwd);
+
+      if (isSame) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   public updateEmail(
     email: string,
   ): Promise<UserModel> {
-    return UserModel
-      .query()
-      .findById(this.id)
+    return this
+      .$query()
       .patchAndFetch({
+        ...this,
         email,
+      });
+  }
+
+  public async updatePassword(
+    newPassword: string,
+  ): Promise<UserModel> {
+    const password = await hash(newPassword);
+    const prev_passwords = this.prev_passwords.concat(password);
+
+    return this
+      .$query()
+      .patchAndFetch({
+        ...this,
+        password,
+        prev_passwords,
       });
   }
 

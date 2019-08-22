@@ -1,5 +1,4 @@
 import * as Knex from 'knex';
-
 import { Model } from 'objection';
 
 import { configs } from '~config';
@@ -119,6 +118,7 @@ export class BaseModel extends Model {
   public $beforeInsert(): void {
     this.created_at = new Date().toISOString();
   }
+
   public $beforeUpdate(): void {
     this.updated_at = new Date().toISOString();
   }

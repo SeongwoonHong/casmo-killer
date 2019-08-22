@@ -9,6 +9,8 @@ import {
   Response,
 } from 'express';
 
+import { UserInfoRequest } from '~lib/types';
+import { UserJobs } from '../jobs.model';
 import { UserModel } from '../user.model';
 import {
   badRequest,
@@ -19,9 +21,7 @@ import {
   success,
 } from '~lib/responses';
 import { configs } from '~config';
-import { mailer } from '~lib/mailer';
-import { sign } from '~lib/token-utils';
-import { socialAuth } from '~lib/social-auth';
+import { constants } from '~constants';
 import {
   isValidAvatar,
   validDisplayName,
@@ -29,8 +29,12 @@ import {
   validNull,
   validPassword,
 } from '~lib/validations';
+import { mailer } from '~lib/mailer';
+import { sign } from '~lib/token-utils';
+import { socialAuth } from '~lib/social-auth';
 
 const {
+  MSG_FOR_REQUEST_SIGNUP: confirmMsg,
   SOCIAL_AUTH_PROVIDERS: socialProviders,
 } = configs;
 
@@ -76,10 +80,9 @@ export const requestSignup = async (
     }
 
     const token = await sign(
-      {
-        email,
-      },
+      email,
       'email',
+      '24h',
     );
 
     await mailer.sendRegisterConfirmation(
@@ -90,11 +93,19 @@ export const requestSignup = async (
       ),
     );
 
+    await UserJobs
+      .query()
+      .insert({
+        job_name: constants.JOB_NAME_FOR_REGISTRATION,
+        token,
+        user_id: email,
+      });
+
     return success(
       res,
       {
         // tslint:disable-next-line:max-line-length
-        message: `Verification email has been sent to ${email}. Please click the link in the email to sign up.`,
+        message: confirmMsg.replace(/<email>/, email),
       },
     );
 
@@ -117,6 +128,7 @@ export const localRegister = async (
       display_name: validDisplayName,
       email: validEmail,
       password: validPassword,
+      token: JoiString().required(),
     }),
   );
 
@@ -163,9 +175,28 @@ export const localRegister = async (
       );
     }
 
-    const newUser = await UserModel.registerNewUser(
-      req.body,
-    );
+    const registered_job = await UserJobs
+      .query()
+      .findOne({
+        job_name: constants.JOB_NAME_FOR_REGISTRATION,
+        token: req.body.token,
+        user_id: req.body.email,
+      });
+
+    if (!registered_job) {
+      return badRequest(
+        res,
+        'The link has expired.',
+      );
+    }
+
+    // tslint:disable-next-line:no-object-literal-type-assertion
+    const newUser = await UserModel.registerNewUser({
+      avatar: req.body.avatar,
+      display_name: req.body.display_name,
+      email: req.body.email,
+      password: req.body.password,
+    } as UserModel);
 
     const {
       response,
@@ -173,8 +204,12 @@ export const localRegister = async (
     } = await newUser.getLogInData(
       res,
       {},
-      req.query,
+      req,
     );
+
+    await UserJobs
+      .query()
+      .deleteById(registered_job.id);
 
     return success(
       response,
@@ -191,7 +226,7 @@ export const localRegister = async (
 };
 
 export const localLogin = async (
-  req: Request,
+  req: UserInfoRequest,
   res: Response,
 ): Promise<Response> => {
   const validations: ValidationResult<any> = JoiValidate(
@@ -239,7 +274,7 @@ export const localLogin = async (
     } = await user.getLogInData(
       res,
       {},
-      req.query,
+      req,
     );
 
     return success(
@@ -294,7 +329,6 @@ export const socialRegister = async (
         social_token,
         strategy,
       },
-      // query,
     } = req;
 
     const socialProfile = await socialAuth.fetchSocialInfo(
@@ -325,7 +359,7 @@ export const socialRegister = async (
     } = await newUser.getLogInData(
       res,
       {},
-      req.query,
+      req,
     );
 
     return success(
@@ -393,7 +427,7 @@ export const socialLogin = async (
     } = await socialUser.getLogInData(
       res,
       {},
-      req.query,
+      req,
     );
 
     return success(

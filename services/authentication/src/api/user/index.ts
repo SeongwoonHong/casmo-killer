@@ -4,11 +4,13 @@ import {
   requestUserInfo,
   logout,
   updateUserInfo,
+  updateUserEmail,
+  updateUserPassword,
 } from './controller';
 
-import { csurferify } from '~lib/middlewares/seesurf';
-import { isAuthorized } from '~lib/middlewares/authorized';
-import { refreshTokenParser } from '~lib/middlewares/token-parser';
+import { csurferify } from '~middlewares/seesurf';
+import { isAuthorized } from '~middlewares/authorized';
+import { refreshTokenParser } from '~middlewares/token-parser';
 
 export class UserRoutes {
   public router: Router;
@@ -35,13 +37,13 @@ export class UserRoutes {
         '/:user_id/email',
         csurferify(),
         isAuthorized(),
-        updateUserInfo,
+        updateUserEmail,
       )
       .patch(
-        '/:user_id/password                                     ',
+        '/:user_id/password',
         csurferify(),
         isAuthorized(),
-        updateUserInfo,
+        updateUserPassword,
       )
       .post(
         '/logout',

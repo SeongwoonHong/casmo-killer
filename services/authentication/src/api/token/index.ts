@@ -1,14 +1,14 @@
 import { Router } from 'express';
 
+import { csurferify } from '~middlewares/seesurf';
 import {
   getCsrfToken,
   getPublicRsaKey,
   refreshTokens,
   verifyToken,
 } from './controller';
-import { csurferify } from '~lib/middlewares/seesurf';
-import { isAuthorized } from '~lib/middlewares/authorized';
-import { refreshTokenParser } from '~lib/middlewares/token-parser';
+import { isAuthorized } from '~middlewares/authorized';
+import { refreshTokenParser } from '~middlewares/token-parser';
 
 export class TokenRoutes {
   public router: Router;

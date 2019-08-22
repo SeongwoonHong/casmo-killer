@@ -1,3 +1,5 @@
+import { v4 } from 'uuid';
+
 import { BaseModel } from '../base.model';
 import { UserModel } from '../user.model';
 
@@ -6,6 +8,7 @@ export class TokenModel extends BaseModel {
     return [
       'created_at',
       'updated_at',
+      'user_agent',
     ];
   }
 
@@ -16,18 +19,24 @@ export class TokenModel extends BaseModel {
     ];
   }
 
-  static get idColumn() {
-    return 'user_id';
-  }
-
   static get tableName() {
     return 'refresh_tokens';
   }
 
+  public id: string;
+  public user_agent?: string;
   public user_id: string;
   public refresh_token: string;
 
-  public async refreshToken(user: UserModel) {
+  public $beforeInsert(): void {
+    super.$beforeInsert();
+    this.id = v4();
+  }
+
+  public async refreshUserToken(
+    user: UserModel,
+    user_agent: string = null,
+  ) {
     const {
       access_token,
       refresh_token,
@@ -37,6 +46,7 @@ export class TokenModel extends BaseModel {
       .$query<TokenModel>()
       .patchAndFetch({
         refresh_token,
+        user_agent,
       });
 
     return {

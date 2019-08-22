@@ -12,7 +12,10 @@ const {
   COOKIE_AUTH_KEY_NAME: keyName,
 } = configs;
 
-export const isAuthorized = (shouldRevoke = false): RequestHandler => {
+export const isAuthorized = (
+  shouldRevoke = false,
+  rejectResponse = unauthorized,
+): RequestHandler => {
   return async (
     req: UserInfoRequest,
     res: Response,
@@ -23,7 +26,7 @@ export const isAuthorized = (shouldRevoke = false): RequestHandler => {
         res.clearCookie(keyName);
       }
 
-      return unauthorized(res);
+      return rejectResponse(res);
     }
 
     return next();

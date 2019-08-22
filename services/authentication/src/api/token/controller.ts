@@ -19,14 +19,17 @@ import {
   success,
 } from '~lib/responses';
 import { configs } from '~config';
+import { constants } from '~constants';
 import { verify } from '~lib/token-utils';
 
 const {
-  COOKIE_CSRF_HEADER_NAME: headerName,
   COOKIE_CSRF_KEY_NAME: keyName,
-  COOKIE_OPTIONS: cookieOptions,
   RSA_KEY_PAIRS: rsaKeyPairs,
 } = configs;
+const {
+  COOKIE_OPTIONS: cookieOptions,
+  HEADER_NAME_FOR_CSRF_TOKEN: csrfHeaderName,
+} = constants;
 
 export const getCsrfToken = (
   req: UserInfoRequest,
@@ -47,7 +50,7 @@ export const getCsrfToken = (
         cookieOptions,
       )
       .setHeader(
-        headerName,
+        csrfHeaderName,
         token,
       );
   }
@@ -121,7 +124,7 @@ export const refreshTokens = async (
     } = await user.getLogInData(
       res,
       tokens,
-      req.query,
+      req,
     );
 
     return success(
@@ -145,7 +148,6 @@ export const verifyToken = async (
   const validations: ValidationResult<any> = JoiValidate(
     req.body,
     JoiObject({
-      subject: JoiString().required(),
       token: JoiString().required(),
     }),
   );
@@ -159,20 +161,19 @@ export const verifyToken = async (
 
   try {
     const {
-      subject,
       token,
     } = req.body;
 
-    const payload = await verify<object>(token);
+    const data = await verify<object>(token);
 
-    if (!payload.hasOwnProperty(subject)) {
+    if (!data) {
       return badRequest(res);
     }
 
     return success(
       res,
       {
-        data: payload[subject],
+        data,
       },
     );
   } catch (err) {

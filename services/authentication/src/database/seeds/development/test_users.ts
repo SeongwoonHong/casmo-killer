@@ -13,8 +13,6 @@ export const testUsers = [
     prev_passwords: null,
     social_id: null,
     strategy: 'local',
-    token_field: null,
-    token_value: null,
     updated_at: null,
   },
   {
@@ -29,8 +27,6 @@ export const testUsers = [
     prev_passwords: null,
     social_id: null,
     strategy: 'local',
-    token_field: null,
-    token_value: null,
     updated_at: null,
   },
   {
@@ -45,8 +41,6 @@ export const testUsers = [
     prev_passwords: null,
     social_id: null,
     strategy: 'local',
-    token_field: null,
-    token_value: null,
     updated_at: null,
   },
 ];

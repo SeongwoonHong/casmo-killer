@@ -33,7 +33,7 @@ const config = {
     CLIENT_APP_NAME: process.env.CLIENT_APP_NAME || 'Damso',
     CLIENT_LOGO_URL: process.env.CLIENT_LOGO_URL || 'https://i.imgur.com/7ClIc5h.png',
     CLIENT_THEME_COLOR: process.env.CLIENT_THEME_COLOR || '#F06292',
-    CLIENT_URL: process.env.CLIENT_URL || 'https://localhost:3000',
+    CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:3000',
     // cookies settings
     COOKIE_AUTH_HEADER_NAME: process.env.COOKIE_AUTH_HEADER_NAME || 'x-auth-token',
     COOKIE_AUTH_KEY_NAME: process.env.COOKIE_AUTH_KEY_NAME,

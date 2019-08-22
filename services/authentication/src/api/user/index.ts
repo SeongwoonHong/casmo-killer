@@ -40,7 +40,7 @@ export class UserRoutes {
         updateUserEmail,
       )
       .patch(
-        '/:user_id/password                                     ',
+        '/:user_id/password',
         csurferify(),
         isAuthorized(),
         updateUserPassword,

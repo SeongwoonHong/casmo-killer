@@ -9,13 +9,18 @@ import {
 
 import { badRequest } from '~lib/responses';
 import { configs } from '~config';
+import { constants } from '~constants';
 
 const {
-  COOKIE_CSRF_HEADER_NAME: headerName,
   COOKIE_CSRF_KEY_NAME: keyName,
 } = configs;
+const {
+  HEADER_NAME_FOR_CSRF_TOKEN: csrfHeaderName,
+} = constants;
 
-export const csurferify = (): RequestHandler => {
+export const csurferify = (
+  rejectResponse = badRequest,
+): RequestHandler => {
   return (
     req: Request,
     res: Response,
@@ -24,20 +29,20 @@ export const csurferify = (): RequestHandler => {
     if (req.method !== 'GET') {
       const errorResponse = (response) => {
         response.clearCookie(keyName);
-        return badRequest(res);
+        return rejectResponse(res);
       };
 
       if (
         !req.signedCookies ||
         !req.signedCookies[keyName] ||
-        !req.get(headerName)
+        !req.get(csrfHeaderName)
       ) {
         return errorResponse(res);
       }
 
       const Token = new Csrf();
       const secret = req.signedCookies[keyName];
-      const token = req.get(headerName);
+      const token = req.get(csrfHeaderName);
 
       // @ts-ignore
       if (!Token.verify(secret, token)) {

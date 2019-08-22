@@ -1,5 +1,36 @@
+const env = process.env.NODE_ENV || 'development';
+
+const CONSTANTS = {
+  all: {
+    COOKIE_OPTIONS: {
+      httpOnly: true,
+      secure: true,
+      signed: true,
+    },
+    HEADER_NAME_FOR_ACCESS_TOKEN: 'x-auth-token',
+    HEADER_NAME_FOR_CSRF_TOKEN: 'x-csrf-token',
+    JOB_NAME_FOR_EMAIL_UPDATE: 'email-update',
+    JOB_NAME_FOR_PWD_UPDATE: 'pwd-update',
+    JOB_NAME_FOR_REGISTRATION: 'user-registration',
+    TOKEN_ISSUER: 'damso-authentication-service',
+  },
+  development: {
+    COOKIE_OPTIONS: {
+      httpOnly: true,
+      secure: false,
+      signed: true,
+    },
+  },
+  test: {
+    COOKIE_OPTIONS: {
+      httpOnly: true,
+      secure: false,
+      signed: true,
+    },
+  },
+};
+
 export const constants = {
-  JOB_NAME_FOR_EMAIL_UPDATE: 'email-update',
-  JOB_NAME_FOR_PWD_UPDATE: 'pwd-update',
-  JOB_NAME_FOR_REGISTRATION: 'user-registration',
+  ...CONSTANTS.all,
+  ...(CONSTANTS[env] || {}),
 };

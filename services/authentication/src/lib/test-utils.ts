@@ -10,13 +10,16 @@ import { UserJobs } from '../api/jobs.model';
 import { UserModel } from '../api/user.model';
 import { TokenModel } from '../api/token/model';
 import { configs } from '~config';
+import { constants } from '~constants';
 
 const {
   API_ROOT,
-  COOKIE_AUTH_HEADER_NAME,
   COOKIE_AUTH_KEY_NAME,
-  COOKIE_CSRF_HEADER_NAME,
 } = configs;
+const {
+  HEADER_NAME_FOR_ACCESS_TOKEN: authHeaderName,
+  HEADER_NAME_FOR_CSRF_TOKEN: csrfHeaderName,
+} = constants;
 
 class TestUtils {
   public get localTestUsers(): UserModel[] {
@@ -142,7 +145,7 @@ class TestUtils {
         .end((err, res: Response) => {
           resolve({
             agent,
-            csrfToken: res.header[COOKIE_CSRF_HEADER_NAME],
+            csrfToken: res.header[csrfHeaderName],
           });
         });
     });
@@ -166,7 +169,7 @@ class TestUtils {
         .send(loginCred)
         .end((err, res: Response) => {
           resolve({
-            accessToken: res.header[COOKIE_AUTH_HEADER_NAME],
+            accessToken: res.header[authHeaderName],
             agent,
             response: res,
           });
@@ -218,8 +221,8 @@ class TestUtils {
     return new Promise((resolve) => {
       agent
         .patch(`${endpoint}/${user_id}`)
-        .set(COOKIE_CSRF_HEADER_NAME, tokens.csrfToken)
-        .set(COOKIE_AUTH_HEADER_NAME, tokens.accessToken)
+        .set(csrfHeaderName, tokens.csrfToken)
+        .set(authHeaderName, tokens.accessToken)
         .send(newInfo)
         .end((errThree, resThree: request.Response) => {
           resolve({
@@ -237,7 +240,7 @@ class TestUtils {
     const _cookies = this.resCookieParser(cookies);
 
     expect(_cookies).toHaveProperty(COOKIE_AUTH_KEY_NAME);
-    expect(res.header).toHaveProperty(COOKIE_AUTH_HEADER_NAME);
+    expect(res.header).toHaveProperty(authHeaderName);
     expect(res.body).toHaveProperty('user');
   }
 

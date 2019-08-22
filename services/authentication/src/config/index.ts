@@ -35,15 +35,8 @@ const config = {
     CLIENT_THEME_COLOR: process.env.CLIENT_THEME_COLOR || '#F06292',
     CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:3000',
     // cookies settings
-    COOKIE_AUTH_HEADER_NAME: process.env.COOKIE_AUTH_HEADER_NAME || 'x-auth-token',
     COOKIE_AUTH_KEY_NAME: process.env.COOKIE_AUTH_KEY_NAME,
-    COOKIE_CSRF_HEADER_NAME: process.env.COOKIE_CSRF_HEADER_NAME || 'x-csrf-token',
     COOKIE_CSRF_KEY_NAME: process.env.COOKIE_CSRF_KEY_NAME,
-    COOKIE_OPTIONS: {
-      httpOnly: true,
-      secure: true,
-      signed: true,
-    },
     COOKIE_SECRET: process.env.COOKIE_SECRET,
     // db settings
     DB_CLIENT: process.env.DB_CLIENT || 'pg',
@@ -81,26 +74,12 @@ const config = {
       : ['facebook', 'google', 'kakao'],
     TOKEN_EXPIRY_FOR_ACCESS: process.env.TOKEN_EXPIRY_FOR_ACCESS || 60,
     TOKEN_EXPIRY_FOR_REFRESH: process.env.TOKEN_EXPIRY_FOR_REFRESH || '90d',
-    TOKEN_ISSUER: process.env.TOKEN_ISSUER || 'damso-authentication-service',
     TOKEN_TARGET_FIELDS: process.env.TOKEN_TARGET_FIELDS
       ? process.env.TOKEN_TARGET_FIELDS.split(',')
       : ['email', 'password'],
   },
-  development: {
-    // cookies settings
-    COOKIE_OPTIONS: {
-      httpOnly: true,
-      secure: false,
-      signed: true,
-    },
-  },
-  test: {
-    COOKIE_OPTIONS: {
-      httpOnly: true,
-      secure: false,
-      signed: true,
-    },
-  },
+  development: {},
+  test: {},
 };
 
 export const configs = {

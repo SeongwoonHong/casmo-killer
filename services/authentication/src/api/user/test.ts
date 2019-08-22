@@ -13,11 +13,13 @@ import { testUtils } from '~lib/test-utils';
 
 const {
   API_ROOT,
-  COOKIE_AUTH_HEADER_NAME,
   COOKIE_AUTH_KEY_NAME,
-  COOKIE_CSRF_HEADER_NAME,
   MSG_FOR_REQUEST_EMAIL_CHANGE,
 } = configs;
+const {
+  HEADER_NAME_FOR_ACCESS_TOKEN: authHeaderName,
+  HEADER_NAME_FOR_CSRF_TOKEN: csrfHeaderName,
+} = constants;
 
 describe('/user routes', () => {
   const app = new App().express;
@@ -181,13 +183,13 @@ describe('/user routes', () => {
 
     agent
       .post(`${endpoint}/logout`)
-      .set(COOKIE_CSRF_HEADER_NAME, csrfToken)
-      .set(COOKIE_AUTH_HEADER_NAME, accessToken)
+      .set(csrfHeaderName, csrfToken)
+      .set(authHeaderName, accessToken)
       .end(async (errThree, res: request.Response) => {
         const cookies = testUtils.resCookieParser(res.header['set-cookie']);
 
         expect(res.status).toEqual(204);
-        expect(res.header[COOKIE_AUTH_HEADER_NAME]).toBeFalsy();
+        expect(res.header[authHeaderName]).toBeFalsy();
         expect(cookies[COOKIE_AUTH_KEY_NAME]).toBeFalsy();
 
         const userTokens = await TokenModel
@@ -296,8 +298,8 @@ describe('/user routes', () => {
 
     agent
       .patch(`${endpoint}/${newUserInfo.id}/email`)
-      .set(COOKIE_CSRF_HEADER_NAME, csrfToken)
-      .set(COOKIE_AUTH_HEADER_NAME, accessToken)
+      .set(csrfHeaderName, csrfToken)
+      .set(authHeaderName, accessToken)
       .send({
         new_email: newUserInfo.email,
         token: jobToken,
@@ -348,8 +350,8 @@ describe('/user routes', () => {
 
     agent
       .patch(`${endpoint}/${newUserInfo.id}/email`)
-      .set(COOKIE_CSRF_HEADER_NAME, csrfToken)
-      .set(COOKIE_AUTH_HEADER_NAME, accessToken)
+      .set(csrfHeaderName, csrfToken)
+      .set(authHeaderName, accessToken)
       .send({
         new_email: newUserInfo.email,
         token: jobToken,
@@ -376,8 +378,8 @@ describe('/user routes', () => {
 
     agent
       .patch(`${endpoint}/${newUserInfo.id}/email`)
-      .set(COOKIE_CSRF_HEADER_NAME, csrfToken)
-      .set(COOKIE_AUTH_HEADER_NAME, accessToken)
+      .set(csrfHeaderName, csrfToken)
+      .set(authHeaderName, accessToken)
       .send({
         new_email: `${idGenerator()}@email.com`,
         token: jobToken,

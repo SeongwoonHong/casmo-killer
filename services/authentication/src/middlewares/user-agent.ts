@@ -12,7 +12,7 @@ export const userAgentMapper = (): RequestHandler => {
     res: Response,
     next: NextFunction,
   ) => {
-    req.user_agent = req.headers['user-agent'] || null;
+    req.user_agent = (req.headers || {})['user-agent'] || null;
 
     next();
   };

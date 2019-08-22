@@ -15,6 +15,7 @@ import {
 } from '~lib/types';
 import { UserModel } from '../api/user.model';
 import { configs } from '~config';
+import { constants } from '~constants';
 import {
   error,
   unauthorized,
@@ -22,9 +23,11 @@ import {
 import { verify } from '~lib/token-utils';
 
 const {
-  COOKIE_AUTH_HEADER_NAME: headerName,
   COOKIE_AUTH_KEY_NAME: keyName,
 } = configs;
+const {
+  HEADER_NAME_FOR_ACCESS_TOKEN: authHeaderName,
+} = constants;
 
 export const authTokenParser = (subject: string = 'user'): RequestHandler => {
   return async (
@@ -32,7 +35,7 @@ export const authTokenParser = (subject: string = 'user'): RequestHandler => {
     res: Response,
     next: NextFunction,
   ) => {
-    const access_token = req.get(headerName);
+    const access_token = req.get(authHeaderName);
 
     if (!access_token) {
       req.user = null;

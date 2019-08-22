@@ -17,16 +17,19 @@ import {
   hash,
 } from '~lib/bcrypt';
 import { configs } from '~config';
+import { constants } from '~constants';
 import { isUrl } from '~lib/validations';
 import { sign } from '~lib/token-utils';
 
 const {
-  COOKIE_AUTH_HEADER_NAME: headerName,
   COOKIE_AUTH_KEY_NAME : keyName,
-  COOKIE_OPTIONS: cookieOptions,
   TOKEN_EXPIRY_FOR_ACCESS: accessTokenExpiry,
   TOKEN_EXPIRY_FOR_REFRESH: refreshTokenExpiry,
 } = configs;
+const {
+  COOKIE_OPTIONS: cookieOptions,
+  HEADER_NAME_FOR_ACCESS_TOKEN: headerName,
+} = constants;
 
 interface LoginResponse {
   response: Response;

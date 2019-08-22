@@ -19,14 +19,17 @@ import {
   success,
 } from '~lib/responses';
 import { configs } from '~config';
+import { constants } from '~constants';
 import { verify } from '~lib/token-utils';
 
 const {
-  COOKIE_CSRF_HEADER_NAME: headerName,
   COOKIE_CSRF_KEY_NAME: keyName,
-  COOKIE_OPTIONS: cookieOptions,
   RSA_KEY_PAIRS: rsaKeyPairs,
 } = configs;
+const {
+  COOKIE_OPTIONS: cookieOptions,
+  HEADER_NAME_FOR_CSRF_TOKEN: csrfHeaderName,
+} = constants;
 
 export const getCsrfToken = (
   req: UserInfoRequest,
@@ -47,7 +50,7 @@ export const getCsrfToken = (
         cookieOptions,
       )
       .setHeader(
-        headerName,
+        csrfHeaderName,
         token,
       );
   }

@@ -11,6 +11,7 @@ import { App } from '../../app';
 import { UserModel } from '../user.model';
 import { aws } from '~lib/aws';
 import { configs } from '~config';
+import { constants } from '~constants';
 import { mailer } from '~lib/mailer';
 import { testUtils } from '~lib/test-utils';
 import {
@@ -18,13 +19,14 @@ import {
   verify,
 } from '~lib/token-utils';
 import { socialAuth } from '~lib/social-auth';
-import { constants } from '~constants';
 
 const {
   API_ROOT,
-  COOKIE_CSRF_HEADER_NAME,
   MSG_FOR_REQUEST_SIGNUP,
 } = configs;
+const {
+  HEADER_NAME_FOR_CSRF_TOKEN: csrfHeaderName,
+} = constants;
 
 describe('/auth routes', () => {
   const app = new App().express;
@@ -38,7 +40,7 @@ describe('/auth routes', () => {
     return new Promise((resolve, reject) => {
       agent
         .post(`${endpoint}/local/request`)
-        .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
+        .set(csrfHeaderName, csrfSecret)
         .send({
           email: user.email,
           redirect_url: 'https://localhost:3000/register/<token>',
@@ -64,7 +66,7 @@ describe('/auth routes', () => {
     agent
       .get(`${API_ROOT}/token/csrf`)
       .end(async (err, res: Response) => {
-        csrfSecret = res.header[COOKIE_CSRF_HEADER_NAME];
+        csrfSecret = res.header[csrfHeaderName];
 
         done();
       });
@@ -76,7 +78,7 @@ describe('/auth routes', () => {
 
     agent
       .post(`${endpoint}/local/request`)
-      .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
+      .set(csrfHeaderName, csrfSecret)
       .send({
         email: newUsers[0].email,
         redirect_url: 'https://localhost:3000/register/<token>',
@@ -115,7 +117,7 @@ describe('/auth routes', () => {
 
     agent
       .post(`${endpoint}/local/request`)
-      .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
+      .set(csrfHeaderName, csrfSecret)
       .send({
         email: testUsers[0].email,
         redirect_url: '<token>',
@@ -134,7 +136,7 @@ describe('/auth routes', () => {
 
     agent
       .post(`${endpoint}/local/register?return_fields=${returnFields.join(',')}`)
-      .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
+      .set(csrfHeaderName, csrfSecret)
       .send({
         display_name: newUsers[0].display_name,
         email: newUsers[0].email,
@@ -180,7 +182,7 @@ describe('/auth routes', () => {
 
     agent
       .post(`${endpoint}/local/register`)
-      .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
+      .set(csrfHeaderName, csrfSecret)
       .send({
         avatar: imgUrl,
         display_name: newUsers[1].display_name,
@@ -216,7 +218,7 @@ describe('/auth routes', () => {
 
     agent
       .post(`${endpoint}/local/register`)
-      .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
+      .set(csrfHeaderName, csrfSecret)
       .send({
         avatar: testUtils.imgData,
         display_name: newUsers[2].display_name,
@@ -250,7 +252,7 @@ describe('/auth routes', () => {
 
     agent
       .post(`${endpoint}/local/register`)
-      .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
+      .set(csrfHeaderName, csrfSecret)
       .send({
         avatar: testUsers[0].avatar,
         display_name: 'randomdisplay',
@@ -271,7 +273,7 @@ describe('/auth routes', () => {
 
     agent
       .post(`${endpoint}/local/register`)
-      .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
+      .set(csrfHeaderName, csrfSecret)
       .send({
         avatar: testUsers[0].avatar,
         display_name: testUsers[0].display_name,
@@ -364,7 +366,7 @@ describe('/auth routes', () => {
 
     agent
       .post(`${endpoint}/social/login`)
-      .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
+      .set(csrfHeaderName, csrfSecret)
       .send(payload)
       .end((err, res: Response) => {
         expect(res.body).toHaveProperty('profile');
@@ -392,7 +394,7 @@ describe('/auth routes', () => {
 
     agent
       .post(`${endpoint}/social/login`)
-      .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
+      .set(csrfHeaderName, csrfSecret)
       .send(payload)
       .end((err, res: Response) => {
         testUtils.validateLoginResponse(
@@ -427,7 +429,7 @@ describe('/auth routes', () => {
 
     agent
       .post(`${endpoint}/social/register`)
-      .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
+      .set(csrfHeaderName, csrfSecret)
       .send(payload)
       .end((err, res: Response) => {
         testUtils.validateLoginResponse(
@@ -462,7 +464,7 @@ describe('/auth routes', () => {
 
     agent
       .post(`${endpoint}/social/register`)
-      .set(COOKIE_CSRF_HEADER_NAME, csrfSecret)
+      .set(csrfHeaderName, csrfSecret)
       .send(payload)
       .end((err, res: Response) => {
         expect(res.body.message).toEqual('Incorrect social profile information provided.');

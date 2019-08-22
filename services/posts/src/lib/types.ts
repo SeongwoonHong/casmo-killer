@@ -1,3 +1,5 @@
+import { PostModel } from '../api/post.model';
+
 export interface ErrorData {
   message: string;
   success?: boolean;

@@ -9,7 +9,10 @@ export const unauthorized = (res: Response, message: string): Response => {
   return error(res, message, 401);
 };
 
-export const badRequest = (res: Response, message: string): Response => {
+export const badRequest = (
+  res: Response,
+  message: string = 'Malformed request',
+): Response => {
   return error(res, message, 400);
 };
 
@@ -19,9 +22,10 @@ export const error = (
   code: number = 500,
 ): Response => {
   let _err = err;
-  const message = typeof err === 'string'
-    ? err
-    : (err as ErrorData).message || JSON.stringify(err);
+  const message =
+    typeof err === 'string'
+      ? err
+      : (err as ErrorData).message || JSON.stringify(err);
 
   logger.error(message);
 
@@ -39,10 +43,12 @@ export const forbidden = (res: Response, message: string): Response => {
   return error(res, message, 403);
 };
 
-export const invalidRequest = (res: Response, errorObj: ValidationError): Response => {
-  const type = errorObj.details[0].type.indexOf('required') > -1
-    ? 'required'
-    : 'invalid';
+export const invalidRequest = (
+  res: Response,
+  errorObj: ValidationError,
+): Response => {
+  const type =
+    errorObj.details[0].type.indexOf('required') > -1 ? 'required' : 'invalid';
   const message = `The ${errorObj.details[0].path[0]} is ${type}.`;
 
   return badRequest(res, message);

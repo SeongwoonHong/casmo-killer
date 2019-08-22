@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { getPosts, insertPost, deletePost } from './controller';
+import { getPosts, insertPost, deletePost, updatePost } from './controller';
 
 export class PostController {
   public router: Router;
@@ -14,6 +14,7 @@ export class PostController {
     this.router
       .get('/', getPosts)
       .post('/', insertPost)
-      .delete('/', deletePost);
+      .patch('/', updatePost)
+      .delete('/:post_id', deletePost);
   }
 }

@@ -28,9 +28,9 @@ export class BaseModel extends Model {
     return [];
   }
 
-  protected created_at: string;
-  protected updated_at: string;
-  protected deleted_at: string;
+  public created_at: string;
+  public updated_at: string;
+  public deleted_at: string;
 
   public $beforeInsert(): void {
     this.created_at = new Date().toISOString();

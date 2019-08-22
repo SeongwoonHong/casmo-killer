@@ -84,6 +84,65 @@ export const insertPost = async (
   }
 };
 
+export const updatePost = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
+  const validations: ValidationResult<any> = JoiValidate(
+    {
+      ...req.params,
+      ...req.body,
+    },
+    JoiObject({
+      body: validNotNull,
+      thumnail: validNull,
+      title: validNotNull,
+      user_id: JoiString().guid({
+        version: ['uuidv4'],
+      }),
+      id: JoiString().guid({
+        version: ['uuidv4'],
+      }),
+    }),
+  );
+
+  if (validations.error) {
+    return invalidRequest(res, validations.error);
+  }
+
+  // if (req.params.id !== req.body.id) {
+  //   return badRequest(res);
+  // }
+
+  // if (req.user.id !== req.body.user_id) {
+  //   return unauthorized(res);
+  // }
+
+  try {
+    const { id, title, thumnail, body } = req.body;
+    const post = await PostModel.query().findById(id);
+
+    if (!post) {
+      return notFound(res, 'Post not found');
+    }
+
+    const newPayload = {
+      title,
+      thumnail,
+      body,
+    };
+
+    const updatedPost = await PostModel.query().patchAndFetchById(
+      id,
+      newPayload,
+    );
+
+    return success(res, { updatedPost });
+  } catch (err) {
+    return error(res, err);
+  }
+};
+
 export const deletePost = async (
   req: Request,
   res: Response,
@@ -105,17 +164,13 @@ export const deletePost = async (
       return invalidRequest(res, validations.error);
     }
 
-    const { id } = req.body;
+    const { id } = req.params;
 
-    const deletedPost: number = await PostModel.query().deleteById(id);
+    const deletedPost = await PostModel.query().patchAndFetchById(id, {
+      deleted_at: new Date().toISOString(),
+    });
 
-    if (deletedPost === 1) {
-      return success(res, {
-        result: req.body,
-      });
-    }
-
-    throw new Error('Error');
+    return success(res, { deletedPost });
   } catch (err) {
     return error(res, err);
   }

@@ -4,12 +4,13 @@ import { IButton } from 'interfaces';
 
 const Button:FunctionComponent<IButton.IProps> = ({ className, onClick, children }) => {
   return (
-    <div
-      className={cx('button', className)}
+    <button
+      type="submit"
       onClick={onClick}
+      className={cx('button', className)}
     >
       {children}
-    </div>
+    </button>
   );
 };
 

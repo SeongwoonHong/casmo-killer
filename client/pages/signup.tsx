@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, AuthFormContainer, Loader } from 'components';
 import { useDispatch } from 'react-redux';
 import { withRouter } from 'next/router';
-import { signup as signupAction } from 'store/modules/auth';
+import { signup as signupAction, requestSignup } from 'store/modules/auth';
 import { useForm, formValidate } from 'utils';
 
 const signup = ({ router }) => {
@@ -92,14 +92,15 @@ const signup = ({ router }) => {
   ];
 
   function signup() {
-    console.log('signup ')
     const { email, password, displayName } = values;
 
-    dispatch(signupAction({ email, password, displayName }))
+    return dispatch(signupAction({ email, password, displayName }))
   }
 
   function signupRequest() {
     setIsRequested(true);
+
+    return requestSignup(values.email);
   }
 
   function renderAuthFormContainer() {

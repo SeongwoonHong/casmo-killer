@@ -34,11 +34,9 @@ export const login = (email: string, password: string) => {
 }
 
 export const requestSignup = (email: string) => {
-  return () => {
-    // axios.post('/auth/local/register', {
-    //   email
-    // })
-  }
+  return axios.post('/auth/local/register', {
+    email
+  })
 };
 
 export const signup = ({
@@ -80,15 +78,12 @@ export const signup = ({
 export const initialize = () => {
   return async () => {
     try {
-      console.log('initialize')
-      // const res = await axios.post('/auth/initialize');
-      const csrfToken = '58Eonwax-QHjb4QOv5PsP3PhXS4x4AUcwOd0';
+      const res = await axios.get('/token/csrf');
+      const csrfToken = res.headers['x-csrf-token'];
+
       if (csrfToken) {
         setTokenToHeader('x-csrf-token', csrfToken);
       }
-      // return res;
-      // save this data somewhere
-      // ...
     } catch (e) {
       console.log(e)
     }
@@ -98,17 +93,17 @@ export const initialize = () => {
 export const tokenRefresh = () => {
   return async () => {
     try {
-      console.log('token refresh')
       const cookies = new Cookies();
       const token = cookies.get('DAMSO_AUTH_TOKEN');
 
-      if (token) {
-        setTokenToHeader('x-auth-token', token);
+      if (!token) {
+        return;
       }
 
-      const res = await axios.post('/token/refresh');
-      console.log('res = ', res);
+      setTokenToHeader('x-auth-token', token);
 
+      const res = await axios.post('/token/refresh');
+      console.log('tokenRefresh response = ', res);
     } catch (e) {
       console.log(e);
     }

@@ -10,6 +10,7 @@ import { ErrorWithStatus } from '~lib/types';
 import { RootRoutes } from './api';
 import { authTokenParser } from '~middlewares/token-parser';
 import { configs } from '~config';
+import { constants } from '~constants';
 import { queryStringMapper } from '~lib/qs-utils';
 import { stream } from '~lib/logger';
 import { userAgentMapper } from '~middlewares/user-agent';
@@ -31,6 +32,10 @@ export class App {
     ));
     this.express.use(cors({
       credentials: true,
+      exposedHeaders: [
+        constants.HEADER_NAME_FOR_CSRF_TOKEN,
+        constants.HEADER_NAME_FOR_ACCESS_TOKEN,
+      ],
       origin: configs.CLIENT_URL,
     }));
     this.express.use(compression());

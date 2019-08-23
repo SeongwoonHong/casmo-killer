@@ -6,8 +6,8 @@ const Button:FunctionComponent<IButton.IProps> = ({ className, onClick, children
   return (
     <button
       type="submit"
-      onClick={onClick}
       className={cx('button', className)}
+      onClick={onClick}
     >
       {children}
     </button>

@@ -22,6 +22,7 @@ import {
 } from '~lib/responses';
 import { configs } from '~config';
 import { constants } from '~constants';
+import { generateRandomStr } from '~lib/miscel';
 import {
   isValidAvatar,
   validDisplayName,
@@ -30,7 +31,6 @@ import {
   validPassword,
 } from '~lib/validations';
 import { mailer } from '~lib/mailer';
-import { sign } from '~lib/token-utils';
 import { socialAuth } from '~lib/social-auth';
 
 const {
@@ -46,9 +46,6 @@ export const requestSignup = async (
     req.body,
     JoiObject({
       email: validEmail,
-      redirect_url: JoiString()
-        .regex(/<token>/)
-        .required(),
     }),
   );
 
@@ -62,7 +59,6 @@ export const requestSignup = async (
   try {
     const {
       email,
-      redirect_url,
     } = req.body;
 
     const {
@@ -79,25 +75,32 @@ export const requestSignup = async (
       );
     }
 
-    const token = await sign(
-      email,
-      'email',
-      '24h',
-    );
+    let verificationCode;
+    let codeTaken = true;
+
+    while (codeTaken) {
+      verificationCode = generateRandomStr();
+
+      const {
+        isTaken: is_taken,
+      } = await UserJobs.isValueTaken({
+        field: 'token',
+        value: verificationCode,
+      });
+
+      codeTaken = is_taken;
+    }
 
     await mailer.sendRegisterConfirmation(
       email,
-      redirect_url.replace(
-        /<token>/,
-        token,
-      ),
+      verificationCode,
     );
 
     await UserJobs
       .query()
       .insert({
         job_name: constants.JOB_NAME_FOR_REGISTRATION,
-        token,
+        token: verificationCode,
         user_id: email,
       });
 
@@ -105,7 +108,10 @@ export const requestSignup = async (
       res,
       {
         // tslint:disable-next-line:max-line-length
-        message: confirmMsg.replace(/<email>/, email),
+        message: confirmMsg.replace(
+          /<email>/,
+          email,
+        ),
       },
     );
 
@@ -148,8 +154,10 @@ export const localRegister = async (
 
   try {
     const {
+      avatar,
       display_name,
       email,
+      password,
     } = req.body;
 
     const {
@@ -192,10 +200,10 @@ export const localRegister = async (
 
     // tslint:disable-next-line:no-object-literal-type-assertion
     const newUser = await UserModel.registerNewUser({
-      avatar: req.body.avatar,
-      display_name: req.body.display_name,
-      email: req.body.email,
-      password: req.body.password,
+      avatar,
+      display_name,
+      email,
+      password,
     } as UserModel);
 
     const {
@@ -209,7 +217,11 @@ export const localRegister = async (
 
     await UserJobs
       .query()
-      .deleteById(registered_job.id);
+      .delete()
+      .where({
+        job_name: constants.JOB_NAME_FOR_REGISTRATION,
+        user_id: req.body.email,
+      });
 
     return success(
       response,

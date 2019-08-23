@@ -26,7 +26,6 @@ export interface EmailTemplateParams {
   buttonUrl: string;
   clientUrl?: string;
   footerText: string;
-  heading: string;
   logoAlt?: string;
   logoUrl?: string;
   themeColor?: string;

@@ -1,5 +1,3 @@
-import { UserJobs } from '../jobs.model';
-
 jest.mock('~lib/token-utils');
 
 import {
@@ -8,16 +6,14 @@ import {
 } from 'supertest';
 
 import { App } from '../../app';
+import { UserJobs } from '../jobs.model';
 import { UserModel } from '../user.model';
 import { aws } from '~lib/aws';
 import { configs } from '~config';
 import { constants } from '~constants';
 import { mailer } from '~lib/mailer';
 import { testUtils } from '~lib/test-utils';
-import {
-  sign,
-  verify,
-} from '~lib/token-utils';
+import { verify } from '~lib/token-utils';
 import { socialAuth } from '~lib/social-auth';
 
 const {
@@ -32,25 +28,23 @@ describe('/auth routes', () => {
   const app = new App().express;
   const agent = _agent(app);
   const endpoint = `${API_ROOT}/auth`;
-  const mockedToken = testUtils.mockedToken;
+
   const newUsers = testUtils.newUsers;
   const socialTestUsers = testUtils.socialTestUser;
 
   const getRegistrationToken = (user): Promise<{ token: string }> => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       agent
         .post(`${endpoint}/local/request`)
-        .set(csrfHeaderName, csrfSecret)
+        .set(csrfHeaderName, csrfToken)
         .send({
           email: user.email,
-          redirect_url: 'https://localhost:3000/register/<token>',
         })
         .end(async (err, res: Response) => {
           const tokenField = await UserJobs
             .query()
             .findOne({
               job_name: constants.JOB_NAME_FOR_REGISTRATION,
-              token: testUtils.mockedToken,
               user_id: user.email,
             });
 
@@ -59,52 +53,40 @@ describe('/auth routes', () => {
     });
   };
 
-  let csrfSecret;
+  let csrfToken;
   let jobToken;
 
-  beforeAll((done) => {
-    agent
-      .get(`${API_ROOT}/token/csrf`)
-      .end(async (err, res: Response) => {
-        csrfSecret = res.header[csrfHeaderName];
+  beforeAll(async (done) => {
+    ({ csrfToken } = await testUtils.getCsrfToken(agent));
 
-        done();
-      });
+    done();
   });
 
   it('sends out a confirmation email before registering', (done) => {
-    // @ts-ignore
-    sign = jest.fn().mockResolvedValue(testUtils.mockedToken);
-
     agent
       .post(`${endpoint}/local/request`)
-      .set(csrfHeaderName, csrfSecret)
+      .set(csrfHeaderName, csrfToken)
       .send({
         email: newUsers[0].email,
-        redirect_url: 'https://localhost:3000/register/<token>',
       })
       .end(async (err, res: Response) => {
-        expect(sign).toHaveBeenCalledWith(
-          newUsers[0].email,
-          'email',
-          '24h',
-        );
-        expect(mailer.sendRegisterConfirmation).toHaveBeenCalledWith(
-          newUsers[0].email,
-          `https://localhost:3000/register/${mockedToken}`,
-        );
-        expect(res.body.message).toBe(MSG_FOR_REQUEST_SIGNUP.replace(/<email>/, newUsers[0].email));
-
         const tokenField = await UserJobs
           .query()
           .findOne({
             job_name: constants.JOB_NAME_FOR_REGISTRATION,
-            token: testUtils.mockedToken,
             user_id: newUsers[0].email,
           });
 
         expect(tokenField).toBeTruthy();
         expect(tokenField.user_id).toEqual(newUsers[0].email);
+        expect(mailer.sendRegisterConfirmation).toHaveBeenCalledWith(
+          newUsers[0].email,
+          tokenField.token,
+        );
+        expect(res.body.message).toBe(MSG_FOR_REQUEST_SIGNUP.replace(
+          /<email>/,
+          newUsers[0].email,
+        ));
 
         jobToken = tokenField.token;
 
@@ -117,10 +99,9 @@ describe('/auth routes', () => {
 
     agent
       .post(`${endpoint}/local/request`)
-      .set(csrfHeaderName, csrfSecret)
+      .set(csrfHeaderName, csrfToken)
       .send({
         email: testUsers[0].email,
-        redirect_url: '<token>',
       })
       .end((err, res: Response) => {
         expect(res.body.message).toBe('The email address is already taken.');
@@ -136,7 +117,7 @@ describe('/auth routes', () => {
 
     agent
       .post(`${endpoint}/local/register?return_fields=${returnFields.join(',')}`)
-      .set(csrfHeaderName, csrfSecret)
+      .set(csrfHeaderName, csrfToken)
       .send({
         display_name: newUsers[0].display_name,
         email: newUsers[0].email,
@@ -164,13 +145,12 @@ describe('/auth routes', () => {
 
         const tokenField = await UserJobs
           .query()
-          .findOne({
+          .where({
             job_name: constants.JOB_NAME_FOR_REGISTRATION,
-            token: testUtils.mockedToken,
             user_id: newUsers[0].email,
           });
 
-        expect(tokenField).toBeFalsy();
+        expect(tokenField).toHaveLength(0);
 
         done();
       });
@@ -182,7 +162,7 @@ describe('/auth routes', () => {
 
     agent
       .post(`${endpoint}/local/register`)
-      .set(csrfHeaderName, csrfSecret)
+      .set(csrfHeaderName, csrfToken)
       .send({
         avatar: imgUrl,
         display_name: newUsers[1].display_name,
@@ -201,13 +181,12 @@ describe('/auth routes', () => {
 
         const tokenField = await UserJobs
           .query()
-          .findOne({
+          .where({
             job_name: constants.JOB_NAME_FOR_REGISTRATION,
-            token,
-            user_id: newUsers[1].email,
+            user_id: newUsers[0].email,
           });
 
-        expect(tokenField).toBeFalsy();
+        expect(tokenField).toHaveLength(0);
 
         done();
       });
@@ -218,7 +197,7 @@ describe('/auth routes', () => {
 
     agent
       .post(`${endpoint}/local/register`)
-      .set(csrfHeaderName, csrfSecret)
+      .set(csrfHeaderName, csrfToken)
       .send({
         avatar: testUtils.imgData,
         display_name: newUsers[2].display_name,
@@ -235,13 +214,12 @@ describe('/auth routes', () => {
 
         const tokenField = await UserJobs
           .query()
-          .findOne({
+          .where({
             job_name: constants.JOB_NAME_FOR_REGISTRATION,
-            token,
-            user_id: newUsers[2].email,
+            user_id: newUsers[0].email,
           });
 
-        expect(tokenField).toBeFalsy();
+        expect(tokenField).toHaveLength(0);
 
         done();
       });
@@ -252,7 +230,7 @@ describe('/auth routes', () => {
 
     agent
       .post(`${endpoint}/local/register`)
-      .set(csrfHeaderName, csrfSecret)
+      .set(csrfHeaderName, csrfToken)
       .send({
         avatar: testUsers[0].avatar,
         display_name: 'randomdisplay',
@@ -273,7 +251,7 @@ describe('/auth routes', () => {
 
     agent
       .post(`${endpoint}/local/register`)
-      .set(csrfHeaderName, csrfSecret)
+      .set(csrfHeaderName, csrfToken)
       .send({
         avatar: testUsers[0].avatar,
         display_name: testUsers[0].display_name,
@@ -366,7 +344,7 @@ describe('/auth routes', () => {
 
     agent
       .post(`${endpoint}/social/login`)
-      .set(csrfHeaderName, csrfSecret)
+      .set(csrfHeaderName, csrfToken)
       .send(payload)
       .end((err, res: Response) => {
         expect(res.body).toHaveProperty('profile');
@@ -394,7 +372,7 @@ describe('/auth routes', () => {
 
     agent
       .post(`${endpoint}/social/login`)
-      .set(csrfHeaderName, csrfSecret)
+      .set(csrfHeaderName, csrfToken)
       .send(payload)
       .end((err, res: Response) => {
         testUtils.validateLoginResponse(
@@ -429,7 +407,7 @@ describe('/auth routes', () => {
 
     agent
       .post(`${endpoint}/social/register`)
-      .set(csrfHeaderName, csrfSecret)
+      .set(csrfHeaderName, csrfToken)
       .send(payload)
       .end((err, res: Response) => {
         testUtils.validateLoginResponse(
@@ -464,7 +442,7 @@ describe('/auth routes', () => {
 
     agent
       .post(`${endpoint}/social/register`)
-      .set(csrfHeaderName, csrfSecret)
+      .set(csrfHeaderName, csrfToken)
       .send(payload)
       .end((err, res: Response) => {
         expect(res.body.message).toEqual('Incorrect social profile information provided.');

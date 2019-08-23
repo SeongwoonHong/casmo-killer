@@ -32,7 +32,6 @@ export class TokenRoutes {
       )
       .post(
         '/refresh',
-        csurferify(),
         refreshTokenParser(),
         isAuthorized(true),
         refreshTokens,

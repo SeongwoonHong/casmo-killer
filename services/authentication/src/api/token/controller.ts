@@ -35,25 +35,20 @@ export const getCsrfToken = (
   req: UserInfoRequest,
   res: Response,
 ): Response => {
-  if (
-    !req.signedCookies ||
-    !req.signedCookies[keyName]
-  ) {
-    const Token = new Csrf();
-    const secret = Token.secretSync();
-    const token = Token.create(secret);
+  const Token = new Csrf();
+  const secret = Token.secretSync();
+  const token = Token.create(secret);
 
-    res
-      .cookie(
-        keyName,
-        secret,
-        cookieOptions,
-      )
-      .setHeader(
-        csrfHeaderName,
-        token,
-      );
-  }
+  res
+    .cookie(
+      keyName,
+      secret,
+      cookieOptions,
+    )
+    .setHeader(
+      csrfHeaderName,
+      token,
+    );
 
   return res
     .status(204)

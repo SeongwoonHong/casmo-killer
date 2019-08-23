@@ -18,11 +18,19 @@ class AuthMailer {
       buttonUrl,
       clientUrl = configs.CLIENT_URL,
       footerText,
-      heading,
       logoAlt = configs.CLIENT_APP_URL,
       logoUrl = configs.CLIENT_LOGO_URL,
       themeColor = configs.CLIENT_THEME_COLOR,
     } = information;
+
+    const linkButton = buttonUrl
+      ? `<a
+          href="${buttonUrl}"
+          target="_blank"
+          style="box-sizing:border-box;border-color:${themeColor};font-weight:400;text-decoration:none;display:inline-block;margin:0;color:#ffffff;background-color:${themeColor};border:solid 1px ${themeColor};border-radius:2px;font-size:14px;padding:12px 45px">
+              ${buttonText}
+          </a>`
+      : '';
 
     return `
       <div style="font-size:16px;background-color:#fdfdfd;margin:0;padding:0;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;line-height:1.5;height:100%!important;width:100%!important;">
@@ -33,9 +41,6 @@ class AuthMailer {
                       </td>
                       <td valign="top" width="600" style="box-sizing:border-box;padding:0;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-size:16px;vertical-align:top;display:block;width:600px;max-width:600px;margin:0 auto!important">
                           <div style="box-sizing:border-box;display:block;max-width:600px;margin:0 auto;padding:10px">
-                              <span style="color:transparent;display:none;height:0;max-height:0;max-width:0;opacity:0;overflow:hidden;width:0">
-                                  ${heading}
-                              </span>
                               <div style="box-sizing:border-box;width:100%;margin-bottom:30px;margin-top:15px">
                                   <table
                                       width="100%"
@@ -110,12 +115,7 @@ class AuthMailer {
                                                                                                   valign="top"
                                                                                                   bgcolor="${themeColor}"
                                                                                                   style="box-sizing:border-box;padding:0;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-size:16px;vertical-align:top;background-color:${themeColor};border-radius:2px;text-align:center">
-                                                                                                  <a
-                                                                                                      href="${buttonUrl}"
-                                                                                                      target="_blank"
-                                                                                                      style="box-sizing:border-box;border-color:${themeColor};font-weight:400;text-decoration:none;display:inline-block;margin:0;color:#ffffff;background-color:${themeColor};border:solid 1px ${themeColor};border-radius:2px;font-size:14px;padding:12px 45px">
-                                                                                                      ${buttonText}
-                                                                                                  </a>
+                                                                                                  ${linkButton}
                                                                                               </td>
                                                                                           </tr>
                                                                                       </tbody>
@@ -182,7 +182,6 @@ class AuthMailer {
       bodyTitle: 'You\'re almost done!<br>Let\'s confirm your email address.',
       buttonText: 'Confirm your email address',
       footerText: 'Place for chat on the web',
-      heading: 'Let\'s confirm your email address.',
       title: `Confirm Your ${clientAppName} email address`,
       ...options,
     };
@@ -194,7 +193,6 @@ class AuthMailer {
       bodyTitle: 'You\'re almost done!<br>Let\'s reset your password.',
       buttonText: 'Confirm your email address',
       footerText: 'Place for chat on the web',
-      heading: 'Let\'s reset your password.',
       title: `Reset Your ${clientAppName} Password`,
       ...options,
     };
@@ -202,11 +200,9 @@ class AuthMailer {
 
   public static registerConfirmData(options: any = {}): EmailTemplateParams {
     return {
-      body: 'Click the following link to confirm your email address.',
-      bodyTitle: 'You\'re almost done!<br>Let\'s confirm your email address.',
-      buttonText: 'Confirm your email address',
+      body: 'Here\'s your verification for Damso account',
+      bodyTitle: 'Verification code for your registration at Damso',
       footerText: 'Place for chat on the web',
-      heading: 'Let\'s confirm your email address.',
       title: `'Welcome to ${clientAppName}! Confirm Your Email Address'`,
       ...options,
     };
@@ -229,17 +225,17 @@ class AuthMailer {
 
     return this.sendMail(
       to,
-      'Complete your Damso registration.',
+      'Verification code for your registration at Damso.',
       AuthMailer.emailTemplate(data),
     );
   }
 
   public sendEmailConfirmation(
     to: string,
-    redirect_url: string,
+    verificationCode: string,
   ): Promise<string> {
     const data = AuthMailer.newEmailConfirmData({
-      buttonUrl: redirect_url,
+      body: verificationCode,
     });
 
     return this.sendMail(

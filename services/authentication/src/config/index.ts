@@ -51,12 +51,12 @@ const config = {
     /<email>/.test(process.env.MSG_FOR_REQUEST_EMAIL_CHANGE)
       ? process.env.MSG_FOR_REQUEST_EMAIL_CHANGE
       // tslint:disable-next-line:max-line-length
-      : 'Verification email has been sent to <email>. Please click the link in the email to confirm your new email address.',
+      : 'Verification email has been sent to <email>.',
     MSG_FOR_REQUEST_SIGNUP: process.env.MSG_FOR_REQUEST_SIGNUP &&
       /<email>/.test(process.env.MSG_FOR_REQUEST_SIGNUP)
       ? process.env.MSG_FOR_REQUEST_SIGNUP
       // tslint:disable-next-line:max-line-length
-      : 'Verification email has been sent to <email>. Please click the link in the email to sign up.',
+      : 'Verification email has been sent to <email>.',
     // tslint:disable-next-line:max-line-length
     NODE_ENV: nodeEnv,
     // jwt token settings

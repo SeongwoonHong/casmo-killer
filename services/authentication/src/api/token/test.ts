@@ -60,17 +60,6 @@ describe('/token routes', () => {
       });
   });
 
-  it('does not issue new csrf token and secret if already issued', (done) => {
-    agent
-      .get(`${endpoint}/csrf`)
-      .end((err, res: request.Response) => {
-        expect(res.header).not.toHaveProperty('set-cookie');
-        expect(res.header).not.toHaveProperty(csrfHeaderName);
-
-        done();
-      });
-  });
-
   it('fetches public key to be used verify jwt token', (done) => {
     const {
       kid,

@@ -1,6 +1,15 @@
 import { Router } from 'express';
 
-import { getPosts, insertPost, deletePost, updatePost } from './controller';
+import {
+  getPosts,
+  insertPost,
+  deletePost,
+  updatePost,
+  getComments,
+  insertComment,
+  updateComment,
+  deleteComment,
+} from './controller';
 
 export class PostController {
   public router: Router;
@@ -15,6 +24,10 @@ export class PostController {
       .get('/', getPosts)
       .post('/', insertPost)
       .patch('/', updatePost)
-      .delete('/:post_id', deletePost);
+      .delete('/:id', deletePost)
+      .get('/comment/:post_id', getComments)
+      .post('/comment', insertComment)
+      .patch('/comment', updateComment)
+      .delete('/comment/:id', deleteComment);
   }
 }

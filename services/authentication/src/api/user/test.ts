@@ -19,6 +19,7 @@ const {
 const {
   HEADER_NAME_FOR_ACCESS_TOKEN: authHeaderName,
   HEADER_NAME_FOR_CSRF_TOKEN: csrfHeaderName,
+  JOB_NAME_FOR_EMAIL_UPDATE,
 } = constants;
 
 describe('/user routes', () => {
@@ -62,13 +63,13 @@ describe('/user routes', () => {
       .find((localTestUser) => {
         return localTestUser.avatar === null;
       });
+
     newUserInfo = {
       avatar: testUtils.imgData,
       display_name: idGenerator(),
       email: `${idGenerator()}@email.com`,
       id: userToUpdate.id,
       password: idGenerator().slice(0, 7),
-      redirect_url: '<token>',
     };
   });
 
@@ -207,12 +208,82 @@ describe('/user routes', () => {
       });
   });
 
+  it('request a email update', async (done) => {
+    const {
+      agent: _agent,
+      accessToken,
+      csrfToken,
+    } = await testUtils.getLoggedInUser(
+      request.agent(app),
+      {
+        email: userToUpdate.email,
+        password: userToUpdate.password,
+      },
+    );
+
+    _agent
+      .post(`${endpoint}/${userToUpdate.id}/request/email`)
+      .set(csrfHeaderName, csrfToken)
+      .set(authHeaderName, accessToken)
+      .send({
+        new_email: newUserInfo.email,
+      })
+      .end((err, res: request.Response) => {
+        expect(res.body).toHaveProperty('message');
+        expect(res.body.message).toEqual(MSG_FOR_REQUEST_EMAIL_CHANGE.replace(
+          /<email>/,
+          newUserInfo.email,
+        ));
+
+        done();
+      });
+  });
+
+  it('verifies a new email with a verification token', async (done) => {
+    const {
+      agent: _agent,
+      accessToken,
+      csrfToken,
+    } = await testUtils.getLoggedInUser(
+      request.agent(app),
+      {
+        email: userToUpdate.email,
+        password: userToUpdate.password,
+      },
+    );
+
+    const { token } = await UserJobs
+      .query()
+      .findOne({
+        job_name: JOB_NAME_FOR_EMAIL_UPDATE,
+        user_id: userToUpdate.id,
+      });
+
+    _agent
+      .post(`${endpoint}/${userToUpdate.id}/verify/email`)
+      .set(csrfHeaderName, csrfToken)
+      .set(authHeaderName, accessToken)
+      .send({
+        new_email: newUserInfo.email,
+        token,
+      })
+      .end((err, res: request.Response) => {
+        expect(res.status).toEqual(204);
+        jobToken = token;
+
+        done();
+      });
+  });
+
   it('updates user info and send out an email if email changed', async (done) => {
     const {
       response,
     } = await requestInfoUpdate(
       userToUpdate,
-      newUserInfo,
+      {
+        ...newUserInfo,
+        token: jobToken,
+      },
     );
 
     testUtils.validateLoginResponse(
@@ -245,29 +316,27 @@ describe('/user routes', () => {
       newUserInfo.email,
     ));
     expect(user.display_name).toEqual(newUserInfo.display_name);
-    expect(user.email).not.toEqual(newUserInfo.email);
+    expect(user.email).toEqual(newUserInfo.email);
 
     const userJobs = await UserJobs
       .query()
       .where({
+        job_name: JOB_NAME_FOR_EMAIL_UPDATE,
         user_id: userToUpdate.id,
       });
 
-    expect(userJobs).toHaveLength(1);
-    expect(userJobs[0].job_name).toEqual(constants.JOB_NAME_FOR_EMAIL_UPDATE);
-
-    jobToken = userJobs[0].token;
+    expect(userJobs).toHaveLength(0);
 
     done();
   });
 
-  it('logs in with an updated password', async (done) => {
+  it('logs in with an updated credential', async (done) => {
     const {
       response,
     } = await testUtils.getAccessToken(
       request(app),
       {
-        email: userToUpdate.email,
+        email: newUserInfo.email,
         password: newUserInfo.password,
       },
     );
@@ -286,114 +355,6 @@ describe('/user routes', () => {
     );
 
     done();
-  });
-
-  it('updates user email address', async (done) => {
-    const {
-      agent,
-      accessToken,
-      csrfToken,
-    } = await testUtils.getLoggedInUser(
-      request.agent(app),
-      {
-        email: userToUpdate.email,
-        password: newUserInfo.password,
-      },
-    );
-
-    agent
-      .patch(`${endpoint}/${newUserInfo.id}/email`)
-      .set(csrfHeaderName, csrfToken)
-      .set(authHeaderName, accessToken)
-      .send({
-        new_email: newUserInfo.email,
-        token: jobToken,
-      })
-      .end(async (errTwo, resTwo: request.Response) => {
-        testUtils.validateLoginResponse(
-          resTwo,
-          resTwo.header['set-cookie'],
-        );
-        testUtils.validateLoginData(
-          resTwo,
-          {
-            ...newUserInfo,
-            strategy: 'local',
-          },
-        );
-
-        const updatedUser = await UserModel
-          .query()
-          .findById(resTwo.body.user.id);
-
-        expect(updatedUser.email).toEqual(newUserInfo.email);
-
-        const userJobs = await UserJobs
-          .query()
-          .findOne({
-            user_id: newUserInfo.id,
-          });
-
-        expect(userJobs).toBeFalsy();
-
-        done();
-      });
-  });
-
-  it('blocks email update for an already updated user', async (done) => {
-    const {
-      agent,
-      accessToken,
-      csrfToken,
-    } = await testUtils.getLoggedInUser(
-      request.agent(app),
-      {
-        email: newUserInfo.email,
-        password: newUserInfo.password,
-      },
-    );
-
-    agent
-      .patch(`${endpoint}/${newUserInfo.id}/email`)
-      .set(csrfHeaderName, csrfToken)
-      .set(authHeaderName, accessToken)
-      .send({
-        new_email: newUserInfo.email,
-        token: jobToken,
-      })
-      .end(async (errTwo, resTwo: request.Response) => {
-        expect(resTwo.body.message).toEqual('The email has already been updated.');
-
-        done();
-      });
-  });
-
-  it('blocks email update for a user who did not request it', async (done) => {
-    const {
-      agent,
-      accessToken,
-      csrfToken,
-    } = await testUtils.getLoggedInUser(
-      request.agent(app),
-      {
-        email: newUserInfo.email,
-        password: newUserInfo.password,
-      },
-    );
-
-    agent
-      .patch(`${endpoint}/${newUserInfo.id}/email`)
-      .set(csrfHeaderName, csrfToken)
-      .set(authHeaderName, accessToken)
-      .send({
-        new_email: `${idGenerator()}@email.com`,
-        token: jobToken,
-      })
-      .end(async (errTwo, resTwo: request.Response) => {
-        expect(resTwo.body.message).toEqual('The link has expired.');
-
-        done();
-      });
   });
 
   it('blocks a password update if it has been used', async (done) => {

@@ -2,6 +2,12 @@ const env = process.env.NODE_ENV || 'development';
 
 const CONSTANTS = {
   all: {
+    AUTH_STRATEGIES: [
+      'local',
+      'facebook',
+      'google',
+      'kakao',
+    ],
     COOKIE_OPTIONS: {
       httpOnly: true,
       secure: true,

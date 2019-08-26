@@ -22,7 +22,6 @@ import {
 } from '~lib/responses';
 import { configs } from '~config';
 import { constants } from '~constants';
-import { generateRandomStr } from '~lib/miscel';
 import {
   isValidAvatar,
   validDisplayName,
@@ -75,21 +74,7 @@ export const requestSignup = async (
       );
     }
 
-    let verificationCode;
-    let codeTaken = true;
-
-    while (codeTaken) {
-      verificationCode = generateRandomStr();
-
-      const {
-        isTaken: is_taken,
-      } = await UserJobs.isValueTaken({
-        field: 'token',
-        value: verificationCode,
-      });
-
-      codeTaken = is_taken;
-    }
+    const verificationCode = await UserModel.generateJobToken();
 
     await mailer.sendRegisterConfirmation(
       email,

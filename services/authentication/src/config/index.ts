@@ -20,9 +20,6 @@ const config = {
     API_LOG_LEVEL: process.env.API_LOG_LEVEL || 'debug',
     API_PORT: process.env.API_PORT || 9000,
     API_ROOT: process.env.API_ROOT || '/api',
-    AUTH_STRATEGIES: process.env.AUTH_STRATEGIES
-      ? process.env.AUTH_STRATEGIES.split(',')
-      : ['local', 'facebook', 'google', 'kakao'],
     // aws configs
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_REGION: process.env.AWS_REGION || 'us-east-1',

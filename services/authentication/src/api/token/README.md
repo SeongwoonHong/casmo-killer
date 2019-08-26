@@ -34,11 +34,11 @@
     ```
 * **Sample Response**
 
-	```
+    ```
     HTTP/1.1 204 OK
     Status: 204 OK
     Content-Type: application/json
- 
+    
     {
         "success": true,
         "public_key": <public RSA key>

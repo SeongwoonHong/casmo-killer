@@ -4,8 +4,9 @@ import {
   requestUserInfo,
   logout,
   updateUserInfo,
-  updateUserEmail,
   updateUserPassword,
+  requestNewEmail,
+  verifyNewEmail,
 } from './controller';
 
 import { csurferify } from '~middlewares/seesurf';
@@ -33,11 +34,17 @@ export class UserRoutes {
         isAuthorized(),
         updateUserInfo,
       )
-      .patch(
-        '/:user_id/email',
+      .post(
+        '/:user_id/request/email',
         csurferify(),
         isAuthorized(),
-        updateUserEmail,
+        requestNewEmail,
+      )
+      .post(
+        '/:user_id/verify/email',
+        csurferify(),
+        isAuthorized(),
+        verifyNewEmail,
       )
       .patch(
         '/:user_id/password',

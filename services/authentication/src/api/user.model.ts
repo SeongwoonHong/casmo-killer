@@ -18,6 +18,7 @@ import {
 } from '~lib/bcrypt';
 import { configs } from '~config';
 import { constants } from '~constants';
+import { generateRandomStr } from '~lib/miscel';
 import { isUrl } from '~lib/validations';
 import { sign } from '~lib/token-utils';
 
@@ -132,6 +133,23 @@ export class UserModel extends BaseModel {
       'user',
       accessTokenExpiry,
     );
+  }
+
+  // TODO: might be too blocking and not performant, need to refactor this
+  public static async generateJobToken() {
+    let code;
+    let isTaken = true;
+
+    while (isTaken) {
+      code = generateRandomStr();
+
+      ({ isTaken } = await UserJobs.isValueTaken({
+        field: 'token',
+        value: code,
+      }));
+    }
+
+    return code;
   }
 
   public static generateRefreshToken(

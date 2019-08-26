@@ -27,6 +27,7 @@ import {
 } from '~lib/responses';
 import { configs } from '~config';
 import { constants } from '~constants';
+import { hash } from '~lib/bcrypt';
 import {
   isValidAvatar,
   validEmail,
@@ -34,11 +35,7 @@ import {
   validPassword,
 } from '~lib/validations';
 import { mailer } from '~lib/mailer';
-import {
-  sign,
-  verify,
-} from '~lib/token-utils';
-import { hash } from '~lib/bcrypt';
+import { verify } from '~lib/token-utils';
 
 const {
   COOKIE_AUTH_KEY_NAME: authKeyName,
@@ -108,16 +105,19 @@ export const updateUserInfo = async (
     JoiObject({
       avatar: validNull,
       display_name: JoiString().required(),
-      email: validNull,
+      email: req.body.strategy === AuthStrategies.local
+        ? validEmail
+        : validNull,
       id: JoiString().guid({
         version: [
           'uuidv4',
         ],
       }),
-      password: validNull,
-      redirect_url: JoiString()
-        .regex(/<token>/)
-        .required(),
+      password: req.body.strategy === AuthStrategies.local
+        ? validPassword
+        : validNull,
+      strategy: JoiString().valid(...constants.AUTH_STRATEGIES),
+      token: validNull,
       user_id: JoiString().guid({
         version: [
           'uuidv4',
@@ -158,7 +158,7 @@ export const updateUserInfo = async (
         display_name,
         email,
         password,
-        redirect_url,
+        token,
       },
     } = req;
 
@@ -171,26 +171,6 @@ export const updateUserInfo = async (
         res,
         'User not found',
       );
-    }
-
-    if (user.strategy === AuthStrategies.local) {
-      const emailValidation: ValidationResult<any> = JoiValidate(
-        {
-          email,
-          password,
-        },
-        JoiObject({
-          email: validEmail,
-          password: validPassword,
-        }),
-      );
-
-      if (emailValidation.error) {
-        return invalidRequest(
-          res,
-          emailValidation.error,
-        );
-      }
     }
 
     const shouldUpdateEmail = email &&
@@ -220,6 +200,23 @@ export const updateUserInfo = async (
       );
     }
 
+    if (shouldUpdateEmail) {
+      const jobData = await UserJobs
+        .query()
+        .findOne({
+          job_name: constants.JOB_NAME_FOR_EMAIL_UPDATE,
+          token,
+          user_id: user.id,
+        });
+
+      if (!jobData) {
+        return badRequest(
+          res,
+          'Please confirm your new email address.',
+        );
+      }
+    }
+
     const isPwdSame = await user.verifyPassword(password);
 
     if (!isPwdSame) {
@@ -231,29 +228,6 @@ export const updateUserInfo = async (
           'The new password cannot be one of previously used passwords.',
         );
       }
-    }
-
-    if (shouldUpdateEmail) {
-      const token = await sign(
-        email,
-        'email',
-        '24h',
-      );
-      await mailer.sendEmailConfirmation(
-        email,
-        redirect_url.replace(
-          /<token>/,
-          token,
-        ),
-      );
-
-      await UserJobs
-        .query()
-        .insert({
-          job_name: constants.JOB_NAME_FOR_EMAIL_UPDATE,
-          token,
-          user_id: user.id,
-        });
     }
 
     const newPassword = await hash(password);
@@ -271,6 +245,7 @@ export const updateUserInfo = async (
         password: newPassword,
         prev_passwords: user.prev_passwords.concat(user.password),
       }),
+      email,
     };
 
     const updatedUser = await user
@@ -285,6 +260,17 @@ export const updateUserInfo = async (
       {},
       req,
     );
+
+    if (shouldUpdateEmail) {
+      await UserJobs
+        .query()
+        .delete()
+        .where({
+          job_name: constants.JOB_NAME_FOR_EMAIL_UPDATE,
+          token,
+          user_id: user.id,
+        });
+    }
 
     return success(
       response,
@@ -303,7 +289,116 @@ export const updateUserInfo = async (
   }
 };
 
-export const updateUserEmail = async (
+export const requestNewEmail = async (
+  req: UserInfoRequest,
+  res: Response,
+): Promise<Response> => {
+  const validations: ValidationResult<any> = JoiValidate(
+    {
+      ...req.params,
+      ...req.body,
+    },
+    JoiObject({
+      new_email: validEmail,
+      user_id: JoiString().guid({
+        version: [
+          'uuidv4',
+        ],
+      }),
+    }),
+  );
+
+  if (validations.error) {
+    return invalidRequest(
+      res,
+      validations.error,
+    );
+  }
+
+  try {
+    const {
+      body: {
+        new_email,
+      },
+      params: {
+        user_id,
+      },
+      user: {
+        id: userId,
+      },
+    } = req;
+
+    if (user_id !== userId) {
+      return unauthorized(res);
+    }
+
+    const user = await UserModel
+      .query()
+      .findById(user_id);
+
+    if (!user) {
+      return notFound(
+        res,
+        'User not found.',
+      );
+    }
+
+    if (user.email === new_email) {
+      return badRequest(
+        res,
+        'New email must be different from the current email.',
+      );
+    }
+
+    const {
+      isTaken,
+    } = await UserModel.isValueTaken({
+      excludeId: user_id,
+      field: 'email',
+      value: new_email,
+    });
+
+    if (isTaken) {
+      return badRequest(
+        res,
+        'The email address is already taken.',
+      );
+    }
+
+    const verificationCode = await UserModel.generateJobToken();
+
+    await mailer.sendRegisterConfirmation(
+      new_email,
+      verificationCode,
+    );
+
+    await UserJobs
+      .query()
+      .insert({
+        job_name: constants.JOB_NAME_FOR_EMAIL_UPDATE,
+        token: verificationCode,
+        user_id,
+      });
+
+    return success(
+      res,
+      {
+        // tslint:disable-next-line:max-line-length
+        message: confirmMsg.replace(
+          /<email>/,
+          new_email,
+        ),
+      },
+    );
+  } catch (err) {
+    return error(
+      res,
+      err,
+    );
+  }
+};
+
+export const verifyNewEmail = async (
   req: UserInfoRequest,
   res: Response,
 ): Promise<Response> => {
@@ -362,37 +457,7 @@ export const updateUserEmail = async (
     if (user.email === new_email) {
       return badRequest(
         res,
-        'The email has already been updated.',
-      );
-    }
-
-    const userJob = await UserJobs
-      .query()
-      .findOne({
-        job_name: constants.JOB_NAME_FOR_EMAIL_UPDATE,
-        token,
-        user_id,
-      });
-
-    if (!userJob) {
-      return badRequest(
-        res,
-        'The link has expired.',
-      );
-    }
-
-    const registeredEmail = await verify<{
-      email: string,
-    }>(token);
-
-    if (
-      !registeredEmail ||
-      !registeredEmail.email ||
-      registeredEmail.email !== new_email
-    ) {
-      return badRequest(
-        res,
-        'The link has expired.',
+        'New email must be different from the current email.',
       );
     }
 
@@ -405,33 +470,30 @@ export const updateUserEmail = async (
     });
 
     if (isTaken) {
-      await userJob.$query().delete();
-
       return badRequest(
         res,
-        'The email is already taken.',
+        'The email address is already taken.',
       );
     }
 
-    const updatedUser = await user.updateEmail(new_email);
+    const jobData = await UserJobs
+      .query()
+      .findOne({
+        job_name: constants.JOB_NAME_FOR_EMAIL_UPDATE,
+        token,
+        user_id,
+      });
 
-    const {
-      response,
-      userData,
-    } = await updatedUser.getLogInData(
-      res,
-      {},
-      req,
-    );
+    if (!jobData) {
+      return badRequest(
+        res,
+        'Incorrect verification code provided.',
+      );
+    }
 
-    await userJob.$query().delete();
-
-    return success(
-      response,
-      {
-        user: userData,
-      },
-    );
+    return res
+      .status(204)
+      .send();
   } catch (err) {
     return error(
       res,

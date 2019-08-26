@@ -1,6 +1,7 @@
 import * as Knex from 'knex';
 
 import { configs } from '../../config';
+import { constants } from '../../constants';
 
 export async function up(knex: Knex): Promise<any> {
   return knex
@@ -21,7 +22,7 @@ export async function up(knex: Knex): Promise<any> {
       table.string('password');
       table.specificType('prev_passwords', 'text[]');
       table
-        .enu('strategy', configs.AUTH_STRATEGIES)
+        .enu('strategy', constants.AUTH_STRATEGIES)
         .notNullable()
         .defaultTo('local');
       table.string('social_id');

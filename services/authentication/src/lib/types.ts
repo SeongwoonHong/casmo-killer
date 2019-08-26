@@ -11,6 +11,7 @@ export enum AuthStrategies {
 export interface DupeValueCheckOption {
   field: string;
   value: string;
+  excludeField?: string;
   excludeId?: string;
 }
 

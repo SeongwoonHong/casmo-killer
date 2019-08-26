@@ -4,11 +4,11 @@ import {
   SocialAuthProviders,
   SocialAuthResponse,
 } from '~lib/types';
-import { configs } from '~config';
+import { constants } from '~constants';
 
 const {
   AUTH_STRATEGIES: strategies,
-} = configs;
+} = constants;
 
 class SocialAuth {
   public strategies: SocialAuthProviders[];

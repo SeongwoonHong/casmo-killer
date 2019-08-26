@@ -123,6 +123,57 @@ export const requestSignup = async (
   }
 };
 
+export const verifyEmail = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
+  const validations: ValidationResult<any> = JoiValidate(
+    req.body,
+    JoiObject({
+      code: JoiString().required(),
+      email: validEmail,
+    }),
+  );
+
+  if (validations.error) {
+    return invalidRequest(
+      res,
+      validations.error,
+    );
+  }
+
+  try {
+    const {
+      code,
+      email,
+    } = req.body;
+
+    const userJob = await UserJobs
+      .query()
+      .findOne({
+        job_name: constants.JOB_NAME_FOR_REGISTRATION,
+        token: code,
+        user_id: email,
+      });
+
+    if (!userJob) {
+      return badRequest(
+        res,
+        'Incorrect verification code provided.',
+      );
+    }
+
+    return res
+      .status(204)
+      .send();
+  } catch (err) {
+    return error(
+      res,
+      err,
+    );
+  }
+};
+
 export const localRegister = async (
   req: Request,
   res: Response,

@@ -109,6 +109,20 @@ describe('/auth routes', () => {
       });
   });
 
+  it('verifies an email with a verification code', (done) => {
+    agent
+      .post(`${endpoint}/local/verify`)
+      .set(csrfHeaderName, csrfToken)
+      .send({
+        code: jobToken,
+        email: newUsers[0].email,
+      })
+      .end((err, res: Response) => {
+        expect(res.status).toEqual(204);
+        done();
+      });
+  });
+
   it('registers a new user and returns correct fields', (done) => {
     const returnFields = [
       'password',

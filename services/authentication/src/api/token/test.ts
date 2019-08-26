@@ -136,7 +136,7 @@ describe('/token routes', () => {
       .post(`${endpoint}/refresh`)
       .set(csrfHeaderName, csrfSecret)
       .end((err, res: request.Response) => {
-        expect(res.body.message).toEqual('Malformed request');
+        expect(res.body.message).toEqual('Unauthorized Access');
         expect(res.body.success).toBe(false);
 
         done();

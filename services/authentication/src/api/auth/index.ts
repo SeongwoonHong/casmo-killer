@@ -8,6 +8,7 @@ import {
   localLogin,
   socialRegister,
   socialLogin,
+  verifyEmail,
 } from './controller';
 
 export class AuthRoutes {
@@ -25,6 +26,11 @@ export class AuthRoutes {
         '/local/request',
         csurferify(),
         requestSignup,
+      )
+      .post(
+        '/local/verify',
+        csurferify(),
+        verifyEmail,
       )
       .post(
         '/local/register',

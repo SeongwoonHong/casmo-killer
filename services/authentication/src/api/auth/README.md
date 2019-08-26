@@ -186,7 +186,7 @@
         "user": {
             "avatar": "https://cdn.pixabay.com/photo/2018/04/20/17/18/cat-3336579__340.jpg",
             "display_name": "new_user",
-            "email": "user@email.com",
+            "email": null,
             "id": "avads8f-12va8b8z-1238bz-g8888a",
             "strategy": "google"
         }
@@ -229,7 +229,7 @@
         "user": {
             "avatar": "https://cdn.pixabay.com/photo/2018/04/20/17/18/cat-3336579__340.jpg",
             "display_name": "new_user",
-            "email": "user@email.com",
+            "email": null,
             "id": "avads8f-12va8b8z-1238bz-g8888a",
             "strategy": "google"
         }
@@ -249,7 +249,7 @@
         "profile": {
             "avatar": "https://cdn.pixabay.com/photo/2018/04/20/17/18/cat-3336579__340.jpg",
             "display_name": "new_user",
-            "email": "user@email.com",
+            "email": null,
             "id": "avads8f-12va8b8z-1238bz-g8888a",
             "strategy": "google"
         }

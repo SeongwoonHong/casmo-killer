@@ -75,12 +75,17 @@ describe('/user routes', () => {
   it('returns a list of users information using display_name', (done) => {
     const testUsers = testUtils.users;
     const queryString = {
+      exclude_fields: 'id',
       search_field: 'display_name',
       search_values: testUsers
         .map(({ display_name }) => display_name)
         .join(','),
     };
-    const requiredFields = UserModel.getReturnFields();
+    const requiredFields = UserModel.getReturnFields({
+      exclude_fields: ['id'],
+      search_field: 'display_name',
+      search_values: testUsers.map(({ display_name }) => display_name),
+    });
 
     request(app)
       .get(`${endpoint}?${qs.stringify(queryString)}`)
@@ -99,7 +104,7 @@ describe('/user routes', () => {
             })
             .forEach((key) => {
               const targetUser = testUsers.find((ur) => {
-                return ur.id === user.id;
+                return ur.id === user.id || ur.display_name === user.display_name;
               });
 
               if (user[key] && targetUser[key]) {

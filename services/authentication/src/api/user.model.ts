@@ -153,7 +153,7 @@ export class UserModel extends BaseModel {
       exclude_fields = [],
       return_fields = [],
     } = options;
-    return Array.from(
+    const returnFields = Array.from(
       new Set([
         ...UserModel.BASE_FIELDS,
         ...return_fields.filter((return_field) => {
@@ -162,6 +162,11 @@ export class UserModel extends BaseModel {
         }),
       ]),
     );
+
+    return returnFields.filter((field) => {
+      return !exclude_fields.includes(field) &&
+        !UserModel.PRIVATE_FIELDS.includes(field);
+    });
   }
 
   public static async refreshTokens(

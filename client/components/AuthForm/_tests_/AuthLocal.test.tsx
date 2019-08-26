@@ -4,7 +4,7 @@ import { mount } from 'enzyme'
 import React from 'react'
 import { AuthLocal } from '../AuthLocal';
 
-describe('AuthLocal', () => {
+describe('<AuthLocal />', () => {
   it('should only have email input for signup request mode', () => {
     const emailInput = [
       {

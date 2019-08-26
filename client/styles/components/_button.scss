@@ -13,4 +13,9 @@
   &.bg-transparent {
     background-color: transparent;
   }
+
+  &:disabled {
+    background-color: lightgrey;
+    cursor: not-allowed;
+  }
 }

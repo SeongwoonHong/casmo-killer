@@ -1,6 +1,14 @@
 import { composeWithDevTools } from 'redux-devtools-extension'
 
 const defaultState = {
+  auth: {
+    isLoading: false,
+    user: null
+  },
+  post: {
+    isLoading: false,
+    posts: []
+  }
 }
 
 import { applyMiddleware, createStore, compose } from 'redux';

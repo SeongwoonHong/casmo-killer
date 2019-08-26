@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import cx from 'classnames';
 import { Button } from 'components';
+import { useSelector, useDispatch } from 'react-redux';
 import Link from 'next/link';
 import Router, { withRouter } from 'next/router'
+import { logout as logoutAction } from 'store/modules/auth';
 import HamburgerMenu from './HamburgerMenu';
 
 const sections = [
@@ -22,6 +24,8 @@ const sections = [
 
 const Header = props => {
   const [isMenuOpened, setIsMenuOpened] = useState(false);
+  const user = useSelector(state => state.auth.user);
+  const dispatch = useDispatch();
 
   function hamburgerMenuOnClick() {
     setIsMenuOpened(!isMenuOpened);
@@ -29,6 +33,11 @@ const Header = props => {
 
   function gotoTrending() {
     Router.push('/trending');
+  }
+
+  function logout() {
+    dispatch(logoutAction());
+    setIsMenuOpened(false);
   }
 
   return (
@@ -64,11 +73,19 @@ const Header = props => {
       <div className={cx('header-side-menu-wrapper', { isOpened: isMenuOpened })}>
         <div className="header-side-menu">
           <div className="side-menu-content">
-            <Link href="/login">
-              <div className="side-menu-item">
-                LOGIN
-              </div>
-            </Link>
+            {
+              user ? (
+                <div className="side-menu-item" onClick={logout}>
+                  LOG OUT
+                </div>
+              ) : (
+                <Link href="/login">
+                  <div className="side-menu-item">
+                    LOGIN
+                  </div>
+                </Link>
+              )
+            }
             <Link href="/settings">
               <div className="side-menu-item">
                 SETTINGS

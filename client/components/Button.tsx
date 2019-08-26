@@ -2,12 +2,13 @@ import React, { FunctionComponent } from 'react';
 import cx from 'classnames';
 import { IButton } from 'interfaces';
 
-const Button:FunctionComponent<IButton.IProps> = ({ className, onClick, children }) => {
+const Button:FunctionComponent<IButton.IProps> = ({ className, onClick, children, type, disabled = false}) => {
   return (
     <button
-      type="submit"
+      type={type || 'submit'}
       className={cx('button', className)}
       onClick={onClick}
+      disabled={disabled}
     >
       {children}
     </button>

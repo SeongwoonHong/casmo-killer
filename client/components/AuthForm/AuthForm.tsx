@@ -25,19 +25,13 @@ const AuthForm:FunctionComponent<IAuthForm.IProps> = ({
 
   return (
     <form className="AuthForm" onSubmit={authOnClick}>
-      {
-        mode !== 'signup' && (
-          <>
-            <hr />
-            <div className="AuthSocial-wrapper">
-              <AuthSocial
-                mode={mode}
-              />
-            </div>
-          </>
-        )
-      }
-      { mode !== 'signup' && <div className="auth-form-or">OR</div> }
+      <hr />
+      <div className="AuthSocial-wrapper">
+        <AuthSocial
+          mode={mode}
+        />
+      </div>
+      <div className="auth-form-or">OR</div>
       <div className="AuthLocal-wrapper">
         <AuthLocal
           mode={mode}

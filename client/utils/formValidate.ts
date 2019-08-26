@@ -2,7 +2,9 @@ function formValidate(values) {
   let errors = {
     email: '',
     password: '',
+    passwordConfirm: '',
     displayName: '',
+    verificationCode: '',
   };
 
   if (!values.email.trim()) {
@@ -17,12 +19,23 @@ function formValidate(values) {
     errors.password = 'Password must be 6 or more characters';
   }
 
+  if (!values.passwordConfirm || !values.passwordConfirm.trim()) {
+    errors.passwordConfirm = 'Password is required';
+  }
+
+  if (values.password !== values.passwordConfirm) {
+    errors.passwordConfirm = 'Password should match';
+  }
+
   if (!values.displayName || !values.displayName.trim()) {
     errors.displayName = 'Username is required';
   } else if (values.displayName && values.displayName.trim() < 4) {
     errors.displayName = 'Username must be 4 or more characters';
   }
 
+  if (!values.verificationCode || !values.verificationCode.trim()) {
+    errors.verificationCode = 'Verification Code is required';
+  }
   return errors;
 }
 

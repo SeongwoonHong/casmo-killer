@@ -1,5 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { IAuthLocal } from 'interfaces';
+import { Button } from 'components';
+import cx from 'classnames';
 
 const AuthLocal:FunctionComponent<IAuthLocal.IProps> = ({ mode, inputs, errors }) => {
   return (
@@ -9,7 +11,7 @@ const AuthLocal:FunctionComponent<IAuthLocal.IProps> = ({ mode, inputs, errors }
           inputs.map((input) => {
             return (
               <div
-                className="authlocal-input-container"
+                className={cx('authlocal-input-container', mode)}
                 key={input.id}
               >
                 <input
@@ -20,6 +22,19 @@ const AuthLocal:FunctionComponent<IAuthLocal.IProps> = ({ mode, inputs, errors }
                   name={input.id}
                   type={input.type || 'text'}
                 />
+                {
+                  mode == 'signup' && input.id === 'email' && (
+                    <>
+                      <Button
+                        className="email-verify-button"
+                        onClick={input.sendVerificationCode}
+                        type="button"
+                      >
+                        Send verification code
+                      </Button>
+                    </>
+                  )
+                }
                 <div className="authlocal-error">
                   {
                     errors[input.id] && errors[input.id]

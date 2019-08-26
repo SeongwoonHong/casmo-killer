@@ -12,3 +12,4 @@ export { CloseButton } from './CloseButton';
 export { Google } from './SocialLogin/Google';
 export { Facebook } from './SocialLogin/Facebook';
 export { Kakaotalk } from './SocialLogin/Kakaotalk';
+export { Modal } from './Modal';

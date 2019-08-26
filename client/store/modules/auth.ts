@@ -1,6 +1,4 @@
-import { axios, setTokenToHeader } from 'utils';
-import { Cookies } from 'react-cookie';
-import post from './post';
+import { axios, setTokenToHeader, setXAuthTokenToCookie } from 'utils';
 
 /* ACTION TYPES */
 const LOGIN = 'LOGIN';
@@ -9,8 +7,18 @@ const LOGIN_FAIL = 'LOGIN_FAIL';
 const SIGNUP = 'SIGNUP';
 const SIGNUP_SUCCESS = 'SIGNUP_SUCCESS';
 const SIGNUP_FAIL = 'SIGNUP_FAIL';
+const LOGOUT = 'LOGOUT';
 
 /* ACTION CREATOR */
+
+const loginSuccess = (user) => {
+  console.log('user = ', user)
+  return {
+    type: LOGIN_SUCCESS,
+    payload: user,
+  }
+}
+
 export const login = (email: string, password: string) => {
   return async (dispatch) => {
     try {
@@ -23,12 +31,10 @@ export const login = (email: string, password: string) => {
       }, {
         withCredentials: true,
       });
-      console.log(`USER DATA\n`, res.data.user);
+      
+      setXAuthTokenToCookie(res.headers['x-auth-token']);
 
-      dispatch({
-        type: LOGIN_SUCCESS,
-        payload: res.data,
-      });
+      dispatch(loginSuccess(res.data.user));
     } catch (e) {
       console.log(e);
       dispatch({ type: LOGIN_FAIL });
@@ -37,11 +43,11 @@ export const login = (email: string, password: string) => {
 };
 
 export const requestSignup = (email: string) => {
-  return () => {
-    // axios.post('/auth/local/register', {
-    //   email
-    // })
-  };
+  return axios.post('/auth/local/request', {
+    email
+  }, {
+    withCredentials: true
+  });
 };
 
 export const signup = ({
@@ -80,45 +86,58 @@ export const signup = ({
   };
 };
 
-export const initialize = () => {
-  return async () => {
-    try {
-      const res = await axios.get('/token/csrf', {
-        withCredentials: true,
-      });
-      const csrfToken = res.headers['x-csrf-token'];
+export const initialize = async () => {
+  try {
+    const res = await axios.get('/token/csrf', {
+      withCredentials: true,
+    });
+    const csrfToken = res.headers['x-csrf-token'];
 
-      console.log('/token/csrf returns new csrf token\n', csrfToken);
-
-      if (csrfToken) {
-        setTokenToHeader('x-csrf-token', csrfToken);
-      }
-      // return res;
-      // save this data somewhere
-      // ...
-    } catch (e) {
-      console.log(e);
+    if (csrfToken) {
+      setTokenToHeader('x-csrf-token', csrfToken);
     }
-  };
+  } catch (e) {
+    console.log(e);
+  }
 };
 
-export const tokenRefresh = () => {
-  return async () => {
+export const tokenRefresh = async () => {
+  try {
+    const res = await axios.post(
+      '/token/refresh',
+      {},
+      {
+        withCredentials: true,
+      },
+    );
+
+    setXAuthTokenToCookie(res.headers['x-auth-token']);
+  } catch (e) {
+    if (e.response.status !== 401) {
+      console.log(e);
+    }
+  }
+};
+
+export const tokenVerify = (token) => {
+  return async (dispatch) => {
     try {
-      const res = await axios.post(
-        '/token/refresh',
-        {},
-        {
-          withCredentials: true,
-        },
-      );
+      const res = await axios.post('/token/verify', {
+        token
+      }, {
+        withCredentials: true
+      });
 
-      console.log('/tokens/refresh returns new user data\n', res.data.user);
-      console.log('/tokens/refresh returns new access token\n', res.headers['x-auth-token']);
-
+      return dispatch(loginSuccess(res.data.user));
     } catch (e) {
       console.log(e);
     }
+  }
+}
+
+export const logout = () => {
+  return {
+    type: LOGOUT,
   };
 };
 
@@ -136,6 +155,7 @@ export default (state = initialState, action) => {
         isLoading: true,
       };
     case LOGIN_SUCCESS:
+      console.log('action.payload = ', action.payload)
       return {
         ...state,
         isLoading: false,
@@ -162,6 +182,8 @@ export default (state = initialState, action) => {
         ...state,
         isLoading: false,
       };
+    case LOGOUT:
+      return initialState;
     default:
       return state;
   }

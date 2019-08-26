@@ -19,5 +19,19 @@
       min-height: 13px;
       color: red;
     }
+
+    &.signup {
+      .email-input {
+        width: 58%;
+        display: inline-block;
+      }
+
+      .email-verify-button {
+        width: 30%;
+        position: absolute;
+        right: 27px;
+        font-size: 10px;
+      }
+    }
   }
 }

@@ -1,7 +1,8 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { login as loginAction } from 'store/modules/auth';
 import { Container, AuthFormContainer } from 'components';
+import Router from 'next/router';
 import { useForm, formValidate } from 'utils';
 
 const login = (props) => {
@@ -28,6 +29,13 @@ const login = (props) => {
     },
   ];
   const dispatch = useDispatch();
+  const user = useSelector(state => state.auth.user);
+
+  useEffect(() => {
+    if (user) {
+      Router.push('/trending');
+    }
+  }, [user]);
 
   function login() {
     const { email, password } = values;

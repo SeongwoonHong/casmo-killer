@@ -1,61 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { Container, AuthFormContainer, Loader } from 'components';
+import React, { useState } from 'react';
+import { Container, AuthFormContainer, Modal } from 'components';
 import { useDispatch } from 'react-redux';
-import { withRouter } from 'next/router';
 import { signup as signupAction, requestSignup } from 'store/modules/auth';
 import { useForm, formValidate } from 'utils';
 
-const signup = ({ router }) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isVerifiedToken, setIsVerifiedToken] = useState(false);
-  const [isRequested, setIsRequested] = useState(false);
+const signup = () => {
+  const [isModalOpend, setIsModalOpened] = useState(false);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (Object.keys(router.query).length) {
-      verifyToken();
-    }
-  }, [router.query]);
-
-  const signupRequestErrorInitialValues = {
-    email: '',
-  };
 
   const signupErrorInitialValues = {
     email: '',
     password: '',
+    passwordConfirm: '',
     displayName: '',
+    verificationCode: '',
     avatar: '',
   };
 
   const { values, errors, handleChange, handleSubmit } = useForm(
-    Object.keys(router.query).length ? signupErrorInitialValues : signupRequestErrorInitialValues, 
+    signupErrorInitialValues, 
     formValidate,
-    Object.keys(router.query).length ? signup : signupRequest); 
+    signup); 
   
-  async function verifyToken() {
-    setIsLoading(true);
-
-    const res = await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    // for now, it's always a verified token
-    setIsVerifiedToken(true);
-
-    setIsLoading(false);
-
-    return res;
-  }
-
-  const emailInput = [
-    {
-      id: 'email',
-      placeholder: 'Email Address',
-      type: 'text',
-      value: values.email,
-      name: 'email',
-      onChange: handleChange,
-    }
-  ];
   const signupInputs = [
     {
       id: 'email',
@@ -64,6 +30,14 @@ const signup = ({ router }) => {
       value: values.email,
       name: 'email',
       onChange: handleChange,
+      sendVerificationCode,
+    },
+    {
+      id: 'verificationCode',
+      placeholder: 'Email Verification Code',
+      value: values.verificationCode,
+      name: 'verificationCode',
+      onChange: handleChange
     },
     {
       id: 'password',
@@ -71,6 +45,14 @@ const signup = ({ router }) => {
       type: 'password',
       value: values.password,
       name: 'password',
+      onChange: handleChange,
+    },
+    {
+      id: 'passwordConfirm',
+      placeholder: 'Password Confirm',
+      type: 'password',
+      value: values.passwordConfirm,
+      name: 'passwordConfirm',
       onChange: handleChange,
     },
     {
@@ -97,36 +79,41 @@ const signup = ({ router }) => {
     return dispatch(signupAction({ email, password, displayName }))
   }
 
-  function signupRequest() {
-    setIsRequested(true);
+  function sendVerificationCode() {
+    const { email } = values;
 
-    return requestSignup(values.email);
+    if (email.trim() && isEmailValid(email)) {
+      requestSignup(email);
+      toggleModal()
+    }
   }
 
-  function renderAuthFormContainer() {
-    return isRequested ? (
-      <div className="check-your-email">check your email brother</div>
-    ) : (
-      <AuthFormContainer
-        mode={isVerifiedToken ? 'signup' : 'signupRequest'}
-        signupInputs={isVerifiedToken ? signupInputs : emailInput}
-        authOnClick={handleSubmit}
-        errors={errors}
-      />
-    );
+  function isEmailValid(email) {
+    return !formValidate({ email }).email;
+  }
+
+  function toggleModal() {
+    setIsModalOpened(!isModalOpend);
   }
 
   return (
     <>
-      {
-        isLoading ? (
-          <Loader />
-        ) : (
-          renderAuthFormContainer()
-        )
-      }
+      <AuthFormContainer
+        mode={'signup'}
+        signupInputs={signupInputs}
+        authOnClick={handleSubmit}
+        errors={errors}
+      />
+      <Modal
+        isOpened={isModalOpend}
+        onClose={toggleModal}
+      >
+        <h1>Verification code is sent</h1>
+        <div>We've sent you a verification code via email.</div>
+        <div>Please check your email and enter the code below</div>
+      </Modal>
     </>
   );
 };
 
-export default Container('Damso - Signup', 'signup')(withRouter(signup));
+export default Container('Damso - Signup', 'signup')(signup);

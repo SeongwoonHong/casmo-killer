@@ -3,3 +3,4 @@ export { useForm } from './useForm';
 export { formValidate } from './formValidate';
 export { default as withReduxStore } from './withReduxStore';
 export { loadSDK } from './loadSDK';
+export { setXAuthTokenToCookie } from './setXAuthTokenToCookie';

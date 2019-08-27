@@ -13,6 +13,7 @@ import { csurferify } from '~middlewares/seesurf';
 import { isAuthorized } from '~middlewares/authorized';
 import { refreshTokenParser } from '~middlewares/token-parser';
 
+// TODO: figure out a way to implemenet pwd reset
 export class UserRoutes {
   public router: Router;
 

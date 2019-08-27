@@ -123,6 +123,21 @@ describe('/auth routes', () => {
       });
   });
 
+  it('verifies an invalid email with a verification code', (done) => {
+    agent
+      .post(`${endpoint}/local/verify`)
+      .set(csrfHeaderName, csrfToken)
+      .send({
+        code: jobToken,
+        email: newUsers[1].email,
+      })
+      .end((err, res: Response) => {
+        expect(res.body.message).toEqual('Incorrect verification code provided.');
+
+        done();
+      });
+  });
+
   it('registers a new user and returns correct fields', (done) => {
     const returnFields = [
       'password',
@@ -281,7 +296,7 @@ describe('/auth routes', () => {
       });
   });
 
-  it('logs in a user', (done) => {
+  it('logs in a local user', (done) => {
     const testUsers = testUtils.localTestUsers;
 
     // @ts-ignore

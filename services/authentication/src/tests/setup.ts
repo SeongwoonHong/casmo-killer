@@ -5,7 +5,7 @@ jest.mock('~lib/social-auth');
 import { testUtils } from '~lib/test-utils';
 
 beforeAll(async (done) => {
-  // await testUtils.emptyTables();
+  await testUtils.emptyTables();
   await testUtils.insertUsers();
   done();
 });
@@ -15,6 +15,6 @@ beforeEach(() => {
 });
 
 afterAll(async (done) => {
-  await testUtils.emptyTables();
+  // await testUtils.emptyTables();
   done();
 });

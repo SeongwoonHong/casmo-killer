@@ -12,6 +12,10 @@ const {
   COOKIE_AUTH_KEY_NAME: keyName,
 } = configs;
 
+/*
+* TODO: add an option to decide whether or not to
+*  check the user data against the database
+* */
 export const isAuthorized = (
   shouldRevoke = false,
   rejectResponse = unauthorized,

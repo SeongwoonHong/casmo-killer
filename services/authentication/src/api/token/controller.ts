@@ -1,5 +1,9 @@
 import * as Csrf from 'csrf';
 import {
+  JsonWebTokenError,
+  TokenExpiredError,
+} from 'jsonwebtoken';
+import {
   ValidationResult,
   object as JoiObject,
   validate as JoiValidate,
@@ -173,8 +177,8 @@ export const verifyToken = async (
     );
   } catch (err) {
     if (
-      err.name === 'JsonWebTokenError' ||
-      err.name === 'TokenExpiredError'
+      err instanceof JsonWebTokenError ||
+      err instanceof TokenExpiredError
     ) {
       return badRequest(res);
     }

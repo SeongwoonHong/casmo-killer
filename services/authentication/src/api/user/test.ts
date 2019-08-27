@@ -208,6 +208,80 @@ describe('/user routes', () => {
       });
   });
 
+  it('blocks an email update request if new email is not different', async (done) => {
+    const {
+      agent: _agent,
+      accessToken,
+      csrfToken,
+    } = await testUtils.getLoggedInUser(
+      request.agent(app),
+      {
+        email: userToUpdate.email,
+        password: userToUpdate.password,
+      },
+    );
+
+    _agent
+      .post(`${endpoint}/${userToUpdate.id}/request/email`)
+      .set(csrfHeaderName, csrfToken)
+      .set(authHeaderName, accessToken)
+      .send({
+        new_email: userToUpdate.email,
+      })
+      .end(async (err, res: request.Response) => {
+        expect(res.body).toHaveProperty('message');
+        expect(res.body.message).toEqual('New email must be different from the current email.');
+
+        const userJobs = await UserJobs
+          .query()
+          .where({
+            job_name: JOB_NAME_FOR_EMAIL_UPDATE,
+            user_id: userToUpdate.id,
+          });
+
+        expect(userJobs).toHaveLength(0);
+
+        done();
+      });
+  });
+
+  it('blocks an email update request if new email is already taken', async (done) => {
+    const {
+      agent: _agent,
+      accessToken,
+      csrfToken,
+    } = await testUtils.getLoggedInUser(
+      request.agent(app),
+      {
+        email: userToUpdate.email,
+        password: userToUpdate.password,
+      },
+    );
+
+    _agent
+      .post(`${endpoint}/${userToUpdate.id}/request/email`)
+      .set(csrfHeaderName, csrfToken)
+      .set(authHeaderName, accessToken)
+      .send({
+        new_email: testUtils.localTestUsers[2].email,
+      })
+      .end(async (err, res: request.Response) => {
+        expect(res.body).toHaveProperty('message');
+        expect(res.body.message).toEqual('The email address is already taken.');
+
+        const userJobs = await UserJobs
+          .query()
+          .where({
+            job_name: JOB_NAME_FOR_EMAIL_UPDATE,
+            user_id: userToUpdate.id,
+          });
+
+        expect(userJobs).toHaveLength(0);
+
+        done();
+      });
+  });
+
   it('request a email update', async (done) => {
     const {
       agent: _agent,
@@ -234,6 +308,78 @@ describe('/user routes', () => {
           /<email>/,
           newUserInfo.email,
         ));
+
+        done();
+      });
+  });
+
+  it('blocks a new email verification if email is not different', async (done) => {
+    const {
+      agent: _agent,
+      accessToken,
+      csrfToken,
+    } = await testUtils.getLoggedInUser(
+      request.agent(app),
+      {
+        email: userToUpdate.email,
+        password: userToUpdate.password,
+      },
+    );
+
+    const { token } = await UserJobs
+      .query()
+      .findOne({
+        job_name: JOB_NAME_FOR_EMAIL_UPDATE,
+        user_id: userToUpdate.id,
+      });
+
+    _agent
+      .post(`${endpoint}/${userToUpdate.id}/verify/email`)
+      .set(csrfHeaderName, csrfToken)
+      .set(authHeaderName, accessToken)
+      .send({
+        new_email: userToUpdate.email,
+        token,
+      })
+      .end((err, res: request.Response) => {
+        expect(res.body).toHaveProperty('message');
+        expect(res.body.message).toEqual('New email must be different from the current email.');
+
+        done();
+      });
+  });
+
+  it('blocks a new email verification if email is already taken', async (done) => {
+    const {
+      agent: _agent,
+      accessToken,
+      csrfToken,
+    } = await testUtils.getLoggedInUser(
+      request.agent(app),
+      {
+        email: userToUpdate.email,
+        password: userToUpdate.password,
+      },
+    );
+
+    const { token } = await UserJobs
+      .query()
+      .findOne({
+        job_name: JOB_NAME_FOR_EMAIL_UPDATE,
+        user_id: userToUpdate.id,
+      });
+
+    _agent
+      .post(`${endpoint}/${userToUpdate.id}/verify/email`)
+      .set(csrfHeaderName, csrfToken)
+      .set(authHeaderName, accessToken)
+      .send({
+        new_email: testUtils.localTestUsers[2].email,
+        token,
+      })
+      .end((err, res: request.Response) => {
+        expect(res.body).toHaveProperty('message');
+        expect(res.body.message).toEqual('The email address is already taken.');
 
         done();
       });
@@ -273,6 +419,41 @@ describe('/user routes', () => {
 
         done();
       });
+  });
+
+  it('blocks user info update if a email or display_name is already taken', async (done) => {
+    const {
+      response,
+    } = await requestInfoUpdate(
+      userToUpdate,
+      {
+        ...newUserInfo,
+        display_name: testUtils.localTestUsers[testUtils.localTestUsers.length - 1].display_name,
+        token: jobToken,
+      },
+    );
+
+    expect(response.body).toHaveProperty('message');
+    expect(response.body.message).toEqual('The display name is already taken.');
+
+    done();
+  });
+
+  it('blocks user info update if a token is incorrect', async (done) => {
+    const {
+      response,
+    } = await requestInfoUpdate(
+      userToUpdate,
+      {
+        ...newUserInfo,
+        token: idGenerator(),
+      },
+    );
+
+    expect(response.body).toHaveProperty('message');
+    expect(response.body.message).toEqual('Please confirm your new email address.');
+
+    done();
   });
 
   it('updates user info and send out an email if email changed', async (done) => {

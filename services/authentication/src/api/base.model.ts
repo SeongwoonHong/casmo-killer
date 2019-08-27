@@ -34,6 +34,17 @@ export class BaseModel extends Model {
     return [];
   }
 
+  public static removeExpiredRows() {
+    return this
+      .query()
+      .delete()
+      .where(
+        'expires_at',
+        '<',
+        this.fn.now(),
+      );
+  }
+
   public static async emptyTable(id: string = this.idColumn) {
     return this
       .query()
@@ -43,7 +54,7 @@ export class BaseModel extends Model {
         await this
           .query()
           .select(id)
-          .map(row => row[id]),
+          .map((row) => row[id]),
       );
   }
 

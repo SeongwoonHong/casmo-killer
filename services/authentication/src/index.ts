@@ -20,6 +20,7 @@ app.set('port', port);
 
 export const server: http.Server = http.createServer(app);
 
+// TODO: set up a cron job to remove expired row
 server.listen(port, () => {
   logger.info(`Server is running on port ${port}`);
 });

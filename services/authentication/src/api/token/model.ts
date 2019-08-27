@@ -3,6 +3,8 @@ import { v4 } from 'uuid';
 import { BaseModel } from '../base.model';
 import { UserModel } from '../user.model';
 
+import { extPrsPayload } from '~lib/token-utils';
+
 export class TokenModel extends BaseModel {
   static get AVAILABLE_FIELDS(): string[] {
     return [
@@ -23,6 +25,7 @@ export class TokenModel extends BaseModel {
     return 'refresh_tokens';
   }
 
+  public expires_at: string;
   public id: string;
   public user_agent?: string;
   public user_id: string;
@@ -31,6 +34,12 @@ export class TokenModel extends BaseModel {
   public $beforeInsert(): void {
     super.$beforeInsert();
     this.id = v4();
+    this.expires_at = this.getExpiryTimestamp();
+  }
+
+  public $beforeUpdate(): void {
+    super.$beforeUpdate();
+    this.expires_at = this.getExpiryTimestamp();
   }
 
   public async refreshUserToken(
@@ -53,5 +62,13 @@ export class TokenModel extends BaseModel {
       access_token,
       refresh_token,
     };
+  }
+
+  private getExpiryTimestamp(): string {
+    const {
+      exp,
+    } = extPrsPayload<{ exp: number }>(this.refresh_token);
+
+    return new Date(exp * 1000).toISOString();
   }
 }

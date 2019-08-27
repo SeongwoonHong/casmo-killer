@@ -1,8 +1,4 @@
-import {
-  default as request,
-  Response,
-  SuperTest,
-} from 'supertest';
+import * as request from 'supertest';
 import { generate as idGenerator } from 'shortid';
 
 import { AuthStrategies } from '~lib/types';
@@ -133,16 +129,16 @@ class TestUtils {
   }
 
   public getCsrfToken(
-    agent: SuperTest<any>,
+    agent: request.SuperTest<any>,
     endpoint = `${API_ROOT}/token/csrf`,
   ): Promise<{
-    agent: SuperTest<any>,
+    agent: request.SuperTest<any>,
     csrfToken: string,
   }> {
     return new Promise((resolve) => {
       agent
         .get(endpoint)
-        .end((err, res: Response) => {
+        .end((err, res: request.Response) => {
           resolve({
             agent,
             csrfToken: res.header[csrfHeaderName],
@@ -152,7 +148,7 @@ class TestUtils {
   }
 
   public getAccessToken(
-    agent: SuperTest<any>,
+    agent: request.SuperTest<any>,
     loginCred: {
       email: string,
       password: string,
@@ -160,14 +156,14 @@ class TestUtils {
     endpoint = `${API_ROOT}/auth/local/login`,
   ): Promise<{
     accessToken: string,
-    agent: SuperTest<any>,
-    response: Response,
+    agent: request.SuperTest<any>,
+    response: request.Response,
   }> {
     return new Promise((resolve) => {
       agent
         .post(endpoint)
         .send(loginCred)
-        .end((err, res: Response) => {
+        .end((err, res: request.Response) => {
           resolve({
             accessToken: res.header[authHeaderName],
             agent,
@@ -178,7 +174,7 @@ class TestUtils {
   }
 
   public async getLoggedInUser(
-    agent: SuperTest<any>,
+    agent: request.SuperTest<any>,
     loginCred: {
       email: string,
       password: string,
@@ -186,9 +182,9 @@ class TestUtils {
     endpoint = `${API_ROOT}/auth/local/login`,
   ): Promise<{
     accessToken: string,
-    agent: SuperTest<any>,
+    agent: request.SuperTest<any>,
     csrfToken: string,
-    response: Response,
+    response: request.Response,
   }> {
     const csrfOp = await this.getCsrfToken(agent);
     const loginOp = await this.getAccessToken(
@@ -206,7 +202,7 @@ class TestUtils {
   }
 
   public requestInfoUpdate(
-    agent: SuperTest<any>,
+    agent: request.SuperTest<any>,
     endpoint: string,
     user_id: string,
     tokens: {
@@ -215,8 +211,8 @@ class TestUtils {
     },
     newInfo,
   ): Promise<{
-    agent: SuperTest<any>,
-    response: Response,
+    agent: request.SuperTest<any>,
+    response: request.Response,
   }> {
     return new Promise((resolve) => {
       agent
@@ -234,7 +230,7 @@ class TestUtils {
   }
 
   public validateLoginResponse(
-    res: Response,
+    res: request.Response,
     cookies: string[],
   ): void {
     const _cookies = this.resCookieParser(cookies);
@@ -245,7 +241,7 @@ class TestUtils {
   }
 
   public validateLoginData(
-    res: Response,
+    res: request.Response,
     user: any,
   ): void {
     const userData = res.body.user;

@@ -66,14 +66,8 @@ const config = {
     })(process.env.RSA_KEY_PAIRS),
     SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
     SENDGRID_SENDER: process.env.SENDGRID_SENDER || 'no-reply@damso.com',
-    SOCIAL_AUTH_PROVIDERS: process.env.SOCIAL_AUTH_PROVIDERS
-      ? process.env.SOCIAL_AUTH_PROVIDERS.split(',')
-      : ['facebook', 'google', 'kakao'],
     TOKEN_EXPIRY_FOR_ACCESS: process.env.TOKEN_EXPIRY_FOR_ACCESS || 60,
     TOKEN_EXPIRY_FOR_REFRESH: process.env.TOKEN_EXPIRY_FOR_REFRESH || '90d',
-    TOKEN_TARGET_FIELDS: process.env.TOKEN_TARGET_FIELDS
-      ? process.env.TOKEN_TARGET_FIELDS.split(',')
-      : ['email', 'password'],
   },
   development: {},
   test: {},

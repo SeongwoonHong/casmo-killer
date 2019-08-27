@@ -10,6 +10,7 @@ const {
 } = configs;
 
 class AuthMailer {
+  // TODO: make a new email template
   public static emailTemplate(information: EmailTemplateParams): string {
     const {
       body,

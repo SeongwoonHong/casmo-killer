@@ -83,20 +83,33 @@ export const verify = <T>(token: string): Promise<T> => {
   });
 };
 
+export const extPrsPayload = <T>(token: string): T => {
+  if (!token) {
+    // tslint:disable-next-line:no-object-literal-type-assertion
+    return {} as T;
+  }
+
+  return parseBase64(token.split('.')[1]);
+};
+
 export const extPrsHeader = <T>(token: string): T => {
   if (!token) {
     // tslint:disable-next-line:no-object-literal-type-assertion
     return {} as T;
   }
 
-  const buffHeader = Buffer.from(
-    token.split('.')[0],
+  return parseBase64(token.split('.')[0]);
+};
+
+const parseBase64 = <T>(base64: string): T => {
+  const buff = Buffer.from(
+    base64,
     'base64',
   );
-  const strHeader = buffHeader.toString('ascii');
+  const str = buff.toString('ascii');
 
   try {
-    return JSON.parse(strHeader);
+    return JSON.parse(str);
   } catch (error) {
     // tslint:disable-next-line:no-object-literal-type-assertion
     return {} as T;

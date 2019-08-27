@@ -357,7 +357,7 @@ export class UserModel extends BaseModel {
   public async hasPwdBeenUsed(
     newPwd: string,
   ): Promise<boolean> {
-    for (const oldPwd of [this.password].concat(this.prev_passwords)) {
+    for (const oldPwd of this.prev_passwords) {
       const isSame = await compare(newPwd, oldPwd);
 
       if (isSame) {
@@ -366,17 +366,6 @@ export class UserModel extends BaseModel {
     }
 
     return false;
-  }
-
-  public updateEmail(
-    email: string,
-  ): Promise<UserModel> {
-    return this
-      .$query()
-      .patchAndFetch({
-        ...this,
-        email,
-      });
   }
 
   public async updatePassword(

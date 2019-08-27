@@ -34,8 +34,10 @@ import { socialAuth } from '~lib/social-auth';
 
 const {
   MSG_FOR_REQUEST_SIGNUP: confirmMsg,
-  SOCIAL_AUTH_PROVIDERS: socialProviders,
 } = configs;
+const {
+  SOCIAL_AUTH_PROVIDERS: socialProviders,
+} = constants;
 
 export const requestSignup = async (
   req: Request,
@@ -74,20 +76,17 @@ export const requestSignup = async (
       );
     }
 
-    const verificationCode = await UserModel.generateJobToken();
+    const verificationCode = await UserJobs.generateJobToken();
 
     await mailer.sendRegisterConfirmation(
       email,
       verificationCode,
     );
 
-    await UserJobs
-      .query()
-      .insert({
-        job_name: constants.JOB_NAME_FOR_REGISTRATION,
-        token: verificationCode,
-        user_id: email,
-      });
+    await UserJobs.registerRegisterConfirm(
+      email,
+      verificationCode,
+    );
 
     return success(
       res,
@@ -133,13 +132,10 @@ export const verifyEmail = async (
       email,
     } = req.body;
 
-    const userJob = await UserJobs
-      .query()
-      .findOne({
-        job_name: constants.JOB_NAME_FOR_REGISTRATION,
-        token: code,
-        user_id: email,
-      });
+    const userJob = await UserJobs.findUserForRegistration(
+      code,
+      email,
+    );
 
     if (!userJob) {
       return badRequest(
@@ -181,13 +177,6 @@ export const localRegister = async (
     );
   }
 
-  if (req.body.avatar && !isValidAvatar(req.body.avatar)) {
-    return badRequest(
-      res,
-      'Invalid avatar provided.',
-    );
-  }
-
   try {
     const {
       avatar,
@@ -195,6 +184,13 @@ export const localRegister = async (
       email,
       password,
     } = req.body;
+
+    if (avatar && !isValidAvatar(avatar)) {
+      return badRequest(
+        res,
+        'Invalid avatar provided.',
+      );
+    }
 
     const {
       field,
@@ -240,6 +236,7 @@ export const localRegister = async (
       display_name,
       email,
       password,
+      strategy: 'local',
     } as UserModel);
 
     const {
@@ -251,13 +248,7 @@ export const localRegister = async (
       req,
     );
 
-    await UserJobs
-      .query()
-      .delete()
-      .where({
-        job_name: constants.JOB_NAME_FOR_REGISTRATION,
-        user_id: req.body.email,
-      });
+    await UserJobs.completeRegistrationJob(email);
 
     return success(
       response,
@@ -298,7 +289,7 @@ export const localLogin = async (
       password,
     } = req.body;
 
-    const user: UserModel = await UserModel.findByEmail(email);
+    const user = await UserModel.findByEmail(email);
 
     if (!user) {
       return notFound(
@@ -350,7 +341,7 @@ export const socialRegister = async (
       display_name: validDisplayName,
       social_id: JoiString().required(),
       social_token: JoiString().required(),
-      strategy: JoiString().valid(socialProviders),
+      strategy: JoiString().valid(...socialProviders),
     }),
   );
 
@@ -358,13 +349,6 @@ export const socialRegister = async (
     return invalidRequest(
       res,
       validations.error,
-    );
-  }
-
-  if (req.body.avatar && !isValidAvatar(req.body.avatar)) {
-    return badRequest(
-      res,
-      'Invalid avatar provided.',
     );
   }
 
@@ -379,6 +363,13 @@ export const socialRegister = async (
       },
     } = req;
 
+    if (avatar && !isValidAvatar(avatar)) {
+      return badRequest(
+        res,
+        'Invalid avatar provided.',
+      );
+    }
+
     const socialProfile = await socialAuth.fetchSocialInfo(
       strategy,
       social_token,
@@ -391,15 +382,13 @@ export const socialRegister = async (
       );
     }
 
-    const newUser = await UserModel.registerNewUser(
-      // tslint:disable-next-line:no-object-literal-type-assertion
-      {
-        avatar,
-        display_name,
-        social_id,
-        strategy,
-      } as UserModel,
-    );
+    // tslint:disable-next-line:no-object-literal-type-assertion
+    const newUser = await UserModel.registerNewUser({
+      avatar,
+      display_name,
+      social_id,
+      strategy,
+    } as UserModel);
 
     const {
       response,
@@ -432,7 +421,7 @@ export const socialLogin = async (
     req.body,
     JoiObject({
       accessToken: JoiString().required(),
-      provider: JoiString().valid(socialProviders),
+      provider: JoiString().valid(...socialProviders),
     }),
   );
 

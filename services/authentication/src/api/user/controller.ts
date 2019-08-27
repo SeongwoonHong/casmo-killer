@@ -133,21 +133,6 @@ export const updateUserInfo = async (
     );
   }
 
-  if (req.body.avatar && !isValidAvatar(req.body.avatar)) {
-    return badRequest(
-      res,
-      'Invalid avatar provided.',
-    );
-  }
-
-  if (req.params.user_id !== req.body.id) {
-    return badRequest(res);
-  }
-
-  if (req.user.id !== req.body.id) {
-    return unauthorized(res);
-  }
-
   try {
     const {
       params: {
@@ -157,10 +142,29 @@ export const updateUserInfo = async (
         avatar,
         display_name,
         email,
+        id,
         password,
         token,
       },
+      user: {
+        id: auth_id,
+      },
     } = req;
+
+    if (avatar && !isValidAvatar(avatar)) {
+      return badRequest(
+        res,
+        'Invalid avatar provided.',
+      );
+    }
+
+    if (
+      user_id !== id ||
+      user_id !== auth_id ||
+      id !== auth_id
+    ) {
+      return badRequest(res);
+    }
 
     const user = await UserModel
       .query()
@@ -173,9 +177,9 @@ export const updateUserInfo = async (
       );
     }
 
-    const shouldUpdateEmail = email &&
+    const shouldUpdateEmail = user.strategy === AuthStrategies.local &&
       user.email !== email &&
-      user.strategy === AuthStrategies.local;
+      email;
 
     const {
       isTaken,
@@ -201,13 +205,10 @@ export const updateUserInfo = async (
     }
 
     if (shouldUpdateEmail) {
-      const jobData = await UserJobs
-        .query()
-        .findOne({
-          job_name: constants.JOB_NAME_FOR_EMAIL_UPDATE,
-          token,
-          user_id: user.id,
-        });
+      const jobData = await UserJobs.findUserForEmailUpdate(
+        token,
+        user_id,
+      );
 
       if (!jobData) {
         return badRequest(
@@ -230,8 +231,6 @@ export const updateUserInfo = async (
       }
     }
 
-    const newPassword = await hash(password);
-
     const newPayload = {
       ...user,
       avatar: avatar && user.avatar !== avatar
@@ -241,10 +240,10 @@ export const updateUserInfo = async (
         )
         : user.avatar,
       display_name,
-      ...(!isPwdSame && {
+      ...(!isPwdSame && ((newPassword) => ({
         password: newPassword,
         prev_passwords: user.prev_passwords.concat(user.password),
-      }),
+      }))(await hash(password))),
       email,
     };
 
@@ -262,14 +261,9 @@ export const updateUserInfo = async (
     );
 
     if (shouldUpdateEmail) {
-      await UserJobs
-        .query()
-        .delete()
-        .where({
-          job_name: constants.JOB_NAME_FOR_EMAIL_UPDATE,
-          token,
-          user_id: user.id,
-        });
+      await UserJobs.completeEmailUpdate(
+        user_id,
+      );
     }
 
     return success(
@@ -329,7 +323,7 @@ export const requestNewEmail = async (
     } = req;
 
     if (user_id !== userId) {
-      return unauthorized(res);
+      return badRequest(res);
     }
 
     const user = await UserModel
@@ -372,13 +366,10 @@ export const requestNewEmail = async (
       verificationCode,
     );
 
-    await UserJobs
-      .query()
-      .insert({
-        job_name: constants.JOB_NAME_FOR_EMAIL_UPDATE,
-        token: verificationCode,
-        user_id,
-      });
+    await UserJobs.registerEmailUpdate(
+      user_id,
+      verificationCode,
+    );
 
     return success(
       res,
@@ -440,7 +431,7 @@ export const verifyNewEmail = async (
     } = req;
 
     if (user_id !== userId) {
-      return unauthorized(res);
+      return badRequest(res);
     }
 
     const user = await UserModel

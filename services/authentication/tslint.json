@@ -28,6 +28,7 @@
         ],
         "object-shorthand-properties-first": false,
         "ordered-imports": false,
+        "ter-arrow-parens": false,
         "variable-name": false
     },
     "rulesDirectory": []

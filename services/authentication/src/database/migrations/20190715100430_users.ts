@@ -1,6 +1,5 @@
 import * as Knex from 'knex';
 
-import { configs } from '../../config';
 import { constants } from '../../constants';
 
 export async function up(knex: Knex): Promise<any> {
@@ -26,7 +25,7 @@ export async function up(knex: Knex): Promise<any> {
         .notNullable()
         .defaultTo('local');
       table.string('social_id');
-      table.enu('token_field', configs.TOKEN_TARGET_FIELDS);
+      table.enu('token_field', ['email', 'password']);
       table.string('token_value');
       table
         .timestamp('created_at')

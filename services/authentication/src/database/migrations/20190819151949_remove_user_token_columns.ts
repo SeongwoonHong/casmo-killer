@@ -1,7 +1,5 @@
 import * as Knex from 'knex';
 
-import { configs } from '../../config';
-
 export async function up(knex: Knex): Promise<any> {
   return knex
     .schema
@@ -15,7 +13,7 @@ export async function down(knex: Knex): Promise<any> {
   return knex
     .schema
     .alterTable('users', (table: Knex.CreateTableBuilder) => {
-      table.enu('token_field', configs.TOKEN_TARGET_FIELDS);
+      table.enu('token_field', ['email', 'password']);
       table.string('token_value');
     });
 }

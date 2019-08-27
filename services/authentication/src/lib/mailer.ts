@@ -14,7 +14,6 @@ class AuthMailer {
     const {
       body,
       bodyTitle,
-      buttonText,
       buttonUrl,
       clientUrl = configs.CLIENT_URL,
       footerText,
@@ -25,10 +24,10 @@ class AuthMailer {
 
     const linkButton = buttonUrl
       ? `<a
-          href="${buttonUrl}"
+          href="#"
           target="_blank"
           style="box-sizing:border-box;border-color:${themeColor};font-weight:400;text-decoration:none;display:inline-block;margin:0;color:#ffffff;background-color:${themeColor};border:solid 1px ${themeColor};border-radius:2px;font-size:14px;padding:12px 45px">
-              ${buttonText}
+              ${buttonUrl}
           </a>`
       : '';
 

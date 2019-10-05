@@ -1,23 +1,19 @@
 import App, { Container } from 'next/app';
 import React from 'react';
-import { CookiesProvider, Cookies } from 'react-cookie';
+import { CookiesProvider } from 'react-cookie';
 import { withReduxStore } from 'utils';
 import { Provider } from 'react-redux';
-import { initialize, tokenRefresh, tokenVerify } from 'store/modules/auth';
+import { initialize, tokenRefresh } from 'store/modules/auth';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/scss/main.scss'
 
 class MyApp extends App {
   async componentDidMount() {
     // @ts-ignore
     const { reduxStore } = this.props;
-    const cookies = new Cookies();
-    const xAuthToken = cookies.get('x-auth-token');
 
     await initialize();
-    await tokenRefresh();
-    
-    if (xAuthToken) {
-      await reduxStore.dispatch(tokenVerify(xAuthToken));
-    }
+    await reduxStore.dispatch(tokenRefresh());
   }
   
   public render(): JSX.Element {
@@ -29,6 +25,7 @@ class MyApp extends App {
         <Provider store={reduxStore}>
           <CookiesProvider>
             <Component {...pageProps} />
+            <ToastContainer />
           </CookiesProvider>
         </Provider>
       </Container>

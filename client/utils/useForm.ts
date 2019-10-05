@@ -35,10 +35,17 @@ const useForm = (initialValues, validate, callback) => {
   }
 
   function handleChange(e) {
-    e.persist();
+    e && e.persist();
     setValues(values => ({
       ...values,
       [e.target.name]: e.target.value,
+    }));
+  }
+
+  function setImg(file) {
+    setValues(values => ({
+      ...values,
+      avatar: file,
     }));
   }
 
@@ -47,6 +54,7 @@ const useForm = (initialValues, validate, callback) => {
     handleSubmit,
     values,
     errors,
+    setImg,
   };
 };
 

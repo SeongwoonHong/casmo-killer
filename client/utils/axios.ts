@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = 'http://localhost:9000';
+const baseURL = 'https://damso-auth-service.herokuapp.com';
 
 axios.defaults.baseURL = baseURL + '/api';
 

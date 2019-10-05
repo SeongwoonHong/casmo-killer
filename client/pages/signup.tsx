@@ -3,11 +3,13 @@ import { Container, AuthFormContainer, Modal } from 'components';
 import { useDispatch } from 'react-redux';
 import { signup as signupAction, requestSignup } from 'store/modules/auth';
 import { useForm, formValidate } from 'utils';
+import Router from 'next/router';
+
 
 const signup = () => {
   const [isModalOpend, setIsModalOpened] = useState(false);
   const dispatch = useDispatch();
-
+  const [modalContent, setModalContent] = useState();
   const signupErrorInitialValues = {
     email: '',
     password: '',
@@ -17,7 +19,7 @@ const signup = () => {
     avatar: '',
   };
 
-  const { values, errors, handleChange, handleSubmit } = useForm(
+  const { values, errors, handleChange, handleSubmit, setImg } = useForm(
     signupErrorInitialValues, 
     formValidate,
     signup); 
@@ -67,24 +69,48 @@ const signup = () => {
       id: 'avatar',
       placeholder: 'Avatar',
       type: 'file',
-      value: values.avatar,
       name: 'avatar',
-      onChange: handleChange,
+      onChange: imgUpload,
     },
   ];
 
-  function signup() {
-    const { email, password, displayName } = values;
+  function imgUpload(e) {
+    const avatar = e.target.files[0];
+    const reader = new FileReader();
 
-    return dispatch(signupAction({ email, password, displayName }))
+    reader.readAsDataURL(avatar);
+
+    return reader.onload = () => {
+      return setImg(reader.result);
+    };
+  }
+
+  function signup() {
+    const { email, password, displayName, verificationCode, avatar } = values;
+
+    return dispatch(signupAction({ email, password, displayName, verificationCode, avatar }))
+      .then(() => Router.push('/login'));
   }
 
   function sendVerificationCode() {
     const { email } = values;
 
     if (email.trim() && isEmailValid(email)) {
-      requestSignup(email);
-      toggleModal()
+      requestSignup(email)
+        .then(() => {
+          setModalContent(
+            <>
+              <h1>Verification code is sent</h1>
+              <div>We've sent you a verification code via email.</div>
+              <div>Please check your email and enter the code below</div>
+            </>
+          );
+          toggleModal();
+        })
+        .catch((e) => {
+          setModalContent(<div>{e.response.data.message}</div>);
+          toggleModal();
+        })
     }
   }
 
@@ -108,9 +134,7 @@ const signup = () => {
         isOpened={isModalOpend}
         onClose={toggleModal}
       >
-        <h1>Verification code is sent</h1>
-        <div>We've sent you a verification code via email.</div>
-        <div>Please check your email and enter the code below</div>
+        {modalContent}
       </Modal>
     </>
   );

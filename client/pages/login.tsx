@@ -4,6 +4,7 @@ import { login as loginAction } from 'store/modules/auth';
 import { Container, AuthFormContainer } from 'components';
 import Router from 'next/router';
 import { useForm, formValidate } from 'utils';
+import { toast } from 'react-toastify';
 
 const login = (props) => {
   const { values, errors, handleChange, handleSubmit } = useForm({
@@ -28,6 +29,7 @@ const login = (props) => {
       onChange: handleChange
     },
   ];
+  let toastId = 'toast-login';
   const dispatch = useDispatch();
   const user = useSelector(state => state.auth.user);
 
@@ -40,7 +42,21 @@ const login = (props) => {
   function login() {
     const { email, password } = values;
 
-    dispatch(loginAction(email, password));
+    return dispatch(loginAction(email, password))
+      .then(loginSuccessCB)
+      .catch(loginFailCB)
+  }
+
+  function loginFailCB() {
+    if (!toast.isActive(toastId)) {
+      return toast.error('Login Failed. Please try it again', {
+        toastId
+      });
+    }
+  }
+
+  function loginSuccessCB() {
+    return toast.success('Login Success!')
   }
 
   return (

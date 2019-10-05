@@ -12,7 +12,6 @@ const LOGOUT = 'LOGOUT';
 /* ACTION CREATOR */
 
 const loginSuccess = (user) => {
-  console.log('user = ', user)
   return {
     type: LOGIN_SUCCESS,
     payload: user,
@@ -31,19 +30,20 @@ export const login = (email: string, password: string) => {
       }, {
         withCredentials: true,
       });
-      
+
       setXAuthTokenToCookie(res.headers['x-auth-token']);
 
-      dispatch(loginSuccess(res.data.user));
+      return dispatch(loginSuccess(res.data.user));
     } catch (e) {
       console.log(e);
       dispatch({ type: LOGIN_FAIL });
+      throw new Error(e);
     }
   };
 };
 
 export const requestSignup = (email: string) => {
-  return axios.post('/auth/local/request', {
+  return axios.post('/job/signup/request', {
     email
   }, {
     withCredentials: true
@@ -54,6 +54,7 @@ export const signup = ({
   email,
   password,
   displayName,
+  verificationCode,
   avatar = null,
 }) => {
   return async (dispatch) => {
@@ -61,25 +62,22 @@ export const signup = ({
       dispatch({
         type: SIGNUP,
       });
-
       const res = await axios.post('/auth/local/register', {
         email,
         password,
-        displayName,
+        display_name: displayName,
         avatar,
+        token: verificationCode,
+      }, {
+        withCredentials: true
       });
 
-      dispatch({
+      return dispatch({
         type: SIGNUP_SUCCESS,
-        payload: {
-          email,
-          displayName,
-          userId: 1,
-        },
       });
     } catch (e) {
       console.log(e);
-      dispatch({
+      return dispatch({
         type: SIGNUP_FAIL,
       });
     }
@@ -101,20 +99,24 @@ export const initialize = async () => {
   }
 };
 
-export const tokenRefresh = async () => {
-  try {
-    const res = await axios.post(
-      '/token/refresh',
-      {},
-      {
-        withCredentials: true,
-      },
-    );
-
-    setXAuthTokenToCookie(res.headers['x-auth-token']);
-  } catch (e) {
-    if (e.response.status !== 401) {
-      console.log(e);
+export const tokenRefresh = () => {
+  return async (dispatch) => {
+    try {
+      const res = await axios.post(
+        '/token/refresh',
+        {},
+        {
+          withCredentials: true,
+        },
+      );
+  
+      setXAuthTokenToCookie(res.headers['x-auth-token']);
+      
+      return dispatch(loginSuccess(res.data.user));
+    } catch (e) {
+      if (e.response.status !== 401) {
+        console.log(e);
+      }
     }
   }
 };
@@ -155,7 +157,6 @@ export default (state = initialState, action) => {
         isLoading: true,
       };
     case LOGIN_SUCCESS:
-      console.log('action.payload = ', action.payload)
       return {
         ...state,
         isLoading: false,
@@ -175,7 +176,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        user: action.payload,
       };
     case SIGNUP_FAIL:
       return {

@@ -1,0 +1,27 @@
+@import './components/index';
+@import './pages/index';
+@import './pages/trending';
+@import './pages/postWrite';
+@import './pages/signup';
+
+body {
+  margin: 0;
+  background-color: $theme;
+  font-size: 12px;
+}
+
+input {
+  outline: none;
+}
+
+button {
+  border: none;
+
+  &:active {
+    border-style: none;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}

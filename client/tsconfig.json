@@ -32,26 +32,59 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "paths": {
-      "components/*": [
-        "./components/*"
+      "~components/*": [
+        "./src/components/*"
       ],
-      "models/*": [
-        "./models/*"
+      "~components": [
+        "./src/components"
       ],
-      "store/*": [
-        "./store/*"
+      "~configs/*": [
+        "./src/configs/*"
       ],
-      "styles/*": [
-        "./styles/*"
+      "~configs": [
+        "./src/configs"
       ],
-      "interfaces/*": [
-        "./interfaces/*"
+      "~models/*": [
+        "./src/models/*"
       ],
-      "static/*": [
-        "./static/*"
+      "~models": [
+        "./src/models"
       ],
-      "utils/*": [
-        "./utils/*"
+      "~store/*": [
+        "./src/store/*"
+      ],
+      "~store": [
+        "./src/store"
+      ],
+      "~styles/*": [
+        "./src/styles/*"
+      ],
+      "~styles": [
+        "./src/styles"
+      ],
+      "~interfaces/*": [
+        "./src/interfaces/*"
+      ],
+      "~interfaces": [
+        "./src/interfaces"
+      ],
+      "~services": [
+        "./src/services"
+      ],
+      "~services/*": [
+        "./src/services/*"
+      ],
+      "~static/*": [
+        "./src/static/*"
+      ],
+      "~static": [
+        "./src/static"
+      ],
+      "~utils/*": [
+        "./src/utils/*"
+      ],
+      "~utils": [
+        "./src/utils"
       ]
     }
   },
